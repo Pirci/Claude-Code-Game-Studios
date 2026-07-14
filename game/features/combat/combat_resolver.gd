@@ -5,6 +5,14 @@ extends RefCounted
 
 signal combat_resolved(result: CombatResult)
 
+# Config verilmezse varsayılan değerlerle (CombatConfig @export defaults) çalışır.
+var _config: CombatConfig = CombatConfig.new()
+
+
+func bind_config(config: CombatConfig) -> void:
+	if config != null:
+		_config = config
+
 
 func resolve(attacker_army: int, defender_army: int) -> CombatResult:
 	var result: CombatResult = CombatResult.new()
@@ -13,16 +21,16 @@ func resolve(attacker_army: int, defender_army: int) -> CombatResult:
 
 	if attacker_army > defender_army:
 		result.attacker_won = true
-		result.attacker_losses = ceili(defender_army * 0.5)
+		result.attacker_losses = ceili(defender_army * _config.attacker_win_loss_ratio)
 		result.defender_losses = defender_army
 	elif defender_army > attacker_army:
 		result.attacker_won = false
 		result.attacker_losses = attacker_army
-		result.defender_losses = ceili(attacker_army * 0.3)
+		result.defender_losses = ceili(attacker_army * _config.defender_win_loss_ratio)
 	else:
-		result.attacker_won = false
-		result.attacker_losses = ceili(attacker_army * 0.7)
-		result.defender_losses = ceili(defender_army * 0.5)
+		result.attacker_won = not _config.draw_favors_defender
+		result.attacker_losses = ceili(attacker_army * _config.draw_attacker_loss_ratio)
+		result.defender_losses = ceili(defender_army * _config.draw_defender_loss_ratio)
 
 	result.attacker_remaining = maxi(0, attacker_army - result.attacker_losses)
 	result.defender_remaining = maxi(0, defender_army - result.defender_losses)

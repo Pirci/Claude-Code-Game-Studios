@@ -53,7 +53,8 @@ Sıra: **(1)** düşman AI oynar → **(2)** gelir toplanır → **(3)** `curren
 - Her düşman bölgesi için (army > 1):
   - Komşular arasında düşman-olmayan, `army_count`'u en düşük hedefi seç.
   - Kuvvet (army−1) gönder; hedefte ordu varsa savaş, yoksa işgal.
-- MVP: düşman tur başına **1 aksiyon** (ilk uygun hamleden sonra `break`).
+- Düşman tur başına en fazla `enemy_actions_per_turn` aksiyon yapar (data-driven,
+  `MapState.enemy_actions_per_turn`; her düşman bölgesi en fazla 1 hamle). MVP: 1.
 
 ### 3.6 Kazanma / Kaybetme
 - **Kazanma** (`WinCondition.is_met`): `must_defeat_all_enemies` ise düşman bölgesi
@@ -120,7 +121,7 @@ hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
 | `required_neutral_conquests` | WinCondition | Prolog: 3 |
 | `must_defeat_all_enemies` | WinCondition | Prolog: true |
 | Bölge `army_count` / `gold_per_turn` | `.tres` | Denge |
-| Düşman AI aksiyon/tur | kod sabiti | MVP: 1 (`break`) — **teknik borç: data-driven olmalı** |
+| `enemy_actions_per_turn` | ChapterMapDefinition / MapState | Düşmanın tur başına toplam aksiyonu (data-driven; MVP: 1) |
 
 ---
 

@@ -6,6 +6,7 @@ signal return_to_menu_requested
 
 
 const CHAPTER_1_MAP: ChapterMapDefinition = preload("res://features/grid/data/chapter_1_map.tres")
+const COMBAT_CONFIG: CombatConfig = preload("res://features/combat/data/combat_config.tres")
 
 @onready var _chapter_label: Label = %ChapterLabel
 @onready var _gold_label: Label = %GoldLabel
@@ -43,6 +44,7 @@ func _setup_controllers() -> void:
 	_army_controller = ArmyController.new()
 	_resource_controller = ResourceController.new()
 	_combat_resolver = CombatResolver.new()
+	_combat_resolver.bind_config(COMBAT_CONFIG)
 	_map_controller = MapController.new()
 	_map_controller.bind_services(
 		_game_state.map_state,

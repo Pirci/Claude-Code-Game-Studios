@@ -90,8 +90,12 @@ func end_turn() -> void:
 
 
 func _run_enemy_ai() -> void:
+	var actions_allowed: int = _map_state.enemy_actions_per_turn
+	var actions_done: int = 0
 	var enemy_regions: Array[RegionData] = _map_state.get_enemy_regions()
 	for region: RegionData in enemy_regions:
+		if actions_done >= actions_allowed:
+			break
 		if region.army_count <= 1:
 			continue
 		var best_target: RegionData = null
@@ -117,4 +121,4 @@ func _run_enemy_ai() -> void:
 			best_target.owner = RegionData.Owner.ENEMY
 			best_target.army_count = moving
 			army_moved.emit(region.region_id, best_target.region_id, moving)
-		break  # MVP: düşman tur başına 1 aksiyon
+		actions_done += 1

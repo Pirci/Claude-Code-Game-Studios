@@ -81,5 +81,6 @@ script = ExtResource("1_chapter")
 chapter_id = 1
 chapter_name_key = &"CHAPTER_1_TITLE"
 actions_per_turn = 1
+enemy_actions_per_turn = 1
 regions = [SubResource("region_otuken"), SubResource("region_bati"), SubResource("region_dogu"), SubResource("region_altai"), SubResource("region_guney"), SubResource("region_sinir")]
 win_condition = SubResource("win_ch1")

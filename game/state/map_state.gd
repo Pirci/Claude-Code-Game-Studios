@@ -7,6 +7,7 @@ var regions: Dictionary = {}  # StringName -> RegionData
 var current_turn: int = 1
 var actions_remaining: int = 1
 var actions_per_turn: int = 1
+var enemy_actions_per_turn: int = 1
 var selected_region_id: StringName = &""
 var chapter_id: int = 1
 

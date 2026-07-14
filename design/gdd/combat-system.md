@@ -102,14 +102,20 @@ attacker_remaining=1, defender_remaining=2, savunan kazanır.
 
 ## 7. Tuning Knobs
 
-Şu an değerler kodda sabit (magic number) — **teknik borç**: data-driven olmalı.
+Değerler **data-driven**: `CombatConfig` resource'undan gelir
+(`game/features/combat/combat_config.gd`, örnek: `data/combat_config.tres`).
+`CombatResolver.bind_config()` ile enjekte edilir; config verilmezse `@export`
+varsayılanları kullanılır (test kolaylığı).
 
-| Knob | Mevcut | Etki |
+| Knob (CombatConfig alanı) | Varsayılan | Etki |
 | ---- | ---- | ---- |
-| Saldıran üstün — savunan kaybı çarpanı | 0.5 | Zafer maliyeti |
-| Savunan üstün — savunan kaybı çarpanı | 0.3 | Savunma dayanıklılığı |
-| Eşitlik — saldıran kaybı çarpanı | 0.7 | Eşit savaş cezası |
-| Eşitlik kazananı | savunan | Savunma avantajı yönü |
+| `attacker_win_loss_ratio` | 0.5 | Saldıran kazanınca zafer maliyeti |
+| `defender_win_loss_ratio` | 0.3 | Savunan kazanınca dayanıklılığı |
+| `draw_attacker_loss_ratio` | 0.7 | Eşitlikte saldıran kaybı |
+| `draw_defender_loss_ratio` | 0.5 | Eşitlikte savunan kaybı |
+| `draw_favors_defender` | true | Eşitlik kazananı (savunma avantajı) |
+
+> Not: Kaybeden taraf her zaman tamamen yok olur (bu bir kural, tunable değil).
 
 **Genişleme (planlı)**: kompozisyon bonusu (süvari>okçu>piyade), arazi etkisi,
 taktik seçimi (Hücum/Savunma/Geri Çekilme), kahraman birim modifikatörü —
