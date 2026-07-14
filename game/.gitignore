@@ -7,6 +7,9 @@ export/
 *.pck
 *.zip
 
+# GDUnit4 test reports
+reports/
+
 # OS generated
 .DS_Store
 Thumbs.db
