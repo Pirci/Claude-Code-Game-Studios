@@ -1,20 +1,23 @@
-# Oyun Konsepti: Ergenekon'dan Bozkıra — Bozkurt'un Gölgesinde
+# Oyun Konsepti: Steppeborn — Path of the Sky Wolf
+
+*Türkçe alt-başlık: Gök Kurt'un Yolu*
 
 *Oluşturulma: 2026-07-10*
-*Son Güncelleme: 2026-07-13*
-*Durum: Taslak*
+*Son Güncelleme: 2026-07-14*
+*Durum: Taslak — Oğuz Kağan omurgasına revize edildi*
 
 ---
 
 ## Hızlı Anlatım
 
-> Sıra tabanlı, harita odaklı büyük strateji oyunu — Bozkurt'un ruhani
-> rehberliğinde, MÖ 209'dan Manas Destanı'na kadar 10 tarihsel kırılma
-> noktasını yaşıyorsunuz. Her bölüm farklı bir hanedan ve lider, ama
-> hepsini birleştiren tek bir ruhani bağ: Bozkurt. Ordu üretin, kaynak
-> toplayın, savaş kazanın, hanedanlar yükselsin ve çöksün. Savaşlar
-> otomatik çözümleniyor ama ayrıntılı raporlarla sunuluyor. Gerçek
-> zamanlı çatışma yok — sadece stratejik harita.
+> Sıra tabanlı, harita odaklı büyük strateji oyunu. Oğuz Kağan Destanı'nı
+> yaşıyorsunuz: doğaüstü işaretlerle doğan ata-kahraman Oğuz'un, gök kurt
+> **Kök Böri**'nin rehberliğinde dört yöne açılışı. Her yönde bir kral (siyasi
+> düşman) ve Erlik'in bozgunu (doğaüstü düşman) sizi bekliyor. Ordu üretin,
+> bölgeleri fethedin, bozulmuş toprakları arındırın, ruh gücü toplayın. Savaşlar
+> otomatik çözümleniyor ama ayrıntılı raporlarla sunuluyor. Gerçek zamanlı
+> çatışma yok — sadece stratejik harita. Final: imparatorluğun altı oğula
+> bölünmesi — zirve ve bölünme aynı anda.
 
 ---
 
@@ -24,56 +27,78 @@
 | ---- | ---- |
 | **Tür** | Sıra Tabanlı Büyük Strateji / Kampanya Haritası Strateji |
 | **Platform** | PC (Steam) |
-| **Hedef Kitle** | Strateji sevenler + Türk tarihi/mitolojisi meraklıları |
+| **Hedef Kitle** | Strateji sevenler + Türk mitolojisi/destanı meraklıları |
 | **Oyuncu Sayısı** | Tek oyunculu |
-| **Oturum Süresi** | 15-30 dakika (1 bölüm) |
+| **Oturum Süresi** | 20-35 dakika (1 sahne) |
 | **Gelir Modeli** | Premium (tek seferlik satın alma) |
-| **Tahmini Kapsam** | Orta-Büyük (12-18 ay, solo geliştirici) |
-| **Karşılaştırılabilir Oyunlar** | Medieval Total War (kampanya haritası), Crusader Kings III (hanedan anlatısı), Slay the Spire (linear ilerleme) |
+| **Tahmini Kapsam** | Orta (12-18 ay, solo geliştirici) — tek dünya, tek görsel dil |
+| **Karşılaştırılabilir Oyunlar** | Medieval Total War (kampanya haritası), Crusader Kings III (hanedan/miras), Slay the Spire (linear ilerleme + roguelite buff) |
 
 ---
 
 ## Temel Fantazi
 
-Bozkurt'un ruhani rehberliğinde, bin yıllık Türk tarihinin 10 büyük kırılma
-noktasını yaşıyorsunuz. Her bölümde farklı bir çağın, farklı bir hanedanın
-liderini yönetiyorsunuz — ama hepsini birleştiren ortak bağ Bozkurt'un ruhu.
+Gök kurt Kök Böri'nin rehberliğinde, bir destan kahramanının dünyayı dört
+yönden birleştiren yolculuğunu yaşıyorsunuz. Oğuz Kağan siradan bir lider
+değil — doğaüstü işaretlerle doğmuş, Ülgen'in (gök tanrısı) yeryüzündeki
+elidir. Görevi çift katmanlı: dışarıda krallıkları fethetmek, içeride ise
+Erlik'in (yeraltı/kaos gücü) topraklara yaydığı bozgunu geri püskürtmek.
 
-Mete Han'la boyları birleştirirsiniz, Bumin Kağan'la efendinize isyan edersiniz,
-Tang esaretinde umutsuzca direnirsiniz, İlteriş Kutluk'la özgürlüğü geri
-kazanırsınız, Bilge Kağan'la altın çağı yaşar ve kaybedersiniz, ta ki Manas'la
-Kırk Boy'u son kez birleştirene kadar.
+Her fetih bir kazanç ama aynı zamanda bir bedel. İmparatorluk büyüdükçe
+Erlik'in gölgesi de uzar. Ve zafer geldiğinde — dört yön birleştiğinde —
+Oğuz ülkeyi altı oğluna böler. Bu bölünme hem destanın gerçek finali hem de
+gelecek çağların (Selçuklu'nun çıktığı Kınık boyu dahil) tohumu.
 
-**Parçalanma → Birleşme** döngüsü her bölümde tekrarlanır — ama her seferinde
-farklı bir hanedan, farklı bir düşman, farklı koşullar. Oyuncu her seferinde
-"bu sefer birleşmeyi ben mi sağlayacağım" hissini yeniden yaşar.
+**Genişleme → Miras** yayı: küçük bir bozkırdan başlayıp bilinen dünyanın
+sınırlarına ulaşırsınız, sonra bu mirası bölersiniz. Oyuncu hem "kurdum" hem
+"devrettim" hissini yaşar.
 
 ---
 
 ## Benzersiz Özellik
 
-Medieval Total War'ın kampanya haritası stratejisi gibi, **VE AYRICA** her bölüm
-gerçek bir tarihsel kırılma noktasını anlatıyor ve tüm bölümleri birleştiren
-ruhani bir üst-anlatı var: **Bozkurt'un ruhu** her çağda yeni bir lidere
-rehberlik ediyor.
+Medieval Total War'ın kampanya haritası stratejisi gibi, **VE AYRICA** oyun
+tek bir büyük Türk destanını — Oğuz Kağan Destanı'nı — omurga alıyor. İki
+katmanlı düşman tasarımı türde nadir: siyasi krallıklar (dış) + kozmik kötülük
+Erlik (doğaüstü). Rehber gök kurt Kök Böri, oyuncunun ilerleme ve güç sistemini
+(Ruh Sistemi) anlatısal bir çapaya bağlıyor.
 
-Türk tarihi bu kapsamda ve bu formatta oyun dünyasında **tamamen kullanılmamış**
-bir alan — MÖ 209'dan Manas Destanı'na kadar bin yıllık bir tarihsel yolculuk.
+Oğuz Kağan Destanı bu formatta oyun dünyasında **tamamen kullanılmamış** —
+Nordic/Yunan mitolojisi ölçeğinde tanrısal-doğaüstü bir Türk destanı.
 
 ---
 
-## Ruhani Bağ Sistemi: Bozkurt'un Ruhu
+## Kök Böri ve Ruh Sistemi (İmza Mekaniği)
 
-Her bölüm farklı bir hanedan ve lider sunuyor ama oyuncu bağı kopmuyor çünkü:
+Gök kurt Kök Böri, destanda Oğuz'un ordusuna yol gösteren ilahi rehberdir.
+Oyunda bu, hem anlatısal çapa hem de temel güç/ilerleme sistemidir:
 
-- **Bozkurt** her bölümün intro sahnesinde yeni liderin yanında belirir
-- Her bölümün açılışında Bozkurt'un gözünden kısa bir "çağlar arası geçiş"
-  sahnesi oynar — önceki hanedanın çöküşü ve yeni hanedanın doğuşu
-- Oyuncunun önceki bölümlerdeki performansı Bozkurt'un "hafızası" olarak
-  korunur — iyi oynanan bölümler Bozkurt'a pasif bonuslar ekler (deneyim
-  birikimi hissi)
-- Son bölümde (Manas) Bozkurt tüm önceki liderlerin ruhlarını çağırır —
-  kampanya boyunca toplanan bonuslar final savaşında birleşir
+- **Kök Böri** her sahnenin açılışında belirir ve o sahnenin hedefini/tehdidini
+  işaret eder (yön seçimi, Erlik odağı)
+- **Ruh (Spirit)** bir kaynaktır: Erlik'in bozduğu bölgeleri arındırdıkça kazanılır
+- Ruh, **ilahi lütuflara** harcanır — roguelite tarzı buff seçimi (her sunumda
+  3 seçenekten biri: ordu bonusu, ekonomi bonusu, arındırma gücü vb.)
+- Lütuflar birikimli — sahneler arası taşınır, finalde tümü aktif
+- Erlik güçlendikçe (bozulmuş bölge sayısı arttıkça) ruh kazanımı zorlaşır —
+  ilerlemeyi ihmal etmenin bedeli var
+
+> **Tasarım köprüsü**: Bu sistem, eski konseptteki "Bozkurt bonusu"nun
+> evrimidir. Kök Böri = Bozkurt; ruh = birikimli pasif bonus.
+
+---
+
+## Kozmik Katman: Ülgen — Erlik Gerilimi
+
+Altay Yaratılış Destanı'ndan alınan kozmik ikilik, oyunun doğaüstü omurgasıdır:
+
+- **Ülgen** — gök/düzen tanrısı. Oğuz'un ilahi yetkisinin kaynağı. Kök Böri
+  onun elçisidir. Oyuncunun "iyi" tarafı.
+- **Erlik** — yeraltı/kaos gücü. Toprakları çürütür, kötücül ruhlar (körmös)
+  gönderir, mevsimleri bozar. Nordic Jötnar / Yunan Titan benzeri kozmik tehdit.
+
+Bu katman her sahnede siyasi fetihe **paralel** işler: bir kralı yenerken
+aynı zamanda o bölgedeki Erlik bozgununu da temizlemeniz gerekir. İki düşman,
+iki farklı meydan okuma — biri dış (krallar), biri iç/doğaüstü (Erlik).
 
 ---
 
@@ -83,134 +108,92 @@ Her bölüm farklı bir hanedan ve lider sunuyor ama oyuncu bağı kopmuyor çü
 
 | Estetik | Öncelik | Nasıl Sunuyoruz |
 | ---- | ---- | ---- |
-| **Anlatı** (drama, hikaye yayı) | 1 | 10 bölüm = 10 tarihsel kırılma, hanedan yükseliş/çöküş döngüsü, Bozkurt üst-anlatısı |
-| **Fantazi** (rol yapma) | 2 | Her bölümde farklı bir tarihsel lider rolü, Bozkurt'un rehberliği |
-| **Duygu** (duyusal zevk) | 3 | Sulu boya el çizimi sanat, Kırgız-Moğol kültürel estetiği, epik müzik |
-| **Meydan Okuma** (ustalık) | 4 | Kaynak optimizasyonu, doğru ordu kompozisyonu, stratejik planlama |
-| **Keşif** (araştırma, sırlar) | 5 | Tarihsel bilgi keşfi, harita bölgeleri, kültürel detaylar |
-| **Teslimiyet** (rahatlama) | 6 | Sıra tabanlı tempo, acele yok, düşünmeye zaman var |
-| **Dostluk** (sosyal bağ) | N/A | Tek oyunculu — geçerli değil |
-| **İfade** (yaratıcılık) | N/A | Linear kampanya — sınırlı ifade alanı |
+| **Anlatı** (drama, hikaye yayı) | 1 | Tek destan omurgası, genişleme→miras yayı, Kök Böri üst-anlatısı |
+| **Fantazi** (rol yapma) | 2 | Doğaüstü ata-kahraman Oğuz rolü, Kök Böri'nin rehberliği |
+| **Duygu** (duyusal zevk) | 3 | Sulu boya el çizimi + kozmik mitolojik atmosfer (Ülgen göğü / Erlik çürümesi) |
+| **Meydan Okuma** (ustalık) | 4 | Çift katmanlı düşman yönetimi, kaynak+ruh optimizasyonu, ordu kompozisyonu |
+| **Keşif** (araştırma, sırlar) | 5 | Destan olaylarını keşfetme, dört yönün haritaları, mitolojik lore |
+| **Teslimiyet** (rahatlama) | 6 | Sıra tabanlı tempo, düşünmeye zaman |
 
 ### Anahtar Dinamikler (Ortaya Çıkan Oyuncu Davranışları)
 
-- Oyuncular Bozkurt bonuslarını biriktirmek için her bölümü optimize etmeye çalışacak
-- Hanedan çöküş bölümlerinde (4, 7, 8) duygusal bağ güçlenecek — "kaybetmek" hikayenin parçası
-- Savaş raporlarını okuyarak birim kompozisyonlarını iyileştirmeye çalışacak
-- "Bir bölüm daha" psikolojisi — sonraki tarihsel kırılmayı merak edecek
-- Parçalanma → birleşme döngüsünü tanıyıp her yeni hanedanda "bu sefer ben başaracağım" hissedecek
+- Oyuncular ruh lütuflarını biriktirmek için bölgeleri arındırmaya öncelik verecek
+- Siyasi fetih ile Erlik arındırma arasında kaynak/aksiyon dengesi kuracak
+- Savaş raporlarını okuyarak birim kompozisyonlarını iyileştirecek
+- "Bir yön daha" psikolojisi — sonraki fethi merak edecek
+- Altı oğlu (konsey) besleyip finaldeki bölünmeyi planlayacak
 
 ### Temel Mekanikler (İnşa Ettiğimiz Sistemler)
 
-1. **Kaynak Toplama** — harita bölgelerinden kaynak toplama, ekonomi yönetimi
-2. **Ordu Üretimi** — 3 birim tipi (süvari, okçu, piyade) üretme ve yönetme
-3. **Harita Hareketi** — birlikleri bölgeler arası taşıma, stratejik konumlandırma
+1. **Bölge Fethi** — harita bölgelerini ordu ile alma, stratejik konumlandırma
+2. **Kaynak Yönetimi** — altın + sürü + ruh (orta derinlik, modüler)
+3. **Ordu Üretimi** — 3+ birim tipi + kahraman birimleri
 4. **Otomatik Çözüm Savaş** — taktik seçimi + otomatik çözüm + ayrıntılı rapor
-5. **Basit Diplomasi** — kabile ittifakı (hediye) veya fetih (savaş)
-6. **Bozkurt Ruhu** — bölümler arası ruhani bağ, birikimli pasif bonuslar
-
----
-
-## Oyuncu Motivasyonu Profili
-
-### Birincil Psikolojik İhtiyaçlar
-
-| İhtiyaç | Bu Oyun Nasıl Karşılıyor | Güç |
-| ---- | ---- | ---- |
-| **Özerklik** (özgürlük, anlamlı seçim) | Her turda aksiyon seçme, savaş taktikleri, diplomasi kararları | Destekleyici |
-| **Yetkinlik** (ustalık, beceri büyümesi) | Kaynak optimizasyonu, Bozkurt bonusu biriktirme, bölüm performansı | Temel |
-| **Bağlılık** (bağ, aidiyet) | Tarihsel liderlerle bağ, Bozkurt'un süregelen rehberliği, hanedanların kaderi | Temel |
-
-### Oyuncu Tipi Çekimi (Bartle Taksonomisi)
-
-- [x] **Başarıcılar** — Bölüm unlock ilerlemesi, Bozkurt bonusu biriktirme, kampanya tamamlama
-- [x] **Kaşifler** — Tarihsel olayları keşfetme, harita bölgelerini açma, kültürel lore öğrenme
-- [ ] **Sosyalleşenler** — Tek oyunculu, geçerli değil
-- [ ] **Rekabetçiler** — PvP yok, geçerli değil
-
-### Akış Durumu Tasarımı
-
-- **Başlangıç eğrisi**: Bölüm 1 (Mete Han) = öğretici — kaynak toplama, ordu üretimi ve hareket öğretiliyor, 15-20 dakikada tamamlanıyor
-- **Zorluk artışı**: İlk 3 bölüm kademeli mekanik ekleme, 4. bölüm ilk "çöküş" deneyimi (zorluk spike), sonra tekrar build-up
-- **Geri bildirim netliği**: Savaş raporları detaylı performans gösteriyor, Bozkurt bonusu ilerleme hissi veriyor
-- **Başarısızlıktan kurtarma**: Bölüm başarısız olursa checkpoint'ten tekrar başla — ilerleme kaybı minimal. Çöküş bölümlerinde (4, 7) kaybetmek hikayenin parçası — özel "yenilgi anlatısı" var
+5. **Katmanlı Diplomasi/Düşman** — krallıklar (siyasi) + Erlik ruhları (PvE)
+6. **Kök Böri / Ruh Sistemi** — arındırma + ilahi lütuf (roguelite buff)
+7. **Konsey (Altı Oğul)** — pasif bonuslar + finaldeki miras
 
 ---
 
 ## Temel Döngü
 
 ### Anlık (30 saniye)
-Haritaya bak → durumu değerlendir → bir hamle yap. Her hamle ağırlıklı ve
-kasıtlı — yanlış bir ordu hareketi ciddi sonuçlar doğurabilir. Geri bildirim
-anlık: bölge renkleri değişiyor, kaynak sayaçları güncelleniyor.
+Haritaya bak → siyasi ve Erlik tehditlerini değerlendir → bir hamle yap.
+Bölge renkleri sahiplik + bozulma durumunu gösterir. Geri bildirim anlık.
 
 ### Kısa Vadeli (3-5 dakika — Tur Döngüsü)
-1. Kaynak topla (bölgelere ordu gönder)
-2. Ordu üret (kaynak harca → süvari/okçu/piyade)
-3. Hareket et (komşu bölgeye ilerle)
-4. Savaş/Diplomasi (karşılaşma varsa → taktik seç → rapor al)
-5. Tur bitir → AI hareket eder (10-15 saniye)
+1. Kaynak topla (bölgelerden altın/sürü)
+2. Ordu üret (kaynak harca → birim)
+3. Hareket et / Fethet (komşu bölgeye ilerle)
+4. Arındır (Erlik bozgununu temizle → ruh kazan)
+5. Savaş/Diplomasi (karşılaşma → taktik seç → rapor)
+6. Tur bitir → AI hareket eder (krallar + Erlik yayılır)
 
-### Oturum Seviyesi (15-30 dakika — Bölüm)
-Bir bölüm = 8-15 tur. Bölüm başında Bozkurt geçiş sahnesi + tarihsel intro
-(metin + sulu boya illüstrasyon). Hedef net ve bölüme özgü: "boyları birleştir",
-"esaretten kurtul", "isyan başlat." Bölüm tamamlanınca tarihsel epilog +
-Bozkurt bonusu + sonraki bölüm unlock. Doğal durma noktası.
+### Oturum Seviyesi (20-35 dakika — Sahne)
+Bir sahne = 10-18 tur. Sahne başında Kök Böri belirir + destan intro (metin +
+sulu boya illüstrasyon). Hedef net: "bu yönü fethet + Erlik odağını temizle".
+Sahne sonunda destan epilog + ruh lütfu + sonraki yön açılır.
 
-### Uzun Vadeli İlerleme (Kampanya — 4-5 saat)
-10 bölüm linear sırayla. Mekanikler ilk 3 bölümde kademeli öğretilir,
-sonraki bölümlerde farklı kombinasyonlarda kullanılır:
-- Bölüm 1-3: Temel mekanikler öğretilir (kaynak, ordu, diplomasi)
-- Bölüm 4: İlk çöküş deneyimi (Tang Esareti) — tüm kaynaklar sıfırlanır
-- Bölüm 5: Yeniden doğuş — sıfırdan build-up heyecanı
-- Bölüm 6: Altın çağ — tüm sistemler tam kapasitede
-- Bölüm 7-8: İkinci çöküş ve hanedan değişimi
-- Bölüm 9: Kaos — parçalanmış boylar, sınırlı kaynaklar
-- Bölüm 10: Final birleşme — Bozkurt'un tüm bonusları devrede
-
-### Tutundurma Kancaları
-- **Merak**: Sonraki tarihsel kırılmada ne olacak? Hangi hanedan yükselecek?
-- **Yatırım**: Bozkurt bonusu birikiyor — her bölüm finale katkı sağlıyor
-- **Döngü tanıma**: "Yine çöküş mü? Bu sefer farklı olacak" hissi
-- **Ustalık**: Savaş raporlarını analiz ederek daha iyi kompozisyon öğrenme
+### Uzun Vadeli İlerleme (Kampanya — 4-6 saat)
+6 sahne (Prolog + 4 yön + Final). Mekanikler Prolog + ilk yönde öğretilir,
+sonraki yönlerde farklı Erlik tehditleri ve kral kompozisyonlarıyla derinleşir.
 
 ---
 
 ## Oyun Sütunları
 
-### Sütun 1: Tarihi Yaşa
-Her bölüm gerçek bir tarihsel kırılma noktasını anlatıyor — mekanikler
-tarihin hizmetinde. Günlük yönetim ve idari detaylar atlanır, direkt
-büyük olaya geçilir.
+### Sütun 1: Destanı Yaşa
+Her sahne Oğuz Kağan Destanı'nın bir perdesini anlatıyor — mekanikler destanın
+hizmetinde. Doğaüstü ve mitolojik unsurlar merkezidir, süs değil.
 
-*Tasarım testi*: "Bu bölüm gerçek bir tarihsel kırılmayı yaşatıyor mu? Hayırsa, yeniden tasarla."
+*Tasarım testi*: "Bu sahne destanın gerçek bir anını yaşatıyor mu? Hayırsa, yeniden tasarla."
 
 ### Sütun 2: Epik Ama Erişilebilir
 Her hamle ağır ve anlamlı hissettirmeli ama öğrenmesi kolay olmalı. 5 dakikada
-oynamayı öğren, kampanya boyunca ustalaş.
+oyna, kampanya boyunca ustalaş.
 
-*Tasarım testi*: "İlk oynayan biri 2 turda anlayabilir mi? Hayırsa, basitleştir."
+*Tasarım testi*: "İlk oynayan biri 2-3 turda anlayabilir mi? Hayırsa, basitleştir."
 
-### Sütun 3: Parçalanma ve Birleşme Döngüsü
-Her bölüm kendi içinde bir kırılma (kuruluş/çöküş/isyan/birleşme). Aynı
-tema farklı hanedanlarla tekrar yaşanır — oyuncu her seferinde döngüyü
-tanır ama sonucu değiştirebileceğini hisseder.
+### Sütun 3: İki Katmanlı Tehdit
+Her sahnede dış düşman (krallar) ve iç/doğaüstü düşman (Erlik) birlikte var.
+Oyuncu ikisi arasında denge kurar — biri ihmal edilirse diğeri güçlenir.
 
-*Tasarım testi*: "Bu bölüm parçalanma→birleşme döngüsünün hangi aşamasını gösteriyor? Net değilse, odağı keskinleştir."
+*Tasarım testi*: "Bu sahnede hem siyasi hem doğaüstü meydan okuma net mi? Değilse, katmanı güçlendir."
 
-### Sütun 4: Bitirilebilir Önce, Genişletilebilir Sonra
-İlk sürüm 10 bölüm, 4-5 saat, tam bir deneyim. Her bölüm kısa (15-30 dk)
-ve kendi içinde tamamlanmış. DLC/güncelleme sonra gelir.
+### Sütun 4: Modüler İnşa
+Çekirdek yalın ve bitirilebilir. Mimari, grand-strategy katmanlarını (derin
+diplomasi, casus, ticaret, araştırma) sonradan ayrı feature olarak eklemeye
+hazır — çekirdeği yeniden yazmadan.
 
-*Tasarım testi*: "10 bölümlük kampanyayı tamamlamak için gerekli mi? Değilse post-launch."
+*Tasarım testi*: "Bu yeni sistem çekirdeği bozmadan feature olarak eklenebilir mi? Hayırsa, arayüzü düzelt."
 
 ### Anti-Sütunlar (Bu Oyun Bunlar DEĞİL)
 
-- **Sandbox DEĞİL**: Açık dünya, serbest keşif yok. Her bölümün net bir tarihsel hedefi ve sonu var.
-- **4X DEĞİL**: Teknoloji ağacı, şehir inşası, iç politika yok. Savaş + kaynak + diplomasi, o kadar.
-- **Multiplayer DEĞİL**: Sadece tek oyunculu kampanya. PvP/Co-op v1.0'da yok.
-- **Gerçek Zamanlı DEĞİL**: Savaşlar dahil her şey sıra tabanlı. Hızlı refleks gerektirmez.
-- **Tarih Simülasyonu DEĞİL**: Günlük idari detaylar, vergi sistemi, iç politika yok. Sadece büyük kırılma noktaları.
+- **Sandbox DEĞİL**: Açık dünya yok. Her sahnenin net destan hedefi ve sonu var.
+- **Tam 4X DEĞİL (v1.0)**: Derin teknoloji ağacı, karmaşık iç politika v1.0'da yok — ama mimari sonradan eklemeye açık.
+- **Multiplayer DEĞİL**: Sadece tek oyunculu kampanya.
+- **Gerçek Zamanlı DEĞİL**: Savaşlar dahil her şey sıra tabanlı.
+- **Kuru Tarih Simülasyonu DEĞİL**: Günlük idari mikro-yönetim değil — destan ve mit merkezli.
 
 ---
 
@@ -218,321 +201,231 @@ ve kendi içinde tamamlanmış. DLC/güncelleme sonra gelir.
 
 | Referans | Ne Alıyoruz | Ne Farklı Yapıyoruz | Neden Önemli |
 | ---- | ---- | ---- | ---- |
-| Medieval Total War | Kampanya haritası stratejisi, otomatik çözüm savaş | Gerçek zamanlı savaş yok, linear bölüm yapısı | Sadece kampanya haritasının tatmin edici olduğunu kanıtlıyor |
-| Crusader Kings III | Hanedan anlatısı, karakter odaklı strateji, taht kavgaları | Sandbox yerine 10 scripted kırılma noktası, basitleştirilmiş mekanikler | Hanedan değişimi + tarihsel anlatının işe yaradığını kanıtlıyor |
-| Slay the Spire | Linear ilerleme, unlock-gated gelişme, kısa session'lar | Kart sistemi yerine klasik strateji mekanikleri | Kısa bölüm + birikimli ilerleme formatının başarısı |
-| Civilization | Sıra tabanlı strateji, "bir tur daha" psikolojisi | Sandbox yerine linear kampanya, çok daha küçük kapsam | Sıra tabanlı stratejinin evrensel çekiciliği |
+| Medieval Total War | Kampanya haritası, otomatik çözüm savaş | Gerçek zamanlı savaş yok, linear destan yapısı | Kampanya haritasının tek başına tatmin ettiğini kanıtlıyor |
+| Crusader Kings III | Miras/bölünme, karakter (oğullar) | Sandbox yerine scripted destan, yalın mekanikler | Miras temasının işe yaradığını kanıtlıyor |
+| Slay the Spire | Linear ilerleme, roguelite buff seçimi | Kart yerine klasik strateji + ruh lütufları | Birikimli lütuf sisteminin başarısı |
+| Hades | Mitolojik dünya, tanrısal güçler, buff seçimi | Sıra tabanlı strateji, Türk mitolojisi | Mitolojinin oyunlaştırma gücü |
 
-**Oyun dışı ilhamlar**: Türk tarihsel kaynakları (Orhun Yazıtları, Çin kayıtları),
-Manas Destanı, Kırgız-Moğol kültürel estetiği, sulu boya resim sanatı, Orta Asya
-bozkır kültürü.
-
----
-
-## Hedef Oyuncu Profili
-
-| Husus | Detay |
-| ---- | ---- |
-| **Yaş aralığı** | 18-40 |
-| **Oyun deneyimi** | Orta seviye / Hardcore strateji |
-| **Zaman müsaitliği** | 15-30 dakikalık oturumlar (1 bölüm), hafta sonları 2-3 bölüm arka arkaya |
-| **Platform tercihi** | PC (Steam) |
-| **Şu an oynadıkları** | Civilization VI, Total War serisi, Crusader Kings III, Mount & Blade II |
-| **Aradıkları** | Türk tarihini yaşatan kaliteli strateji oyunu — bu niş tamamen boş |
-| **Uzaklaştıracak şeyler** | Aşırı karmaşık mekanikler, tarihsel çarpıtma, düşük kalite görseller |
+**Oyun dışı ilhamlar**: Oğuz Kağan Destanı, Altay Yaratılış Destanı (Ülgen-Erlik),
+Türk mitolojisi (Kök Böri, körmös, tamga sistemi), sulu boya resim sanatı,
+Orta Asya bozkır kültürü.
 
 ---
 
-## Teknik Hususlar
+## Görsel Kimlik Çapası
 
-| Husus | Değerlendirme |
-| ---- | ---- |
-| **Motor** | Godot 4.6 — 2D sıra tabanlı strateji için ideal |
-| **Temel Teknik Zorluklar** | Harita sistemi (tile-based), otomatik çözüm savaş algoritması, AI karar verme, Bozkurt bonus sistemi |
-| **Sanat Stili** | 2D sulu boya el çizimi — Kırgız-Moğol kültürel estetiği |
-| **Sanat Üretim Karmaşıklığı** | Orta (10 harita + sulu boya illüstrasyonlar + birim ikonları). Her bölüm ayrı harita ama modüler tile sistemi tekrar kullanım sağlar |
-| **Ses İhtiyaçları** | Orta (ortam müziği + savaş efektleri + UI sesleri) |
-| **Ağ** | Yok — tamamen çevrimdışı tek oyunculu |
-| **İçerik Hacmi** | 10 harita, 3 birim tipi, 4-5 saat oynanış, 10 intro/outro illüstrasyonu |
-| **Prosedürel Sistemler** | Yok — tüm içerik el yapımı |
+### Seçilen Görsel Yön: Sulu Boya El Çizimi + Mitolojik Kozmik Atmosfer
+
+**Tek Satırlık Görsel Kural**: Her ekran bir bozkır şamanının rüya defterinden
+koparılmış bir sayfa gibi hissettirmeli — akıcı fırça darbeleri, doğal
+pigmentler, ve araya sızan gök/yeraltı ışığı.
+
+**Destekleyici Görsel İlkeler**:
+
+1. **Sulu Boya Temeli** — wet-on-wet geçişler, görünür fırça darbeleri, doğal
+   pigment granülasyonu.
+2. **Kozmik İkilik** — Ülgen katmanı: parlak, göksel, altın-indigo. Erlik
+   katmanı: karanlık, çürümüş, mor-siyah leke. Bozulmuş bölgeler görsel olarak
+   ayırt edilebilir olmalı.
+3. **Kök Böri Varlığı** — gök kurt tekrar eden ilahi motif; kritik anlarda
+   belirir (yarı-saydam, ışıklı).
+4. **Türk Mitolojik Kimlik** — tamga sembolleri, koçboynuzu, kartal, tündük
+   motifi UI ve kenarlıklarda.
+
+**Renk Felsefesi**: Krem/keçe beyazı arka plan, deri kahvesi çizgiler. İndigo
++ altın = Ülgen/gök. Mor + kömür siyahı = Erlik/bozulma. Deel kırmızısı =
+Oğuz/ordu vurgusu.
+
+---
+
+## Sahne Yapısı (6 Sahne)
+
+### Prolog: Doğuş — ÖĞRETİCİ
+- **Destan Anı**: Oğuz'un doğaüstü doğumu, dağınık boyları birleştirmesi, toprağı kasıp kavuran ilk canavarı (tek boynuzlu yaratık) yenmesi
+- **Lider**: Genç Oğuz
+- **Hedef**: Boyları birleştir + ilk canavarı yen → Kağan ilan et
+- **Öğretilen Mekanikler**: Bölge fethi, kaynak toplama, ordu üretimi, temel savaş, ilk arındırma
+- **Siyasi Düşman**: Dağınık/başıboş boylar
+- **Doğaüstü Katman**: İlk Erlik canavarı — arındırmanın tanıtımı
+- **Kök Böri Bağı**: İlk kez belirir — "genesis" sahnesi
+- **Harita**: Oğuz'un ata yurdu (6 bölge) — *mevcut Ötüken haritası buraya uyarlanır*
+- **Duygu Tonu**: Kader, doğuş, uyanış
+
+### Perde 1: Doğu — Cürcet Yönü
+- **Destan Anı**: Doğuya sefer, Cürcet Kağan'ın direnişi
+- **Hedef**: Doğu bölgelerini fethet + bozulmuş ormanları arındır
+- **Siyasi Düşman**: Cürcet Kağan
+- **Doğaüstü Katman**: Çürümüş ormanlar, orman ruhları (körmös)
+- **Yeni Mekanik**: Ruh lütuf sistemi tam devrede
+- **Harita**: Doğu ormanları (8 bölge)
+- **Duygu Tonu**: İlk büyük sefer, güç kanıtı
+
+### Perde 2: Batı — Urum Yönü
+- **Destan Anı**: Batıya sefer, Urum Kağan ve vahşi Kıl Barak halkı
+- **Hedef**: Batı bölgelerini fethet + Kıl Barak tehdidini alt et
+- **Siyasi Düşman**: Urum Kağan + Kıl Barak
+- **Doğaüstü Katman**: Erlik'in en yoğun bozgunu — çürüyen topraklar
+- **Yeni Mekanik**: Konsey (altı oğul) devreye girer — pasif bonuslar
+- **Harita**: Batı toprakları (10 bölge)
+- **Duygu Tonu**: Zorlu sınav, en karanlık batı
+
+### Perde 3: Kuzey — İtil/Ural Yönü
+- **Destan Anı**: Kuzeye, İtil ırmağı ötesine sefer
+- **Hedef**: Kuzey bölgelerini fethet + ölümcül kışa dayan
+- **Siyasi Düşman**: Kuzey boyları/kağanları
+- **Doğaüstü Katman**: Erlik'in kışı — mevsim mekaniği (hareket/kaynak cezası)
+- **Yeni Mekanik**: Çevre/mevsim etkisi
+- **Harita**: Kuzey donmuş toprakları (8 bölge)
+- **Duygu Tonu**: Doğaya karşı direniş, dayanıklılık
+
+### Perde 4: Güney — Sındu/Şam Yönü
+- **Destan Anı**: Güneye, sıcak diyarlara sefer
+- **Hedef**: Güney bölgelerini fethet + kuraklık/hastalığı yönet
+- **Siyasi Düşman**: Güney kralları
+- **Doğaüstü Katman**: Kuraklık, hastalık ruhları
+- **Yeni Mekanik**: Kahraman birimleri zirvede
+- **Harita**: Güney çölleri/vadileri (10 bölge)
+- **Duygu Tonu**: Son yön, zaferin eşiği
+
+### Final: Miras — Kozmik Hesaplaşma ve Bölünme
+- **Destan Anı**: Dört yön birleşir, Erlik son saldırısını yapar, Oğuz ülkeyi altı oğluna böler
+- **Hedef**: Erlik'in son dalgasını püskürt + imparatorluğu birleştir → altı oğula böl
+- **Siyasi Düşman**: — (birleşme)
+- **Doğaüstü Katman**: Erlik'in nihai saldırısı — tüm birikmiş ruh lütufları aktif
+- **Özel Mekanik**: Tüm Kök Böri lütufları + konsey bonusları devrede; miras/bölünme kararı
+- **Kök Böri Bağı**: En parlak hali — Ülgen'in zaferi
+- **Harita**: Birleşik dünya haritası (15 bölge)
+- **Duygu Tonu**: Epik final — zirve ve bölünme bir arada, hüzünlü zafer
+
+---
+
+## Duygusal Yay (6 Sahne Ritmi)
+
+```
+Uyanış   ████░░░░░░  Prolog: Doğuş
+Güç      ██████░░░░  Perde 1: Doğu (ilk sefer)
+Karanlık ░░░░████░░  Perde 2: Batı (en zorlu, Erlik yoğun)
+Direniş  ░░░░██░░░░  Perde 3: Kuzey (doğaya karşı)
+Zirve    ████████░░  Perde 4: Güney (zaferin eşiği)
+Final    ██████████  Final: Miras (zirve + bölünme)
+```
+
+---
+
+## Mekanikler (Orta Derinlik + Modüler)
+
+### Kaynak Sistemi (3 Kaynak — Modüler)
+- **Altın** — ordu, bina, diplomasi için genel kaynak
+- **Sürü (Herds)** — nüfus/ordu büyümesini besler (bozkır ekonomisi)
+- **Ruh (Spirit)** — arındırmadan kazanılır, Kök Böri lütuflarına harcanır
+- *Modülerlik*: kaynak sayısı ve türü data-driven; yeni kaynak eklemek çekirdeği bozmaz
+
+### Ordu Sistemi (3+ Birim + Kahramanlar)
+- **Süvari** (hızlı, pahalı, açık arazide güçlü)
+- **Okçu** (orta menzil, ucuz, savunmada güçlü)
+- **Ağır Piyade** (yavaş, dayanıklı, kuşatmada güçlü)
+- **Kahraman Birimleri** — Oğuz + seçkin yiğitler (özel yetenekler)
+- Savaş: otomatik çözüm, kompozisyon önemli (taş-kağıt-makas)
+
+### Katmanlı Düşman Sistemi
+- **Siyasi (krallar)**: fethedilir, toprak kazandırır, diplomasi mümkün (ittifak/fetih)
+- **Doğaüstü (Erlik)**: arındırılır, ruh kazandırır, PvE — pazarlık yok
+- Erlik ihmal edilirse yayılır (bölge cezası artar); krallar ihmal edilirse saldırır
+
+### Savaş Sistemi (Basitleştirilmiş Otomatik Çözüm)
+- İki ordu karşılaşınca: güç karşılaştırması (sayı × kompozisyon × taktik × arazi)
+- Oyuncu 3 taktik seçebilir: **Hücum** / **Savunma** / **Geri Çekilme**
+- Ayrıntılı savaş raporu: kayıplar, birim performansı, arazi, taktik bonusu
+
+### Kök Böri / Ruh Sistemi
+- Bozulmuş bölge arındırma → ruh kazanımı
+- Ruh → ilahi lütuf seçimi (3 seçenekten 1, roguelite)
+- Lütuflar birikimli, sahneler arası taşınır
+- Erlik güçlendikçe arındırma zorlaşır
+
+### Konsey Sistemi (Altı Oğul)
+- Altı oğul (Gün/Ay/Yıldız/Gök/Dağ/Deniz) konsey üyesi
+- Her biri bir alanda pasif bonus (ekonomi, ordu, ruh vb.)
+- Finalde miras: bölünme kararı oyuncunun kampanya boyu beslediği oğullara bağlanır
+
+### Modülerlik Notu (Teknik)
+Mimari feature-encapsulation + dependency injection üzerine kurulu. Aşağıdaki
+grand-strategy katmanları sonradan ayrı feature olarak eklenebilir, çekirdek
+yeniden yazılmadan:
+- Derin diplomasi (antlaşma tipleri, itibar)
+- Casus/istihbarat sistemi
+- Ticaret ağı (kaynak alışverişi)
+- Araştırma/gelişme ağacı
+
+---
+
+## MVP Tanımı
+
+**Temel Hipotez**: "Oyuncular, Oğuz Kağan destanı temalı, çift katmanlı düşman
+(krallar + Erlik) içeren sıra tabanlı stratejiyi 20-35 dakikalık sahnelerle
+tatmin edici buluyor."
+
+**MVP İçin Gerekli**:
+1. Prolog (Doğuş) tam çalışır — öğretici
+2. Bölge fethi + kaynak (altın) + ordu üretimi + hareket
+3. 1 savaş + ayrıntılı rapor
+4. Temel arındırma + ruh kazanımı (Kök Böri sistemi çekirdeği)
+5. Sahne intro/outro anlatı ekranları (Kök Böri sahnesi dahil)
+
+**MVP'de Açıkça OLMAYAN** (sonraya ertelenen):
+- Perde 1-4 + Final (MVP sadece Prolog)
+- Konsey (altı oğul) sistemi
+- Mevsim/çevre mekaniği
+- Sürü + ruh dışında ekstra kaynaklar
+- Ses/müzik (placeholder yeterli)
+
+### Kapsam Kademeleri
+
+| Kademe | İçerik | Özellikler | Süre |
+| ---- | ---- | ---- | ---- |
+| **MVP** | Prolog (Doğuş) | Fetih + kaynak + ordu + savaş + temel arındırma | 6-8 hafta |
+| **Vertical Slice** | Prolog + Perde 1 | + ruh lütuf sistemi + Erlik katmanı | 3-4 ay |
+| **Alpha** | 6 sahne, placeholder sanat | Tüm mekanikler + konsey + mevsim | 8-12 ay |
+| **Tam Vizyon** | 6 sahne, son sanat | Tüm özellikler, cilalanmış | 12-18 ay |
 
 ---
 
 ## Riskler ve Açık Sorular
 
 ### Tasarım Riskleri
-- Otomatik çözüm savaş + ayrıntılı rapor yeterince tatmin edici olmayabilir
-- 10 bölüm × farklı hanedan: oyuncu bağı her geçişte zayıflayabilir — Bozkurt bağı yeterli mi?
-- Çöküş bölümleri (4, 7, 8) moral kırıcı olabilir — "kaybetmek hikayenin parçası" mesajı net verilmeli
-- Her bölüm 15-30 dk: yeterli derinlik sağlanabilir mi bu sürede?
+- Çift katmanlı düşman (krallar + Erlik) kavramsal yük yaratabilir — öğretici net olmalı
+- Ruh lütuf sistemi dengesi kritik — çok güçlü lütuflar zorluğu bozabilir
+- Dört yönün (Perde 1-4) birbirinden yeterince farklı hissettirilmesi gerek — Erlik teması bunu sağlar (orman/çürüme/kış/kuraklık)
+- Otomatik çözüm savaş + rapor yeterince tatmin edici olmalı
 
 ### Teknik Riskler
-- Sıra tabanlı 2D harita oyunu Godot'nun güçlü yanı — teknik risk minimal
-- AI karar verme kalitesi gameplay deneyimini doğrudan etkiliyor
-- 10 farklı harita üretimi varlık yönetimi gerektirir — modüler tile sistemi kritik
+- Sıra tabanlı 2D harita Godot'nun güçlü yanı — teknik risk minimal
+- Modülerlik hedefi mimari disiplin gerektirir (feature sınırları temiz tutulmalı)
+- AI: hem siyasi krallar hem Erlik yayılımı için iki farklı AI davranışı
 
 ### Pazar Riskleri
-- Türk tarihi niş ama tamamen kullanılmamış — farklılaşma güçlü ama kitle boyutu belirsiz
-- 10 bölümlük tarihsel kampanya eğitici hissedebilir — "oyun" hissi korunmalı
+- Türk mitolojisi niş ama kullanılmamış — farklılaşma güçlü, kitle boyutu belirsiz
+- Mitolojik tema "eğitici" değil "epik" hissettirmeli
 
 ### Kapsam Riskleri
-- 10 bölüm = 10 harita + 10 intro/outro + 10 tarihsel araştırma: scope ciddi
-- Solo dev + 12-18 ay timeline: her bölümün scope'u sıkı kontrol edilmeli
-- Sanat kalitesi tutarlılığı 10 bölüm boyunca korunmalı
+- 6 sahne = 6 harita + 6 intro/outro. Tek dünya/görsel dil olması 10 tarihsel çağa göre büyük avantaj
+- Solo dev + 12-18 ay: her sahnenin scope'u sıkı kontrol edilmeli
+- Orta derinlik mekanikler (konsey, mevsim, 3 kaynak) scope'u artırır — modülerlik sayesinde kesilebilir olmalı
 
 ### Açık Sorular
-- Savaş raporu formatı nasıl olmalı? → Prototipte test edilecek
-- Bozkurt bonus sistemi detayları? → Sistem GDD'sinde tasarlanacak
-- Çöküş bölümlerinde oyuncu motivasyonu nasıl korunur? → Playtest ile doğrulanacak
-- Zorluk ayarları olacak mı? → MVP sonrası karar verilecek
-
----
-
-## MVP Tanımı
-
-**Temel Hipotez**: "Oyuncular tarihsel kırılma noktaları temalı sıra tabanlı
-stratejiyi, bölüm unlock sistemiyle 15-30 dakika oynamayı tatmin edici buluyor."
-
-**MVP İçin Gerekli**:
-1. Bölüm 1 tam çalışır (Mete Han — öğretici)
-2. Kaynak toplama + ordu üretimi sistemi
-3. Harita üzerinde hareket
-4. 1 savaş + ayrıntılı rapor sistemi
-5. Bölüm intro/outro anlatı ekranları (Bozkurt geçiş sahnesi dahil)
-
-**MVP'de Açıkça OLMAYAN** (sonraya ertelenen):
-- Bölüm 2-10 (MVP sadece Bölüm 1)
-- Diplomasi sistemi (Bölüm 3'te ekleniyor)
-- Bozkurt bonus biriktirme (en az 2 bölüm gerekli)
-- Ses/müzik (placeholder yeterli)
-- Yerelleştirme
-
-### Kapsam Kademeleri
-
-| Kademe | İçerik | Özellikler | Süre |
-| ---- | ---- | ---- | ---- |
-| **MVP** | 1 bölüm (Mete Han) | Kaynak + ordu + savaş | 6-8 hafta |
-| **Vertical Slice** | 3 bölüm (Mete → Bumin → Bölünme) | + diplomasi + Bozkurt bonusu | 3-4 ay |
-| **Alpha** | 10 bölüm, placeholder sanat | Tüm mekanikler çalışıyor | 8-12 ay |
-| **Tam Vizyon** | 10 bölüm, son sanat | Tüm özellikler, cilalanmış | 12-18 ay |
-
----
-
-## Görsel Kimlik Çapası
-
-### Seçilen Görsel Yön: Sulu Boya El Çizimi + Kırgız-Moğol Estetiği
-
-**Tek Satırlık Görsel Kural**: Her ekran bir bozkır gezgininin sulu boya
-defterinden koparılmış bir sayfa gibi hissettirmeli — akıcı fırça darbeleri,
-doğal pigmentler, el yapımı sıcaklık.
-
-**Destekleyici Görsel İlkeler**:
-
-1. **Sulu Boya Temeli** — Tüm görseller sulu boya tekniğiyle render edilir:
-   wet-on-wet geçişler, görünür fırça darbeleri, doğal pigment granülasyonu.
-   *Tasarım testi*: "Bu görselde fırça darbeleri ve pigment davranışı görünüyor
-   mu? Hayırsa, çok dijital duruyor."
-
-2. **Kırgız-Moğol Kültürel Kimlik** — Shyrdak keçe halı desenleri, tündük
-   (yurt taç halkası) motifi, koçboynuzu ve kartal sembolleri UI ve
-   kenarlıklarda kullanılır.
-   *Tasarım testi*: "Kırgız-Moğol kültürel kimliği bu ekranda hissediliyor mu?
-   Hayırsa, bir motif ekle."
-
-3. **Doğal Bozkır Paleti** — Renkler doğal pigmentlerden geliyormuş gibi:
-   toprak kahveleri, otlak yeşilleri, gökyüzü mavileri. Yapay veya neon renk yok.
-   *Tasarım testi*: "Bu renk bozkırda doğal olarak var mı? Hayırsa, paletten çıkar."
-
-**Renk Felsefesi**: Krem/keçe beyazı arka plan, deri kahvesi çizgiler, deel
-kırmızısı vurgular. İndigo mavi = su ve gökyüzü. Amber = ateş ve altın.
-Soğuk tonlar sadece kış ve düşman bölgelerinde.
-
----
-
-## 10 Bölüm Yapısı
-
-### Bölüm 1: Mete Han ve Bozkırın Birleşmesi (MÖ ~209) — ÖĞRETİCİ
-- **Tarihsel Kırılma**: Proto-Türk/Hun kökeni — dağınık boyların tek ordu-devlet haline gelmesi
-- **Hanedan**: Hun / Xiongnu
-- **Lider**: Mete Han (Modu Chanyu)
-- **Hedef**: Dağınık 3 boyu birleştir, ilk ordu-devleti kur
-- **Öğretilen Mekanikler**: Kaynak toplama, ordu üretimi, hareket, temel savaş
-- **Açma Kriteri**: 3 boyu birleştir + ilk düşmanı yen → Bölüm 2
-- **Bozkurt Bağı**: Bozkurt ilk kez belirir — oyunun "genesis" sahnesi
-- **Süre**: 15-20 dakika
-- **Harita**: Bozkır merkez (5-7 bölge)
-- **Duygu Tonu**: Umut, kuruluş, güç toplama
-
-### Bölüm 2: Bumin Kağan ve Rouran'ın Yıkılışı (552)
-- **Tarihsel Kırılma**: İlk Göktürk Kağanlığı'nın kuruluşu — efendi-vasal ilişkisinin tersine dönmesi
-- **Hanedan**: Göktürk (Ashina)
-- **Lider**: Bumin Kağan
-- **Hedef**: Rouran hakimiyetinden bağımsızlık — isyan başlat, Rouran ordusunu yen
-- **Eklenen Mekanikler**: İsyan mekaniği (gizli ordu toplama, zamanlama), vasal-efendi ilişkisi
-- **Açma Kriteri**: Rouran'ı yen + Kağanlık ilan et → Bölüm 3
-- **Bozkurt Bağı**: Bozkurt yeni çağda Ashina soyuna rehberlik eder
-- **Süre**: 20-25 dakika
-- **Harita**: Rouran-Göktürk sınırı (8 bölge)
-- **Duygu Tonu**: İsyan, özgürlük, zafer
-
-### Bölüm 3: Doğu-Batı Bölünmesi
-- **Tarihsel Kırılma**: Göktürk Kağanlığı'nın ikiye ayrılması — kardeş/hanedan içi taht kavgası
-- **Hanedan**: Göktürk (Ashina — bölünmüş)
-- **Lider**: İstemi Kağan (Batı) veya Mukan Kağan (Doğu) — oyuncu seçer
-- **Hedef**: Kardeş kağanlığa karşı üstünlük kur VEYA birliği koru (diplomasi)
-- **Eklenen Mekanikler**: Diplomasi sistemi tam devrede — ittifak, hediye, evlilik ittifakı
-- **Açma Kriteri**: Üstünlük kur veya barış antlaşması imzala → Bölüm 4
-- **Bozkurt Bağı**: Bozkurt üzgün — bölünme onu zayıflatıyor (görsel: soluk, yarı-saydam)
-- **Süre**: 20-25 dakika
-- **Harita**: Doğu-Batı bölünmüş harita (10 bölge)
-- **Duygu Tonu**: İhanet, kardeş kavgası, bölünme acısı
-
-### Bölüm 4: Tang Esareti (630) — ÇÖKÜŞ BÖLÜMÜ
-- **Tarihsel Kırılma**: Doğu Göktürklerin Tang Çin'ine bağlanması — 50 yıllık esaret
-- **Hanedan**: Göktürk (esir)
-- **Lider**: İsimsiz bir boy beyi (anonim direnişçi)
-- **Hedef**: Sınırlı kaynaklarla hayatta kal, gizli direnişi örgütle, kültürel kimliği koru
-- **Özel Mekanikler**: Kaynak çok kısıtlı, ordu üretimi engellenmiş, gizli hareket
-- **Açma Kriteri**: Direniş ağını kur + kültürel mirası koru → Bölüm 5
-- **Bozkurt Bağı**: Bozkurt gizleniyor — sadece gece sahnelerinde kısa an görünür
-- **Süre**: 15-20 dakika
-- **Harita**: Tang kontrolünde küçük bölge (5 bölge, hareket kısıtlı)
-- **Duygu Tonu**: Umutsuzluk, direnme, acı — ama kopamayan bir bağ
-
-### Bölüm 5: İlteriş Kutluk'un İsyanı (682) — YENİDEN DOĞUŞ
-- **Tarihsel Kırılma**: Esaretten bağımsızlığa — İkinci Göktürk Kağanlığı'nın doğuşu
-- **Hanedan**: Göktürk (İkinci Kağanlık — Ashina)
-- **Lider**: İlteriş Kutluk Kağan
-- **Hedef**: 17 kişilik isyan grubuyla başla, ordu topla, Tang'dan bağımsızlığı kazan
-- **Özel Mekanikler**: Sıfırdan build-up — minimal kaynakla başlama, hızlı büyüme
-- **Açma Kriteri**: Bağımsızlık ilan et + ilk büyük savaşı kazan → Bölüm 6
-- **Bozkurt Bağı**: Bozkurt geri dönüyor — güçlü, parlak, yol gösteriyor (en güçlü görsel anlarından biri)
-- **Süre**: 20-25 dakika
-- **Harita**: Tang sınırından bozkıra (8 bölge, genişleyen)
-- **Duygu Tonu**: Yeniden doğuş, umut, "bu sefer farklı" heyecanı
-
-### Bölüm 6: Bilge Kağan, Kültigin, Tonyukuk (716-734) — ALTIN ÇAĞ
-- **Tarihsel Kırılma**: Altın çağ ve Orhun Yazıtları'nın dikilişi — ilk yazılı Türkçe kayıt
-- **Hanedan**: Göktürk (İkinci Kağanlık)
-- **Lider**: Bilge Kağan (+ Kültigin ve Tonyukuk danışmanlar olarak)
-- **Hedef**: İmparatorluğu genişlet, Orhun Yazıtları'nı dik, mirası kalıcılaştır
-- **Özel Mekanikler**: Tüm sistemler tam kapasitede, ek "miras" mekaniği (yazıt dikme = kalıcı bonus)
-- **Açma Kriteri**: Yazıtları dik + Kültigin'in ölümüne tanıklık et → Bölüm 7
-- **Bozkurt Bağı**: Bozkurt en güçlü halinde — ama bölüm sonunda Kültigin'in ölümüyle hüzünleniyor
-- **Süre**: 25-30 dakika
-- **Harita**: Geniş Göktürk toprakları (12 bölge)
-- **Duygu Tonu**: Zafer + kayıp — altın çağın kaçınılmaz sonu
-
-### Bölüm 7: Uygur İsyanı ve Göktürk'ün Sonu (744) — İKİNCİ ÇÖKÜŞ
-- **Tarihsel Kırılma**: Göktürk hanedanının çöküşü, Uygur Kağanlığı'nın yükselişi
-- **Hanedan**: Göktürk → Uygur geçişi
-- **Lider**: Uygur Kutluk Bilge Kağan (yeni playable hanedan)
-- **Hedef**: Göktürk hakimiyetini kır, Uygur Kağanlığı'nı kur
-- **Özel Mekanikler**: Hanedan değişimi — önceki hanedanın kalıntılarıyla savaş
-- **Açma Kriteri**: Göktürk hanedanını devir + Uygur Kağanlığı'nı ilan et → Bölüm 8
-- **Bozkurt Bağı**: Bozkurt acılı bir geçiş yaşar — eski hanedanı bırakır, yeni lideri seçer
-- **Süre**: 20-25 dakika
-- **Harita**: Göktürk-Uygur çatışma haritası (8 bölge)
-- **Duygu Tonu**: Çöküş, yenilenme, döngünün tekrarı
-
-### Bölüm 8: Uygur Çöküşü ve Kırgız Yükselişi (840)
-- **Tarihsel Kırılma**: Kırgızların Uygur başkentini yıkması — güç Kırgız boylarına geçer
-- **Hanedan**: Kırgız
-- **Lider**: Kırgız Kağanı
-- **Hedef**: Uygur başkentini al, Kırgız hakimiyetini kur
-- **Özel Mekanikler**: Kuşatma mekaniği (kale/şehir alma), hızlı saldırı taktikleri
-- **Açma Kriteri**: Uygur başkentini al + 3 bölgeyi kontrol et → Bölüm 9
-- **Bozkurt Bağı**: Bozkurt artık Kırgız liderine rehberlik ediyor — Manas'a giden hattın başlangıcı
-- **Süre**: 20-25 dakika
-- **Harita**: Uygur toprakları (8 bölge, başkent kuşatması merkez)
-- **Duygu Tonu**: Fetih, ama pirik zafer — Uygur kültürünün kaybı
-
-### Bölüm 9: Moğol/Oyrat Baskısı ve Kırk Boy'un Dağılması
-- **Tarihsel Kırılma**: Kırgız boylarının parçalanması, dış baskı altında göç ve iç çatışma
-- **Hanedan**: Kırgız (dağılmış boylar)
-- **Lider**: İsimsiz boy beyi (Manas'ın öncüsü)
-- **Hedef**: Sınırlı kaynaklarla hayatta kal, Oyrat saldırılarından boyları koru
-- **Özel Mekanikler**: Savunma odaklı — geri çekilme, gerilla taktikleri, boylar arası koordinasyon
-- **Açma Kriteri**: En az 3 boyu hayatta tut + Oyrat saldırısını savuştur → Bölüm 10
-- **Bozkurt Bağı**: Bozkurt yine zayıf ve gizli — Bölüm 4'ün aynası. "Tarih tekerrür ediyor" hissi
-- **Süre**: 15-20 dakika
-- **Harita**: Parçalanmış bölgeler (6 bölge, sınırlı bağlantı)
-- **Duygu Tonu**: Kaos, dağılma, son umut kırıntısı
-
-### Bölüm 10: Manas — Kırk Boy'un Birleşmesi — FİNAL
-- **Tarihsel Kırılma**: Kırgız boylarının Oyratlara karşı Manas önderliğinde birleşmesi
-- **Hanedan**: Kırgız (birleşik)
-- **Lider**: Manas
-- **Hedef**: Kırk Boyu birleştir, Oyrat ordusunu nihai savaşta yen, Kırgız yurdunu kur
-- **Özel Mekanikler**: Bozkurt'un tüm birikmiş bonusları aktif — önceki 9 bölümün performansı finali etkiliyor. Manas'ın 40 yoldaşı (Kırk Yiğit) özel kahraman birimleri olarak
-- **Açma Kriteri**: Kırk Boyu birleştir + Oyrat ordusunu yen → Kampanya Tamamlandı + Epilog
-- **Bozkurt Bağı**: Bozkurt en parlak, en güçlü halinde — tüm önceki liderlerin ruhlarını çağırır. Finale yakışır epik sahne
-- **Süre**: 25-30 dakika
-- **Harita**: Büyük birleşik bozkır haritası (15 bölge)
-- **Duygu Tonu**: Epik final, bin yıllık döngünün kapanışı, zafer ve hüzün bir arada
-
----
-
-## Duygusal Yay (10 Bölüm Ritmi)
-
-```
-Umut    ████░░░░░░  Bölüm 1: Kuruluş (Mete Han)
-Zafer   ██████░░░░  Bölüm 2: İsyan ve Özgürlük (Bumin)
-Acı     ░░░░████░░  Bölüm 3: Bölünme (Doğu-Batı)
-Çöküş   ░░░░░░░░██  Bölüm 4: Esaret (Tang) ← en karanlık nokta
-Umut    ████░░░░░░  Bölüm 5: Yeniden Doğuş (İlteriş)
-Zirve   ████████░░  Bölüm 6: Altın Çağ (Bilge Kağan) ← en yüksek nokta
-Çöküş   ░░░░░░████  Bölüm 7: İkinci Çöküş (Uygur İsyanı)
-Geçiş   ░░░░██░░░░  Bölüm 8: Hanedan Değişimi (Kırgız)
-Kaos    ░░░░░░░░██  Bölüm 9: Dağılma (Oyrat Baskısı) ← ikinci karanlık
-Final   ██████████  Bölüm 10: Birleşme (Manas) ← doruk noktası
-```
-
----
-
-## Basitleştirilmiş Mekanikler
-
-### Kaynak Sistemi (Tek Kaynak Tipi)
-- **Altın** (generic kaynak) — her şey için kullanılır
-- Kaynak toplama: Her bölgede "kaynak node" var, ordunu gönder → altın topla
-- Kullanım: Ordu üret, diplomasi hediyesi, bina yap
-- Çöküş bölümlerinde (4, 9) kaynak çok kısıtlı — hayatta kalma hissi
-
-### Ordu Sistemi (3 Birim Tipi)
-- **Süvari** (hızlı, pahalı, açık arazide güçlü)
-- **Okçu** (orta menzil, ucuz, savunmada güçlü)
-- **Ağır Piyade** (yavaş, dayanıklı, kuşatmada güçlü)
-- Savaş: Otomatik çözüm ama kompozisyon önemli (süvari > okçu > piyade > süvari gibi taş-kağıt-makas)
-- Bölüm 10'da ek birim: Kırk Yiğit (Manas'ın 40 yoldaşı) — özel kahraman birimi
-
-### Diplomasi Sistemi (İkili Seçimler)
-- Her kabile/NPC: **İttifak** (hediye ver) VEYA **Fetih** (savaş kazan)
-- İttifak = ordu bonusu + kaynak paylaşımı
-- Fetih = toprak kazan ama düşman yaratırsın
-- Bazı bölümlerde diplomasi zorla kısıtlanır (Bölüm 4: esaret, Bölüm 9: kaos)
-
-### Savaş Sistemi (Basitleştirilmiş Otomatik Çözüm)
-- İki ordu karşılaşınca: güç karşılaştırması (sayı × kompozisyon bonusu)
-- Oyuncu 3 taktik seçebilir: **Hücum** / **Savunma** / **Geri Çekilme**
-- Sonuç: Kazanırsan toprak alırsın, kaybedersen ordu kaybedersin
-- Ayrıntılı savaş raporu: kayıplar, birim performansı, arazi etkisi, taktik bonusu
-- Gerçek zamanlı savaş YOK — sadece sıra tabanlı otomatik çözüm
-
-### Bozkurt Ruhu Sistemi
-- Her bölüm sonunda performans değerlendirilir (kaynak verimliliği, savaş başarısı, bölüm hızı)
-- İyi performans = Bozkurt bonusu eklenir (küçük pasif: +%5 kaynak, +%3 savaş gücü vb.)
-- Bonuslar birikimli — Bölüm 10'da tüm bonuslar aktif
-- Çöküş bölümlerinde (4, 7, 9) Bozkurt zayıflar — bonus kazanım düşük ama kaybedilmez
+- Ruh lütuf havuzu ne kadar geniş olmalı? → Sistem GDD'sinde tasarlanacak
+- Erlik yayılımı ne hızda olmalı? → Prototipte dengelenr
+- Konsey (altı oğul) bonusları finalde nasıl somutlaşır? → Sistem GDD'sinde
+- Mevsim mekaniği sadece Kuzey'de mi, tüm sahnelerde mi? → Playtest ile karar
 
 ---
 
 ## Sonraki Adımlar
 
-- [ ] Motor yapılandırmasını ayarla (`/setup-engine` ile Godot 4.6 kur)
-- [ ] Sanat bibliyası oluştur (`/art-bible` — sulu boya + Kırgız-Moğol estetiği)
+- [ ] Sanat bibliyasını güncelle (`/art-bible` — sulu boya + kozmik mitolojik katman)
 - [ ] Konsepti sistemlere ayır (`/map-systems`)
-- [ ] Her sistem için GDD yaz (`/design-system [sistem-adı]`)
-- [ ] Prototip oluştur (`/prototype` — MVP hipotezini test et)
-- [ ] Mimari planla (`/create-architecture`)
-- [ ] Playtest yap ve raporla (`/playtest-report`)
-- [ ] İlk sprint'i planla (`/sprint-plan new`)
+- [ ] İmza sistem GDD'si: Kök Böri / Ruh Sistemi (`/design-system spirit-system`)
+- [ ] Katmanlı düşman GDD'si (`/design-system enemy-layers`)
+- [ ] Mevcut Prolog haritasını destana uyarla (Ötüken → Oğuz ata yurdu)
+- [ ] Prototip: çift katmanlı düşman hipotezini test et (`/prototype`)
+- [ ] Mimari: modülerlik + grand-strategy genişleme noktalarını planla (`/create-architecture`)

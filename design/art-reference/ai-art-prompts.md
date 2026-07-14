@@ -1,12 +1,28 @@
-# Ergenekon'dan Bozkıra — AI Görsel Üretim Prompt'ları
+# Steppeborn: Path of the Sky Wolf — AI Görsel Üretim Prompt'ları
+
+*Türkçe alt-başlık: Gök Kurt'un Yolu*
 
 Platform: **Gemini Nano Banana** (Nano Banana 2 / Nano Banana Pro)
-Stil referansı: Kırgız-Moğol kültürel estetiği + sulu boya el çizimi sanat.
+Stil referansı: Türk-bozkır kültürel estetiği + sulu boya el çizimi + **kozmik
+mitolojik katman** (Oğuz Kağan Destanı).
 
 Prompt formatı: Nano Banana'nın önerdiği yapısal akış kullanılır:
 `[Konu] + [Eylem/Sahne] + [Ortam/Bağlam] + [Kompozisyon] + [Stil/Ortam]`
 
 Sahneyi **betimle**, anahtar kelime **listeleme**.
+
+> **ÖNEMLİ — Konsept revizyonu (2026-07-14)**: Oyun artık Oğuz Kağan Destanı
+> omurgalı. Aşağıdaki prompt'ların sulu boya tabanı ve bozkır kültürü geçerli,
+> ama iki yeni katman eklendi:
+> - **Kök Böri (gök kurt)**: Bozkurt motifi artık ilahi rehber — gökten inen
+>   ışıkla çevrili, altın gözlü, yarı-saydam. "Sky Wolf / Kök Böri, celestial
+>   guide wolf haloed in heavenly light."
+> - **Ülgen / Erlik kozmik ikiliği**: Ülgen = parlak göksel altın-indigo ışık
+>   (düzen). Erlik = mor-siyah çürüme, bozulmuş toprak, kötücül ruhlar (körmös).
+>   Fethedilecek bölgeler ile *bozulmuş* bölgeler görsel olarak ayrışmalı.
+>
+> Eski "Ergenekon" ve "Kırgız Kağan" merkezli prompt'lar (1, 6) Oğuz temasına
+> göre yeniden çerçevelenmeli — aşağıda 9. ve 10. maddede yeni prompt'lar var.
 
 ---
 
@@ -252,6 +268,55 @@ paper, ink outlines, hand-painted game UI elements.
 
 ---
 
+## 9. Prolog Haritası (Doğuş — Oğuz'un Ata Yurdu)
+
+```
+Generate an image of a top-down strategy game campaign map depicting the
+ancestral homeland of Oğuz — a wide steppe valley cradled by rolling hills,
+painted entirely in loose expressive watercolor. Scattered nomadic camps
+(oba) of white felt yurts cluster near a winding river, each camp marking a
+separate tribe waiting to be united. Herds of stocky steppe horses graze on
+sage-green meadows rendered wet-on-wet. At the center sits Oğuz's own
+encampment, larger and marked with a red clan banner. To the southeast, one
+region is visibly CORRUPTED by Erlik: the grass turns sickly purple-grey, the
+earth cracks into black veins, and a monstrous horned beast's lair broods in
+violet-black ink wash with faint malevolent spirit wisps (körmös) rising from
+it — a clear visual contrast to the healthy tribal lands. High above, a faint
+celestial grey wolf silhouette — Kök Böri — watches, haloed in golden-indigo
+heavenly light with piercing gold eyes. Dotted watercolor lines mark region
+borders. An ornate border uses Turkic tamga and ram-horn motifs. Palette:
+warm cream paper, olive and sage greens for healthy land, deep indigo and gold
+for the celestial, and poisonous violet-black for Erlik's corruption.
+16:9 aspect ratio, 4K resolution, watercolor on cold-press paper, visible
+wet-on-wet bleeds, granulating washes, hand-painted feel.
+```
+
+---
+
+## 10. Kök Böri ve Kozmik Katman (Ülgen — Erlik)
+
+```
+Generate an image of a dramatic mythological scene for a strategy game
+cutscene, painted in expressive watercolor with cosmic scale. In the sky,
+the sky-god Ülgen's realm blazes as radiant golden and indigo light, order
+and warmth pouring down as rays created by exposed white paper. Descending
+through this light strides Kök Böri — a great celestial grey wolf, its fur
+rendered in flowing luminous ink-wash strokes, eyes sharp gold, a faint halo
+of heavenly light around it. Below, the earth is split between two states:
+on one side a thriving steppe of green washes and white yurts under Ülgen's
+light; on the other, the domain of Erlik — the underworld chaos god — where
+the land rots into violet-black corruption, twisted dead trees claw upward,
+and shadowy malevolent spirits (körmös) coil in smoky ink washes. The
+contrast between celestial gold-indigo and infernal violet-black is the
+emotional core of the image. A lone Oğuz warrior stands at the threshold
+between the two, saber raised, deel robe in deep red. Border of Turkic felt
+motifs — ram horns, eagle wings — in warm watercolor.
+9:16 aspect ratio, 4K resolution, expressive watercolor on cold-press paper,
+wet-on-wet technique, ink wash accents, dramatic cosmic contrast, hand-painted.
+```
+
+---
+
 ## Stil Referans Görselleri İçin Arama Terimleri
 
 Bu terimleri Pinterest, ArtStation veya Google'da arayarak stil referansları toplayabilirsiniz:
@@ -289,6 +354,11 @@ Bu terimleri Pinterest, ArtStation veya Google'da arayarak stil referansları to
 | Amber ışık | `#D4922A` | Ateş, gün batımı, altın vurgular |
 | Kar beyazı | `#EDE8E0` | Kış, yurt keçesi, dağ karı |
 | Koyu mürekkep | `#1C1410` | Mürekkep çizgiler, metin, silüetler |
+| **Ülgen altını** | `#E8B84B` | Göksel ışık, ilahi yetki, Kök Böri halesi |
+| **Ülgen indigosu** | `#31407A` | Göksel derinlik, düzenin gökyüzü |
+| **Erlik moru** | `#4A2A5E` | Yeraltı kaosu, bozulma başlangıcı |
+| **Erlik çürüğü** | `#2A1A2E` | Çürümüş toprak, kötücül gölge, körmös |
+| **Zehir yeşili** | `#5A6B3A` | Hastalıklı ot, bozulmuş bölge (sağlıklı yeşilden ayrışır) |
 
 ---
 

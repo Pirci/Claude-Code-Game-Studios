@@ -10,8 +10,8 @@ config_version=5
 
 [application]
 
-config/name="Ergenekon'dan Bozkıra"
-config/description="Bozkurt'un ruhani rehberliğinde, MÖ 209'dan Manas Destanı'na kadar 10 tarihsel kırılma noktası."
+config/name="Steppeborn: Path of the Sky Wolf"
+config/description="Gök kurt Kök Böri'nin rehberliğinde Oğuz Kağan Destanı: dört yöne fetih, Erlik'in bozgununa karşı arınma."
 run/main_scene="res://contexts/root_context/root_context.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 run/max_fps=60
