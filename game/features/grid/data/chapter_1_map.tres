@@ -1,0 +1,85 @@
+[gd_resource type="Resource" script_class="ChapterMapDefinition" load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://features/grid/chapter_map_definition.gd" id="1_chapter"]
+[ext_resource type="Script" path="res://features/grid/region_definition.gd" id="2_region"]
+[ext_resource type="Script" path="res://features/grid/win_condition.gd" id="3_win"]
+
+[sub_resource type="Resource" id="region_otuken"]
+script = ExtResource("2_region")
+region_id = &"otuken"
+display_name_key = &"REGION_OTUKEN"
+owner = 1
+starting_army = 5
+gold_per_turn = 2
+position = Vector2(960, 450)
+polygon_points = PackedVector2Array(880, 370, 1040, 370, 1080, 450, 1040, 530, 880, 530, 840, 450)
+adjacent_region_ids = Array[StringName]([&"bati_bozkir", &"dogu_bozkir", &"altai", &"guney_vadi"])
+
+[sub_resource type="Resource" id="region_bati"]
+script = ExtResource("2_region")
+region_id = &"bati_bozkir"
+display_name_key = &"REGION_BATI_BOZKIR"
+owner = 0
+starting_army = 3
+gold_per_turn = 1
+position = Vector2(480, 450)
+polygon_points = PackedVector2Array(350, 370, 610, 370, 610, 530, 350, 530)
+adjacent_region_ids = Array[StringName]([&"otuken", &"altai", &"guney_vadi"])
+
+[sub_resource type="Resource" id="region_dogu"]
+script = ExtResource("2_region")
+region_id = &"dogu_bozkir"
+display_name_key = &"REGION_DOGU_BOZKIR"
+owner = 0
+starting_army = 3
+gold_per_turn = 1
+position = Vector2(1440, 450)
+polygon_points = PackedVector2Array(1310, 370, 1570, 370, 1570, 530, 1310, 530)
+adjacent_region_ids = Array[StringName]([&"otuken", &"sinir_bolge"])
+
+[sub_resource type="Resource" id="region_altai"]
+script = ExtResource("2_region")
+region_id = &"altai"
+display_name_key = &"REGION_ALTAI"
+owner = 0
+starting_army = 2
+gold_per_turn = 2
+position = Vector2(960, 200)
+polygon_points = PackedVector2Array(800, 130, 1120, 130, 1120, 310, 800, 310)
+adjacent_region_ids = Array[StringName]([&"otuken", &"bati_bozkir"])
+
+[sub_resource type="Resource" id="region_guney"]
+script = ExtResource("2_region")
+region_id = &"guney_vadi"
+display_name_key = &"REGION_GUNEY_VADI"
+owner = 0
+starting_army = 0
+gold_per_turn = 3
+position = Vector2(640, 700)
+polygon_points = PackedVector2Array(450, 620, 830, 620, 830, 780, 450, 780)
+adjacent_region_ids = Array[StringName]([&"otuken", &"bati_bozkir", &"sinir_bolge"])
+
+[sub_resource type="Resource" id="region_sinir"]
+script = ExtResource("2_region")
+region_id = &"sinir_bolge"
+display_name_key = &"REGION_SINIR_BOLGE"
+owner = 2
+starting_army = 6
+gold_per_turn = 1
+position = Vector2(1280, 700)
+polygon_points = PackedVector2Array(1100, 620, 1460, 620, 1460, 780, 1100, 780)
+adjacent_region_ids = Array[StringName]([&"dogu_bozkir", &"guney_vadi"])
+
+[sub_resource type="Resource" id="win_ch1"]
+script = ExtResource("3_win")
+required_neutral_conquests = 3
+must_defeat_all_enemies = true
+description_key = &"WIN_CONDITION_CH1"
+
+[resource]
+script = ExtResource("1_chapter")
+chapter_id = 1
+chapter_name_key = &"CHAPTER_1_TITLE"
+actions_per_turn = 1
+regions = [SubResource("region_otuken"), SubResource("region_bati"), SubResource("region_dogu"), SubResource("region_altai"), SubResource("region_guney"), SubResource("region_sinir")]
+win_condition = SubResource("win_ch1")

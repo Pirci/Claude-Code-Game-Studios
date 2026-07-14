@@ -10,6 +10,46 @@
   For UI changes, verify with screenshots. Compare expected output to actual output
   before marking work complete. Every implementation should have a way to prove it works.
 
+## GDScript Standards
+
+- **Static typing zorunlu**: Tüm değişkenler, parametreler ve dönüş değerleri tip belirtmeli.
+  Dinamik tipleme kabul edilmez. Editör uyarıları açık tutulmalı (untyped_declaration: WARN).
+- **`$` node erişimi kullanma**: `$NodeName` yerine `@export` ile node referansları bağla.
+  `$` erişimi tip güvenliği sağlamaz ve refactor'da kırılganlaşır.
+- **Script düzeni** (GDScript style guide sırası):
+  1. `class_name`
+  2. `extends`
+  3. Sinyaller (`signal`)
+  4. Enum'lar
+  5. Sabitler (`const`)
+  6. `@export` değişkenler
+  7. Public değişkenler
+  8. Private değişkenler (`_` prefix)
+  9. `@onready` değişkenler
+  10. `_ready()`, `_process()`, `_physics_process()` (yaşam döngüsü)
+  11. Public metotlar
+  12. Private metotlar (`_` prefix)
+- **Preload kuralları**:
+  - Küçük, sık kullanılan sahneler için `preload()` kullan (ör: mermi, efekt)
+  - Preload'u kullanıldığı yere yakın tut — sahip olan node ağaçtan çıkınca referans da temizlenmeli
+  - Büyük sahneler (bölüm haritaları, menüler) için `load()` veya `ResourceLoader.load_threaded_request()` kullan
+  - Kalıcı node'lardan (root_context gibi) asla büyük sahne zinciri preload etme
+- **Yön çevirme**: `Sprite2D.flip_h` kullan, `scale.x = -1` YASAK (bkz. technical-preferences.md → Forbidden Patterns)
+- **Sprite animasyonu**: Sprite kaydırma için `offset` kullan, `position` değil. Position = oyun gerçeği, Offset = görsel ayarlama.
+- **Ekran dışı optimizasyon**: Ekran dışındaki düşmanlar/NPC'ler için `VisibleOnScreenNotifier2D` veya `VisibleOnScreenEnabler2D` kullan — gereksiz process/physics çağrısı önlenir.
+
+## Localization Standards
+
+- **Varsayılan dil**: İngilizce (en). Tüm UI metinleri İngilizce yazılır.
+- **Çeviri dosyası**: `assets/locale/translations.csv` — tek CSV, tüm diller yan yana.
+- **Metin key formatı**: `SCREAMING_SNAKE_CASE` — ör: `NEW_CAMPAIGN`, `BATTLE_REPORT`, `CHAPTER_1_TITLE`
+- **Hardcoded metin YASAK**: Tüm oyuncu-görünür metinler translation key üzerinden `tr()` fonksiyonu ile çağrılmalı.
+  Sahne dosyalarında doğrudan key yazılır (Godot otomatik `tr()` uygular), script'lerde `tr("KEY")` kullanılır.
+- **Dinamik metin**: Format string'lerde `tr()` ile birleştir: `"%s: %d" % [tr("GOLD"), amount]`
+- **Yeni metin eklerken**: Önce `translations.csv`'ye key + en sütununu ekle, sonra diğer dilleri doldur.
+  Çeviri eksik kalabilir — `locale/fallback="en"` sayesinde İngilizce gösterilir.
+- **Desteklenen diller**: en, tr, de, fr, es, zh, ja, ko, ru, pt, ar (11 dil)
+
 # Design Document Standards
 
 - All design docs use Markdown

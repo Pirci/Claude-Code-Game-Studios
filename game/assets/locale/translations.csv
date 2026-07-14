@@ -1,0 +1,41 @@
+key,en,tr,de,fr,es,zh,ja,ko,ru,pt,ar
+NEW_CAMPAIGN,New Campaign,Yeni Kampanya,Neue Kampagne,Nouvelle Campagne,Nueva Campaña,新战役,新キャンペーン,새 캠페인,Новая кампания,Nova Campanha,حملة جديدة
+CONTINUE,Continue,Devam Et,Fortsetzen,Continuer,Continuar,继续,続ける,계속하기,Продолжить,Continuar,متابعة
+SETTINGS,Settings,Ayarlar,Einstellungen,Paramètres,Ajustes,设置,設定,설정,Настройки,Configurações,الإعدادات
+QUIT,Quit,Çık,Beenden,Quitter,Salir,退出,終了,종료,Выход,Sair,خروج
+MAIN_MENU,Main Menu,Ana Menü,Hauptmenü,Menu Principal,Menú Principal,主菜单,メインメニュー,메인 메뉴,Главное меню,Menu Principal,القائمة الرئيسية
+GOLD,Gold,Altın,Gold,Or,Oro,金币,ゴールド,골드,Золото,Ouro,ذهب
+TURN,Turn,Tur,Runde,Tour,Turno,回合,ターン,턴,Ход,Turno,دور
+END_TURN,End Turn,Turu Bitir,Runde beenden,Fin du tour,Finalizar turno,结束回合,ターン終了,턴 종료,Конец хода,Finalizar turno,إنهاء الدور
+CHAPTER_1_TITLE,Chapter 1: Mete Khan — Unification of the Steppe,Bölüm 1: Mete Han — Bozkırın Birleşmesi,Kapitel 1: Mete Khan — Vereinigung der Steppe,Chapitre 1 : Mete Khan — Unification de la Steppe,Capítulo 1: Mete Khan — Unificación de la Estepa,第一章：冒顿单于 — 草原的统一,第1章：冒頓単于 — ステップの統一,제1장: 메테 칸 — 초원의 통일,Глава 1: Мете-хан — Объединение степи,Capítulo 1: Mete Khan — Unificação da Estepe,الفصل 1: ميتي خان — توحيد السهوب
+MAP_PLACEHOLDER,[ Map Goes Here ],[ Harita Buraya Gelecek ],[ Karte kommt hierhin ],[ La carte va ici ],[ El mapa va aquí ],[ 地图将在此处 ],[ マップはここに ],[ 맵이 여기에 표시됩니다 ],[ Карта будет здесь ],[ Mapa vem aqui ],[ الخريطة ستكون هنا ]
+CAVALRY,Cavalry,Süvari,Kavallerie,Cavalerie,Caballería,骑兵,騎兵,기병,Кавалерия,Cavalaria,فرسان
+ARCHER,Archer,Okçu,Bogenschütze,Archer,Arquero,弓兵,弓兵,궁수,Лучник,Arqueiro,رامي السهام
+HEAVY_INFANTRY,Heavy Infantry,Ağır Piyade,Schwere Infanterie,Infanterie lourde,Infantería pesada,重步兵,重歩兵,중보병,Тяжёлая пехота,Infantaria pesada,مشاة ثقيلة
+ALLIANCE,Alliance,İttifak,Allianz,Alliance,Alianza,联盟,同盟,동맹,Союз,Aliança,تحالف
+CONQUEST,Conquest,Fetih,Eroberung,Conquête,Conquista,征服,征服,정복,Завоевание,Conquista,فتح
+ATTACK,Attack,Hücum,Angriff,Attaque,Ataque,进攻,攻撃,공격,Атака,Ataque,هجوم
+DEFEND,Defend,Savunma,Verteidigung,Défense,Defensa,防御,防御,방어,Оборона,Defesa,دفاع
+RETREAT,Retreat,Geri Çekilme,Rückzug,Retraite,Retirada,撤退,撤退,후퇴,Отступление,Recuo,انسحاب
+BATTLE_REPORT,Battle Report,Savaş Raporu,Schlachtbericht,Rapport de bataille,Informe de batalla,战斗报告,戦闘報告,전투 보고서,Боевой отчёт,Relatório de batalha,تقرير المعركة
+VICTORY,Victory,Zafer,Sieg,Victoire,Victoria,胜利,勝利,승리,Победа,Vitória,انتصار
+DEFEAT,Defeat,Yenilgi,Niederlage,Défaite,Derrota,失败,敗北,패배,Поражение,Derrota,هزيمة
+BOZKURT_SPIRIT,Spirit of the Grey Wolf,Bozkurt'un Ruhu,Geist des Grauen Wolfs,Esprit du Loup Gris,Espíritu del Lobo Gris,灰狼之魂,灰色狼の魂,회색 늑대의 영혼,Дух Серого Волка,Espírito do Lobo Cinzento,روح الذئب الرمادي
+LANGUAGE,Language,Dil,Sprache,Langue,Idioma,语言,言語,언어,Язык,Idioma,اللغة
+MASTER_VOLUME,Master Volume,Ana Ses,Gesamtlautstärke,Volume principal,Volumen general,主音量,マスター音量,마스터 볼륨,Общая громкость,Volume geral,مستوى الصوت الرئيسي
+MUSIC_VOLUME,Music,Müzik,Musik,Musique,Música,音乐,音楽,음악,Музыка,Música,الموسيقى
+SFX_VOLUME,Sound Effects,Ses Efektleri,Soundeffekte,Effets sonores,Efectos de sonido,音效,効果音,효과음,Звуковые эффекты,Efeitos sonoros,المؤثرات الصوتية
+FULLSCREEN,Fullscreen,Tam Ekran,Vollbild,Plein écran,Pantalla completa,全屏,フルスクリーン,전체 화면,Полный экран,Tela cheia,ملء الشاشة
+BACK,Back,Geri,Zurück,Retour,Atrás,返回,戻る,뒤로,Назад,Voltar,رجوع
+ARMY,Army,Ordu,Armee,Armée,Ejército,军队,軍隊,군대,Армия,Exército,جيش
+SEND_ARMY,Send Army,Ordu Gönder,Armee entsenden,Envoyer l'armée,Enviar ejército,派遣军队,軍隊を派遣,군대 파견,Отправить армию,Enviar exército,إرسال الجيش
+OWNER_PLAYER,Yours,Sizin,Euer,Vôtre,Tuyo,己方,自軍,아군,Ваше,Seu,ملكك
+OWNER_ENEMY,Enemy,Düşman,Feind,Ennemi,Enemigo,敌方,敵軍,적군,Враг,Inimigo,العدو
+OWNER_NEUTRAL,Neutral,Nötr,Neutral,Neutre,Neutral,中立,中立,중립,Нейтральный,Neutro,محايد
+REGION_OTUKEN,Ötüken,Ötüken,Ötüken,Ötüken,Ötüken,于都斤,オテュケン,외튀켄,Отюкен,Ötüken,أوتوكين
+REGION_BATI_BOZKIR,Western Steppe,Batı Bozkır,Westliche Steppe,Steppe occidentale,Estepa occidental,西部草原,西部ステップ,서부 초원,Западная степь,Estepe ocidental,السهوب الغربية
+REGION_DOGU_BOZKIR,Eastern Steppe,Doğu Bozkır,Östliche Steppe,Steppe orientale,Estepa oriental,东部草原,東部ステップ,동부 초원,Восточная степь,Estepe oriental,السهوب الشرقية
+REGION_ALTAI,Altai Mountains,Altay Dağları,Altaigebirge,Monts Altaï,Montañas Altái,阿尔泰山,アルタイ山脈,알타이 산맥,Алтайские горы,Montanhas Altai,جبال ألتاي
+REGION_GUNEY_VADI,Southern Valley,Güney Vadi,Südliches Tal,Vallée méridionale,Valle del sur,南方谷地,南部渓谷,남부 계곡,Южная долина,Vale do sul,الوادي الجنوبي
+REGION_SINIR_BOLGE,Border Region,Sınır Bölge,Grenzregion,Région frontalière,Región fronteriza,边境地区,国境地帯,국경 지역,Пограничный район,Região fronteiriça,منطقة الحدود
+WIN_CONDITION_CH1,Unite 3 neutral tribes and defeat the Donghu,3 nötr boyu birleştir ve Dunghu'yu yen,Vereinige 3 neutrale Stämme und besiege die Donghu,Unissez 3 tribus neutres et battez les Donghu,Une 3 tribus neutrales y derrota a los Donghu,统一3个中立部落并击败东胡,中立の3部族を統一し東胡を倒せ,중립 부족 3개를 통합하고 동호를 물리쳐라,Объедините 3 нейтральных племени и победите дунху,Una 3 tribos neutras e derrote os Donghu,وحّد 3 قبائل محايدة واهزم الدونغهو
