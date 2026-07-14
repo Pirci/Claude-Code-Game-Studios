@@ -48,6 +48,7 @@ func setup(data: RegionData) -> void:
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_label.position = data.position - Vector2(80, 30)
 	_label.size = Vector2(160, 30)
+	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.add_theme_font_size_override(&"font_size", 16)
 	add_child(_label)
 
@@ -55,6 +56,7 @@ func setup(data: RegionData) -> void:
 	_army_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_army_label.position = data.position - Vector2(40, 5)
 	_army_label.size = Vector2(80, 25)
+	_army_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_army_label.add_theme_font_size_override(&"font_size", 14)
 	add_child(_army_label)
 	update_display(data)

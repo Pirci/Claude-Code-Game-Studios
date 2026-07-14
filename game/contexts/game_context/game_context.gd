@@ -30,6 +30,8 @@ func bind_services(game_state: GameState) -> void:
 
 
 func _ready() -> void:
+	# Area2D bölge tıklamalarının çalışması için 2D fiziksel nesne seçimini aç.
+	get_viewport().physics_object_picking = true
 	_setup_controllers()
 	_setup_map_visuals()
 	_connect_signals()
