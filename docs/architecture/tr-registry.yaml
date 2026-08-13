@@ -24,33 +24,203 @@
 #
 # STATUS VALUES: active | deprecated | superseded-by: TR-[system]-NNN
 
-version: 1
-last_updated: ""
+version: 2
+last_updated: "2026-08-13"
 
-requirements: []
+requirements:
+  # --- region-map-system (slug: map) ---
+  - id: TR-map-001
+    system: map
+    gdd: design/gdd/region-map-system.md
+    requirement: "Per-region persistent state (owner, army_count, gold_per_turn, adjacency, geometry) tracked across turns"
+    created: 2026-08-13
+    revised: ""
+    status: active
 
-# --- EXAMPLE ENTRIES (remove when first real entries are added) ---
-#
-# - id: TR-combat-001
-#   system: combat
-#   gdd: design/gdd/combat-system.md
-#   requirement: "Player takes damage from enemies based on attack power minus defence"
-#   created: 2026-03-10
-#   revised: ""
-#   status: active
-#
-# - id: TR-combat-002
-#   system: combat
-#   gdd: design/gdd/combat-system.md
-#   requirement: "Combo window timing is 0.4 seconds between hits"
-#   created: 2026-03-10
-#   revised: "2026-04-01"
-#   status: active
-#
-# - id: TR-combat-003
-#   system: combat
-#   gdd: design/gdd/combat-system.md
-#   requirement: "Old damage formula using raw stats"
-#   created: 2026-03-10
-#   revised: ""
-#   status: superseded-by: TR-combat-001
+  - id: TR-map-002
+    system: map
+    gdd: design/gdd/region-map-system.md
+    requirement: "Map is data-driven from a ChapterMapDefinition Resource (.tres), loadable per chapter"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-map-003
+    system: map
+    gdd: design/gdd/region-map-system.md
+    requirement: "Turn-flow orchestration (end_turn: enemy AI -> income -> turn++ -> win-check) over injected systems"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-map-004
+    system: map
+    gdd: design/gdd/region-map-system.md
+    requirement: "Clickable region polygons and visual layer (connection lines, info panel) separated from state"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-map-005
+    system: map
+    gdd: design/gdd/region-map-system.md
+    requirement: "Enemy AI: per-enemy-region target selection (lowest-army non-enemy neighbour) with a per-turn action budget"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-map-006
+    system: map
+    gdd: design/gdd/region-map-system.md
+    requirement: "Data-driven win/lose condition evaluation (WinCondition: defeat-all-enemies + required neutral conquests)"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  # --- army-system (slug: army) ---
+  - id: TR-army-001
+    system: army
+    gdd: design/gdd/army-system.md
+    requirement: "Move validation + garrison rule (always leave 1) + action consumption, with logic in the controller not state"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-army-002
+    system: army
+    gdd: design/gdd/army-system.md
+    requirement: "Arrival resolution routes to combat (enemy target) or peaceful merge/occupation"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  # --- combat-system (slug: combat) ---
+  - id: TR-combat-001
+    system: combat
+    gdd: design/gdd/combat-system.md
+    requirement: "Deterministic auto-resolve combat implemented as a zero-dependency, unit-testable leaf"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-combat-002
+    system: combat
+    gdd: design/gdd/combat-system.md
+    requirement: "Combat tuning is data-driven via an injected CombatConfig (.tres) with @export defaults"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-combat-003
+    system: combat
+    gdd: design/gdd/combat-system.md
+    requirement: "CombatResult is surfaced to the UI as a detailed battle report (losses, remaining, outcome)"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  # --- spirit-system (slug: spirit) ---
+  - id: TR-spirit-001
+    system: spirit
+    gdd: design/gdd/spirit-system.md
+    requirement: "RegionData extended with a corruption_level field (0-3)"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-spirit-002
+    system: spirit
+    gdd: design/gdd/spirit-system.md
+    requirement: "Ruh (spirit) resource and a persistent, cross-scene boons list held on GameState"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-spirit-003
+    system: spirit
+    gdd: design/gdd/spirit-system.md
+    requirement: "Purification reuses CombatResolver (army strength vs corruption_strength)"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-spirit-004
+    system: spirit
+    gdd: design/gdd/spirit-system.md
+    requirement: "Deterministic seeded boon-offer selection (3-of-pool, reproducible for tests)"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-spirit-005
+    system: spirit
+    gdd: design/gdd/spirit-system.md
+    requirement: "Erlik spread AI: deterministic periodic corruption spread (second AI behavior alongside enemy AI)"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-spirit-006
+    system: spirit
+    gdd: design/gdd/spirit-system.md
+    requirement: "Shared additive modifier pipeline for boons + council bonuses, preventing double-counting"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-spirit-007
+    system: spirit
+    gdd: design/gdd/spirit-system.md
+    requirement: "Corruption visual state: distinguishable region colour by corruption level"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  # --- game-concept (slug: concept) ---
+  - id: TR-concept-001
+    system: concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Menu -> campaign -> scene flow with persistent campaign progress"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-concept-002
+    system: concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Campaign progress persists between sessions (save/load)"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-concept-003
+    system: concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Three data-driven resources (gold/herds/spirit), extensible without core rewrite"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-concept-004
+    system: concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Boons accumulate across scenes within a single campaign run"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-concept-005
+    system: concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Modular grand-strategy expansion: add new features without rewriting the core"
+    created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-concept-006
+    system: concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Localization: 11 languages via tr()/CSV, no hardcoded player-visible text"
+    created: 2026-08-13
+    revised: ""
+    status: active

@@ -96,6 +96,19 @@ interfaces:
     added: 2026-08-13
     revised: ""
 
+  - contract: ai_turn_execution
+    status: active
+    pattern: direct_call     # orchestrator calls decide(), then applies intents
+    producer: ai-decision-services (enemy-ai, erlik-spread)
+    consumers:
+      - map-controller       # calls decide(map_state), applies returned intents, emits signals
+    adr: docs/architecture/adr-0005-ai-architecture.md
+    signal_signature: "EnemyAIController.decide(map_state: MapState) -> Array[MoveIntent]; ErlikSpreadController.decide(map_state: MapState) -> Array[StringName]  (pure: reads state, returns intents; no mutation, no signals)"
+    referenced_by:
+      - docs/architecture/adr-0005-ai-architecture.md
+    added: 2026-08-13
+    revised: ""
+
 # Example:
 #
 # interfaces:
@@ -239,6 +252,17 @@ forbidden_patterns:
     why: "Scattered state has no single place to save, load, or inspect (the lone
       score-var-on-controller anti-pattern)."
     adr: docs/architecture/adr-0004-state-segregation.md
+    added: 2026-08-13
+
+  - pattern: ai_service_mutates_or_signals
+    status: active
+    description: "AI decision services (decide(map_state) -> Array[intent]) must be
+      pure: read MapState and return intents only. They must not mutate state or emit
+      gameplay signals. The orchestrator (MapController) applies intents and emits."
+    why: "Keeping AI pure makes each behavior deterministic and unit-testable in
+      isolation, and keeps mutation + signals centralized ('call down, signal up').
+      AI that writes state directly recreates the coupling this ADR extracts."
+    adr: docs/architecture/adr-0005-ai-architecture.md
     added: 2026-08-13
 
 # Example:

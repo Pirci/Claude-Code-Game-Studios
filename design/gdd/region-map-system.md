@@ -49,7 +49,13 @@ Oyuncu tüm bozkırı tek bakışta okur: kim nerede güçlü, hangi sınır zay
 Sıra: **(1)** düşman AI oynar → **(2)** gelir toplanır → **(3)** `current_turn+=1`,
 `actions_remaining = actions_per_turn` → **(4)** kazanma/kaybetme kontrolü.
 
-### 3.5 Düşman AI (`_run_enemy_ai`)
+### 3.5 Düşman AI (`EnemyAIController.decide`)
+Düşman AI, saf bir karar servisidir (bkz. [ADR-0005](../../docs/architecture/adr-0005-ai-architecture.md)):
+`EnemyAIController.decide(map_state) -> Array[MoveIntent]` yalnızca `MapState`'i
+**okur** ve deterministik bir hamle listesi (intent) döndürür — state'i değiştirmez,
+sinyal yaymaz. `MapController.end_turn()` intent'leri `ArmyController`/`CombatResolver`
+üzerinden **uygular** ve mevcut sinyalleri yayar.
+
 - Her düşman bölgesi için (army > 1):
   - Komşular arasında düşman-olmayan, `army_count`'u en düşük hedefi seç.
   - Kuvvet (army−1) gönder; hedefte ordu varsa savaş, yoksa işgal.
