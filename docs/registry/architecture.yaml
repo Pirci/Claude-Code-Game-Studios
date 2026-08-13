@@ -30,7 +30,7 @@
 #   Superseded entries:     Grep pattern="status: superseded"
 
 version: 1
-last_updated: ""
+last_updated: "2026-08-13"
 
 # ─── STATE OWNERSHIP ─────────────────────────────────────────────────────────
 # Who is the authoritative owner of each piece of shared game state.
@@ -43,7 +43,18 @@ last_updated: ""
 # interface: how other systems access this state (read-only property, method call,
 #   signal, shared resource, etc.) — this is the contract other ADRs depend on.
 
-state_ownership: []
+state_ownership:
+  - state: game_state
+    status: active           # active | superseded_by: ADR-NNNN
+    owner_system: root-context
+    adr: docs/architecture/adr-0001-context-based-hierarchical-architecture.md
+    interface: "GameState instance created and owned by RootContext; injected into GameContext via bind_services(game_state: GameState). One instance per campaign; discarded on return-to-menu."
+    write_access: game-context-controllers   # controllers under GameContext mutate; RootContext owns lifecycle
+    referenced_by:
+      - docs/architecture/adr-0001-context-based-hierarchical-architecture.md
+      - docs/architecture/adr-0004-state-segregation.md   # defines the data-only shape of this state
+    added: 2026-08-13
+    revised: ""
 
 # Example:
 #
@@ -71,7 +82,19 @@ state_ownership: []
 #
 # pattern options: signal | direct_call | event_bus | shared_resource | rpc | none
 
-interfaces: []
+interfaces:
+  - contract: context_transition
+    status: active
+    pattern: signal          # contexts signal up; RootContext orchestrates
+    producer: contexts (menu-context, game-context)
+    consumers:
+      - root-context         # listens and drives _switch_to()
+    adr: docs/architecture/adr-0001-context-based-hierarchical-architecture.md
+    signal_signature: "MenuContext.new_campaign_requested(); MenuContext.quit_requested(); GameContext.return_to_menu_requested(); RootContext.context_changed(context_name: StringName)"
+    referenced_by:
+      - docs/architecture/adr-0001-context-based-hierarchical-architecture.md
+    added: 2026-08-13
+    revised: ""
 
 # Example:
 #
@@ -131,7 +154,19 @@ performance_budgets: []
 # Register an API decision when the choice is non-obvious and other ADRs might
 # make a different choice for the same purpose without knowing this was decided.
 
-api_decisions: []
+api_decisions:
+  - purpose: service_dependency_wiring
+    status: active
+    api: "bind_services(...) / bind_config(...) called after .new()"
+    not: "autoload singleton  OR  _init() constructor injection"
+    adr: docs/architecture/adr-0003-dependency-injection.md
+    reason: "GDScript _init() lacks named parameters, making large positional
+      dependency lists error-prone; autoloads create hidden global coupling.
+      Post-construction injection gives named, order-flexible, testable wiring."
+    referenced_by:
+      - docs/architecture/adr-0003-dependency-injection.md
+    added: 2026-08-13
+    revised: ""
 
 # Example:
 #
@@ -157,7 +192,54 @@ api_decisions: []
 # Register a pattern when an ADR explicitly bans it AND other ADRs might
 # unknowingly use it (i.e., it's a tempting but wrong approach for this project).
 
-forbidden_patterns: []
+forbidden_patterns:
+  - pattern: file_type_folder_organization
+    status: active
+    description: "Do not organize source by file type (scripts/, scenes/, art/).
+      Organize by feature: game/features/<feature>/ with co-located code, scenes,
+      and data/*.tres."
+    why: "Type-based folders scatter a feature's pieces and encourage diffuse,
+      hard-to-track dependencies. Editors already filter by type."
+    adr: docs/architecture/adr-0002-feature-encapsulation.md
+    added: 2026-08-13
+
+  - pattern: global_classname_on_internal_types
+    status: active
+    description: "Reserve `class_name` (global type registration) for types meant to
+      be referenced across features (public APIs, injected service types, data types).
+      Internal helper scripts omit class_name and are referenced by relative path."
+    why: "class_name registers a type globally; using it on internal types silently
+      widens a feature's public surface and breaks encapsulation, which GDScript does
+      not enforce at compile time."
+    adr: docs/architecture/adr-0002-feature-encapsulation.md
+    added: 2026-08-13
+
+  - pattern: autoload_singleton_coupling
+    status: active
+    description: "Game services and state must not be Godot autoload singletons or
+      referenced by global name. Instantiate via .new() and inject via bind_services()."
+    why: "Autoloads create hidden global dependencies, load-order coupling, and make
+      systems untestable in isolation."
+    adr: docs/architecture/adr-0003-dependency-injection.md
+    added: 2026-08-13
+
+  - pattern: logic_in_state_objects
+    status: active
+    description: "State classes (GameState/MapState/RegionData) hold data and pure
+      getters only. No mutation, side effects, or service calls inside state objects."
+    why: "Mixing logic into state scatters rules and breaks the data/logic separation
+      that keeps state saveable, debuggable, and testable. Controllers mutate state."
+    adr: docs/architecture/adr-0004-state-segregation.md
+    added: 2026-08-13
+
+  - pattern: long_term_state_in_controllers_or_nodes
+    status: active
+    description: "Long-term/persistent state must live in game/state/ objects rooted
+      at GameState, never stored ad hoc on a controller or node."
+    why: "Scattered state has no single place to save, load, or inspect (the lone
+      score-var-on-controller anti-pattern)."
+    adr: docs/architecture/adr-0004-state-segregation.md
+    added: 2026-08-13
 
 # Example:
 #

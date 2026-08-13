@@ -64,10 +64,12 @@
 
 ## Architecture Decisions Log
 
-- **ADR-001**: Context-based hierarchical architecture — root_context → game_context / menu_context
-- **ADR-002**: Feature encapsulation — her sistem kendi klasöründe, minimal dış bağımlılık
-- **ADR-003**: Dependency injection — bind_services() pattern ile servis bağlama
-- **ADR-004**: State segregation — game state objeleri sadece veri tutar, mantık controller'larda
+- **ADR-0001** (Proposed): Context-based hierarchical architecture — root_context → game_context / menu_context. → [adr-0001](../../docs/architecture/adr-0001-context-based-hierarchical-architecture.md)
+- **ADR-0002** (Proposed): Feature encapsulation — her sistem kendi klasöründe, minimal dış bağımlılık. → [adr-0002](../../docs/architecture/adr-0002-feature-encapsulation.md)
+- **ADR-0003** (Proposed): Dependency injection — bind_services() pattern ile servis bağlama. → [adr-0003](../../docs/architecture/adr-0003-dependency-injection.md)
+- **ADR-0004** (Proposed): State segregation — game state objeleri sadece veri tutar, mantık controller'larda. → [adr-0004](../../docs/architecture/adr-0004-state-segregation.md)
+
+> Tümü `/architecture-decision` ile geriye dönük yazıldı (as-built). Taze bir oturumda `/architecture-review` çalıştırıp doğruladıktan sonra Status → Accepted yapılabilir.
 
 ## Godot Project Settings Checklist
 
