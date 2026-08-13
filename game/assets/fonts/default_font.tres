@@ -1,0 +1,6 @@
+[gd_resource type="SystemFont" format=3]
+
+[resource]
+font_names = PackedStringArray("Noto Sans", "Noto Sans CJK SC", "Noto Sans CJK JP", "Noto Sans CJK KR", "Noto Sans Arabic", "Arial Unicode MS", "Hiragino Sans", "PingFang SC", "Microsoft YaHei")
+subpixel_positioning = 1
+multichannel_signed_distance_field = true

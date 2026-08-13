@@ -18,18 +18,57 @@ Skills and agents are assigned to model tiers based on task complexity:
 
 | Tier | Model | When to use |
 |------|-------|-------------|
-| **Haiku** | `claude-haiku-4-5-20251001` | Read-only status checks, formatting, simple lookups — no creative judgment needed |
+| **Haiku** | `claude-haiku-4-5-20251001` | Read-only status checks, formatting, simple lookups, templated output — no creative judgment needed |
 | **Sonnet** | `claude-sonnet-4-6` | Implementation, design authoring, analysis of individual systems — default for most work |
-| **Opus** | `claude-opus-4-6` | Multi-document synthesis, high-stakes phase gate verdicts, cross-system holistic review |
+| **Opus** | `claude-opus-4-6` | Multi-document synthesis, high-stakes phase gate verdicts, cross-system holistic review, architecture decisions |
+
+### Agent Tier Dağılımı
+
+| Tier | Agents |
+|------|--------|
+| **Opus** (5) | creative-director, technical-director, producer, narrative-director, lead-programmer |
+| **Sonnet** (37) | Tüm designer'lar, programmer'lar, specialist'ler (varsayılan) |
+| **Haiku** (7) | devops-engineer, community-manager, qa-tester, tools-programmer, sound-designer, localization-lead, release-manager |
+
+### Skill Tier Dağılımı
 
 Skills with `model: haiku`: `/help`, `/sprint-status`, `/story-readiness`, `/scope-check`,
-`/project-stage-detect`, `/changelog`, `/patch-notes`, `/onboard`
+`/project-stage-detect`, `/changelog`, `/patch-notes`, `/onboard`, `/smoke-check`,
+`/bug-report`, `/estimate`, `/test-evidence-review`
 
-Skills with `model: opus`: `/review-all-gdds`, `/architecture-review`, `/gate-check`
+Skills with `model: opus`: `/review-all-gdds`, `/architecture-review`, `/gate-check`,
+`/create-architecture`, `/milestone-review`, `/design-review`, `/team-combat`,
+`/content-audit`, `/balance-check`
 
-All other skills default to Sonnet. When creating new skills, assign Haiku if the
-skill only reads and formats; assign Opus if it must synthesize 5+ documents with
-high-stakes output; otherwise leave unset (Sonnet).
+All other skills default to Sonnet.
+
+### Tier Seçim Kuralları
+
+Yeni skill veya agent oluştururken:
+
+1. **Haiku** ata eğer: sadece okuma yapıyorsa, template dolduruyorsa, checklist
+   doğruluyorsa, formatlama yapıyorsa. Yaratıcı yargı gerektirmiyorsa.
+2. **Sonnet** ata eğer: tek bir sistem tasarlıyor/uyguluyorsa, kod yazıyorsa,
+   tek bir doküman analiz ediyorsa. Çoğu iş buraya düşer.
+3. **Opus** ata eğer: 5+ dokümanı sentezliyorsa, çapraz-sistem kararlar veriyorsa,
+   geri dönüşü zor yüksek riskli çıktılar üretiyorsa, veya birden fazla agent'ı
+   koordine ediyorsa.
+
+### Dinamik Model Override
+
+Bir agent veya skill çalışma sırasında farklı zorluktaki alt görevlerle
+karşılaşabilir. Bu durumda subagent spawn ederken `model:` parametresini
+override edebilir:
+
+```
+# Sonnet agent, karmaşık bir alt görev için Opus subagent çağırır:
+Agent(subagent_type="narrative-director", model="opus", prompt="...")
+
+# Opus agent, basit bir arama için Haiku subagent çağırır:
+Agent(subagent_type="Explore", model="haiku", prompt="...")
+```
+
+Bu sayede aynı iş akışı içinde maliyet-verimlilik dengesi sağlanır.
 
 ## Subagents vs Agent Teams
 

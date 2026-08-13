@@ -4,7 +4,7 @@ description: "Generates a comprehensive milestone progress review including feat
 argument-hint: "[milestone-name|current] [--review full|lean|solo]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Task, AskUserQuestion
-model: sonnet
+model: opus
 ---
 
 ## Phase 0: Parse Arguments

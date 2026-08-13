@@ -4,7 +4,7 @@ description: "Quality review of test files and manual evidence documents. Goes b
 argument-hint: "[story-path | sprint | system-name]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write
-model: sonnet
+model: haiku
 ---
 
 # Test Evidence Review

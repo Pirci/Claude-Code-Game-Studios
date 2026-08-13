@@ -1,0 +1,41 @@
+key,en,tr,de,fr,es,zh,ja,ko,ru,pt,ar
+NEW_CAMPAIGN,New Campaign,Yeni Kampanya,Neue Kampagne,Nouvelle Campagne,Nueva Campaña,新战役,新キャンペーン,새 캠페인,Новая кампания,Nova Campanha,حملة جديدة
+CONTINUE,Continue,Devam Et,Fortsetzen,Continuer,Continuar,继续,続ける,계속하기,Продолжить,Continuar,متابعة
+SETTINGS,Settings,Ayarlar,Einstellungen,Paramètres,Ajustes,设置,設定,설정,Настройки,Configurações,الإعدادات
+QUIT,Quit,Çık,Beenden,Quitter,Salir,退出,終了,종료,Выход,Sair,خروج
+MAIN_MENU,Main Menu,Ana Menü,Hauptmenü,Menu Principal,Menú Principal,主菜单,メインメニュー,메인 메뉴,Главное меню,Menu Principal,القائمة الرئيسية
+GOLD,Gold,Altın,Gold,Or,Oro,金币,ゴールド,골드,Золото,Ouro,ذهب
+TURN,Turn,Tur,Runde,Tour,Turno,回合,ターン,턴,Ход,Turno,دور
+END_TURN,End Turn,Turu Bitir,Runde beenden,Fin du tour,Finalizar turno,结束回合,ターン終了,턴 종료,Конец хода,Finalizar turno,إنهاء الدور
+CHAPTER_1_TITLE,Prologue: The Birth — Uniting the Tribes,Prolog: Doğuş — Boyların Birleşmesi,Prolog: Die Geburt — Vereinigung der Stämme,Prologue : La Naissance — L'Unification des Tribus,Prólogo: El Nacimiento — La Unificación de las Tribus,序章：诞生 — 部落的统一,序章：誕生 — 部族の統一,서장: 탄생 — 부족의 통일,Пролог: Рождение — Объединение племён,Prólogo: O Nascimento — A Unificação das Tribos,المقدمة: الميلاد — توحيد القبائل
+MAP_PLACEHOLDER,[ Map Goes Here ],[ Harita Buraya Gelecek ],[ Karte kommt hierhin ],[ La carte va ici ],[ El mapa va aquí ],[ 地图将在此处 ],[ マップはここに ],[ 맵이 여기에 표시됩니다 ],[ Карта будет здесь ],[ Mapa vem aqui ],[ الخريطة ستكون هنا ]
+CAVALRY,Cavalry,Süvari,Kavallerie,Cavalerie,Caballería,骑兵,騎兵,기병,Кавалерия,Cavalaria,فرسان
+ARCHER,Archer,Okçu,Bogenschütze,Archer,Arquero,弓兵,弓兵,궁수,Лучник,Arqueiro,رامي السهام
+HEAVY_INFANTRY,Heavy Infantry,Ağır Piyade,Schwere Infanterie,Infanterie lourde,Infantería pesada,重步兵,重歩兵,중보병,Тяжёлая пехота,Infantaria pesada,مشاة ثقيلة
+ALLIANCE,Alliance,İttifak,Allianz,Alliance,Alianza,联盟,同盟,동맹,Союз,Aliança,تحالف
+CONQUEST,Conquest,Fetih,Eroberung,Conquête,Conquista,征服,征服,정복,Завоевание,Conquista,فتح
+ATTACK,Attack,Hücum,Angriff,Attaque,Ataque,进攻,攻撃,공격,Атака,Ataque,هجوم
+DEFEND,Defend,Savunma,Verteidigung,Défense,Defensa,防御,防御,방어,Оборона,Defesa,دفاع
+RETREAT,Retreat,Geri Çekilme,Rückzug,Retraite,Retirada,撤退,撤退,후퇴,Отступление,Recuo,انسحاب
+BATTLE_REPORT,Battle Report,Savaş Raporu,Schlachtbericht,Rapport de bataille,Informe de batalla,战斗报告,戦闘報告,전투 보고서,Боевой отчёт,Relatório de batalha,تقرير المعركة
+VICTORY,Victory,Zafer,Sieg,Victoire,Victoria,胜利,勝利,승리,Победа,Vitória,انتصار
+DEFEAT,Defeat,Yenilgi,Niederlage,Défaite,Derrota,失败,敗北,패배,Поражение,Derrota,هزيمة
+BOZKURT_SPIRIT,Spirit of the Grey Wolf,Bozkurt'un Ruhu,Geist des Grauen Wolfs,Esprit du Loup Gris,Espíritu del Lobo Gris,灰狼之魂,灰色狼の魂,회색 늑대의 영혼,Дух Серого Волка,Espírito do Lobo Cinzento,روح الذئب الرمادي
+LANGUAGE,Language,Dil,Sprache,Langue,Idioma,语言,言語,언어,Язык,Idioma,اللغة
+MASTER_VOLUME,Master Volume,Ana Ses,Gesamtlautstärke,Volume principal,Volumen general,主音量,マスター音量,마스터 볼륨,Общая громкость,Volume geral,مستوى الصوت الرئيسي
+MUSIC_VOLUME,Music,Müzik,Musik,Musique,Música,音乐,音楽,음악,Музыка,Música,الموسيقى
+SFX_VOLUME,Sound Effects,Ses Efektleri,Soundeffekte,Effets sonores,Efectos de sonido,音效,効果音,효과음,Звуковые эффекты,Efeitos sonoros,المؤثرات الصوتية
+FULLSCREEN,Fullscreen,Tam Ekran,Vollbild,Plein écran,Pantalla completa,全屏,フルスクリーン,전체 화면,Полный экран,Tela cheia,ملء الشاشة
+BACK,Back,Geri,Zurück,Retour,Atrás,返回,戻る,뒤로,Назад,Voltar,رجوع
+ARMY,Army,Ordu,Armee,Armée,Ejército,军队,軍隊,군대,Армия,Exército,جيش
+SEND_ARMY,Send Army,Ordu Gönder,Armee entsenden,Envoyer l'armée,Enviar ejército,派遣军队,軍隊を派遣,군대 파견,Отправить армию,Enviar exército,إرسال الجيش
+OWNER_PLAYER,Yours,Sizin,Euer,Vôtre,Tuyo,己方,自軍,아군,Ваше,Seu,ملكك
+OWNER_ENEMY,Enemy,Düşman,Feind,Ennemi,Enemigo,敌方,敵軍,적군,Враг,Inimigo,العدو
+OWNER_NEUTRAL,Neutral,Nötr,Neutral,Neutre,Neutral,中立,中立,중립,Нейтральный,Neutro,محايد
+REGION_OTUKEN,Oğuz's Camp,Oğuz Otağı,Oğuz-Lager,Camp d'Oğuz,Campamento de Oğuz,乌古斯营地,オグズの陣営,오구즈 진영,Стан Огуза,Acampamento de Oğuz,معسكر أوغوز
+REGION_BATI_BOZKIR,Western Camp,Batı Obası,Westlager,Camp de l'Ouest,Campamento del Oeste,西部营帐,西の宿営,서부 야영지,Западная стоянка,Acampamento Ocidental,المخيم الغربي
+REGION_DOGU_BOZKIR,Eastern Camp,Doğu Obası,Ostlager,Camp de l'Est,Campamento del Este,东部营帐,東の宿営,동부 야영지,Восточная стоянка,Acampamento Oriental,المخيم الشرقي
+REGION_ALTAI,Sacred Mountain,Kutlu Dağ,Heiliger Berg,Montagne Sacrée,Montaña Sagrada,圣山,聖なる山,성스러운 산,Священная гора,Montanha Sagrada,الجبل المقدس
+REGION_GUNEY_VADI,Valley of Plenty,Bereket Vadisi,Tal des Überflusses,Vallée de l'Abondance,Valle de la Abundancia,丰饶之谷,豊穣の谷,풍요의 계곡,Долина изобилия,Vale da Abundância,وادي الوفرة
+REGION_SINIR_BOLGE,The Beast's Lair,Canavarın İni,Höhle der Bestie,Antre de la Bête,Guarida de la Bestia,巨兽之巢,怪物の巣,괴수의 소굴,Логово чудовища,Covil da Besta,وكر الوحش
+WIN_CONDITION_CH1,Unite 3 tribes and slay the beast of Erlik,3 boyu birleştir ve Erlik'in canavarını yen,Vereine 3 Stämme und erschlage die Bestie Erliks,Unissez 3 tribus et terrassez la bête d'Erlik,Une 3 tribus y derrota a la bestia de Erlik,统一3个部落并击败埃尔利克的巨兽,3部族を統一しエルリクの怪物を倒せ,부족 3개를 통합하고 에를리크의 괴수를 물리쳐라,Объедините 3 племени и сразите чудовище Эрлика,Una 3 tribos e derrote a besta de Erlik,وحّد 3 قبائل واهزم وحش إرليك
