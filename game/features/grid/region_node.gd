@@ -10,6 +10,9 @@ const COLOR_ENEMY := Color(0.9, 0.2, 0.2, 0.6)
 const COLOR_NEUTRAL := Color(0.6, 0.6, 0.6, 0.4)
 const COLOR_SELECTED := Color(1.0, 0.9, 0.3, 0.7)
 const COLOR_HOVER := Color(1.0, 1.0, 1.0, 0.15)
+## Bölge adı / ordu etiket kutusu (640×360 base, piksel).
+const LABEL_WIDTH: int = 96
+const LABEL_HEIGHT: int = 16
 
 var region_id: StringName = &""
 var is_selected: bool = false
@@ -43,21 +46,30 @@ func setup(data: RegionData) -> void:
 	_area.mouse_entered.connect(_on_mouse_entered)
 	_area.mouse_exited.connect(_on_mouse_exited)
 
+	# Font boyutu override edilmez: tema dil bazlı pixel font boyutunu belirler
+	# (Fusion 12 / Arapça Unifont 16). Ara boyutlar pixel fontu bozar.
+	# Konumlar harita (dünya) koordinatıdır: RTL dillerde aynalanmamalı → LTR yerleşim;
+	# metnin kendisi text_direction=AUTO ile yine doğru yönde çizilir.
+	# Metin kutudan genişse (ör. Unifont 16) iki yana eşit büyüsün → GROW_DIRECTION_BOTH.
 	_label = Label.new()
+	_label.layout_direction = Control.LAYOUT_DIRECTION_LTR
+	_label.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_label.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	_label.text = tr(String(data.display_name_key))
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_label.position = data.position - Vector2(80, 30)
-	_label.size = Vector2(160, 30)
+	_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	_label.position = data.position - Vector2(LABEL_WIDTH / 2.0, LABEL_HEIGHT)
+	_label.size = Vector2(LABEL_WIDTH, LABEL_HEIGHT)
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_label.add_theme_font_size_override(&"font_size", 16)
 	add_child(_label)
 
 	_army_label = Label.new()
+	_army_label.layout_direction = Control.LAYOUT_DIRECTION_LTR
+	_army_label.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	_army_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_army_label.position = data.position - Vector2(40, 5)
-	_army_label.size = Vector2(80, 25)
+	_army_label.position = data.position - Vector2(LABEL_WIDTH / 2.0, 0)
+	_army_label.size = Vector2(LABEL_WIDTH, LABEL_HEIGHT)
 	_army_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_army_label.add_theme_font_size_override(&"font_size", 14)
 	add_child(_army_label)
 	update_display(data)
 

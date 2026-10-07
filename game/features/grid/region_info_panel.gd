@@ -15,15 +15,21 @@ var _send_button: Button
 
 
 func _ready() -> void:
-	custom_minimum_size = Vector2(280, 200)
-	size = Vector2(280, 200)
+	# Yükseklik içerikten gelir (dil bazlı font boyutu değişebilir).
+	custom_minimum_size = Vector2(136, 0)
+	# Panel her dilde haritanın boş kalan sağ şeridinde durur (harita aynalanmaz);
+	# içerik ise dile göre (Arapça → RTL) hizalanır.
+	layout_direction = Control.LAYOUT_DIRECTION_LTR
 
 	var vbox: VBoxContainer = VBoxContainer.new()
-	vbox.add_theme_constant_override(&"separation", 8)
+	vbox.layout_direction = Control.LAYOUT_DIRECTION_APPLICATION_LOCALE
+	vbox.add_theme_constant_override(&"separation", 2)
 	add_child(vbox)
 
+	# Başlık vurgusu boyutla değil renkle (HeaderLabel tema varyasyonu) —
+	# pixel font sadece native boyutunda keskin kalır.
 	_name_label = Label.new()
-	_name_label.add_theme_font_size_override(&"font_size", 22)
+	_name_label.theme_type_variation = &"HeaderLabel"
 	vbox.add_child(_name_label)
 
 	_owner_label = Label.new()

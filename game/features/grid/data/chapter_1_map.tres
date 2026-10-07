@@ -11,8 +11,8 @@ display_name_key = &"REGION_OTUKEN"
 owner = 1
 starting_army = 5
 gold_per_turn = 2
-position = Vector2(960, 450)
-polygon_points = PackedVector2Array(880, 370, 1040, 370, 1080, 450, 1040, 530, 880, 530, 840, 450)
+position = Vector2(288, 150)
+polygon_points = PackedVector2Array(261, 123, 315, 123, 328, 150, 315, 177, 261, 177, 248, 150)
 adjacent_region_ids = Array[StringName]([&"bati_bozkir", &"dogu_bozkir", &"altai", &"guney_vadi"])
 
 [sub_resource type="Resource" id="region_bati"]
@@ -22,8 +22,8 @@ display_name_key = &"REGION_BATI_BOZKIR"
 owner = 0
 starting_army = 3
 gold_per_turn = 1
-position = Vector2(480, 450)
-polygon_points = PackedVector2Array(350, 370, 610, 370, 610, 530, 350, 530)
+position = Vector2(128, 150)
+polygon_points = PackedVector2Array(85, 123, 171, 123, 171, 177, 85, 177)
 adjacent_region_ids = Array[StringName]([&"otuken", &"altai", &"guney_vadi"])
 
 [sub_resource type="Resource" id="region_dogu"]
@@ -33,8 +33,8 @@ display_name_key = &"REGION_DOGU_BOZKIR"
 owner = 0
 starting_army = 3
 gold_per_turn = 1
-position = Vector2(1440, 450)
-polygon_points = PackedVector2Array(1310, 370, 1570, 370, 1570, 530, 1310, 530)
+position = Vector2(448, 150)
+polygon_points = PackedVector2Array(405, 123, 491, 123, 491, 177, 405, 177)
 adjacent_region_ids = Array[StringName]([&"otuken", &"sinir_bolge"])
 
 [sub_resource type="Resource" id="region_altai"]
@@ -44,8 +44,8 @@ display_name_key = &"REGION_ALTAI"
 owner = 0
 starting_army = 2
 gold_per_turn = 2
-position = Vector2(960, 200)
-polygon_points = PackedVector2Array(800, 130, 1120, 130, 1120, 310, 800, 310)
+position = Vector2(288, 67)
+polygon_points = PackedVector2Array(235, 43, 341, 43, 341, 103, 235, 103)
 adjacent_region_ids = Array[StringName]([&"otuken", &"bati_bozkir"])
 
 [sub_resource type="Resource" id="region_guney"]
@@ -55,8 +55,8 @@ display_name_key = &"REGION_GUNEY_VADI"
 owner = 0
 starting_army = 0
 gold_per_turn = 3
-position = Vector2(640, 700)
-polygon_points = PackedVector2Array(450, 620, 830, 620, 830, 780, 450, 780)
+position = Vector2(181, 233)
+polygon_points = PackedVector2Array(118, 207, 245, 207, 245, 260, 118, 260)
 adjacent_region_ids = Array[StringName]([&"otuken", &"bati_bozkir", &"sinir_bolge"])
 
 [sub_resource type="Resource" id="region_sinir"]
@@ -66,8 +66,8 @@ display_name_key = &"REGION_SINIR_BOLGE"
 owner = 2
 starting_army = 6
 gold_per_turn = 1
-position = Vector2(1280, 700)
-polygon_points = PackedVector2Array(1100, 620, 1460, 620, 1460, 780, 1100, 780)
+position = Vector2(395, 233)
+polygon_points = PackedVector2Array(335, 207, 455, 207, 455, 260, 335, 260)
 adjacent_region_ids = Array[StringName]([&"dogu_bozkir", &"guney_vadi"])
 
 [sub_resource type="Resource" id="win_ch1"]

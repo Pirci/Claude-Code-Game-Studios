@@ -4,7 +4,8 @@ extends Node2D
 
 
 const LINE_COLOR := Color(0.8, 0.8, 0.8, 0.3)
-const LINE_WIDTH := 2.0
+## Negatif genişlik = 1 piksellik ince primitive (pixel art; antialias yok).
+const LINE_WIDTH := -1.0
 
 var _connections: Array[Vector2] = []
 
@@ -30,5 +31,5 @@ func build_connections(map_state: MapState) -> void:
 func _draw() -> void:
 	var i: int = 0
 	while i < _connections.size():
-		draw_line(_connections[i], _connections[i + 1], LINE_COLOR, LINE_WIDTH, true)
+		draw_line(_connections[i], _connections[i + 1], LINE_COLOR, LINE_WIDTH, false)
 		i += 2

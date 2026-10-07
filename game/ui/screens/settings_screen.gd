@@ -18,6 +18,10 @@ const LOCALES: Array[Dictionary] = [
 	{"code": "pt", "name": "Português"},
 	{"code": "ar", "name": "العربية"},
 ]
+## Her dilin adı kendi pixel fontuyla önceden çizilmiş görsel olarak gösterilir
+## (tools/asset-pipeline/generate_language_name_icons.gd). Tek tema fontu tüm
+## alfabeleri native boyutta çizemez (ör. "العربية" Unifont 16px, liste 12px).
+const LOCALE_NAME_ICON_PATH: String = "res://assets/art/ui/theme/lang_name_%s.png"
 
 
 @onready var _language_option: OptionButton = %LanguageOption
@@ -48,8 +52,13 @@ func _setup_language_options() -> void:
 
 	for i: int in LOCALES.size():
 		var locale: Dictionary = LOCALES[i]
-		_language_option.add_item(locale["name"] as String, i)
-		if current_locale.begins_with(locale["code"] as String):
+		var code: String = locale["code"] as String
+		var icon_path: String = LOCALE_NAME_ICON_PATH % code
+		if ResourceLoader.exists(icon_path):
+			_language_option.add_icon_item(load(icon_path) as Texture2D, "", i)
+		else:
+			_language_option.add_item(locale["name"] as String, i)
+		if current_locale.begins_with(code):
 			selected_index = i
 
 	_language_option.selected = selected_index

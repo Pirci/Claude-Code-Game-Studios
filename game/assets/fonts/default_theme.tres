@@ -1,7 +1,172 @@
-[gd_resource type="Theme" load_steps=2 format=3]
+[gd_resource type="Theme" load_steps=27 format=3]
 
 [ext_resource type="Font" path="res://assets/fonts/default_font.tres" id="1_font"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/slider_grabber.png" id="grabber"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/slider_grabber_highlight.png" id="grabber_hl"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/slider_grabber_disabled.png" id="grabber_dis"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/toggle_on.png" id="t_on"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/toggle_on_mirrored.png" id="t_on_m"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/toggle_on_disabled.png" id="t_on_d"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/toggle_on_disabled_mirrored.png" id="t_on_dm"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/toggle_off.png" id="t_off"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/toggle_off_mirrored.png" id="t_off_m"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/toggle_off_disabled.png" id="t_off_d"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/toggle_off_disabled_mirrored.png" id="t_off_dm"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/dropdown_arrow.png" id="arrow"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/radio_checked.png" id="radio_on"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/radio_unchecked.png" id="radio_off"]
+
+[sub_resource type="StyleBoxFlat" id="btn_normal"]
+content_margin_left = 6.0
+content_margin_top = 2.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+bg_color = Color(0.18, 0.15, 0.11, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45, 0.36, 0.24, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="btn_hover"]
+content_margin_left = 6.0
+content_margin_top = 2.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+bg_color = Color(0.26, 0.21, 0.15, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.93, 0.78, 0.42, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="btn_pressed"]
+content_margin_left = 6.0
+content_margin_top = 3.0
+content_margin_right = 6.0
+content_margin_bottom = 1.0
+bg_color = Color(0.11, 0.09, 0.06, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.93, 0.78, 0.42, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="btn_disabled"]
+content_margin_left = 6.0
+content_margin_top = 2.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+bg_color = Color(0.14, 0.12, 0.09, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.27, 0.22, 0.16, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="btn_focus"]
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.93, 0.78, 0.42, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="panel"]
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(0.12, 0.1, 0.07, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45, 0.36, 0.24, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="popup_hover"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0.26, 0.21, 0.15, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="slider_track"]
+content_margin_top = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.11, 0.09, 0.06, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45, 0.36, 0.24, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="slider_fill"]
+content_margin_top = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.72, 0.58, 0.3, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="separator"]
+content_margin_top = 1.0
+content_margin_bottom = 1.0
+bg_color = Color(0.45, 0.36, 0.24, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxEmpty" id="empty"]
 
 [resource]
 default_font = ExtResource("1_font")
 default_font_size = 12
+Button/styles/normal = SubResource("btn_normal")
+Button/styles/hover = SubResource("btn_hover")
+Button/styles/pressed = SubResource("btn_pressed")
+Button/styles/disabled = SubResource("btn_disabled")
+Button/styles/focus = SubResource("btn_focus")
+OptionButton/styles/normal = SubResource("btn_normal")
+OptionButton/styles/hover = SubResource("btn_hover")
+OptionButton/styles/pressed = SubResource("btn_pressed")
+OptionButton/styles/disabled = SubResource("btn_disabled")
+OptionButton/styles/focus = SubResource("btn_focus")
+PanelContainer/styles/panel = SubResource("panel")
+PopupMenu/styles/panel = SubResource("panel")
+PopupMenu/styles/hover = SubResource("popup_hover")
+HSlider/styles/slider = SubResource("slider_track")
+HSlider/styles/grabber_area = SubResource("slider_fill")
+HSlider/styles/grabber_area_highlight = SubResource("slider_fill")
+HSeparator/styles/separator = SubResource("separator")
+Button/styles/hover_pressed = SubResource("btn_pressed")
+OptionButton/styles/hover_pressed = SubResource("btn_pressed")
+OptionButton/styles/normal_mirrored = SubResource("btn_normal")
+OptionButton/styles/hover_mirrored = SubResource("btn_hover")
+OptionButton/styles/pressed_mirrored = SubResource("btn_pressed")
+OptionButton/styles/disabled_mirrored = SubResource("btn_disabled")
+OptionButton/styles/hover_pressed_mirrored = SubResource("btn_pressed")
+OptionButton/icons/arrow = ExtResource("arrow")
+CheckButton/styles/normal = SubResource("empty")
+CheckButton/styles/hover = SubResource("empty")
+CheckButton/styles/pressed = SubResource("empty")
+CheckButton/styles/hover_pressed = SubResource("empty")
+CheckButton/styles/disabled = SubResource("empty")
+CheckButton/styles/focus = SubResource("btn_focus")
+CheckButton/icons/checked = ExtResource("t_on")
+CheckButton/icons/checked_mirrored = ExtResource("t_on_m")
+CheckButton/icons/checked_disabled = ExtResource("t_on_d")
+CheckButton/icons/checked_disabled_mirrored = ExtResource("t_on_dm")
+CheckButton/icons/unchecked = ExtResource("t_off")
+CheckButton/icons/unchecked_mirrored = ExtResource("t_off_m")
+CheckButton/icons/unchecked_disabled = ExtResource("t_off_d")
+CheckButton/icons/unchecked_disabled_mirrored = ExtResource("t_off_dm")
+HSlider/icons/grabber = ExtResource("grabber")
+HSlider/icons/grabber_highlight = ExtResource("grabber_hl")
+HSlider/icons/grabber_disabled = ExtResource("grabber_dis")
+PopupMenu/icons/radio_checked = ExtResource("radio_on")
+PopupMenu/icons/radio_unchecked = ExtResource("radio_off")
+HeaderLabel/base_type = &"Label"
+HeaderLabel/colors/font_color = Color(0.93, 0.78, 0.42, 1)
