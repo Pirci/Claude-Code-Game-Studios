@@ -23,6 +23,12 @@ fi
 
 cd "$PROJECT_DIR"
 
+# Runner eksikse Godot "script bulunamadı" deyip yine 0 döner — sessizce geçmesin.
+if [[ ! -f addons/gdUnit4/bin/GdUnitCmdTool.gd ]]; then
+  echo "HATA: GDUnit4 runner yok: addons/gdUnit4/bin/GdUnitCmdTool.gd" >&2
+  exit 1
+fi
+
 # Class cache'in güncel olması için önce import (ilk çalıştırmada gerekli).
 "$GODOT" --headless --import >/dev/null 2>&1 || true
 

@@ -29,6 +29,8 @@ docs/consistency-failures.md
 build/
 builds/
 bin/
+# GDUnit4 CLI runner lives in addons/gdUnit4/bin and must be tracked
+!game/addons/gdUnit4/bin/
 obj/
 out/
 dist/
