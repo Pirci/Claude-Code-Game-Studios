@@ -5,7 +5,7 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-07
-- **Son commit:** `9f26595` (K-02 onayı) — origin ile senkron
+- **Son commit:** `9f26595` (K-02 onayı) — push bekliyor (2026-10-07 GitHub Git Operations arızası)
 - **Proje evresi:** Concept (`production/stage.txt`)
 - **Aktif görev:** — (yok; sıradaki: C-01)
 
@@ -22,23 +22,25 @@ fark etmez) şu adımlar **sırayla** uygulanır:
    git'ini PATH'in başına koy:
    `D="$HOME/Applications/GitHub Desktop.app/Contents/Resources/app/git"; export PATH="$D/bin:$D/libexec/git-core:$PATH"`.
    Kimlik doğrulama `gh auth git-credential` ile otomatik.)
-2. **Yarım kalan iş var mı?** Bir görev `[~]` durumundaysa veya çalışma ağacında
+2. **Gönderilmemiş commit var mı?** `git status -sb` "ahead" diyorsa önce
+   `git push origin main` (GitHub arızasında: https://www.githubstatus.com).
+3. **Yarım kalan iş var mı?** Bir görev `[~]` durumundaysa veya çalışma ağacında
    commit'lenmemiş değişiklik varsa → **önce o görevi tamamla.** Baştan başlama:
    dosyalara ve commit'lere bakarak neyin bittiğini tespit et, kalan kısmı yap.
-3. **Sıradaki görevi seç:** kuyruktaki **ilk `[ ]`** görev — bağımlılıkları `[x]`
+4. **Sıradaki görevi seç:** kuyruktaki **ilk `[ ]`** görev — bağımlılıkları `[x]`
    olmalı. Bağımlılığı bitmemişse önce bağımlılığı yap. Görev atlanmaz.
-4. **Duyur ve başla:** kullanıcıya tek satırla "Sıradaki: C-XX — … (plan: …)" yaz;
+5. **Duyur ve başla:** kullanıcıya tek satırla "Sıradaki: C-XX — … (plan: …)" yaz;
    görevi `[~] (tarih)` olarak işaretle. "devam" komutu, kuyrukta tanımlı olan
    bu görevi uygulamak için onay sayılır. Görevin içinde **kullanıcıya ait bir
    karar** (tasarım seçimi, kapsam, yeni bağımlılık) çıkarsa sorulur.
-5. **Doğrula:** testler (`tools/ci/run-tests.sh`), UI işlerinde ekran görüntüsü,
+6. **Doğrula:** testler (`tools/ci/run-tests.sh`), UI işlerinde ekran görüntüsü,
    görevin "Bitti kriteri".
-6. **Kapat:** görevi `[x] <commit>` yap → "Tamamlananlar" tablosuna ekle →
+7. **Kapat:** görevi `[x] <commit>` yap → "Tamamlananlar" tablosuna ekle →
    üstteki "Son commit / Aktif görev" alanlarını güncelle → `active.md`'ye kısa
    özet yaz → **commit at ve push et** (`git push origin main`; kullanıcı
    yetkilendirdi). Commit mesajı **her zaman anlamlı**: Conventional Commits
    başlığı + gövdede *ne değişti ve neden*, nasıl doğrulandı, `Task: C-XX`.
-7. **Bir sonraki göreve geçme** — kullanıcının bir sonraki "devam"ını bekle
+8. **Bir sonraki göreve geçme** — kullanıcının bir sonraki "devam"ını bekle
    (her "devam" = bir görev).
 
 **Kurallar**
