@@ -8,12 +8,26 @@ signal context_changed(context_name: StringName)
 const MENU_SCENE: PackedScene = preload("res://contexts/menu_context/menu_context.tscn")
 const GAME_SCENE: PackedScene = preload("res://contexts/game_context/game_context.tscn")
 
+## Arapça arayüz fontu (Unifont); native piksel boyutunda kullanılmalı.
+@export var arabic_font: Font = null
+@export var arabic_font_size: int = 16
+
 var _current_context: Node = null
 var _game_state: GameState = null
+var _locale_fonts: LocaleFontController = null
 
 
 func _ready() -> void:
+	_locale_fonts = LocaleFontController.new(ThemeDB.get_project_theme())
+	if arabic_font:
+		_locale_fonts.add_override("ar", arabic_font, arabic_font_size)
+	_locale_fonts.apply(TranslationServer.get_locale())
 	_switch_to(&"menu")
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and _locale_fonts:
+		_locale_fonts.apply(TranslationServer.get_locale())
 
 
 func _switch_to(context_name: StringName) -> void:

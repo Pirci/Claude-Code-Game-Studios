@@ -1,6 +1,11 @@
-[gd_resource type="SystemFont" format=3]
+[gd_resource type="FontVariation" load_steps=6 format=3]
+
+[ext_resource type="FontFile" uid="uid://c0ljmyfmkbo3q" path="res://assets/fonts/fusion_pixel_12px_latin.woff2" id="1_latin"]
+[ext_resource type="FontFile" uid="uid://dnftnl02w5ps8" path="res://assets/fonts/fusion_pixel_12px_ja.woff2" id="2_ja"]
+[ext_resource type="FontFile" uid="uid://dmwjeuduyobky" path="res://assets/fonts/fusion_pixel_12px_ko.woff2" id="3_ko"]
+[ext_resource type="FontFile" uid="uid://cxoebe1j2iome" path="res://assets/fonts/fusion_pixel_12px_zh_hans.woff2" id="4_zh"]
+[ext_resource type="FontFile" uid="uid://bbck55eiaqq4x" path="res://assets/fonts/unifont.otf" id="5_unifont"]
 
 [resource]
-font_names = PackedStringArray("Noto Sans", "Noto Sans CJK SC", "Noto Sans CJK JP", "Noto Sans CJK KR", "Noto Sans Arabic", "Arial Unicode MS", "Hiragino Sans", "PingFang SC", "Microsoft YaHei")
-subpixel_positioning = 1
-multichannel_signed_distance_field = true
+base_font = ExtResource("1_latin")
+fallbacks = Array[Font]([ExtResource("2_ja"), ExtResource("3_ko"), ExtResource("4_zh"), ExtResource("5_unifont")])

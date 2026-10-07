@@ -9,12 +9,18 @@
 
 ## Display & Scaling
 
-- **Base Resolution**: 1920 × 1080 (strateji haritası için yüksek çözünürlük, sulu boya detayı korunmalı)
+- **Art Style**: Pixel art (2026-10-07 itibarıyla; önceki yön sulu boyaydı)
+- **Base Resolution**: 640 × 360 (×3 = 1080p, ×6 = 4K — tam kat ölçekleme)
 - **Default Window Size**: 1920 × 1080
-- **Scale Mode**: `canvas_items`
+- **Scale Mode**: `viewport` (her şey 640×360'ta çizilip büyütülür — gerçek pixel grid)
 - **Aspect**: `keep`
-- **Integer Scaling**: Kapalı (sulu boya sanat stili, piksel-mükemmellik gerekmiyor)
-- **MSDF Fonts**: Açık — tüm fontlarda MSDF aktif olmalı (bulanık font önlemi)
+- **Integer Scaling**: Açık (`window/stretch/scale_mode="integer"`)
+- **Texture Filter**: Nearest (`rendering/textures/canvas_textures/default_texture_filter=0`)
+- **Pixel Snap**: `2d/snap/snap_2d_transforms_to_pixel` ve `snap_2d_vertices_to_pixel` açık
+- **Fonts**: Pixel fontlar — MSDF, antialiasing, hinting ve subpixel **kapalı**, sistem font fallback'i kapalı.
+  - **Fusion Pixel 12px** (OFL) — en/tr/de/fr/es/ru/pt + zh/ja/ko (`language_support` ile bölgesel glif biçimi)
+  - **GNU Unifont 16px** (OFL) — Arapça; `LocaleFontController` dil `ar` olunca temayı Unifont 16'ya geçirir
+  - Font boyutları sadece native boyut veya tam katı olabilir (Fusion: 12/24/36, Unifont: 16/32). Başka `font_size` override'ı fontu bozar.
 - **FPS Limit**: 60 FPS (sıra tabanlı oyun, GPU gereksiz yüklenmemeli)
 
 ## Input & Platform
@@ -75,19 +81,23 @@
 
 Proje oluşturulduğunda aşağıdaki ayarlar yapılmalı:
 
-- [ ] `display/window/size/viewport_width`: 1920
-- [ ] `display/window/size/viewport_height`: 1080
-- [ ] `display/window/size/window_width_override`: 1920
-- [ ] `display/window/size/window_height_override`: 1080
-- [ ] `display/window/stretch/mode`: canvas_items
-- [ ] `display/window/stretch/aspect`: keep
+- [x] `display/window/size/viewport_width`: 640
+- [x] `display/window/size/viewport_height`: 360
+- [x] `display/window/size/window_width_override`: 1920
+- [x] `display/window/size/window_height_override`: 1080
+- [x] `display/window/stretch/mode`: viewport
+- [x] `display/window/stretch/scale_mode`: integer
+- [x] `display/window/stretch/aspect`: keep (varsayılan)
+- [x] `rendering/textures/canvas_textures/default_texture_filter`: Nearest (0)
+- [x] `rendering/2d/snap/snap_2d_transforms_to_pixel`: true
+- [x] `rendering/2d/snap/snap_2d_vertices_to_pixel`: true
 - [ ] `debug/gdscript/warnings/untyped_declaration`: WARN
 - [ ] `debug/gdscript/warnings/inferred_declaration`: WARN
 - [ ] `debug/gdscript/warnings/unsafe_property_access`: WARN
 - [ ] `debug/gdscript/warnings/unsafe_cast`: WARN
 - [ ] `debug/gdscript/warnings/unsafe_call_argument`: WARN
-- [ ] `application/run/max_fps`: 60
-- [ ] `gui/theme/default_font_multichannel_signed_distance_field`: true
+- [x] `application/run/max_fps`: 60
+- [x] `gui/theme/default_font_multichannel_signed_distance_field`: false (pixel font — varsayılan)
 
 ## Debug Tools
 

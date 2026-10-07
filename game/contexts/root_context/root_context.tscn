@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://contexts/root_context/root_context.gd" id="1_root"]
+[ext_resource type="FontFile" uid="uid://bbck55eiaqq4x" path="res://assets/fonts/unifont.otf" id="2_unifont"]
 
 [node name="RootContext" type="Node"]
 script = ExtResource("1_root")
+arabic_font = ExtResource("2_unifont")

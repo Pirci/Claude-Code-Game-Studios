@@ -214,6 +214,13 @@ Orta Asya bozkır kültürü.
 
 ## Görsel Kimlik Çapası
 
+> **⚠ Yön değişikliği (2026-10-07):** Sanat yönü **pixel art**'a geçti
+> (640×360 base, integer scaling, pixel fontlar — bkz.
+> `.claude/docs/technical-preferences.md` → Display & Scaling). Aşağıdaki sulu
+> boya ilkeleri tarihsel kayıttır; kozmik ikilik, Kök Böri motifi, Türk
+> mitolojik kimlik ve renk felsefesi pixel art'a uyarlanmak üzere `/art-bible`
+> ile yeniden yazılacak.
+
 ### Seçilen Görsel Yön: Sulu Boya El Çizimi + Mitolojik Kozmik Atmosfer
 
 **Tek Satırlık Görsel Kural**: Her ekran bir bozkır şamanının rüya defterinden

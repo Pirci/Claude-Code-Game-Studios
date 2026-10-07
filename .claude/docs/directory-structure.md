@@ -27,7 +27,7 @@
 │   │   ├── art/                 # Görseller (maps, units, ui, illustrations)
 │   │   ├── audio/               # Ses dosyaları (music, sfx)
 │   │   ├── shaders/             # Shader dosyaları
-│   │   └── fonts/               # Font dosyaları (MSDF aktif)
+│   │   └── fonts/               # Pixel fontlar (Fusion Pixel 12px + Unifont 16px, MSDF kapalı)
 │   ├── tests/                   # GDUnit4 testleri
 │   │   ├── unit/                # Birim testleri
 │   │   └── integration/         # Entegrasyon testleri
