@@ -1,4 +1,4 @@
-# Steppeborn: Path of the Sky Wolf — AI Görsel Üretim Prompt'ları
+# ASENA: Path of the Sky Wolf — AI Görsel Üretim Prompt'ları
 
 *Türkçe alt-başlık: Gök Kurt'un Yolu*
 

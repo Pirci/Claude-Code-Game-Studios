@@ -1,4 +1,4 @@
-# Oyun Konsepti: Steppeborn — Path of the Sky Wolf
+# Oyun Konsepti: ASENA — Path of the Sky Wolf
 
 *Türkçe alt-başlık: Gök Kurt'un Yolu*
 

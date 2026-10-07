@@ -18,7 +18,7 @@ Technical direction (retroactive documentation of as-built architecture), valida
 
 ## Summary
 
-Steppeborn uses **no autoload singletons** for game services or state. Instead,
+ASENA uses **no autoload singletons** for game services or state. Instead,
 services are plain GDScript classes (`RefCounted`) instantiated by their owning
 context/orchestrator and wired together via explicit `bind_services(...)` /
 `bind_config(...)` methods called after `.new()`. This makes every dependency

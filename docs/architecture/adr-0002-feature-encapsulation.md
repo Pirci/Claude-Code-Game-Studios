@@ -18,7 +18,7 @@ Technical direction (retroactive documentation of as-built architecture), valida
 
 ## Summary
 
-Steppeborn organizes source code by **feature** (cohesive folders under
+ASENA organizes source code by **feature** (cohesive folders under
 `game/features/`), not by file type (`scripts/`, `scenes/`, `art/`). Each feature
 groups its code, scenes, and data resources together, depends minimally on outside
 code, and follows a layered dependency direction: leaf features (e.g. combat) have

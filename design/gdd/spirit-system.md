@@ -1,6 +1,6 @@
 # Sistem GDD: Kök Böri / Ruh Sistemi
 
-*Oyun: Steppeborn — Path of the Sky Wolf*
+*Oyun: ASENA — Path of the Sky Wolf*
 *Oluşturulma: 2026-07-14*
 *Durum: Taslak (kod henüz yok — tasarım spesifikasyonu)*
 *Katman: Feature (imza sistem)*

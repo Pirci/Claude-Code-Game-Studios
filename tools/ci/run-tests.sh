@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Steppeborn — GDUnit4 birim testlerini headless çalıştırır.
+# ASENA — GDUnit4 birim testlerini headless çalıştırır.
 #
 # Kullanım:
 #   GODOT=/path/to/Godot tools/ci/run-tests.sh [test_yolu]

@@ -1,6 +1,6 @@
 # Sistem GDD: Savaş Çözümü (Otomatik)
 
-*Oyun: Steppeborn — Path of the Sky Wolf*
+*Oyun: ASENA — Path of the Sky Wolf*
 *Oluşturulma: 2026-07-14*
 *Durum: Belgelenmiş (kod mevcut — `game/features/combat/combat_resolver.gd`)*
 *Katman: Core*

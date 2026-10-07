@@ -18,7 +18,7 @@ Technical direction (retroactive documentation of as-built architecture), valida
 
 ## Summary
 
-Steppeborn keeps all long-term game state in dedicated **data-only** objects
+ASENA keeps all long-term game state in dedicated **data-only** objects
 (`GameState`, `MapState`, `RegionData`) that hold variables and light getters but
 **no game logic** — mutation and rules live in controllers/services. This gives a
 single, inspectable hierarchy of state that is easy to save, load, and debug, and

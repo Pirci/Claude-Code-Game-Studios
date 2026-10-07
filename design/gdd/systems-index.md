@@ -1,4 +1,4 @@
-# Sistem GDD İndeksi — Steppeborn: Path of the Sky Wolf
+# Sistem GDD İndeksi — ASENA: Path of the Sky Wolf
 
 *Türkçe alt-başlık: Gök Kurt'un Yolu*
 *Son Güncelleme: 2026-07-14*
