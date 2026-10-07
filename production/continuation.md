@@ -5,7 +5,7 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-07
-- **Son commit:** `1206f14` (devam indeksi) — origin ile senkron
+- **Son commit:** `9f26595` (K-02 onayı) — origin ile senkron
 - **Proje evresi:** Concept (`production/stage.txt`)
 - **Aktif görev:** — (yok; sıradaki: C-01)
 
@@ -98,4 +98,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-07 | Art Bible (9 bölüm) — `design/art/art-bible.md` | `da43161` |
 | 2026-10-07 | Devam indeksi + "devam" protokolü | `1206f14` |
 | 2026-10-07 | Push protokole eklendi, anlamlı commit kuralı | `60f66b2` |
-| 2026-10-07 | K-02: `ai_turn_execution` kuralı onaylandı | (bu commit) |
+| 2026-10-07 | K-02: `ai_turn_execution` kuralı onaylandı | `9f26595` |
