@@ -46,6 +46,14 @@ See `docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` for full protocol and examples.
 > **First session?** If the project has no engine configured and no game concept,
 > run `/start` to begin the guided onboarding flow.
 
+## Devam Protokolü ("devam" komutu)
+
+Kullanıcı yalnızca **"devam"** yazarsa (büyük/küçük harf, "devam et", "Devam."
+fark etmez): `production/continuation.md` dosyasını oku ve oradaki **Devam
+Protokolü**'nü adım adım uygula — yarım kalan işi bitir, yoksa kuyruktaki ilk
+`[ ]` görevi yap, doğrula, commit'le, indeksi güncelle. Her "devam" = bir görev.
+Tamamlanmış (`[x]`) görev tekrar yapılmaz; keşfedilen yeni işler kuyruğa eklenir.
+
 ## Coding Standards
 
 @.claude/docs/coding-standards.md

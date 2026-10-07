@@ -13,3 +13,14 @@
 - GDD synced: region-map-system.md §3.5 now points at EnemyAIController.decide().
 - Engine specialist: GREEN LIGHT (no post-cutoff APIs, RefCounted lifecycle correct).
 - PENDING: registry update proposal (ai_turn_execution stance) awaiting user approval; remaining priority ADRs: Additive Modifier / Stat Pipeline, Save/Load Persistence.
+
+## Session Extract — 2026-10-07 (l10n, ASENA, pixel art, art bible)
+- Game renamed Steppeborn → ASENA (all locales identical, Latin).
+- Art direction switched watercolor → pixel art: 640×360 viewport, integer scaling, nearest, pixel snap.
+- Fonts: Fusion Pixel 12px (latin/ja/ko/zh_hans woff2) + GNU Unifont 16px (Arabic); LocaleFontController (features/localization) swaps theme for `ar`.
+- UI re-laid out for 640×360; pixel theme + generated icons (tools/asset-pipeline/*.gd); RTL fixes for map labels/info panel.
+- Fixed: gdUnit4 bin/ was gitignored → tests never ran; restored + run-tests.sh fails if runner missing. 34/34 pass.
+- Art Bible written: design/art/art-bible.md (9/9 sections, lean mode, AD sign-off skipped).
+- Pending code follow-ups from art bible: opaque ownership colours (blue/rust/keçe grey), map label LabelSettings outline + ellipsis, HUD bar 70% backgrounds, tamga sprites, ◆ selection marks, accessibility settings (colour-blind mode, reduce motion, show/hide region names), theme palette → Bölüm 4 UI palette, validate_palette.gd, ai-art-prompts.md rewrite.
+- Push blocked: Xcode license not accepted; commits ahead of origin — push via GitHub Desktop.
+- NEXT: all open work is indexed in production/continuation.md (task queue C-01…C-18, user actions K-01/K-02). User types "devam" → follow its Devam Protokolü.
