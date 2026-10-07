@@ -38,13 +38,13 @@ theme_override_constants/separation = 24
 
 [node name="TitleLabel" type="Label" parent="MainPanel"]
 layout_mode = 2
-text = "STEPPEBORN"
+text = "GAME_TITLE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SubtitleLabel" type="Label" parent="MainPanel"]
 layout_mode = 2
-text = "Path of the Sky Wolf"
+text = "GAME_SUBTITLE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
