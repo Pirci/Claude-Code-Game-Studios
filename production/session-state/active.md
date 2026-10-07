@@ -12,7 +12,7 @@
 - Covers gaps TR-map-005 (shipped enemy AI) + TR-spirit-005 (Erlik spread).
 - GDD synced: region-map-system.md §3.5 now points at EnemyAIController.decide().
 - Engine specialist: GREEN LIGHT (no post-cutoff APIs, RefCounted lifecycle correct).
-- PENDING: registry update proposal (ai_turn_execution stance) awaiting user approval; remaining priority ADRs: Additive Modifier / Stat Pipeline, Save/Load Persistence.
+- RESOLVED 2026-10-07: ai_turn_execution stance + ai_service_mutates_or_signals approved by user (K-02). Remaining priority ADRs (C-15, C-16) and ADR-0005 implementation (C-19) are queued in production/continuation.md.
 
 ## Session Extract — 2026-10-07 (l10n, ASENA, pixel art, art bible)
 - Game renamed Steppeborn → ASENA (all locales identical, Latin).

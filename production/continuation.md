@@ -60,7 +60,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | ID | Durum | İş | Not |
 | --- | --- | --- | --- |
 | K-01 | [x] | **Push:** origin'e gönderilmemiş commit'ler | 2026-10-07 push edildi (`1206f14`); push artık protokolün parçası |
-| K-02 | [ ] | **Karar:** `ai_turn_execution` registry güncelleme önerisi | /architecture-review (2026-08-13) sonrası onay bekliyor — bkz. `active.md` |
+| K-02 | [x] | **Karar:** `ai_turn_execution` registry güncelleme önerisi | 2026-10-07 onaylandı — kayıt (13 Ağustos'ta yazılmıştı) olduğu gibi kaldı |
 
 ## Görev Kuyruğu
 
@@ -84,6 +84,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-16 | [ ] | ADR: Save/Load Persistence (`/architecture-decision`) | Arch. review 2026-08-13 | — | ADR dosyası |
 | C-17 | [ ] | `/architecture-review` yeniden → ADR'leri Accepted yap | Arch. review | C-15, C-16, K-02 | Rapor + ADR durumları |
 | C-18 | [ ] | `/create-architecture` | Technical Setup | C-17 | Mimari doküman |
+| C-19 | [ ] | ADR-0005 uygulaması: `game/features/ai/` altında `EnemyAIController` + `ErlikSpreadController` (saf `decide()`), `MapController` intent'leri uygular; `_run_enemy_ai()` taşınır | ADR-0005 (K-02 sırasında keşfedildi) | C-17 | Davranış aynı kalır; mevcut testler yeşil + `decide()` için izole testler |
 
 ## Tamamlananlar
 
@@ -96,3 +97,5 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-07 | Tüm ekranlar 640×360'a yeniden yerleşti, pixel UI teması, RTL düzeltmeleri | `80fbc01` |
 | 2026-10-07 | Art Bible (9 bölüm) — `design/art/art-bible.md` | `da43161` |
 | 2026-10-07 | Devam indeksi + "devam" protokolü | `1206f14` |
+| 2026-10-07 | Push protokole eklendi, anlamlı commit kuralı | `60f66b2` |
+| 2026-10-07 | K-02: `ai_turn_execution` kuralı onaylandı | (bu commit) |

@@ -98,6 +98,7 @@ interfaces:
 
   - contract: ai_turn_execution
     status: active
+    # Approved by user 2026-10-07 (was written 2026-08-13 pending approval — K-02)
     pattern: direct_call     # orchestrator calls decide(), then applies intents
     producer: ai-decision-services (enemy-ai, erlik-spread)
     consumers:
@@ -256,6 +257,7 @@ forbidden_patterns:
 
   - pattern: ai_service_mutates_or_signals
     status: active
+    # Approved by user 2026-10-07 together with ai_turn_execution (K-02)
     description: "AI decision services (decide(map_state) -> Array[intent]) must be
       pure: read MapState and return intents only. They must not mutate state or emit
       gameplay signals. The orchestrator (MapController) applies intents and emits."
