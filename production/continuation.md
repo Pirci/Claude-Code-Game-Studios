@@ -5,7 +5,7 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-07
-- **Son commit:** `da43161` (art bible)
+- **Son commit:** `1206f14` (devam indeksi) — origin ile senkron
 - **Proje evresi:** Concept (`production/stage.txt`)
 - **Aktif görev:** — (yok; sıradaki: C-01)
 
@@ -18,8 +18,10 @@ fark etmez) şu adımlar **sırayla** uygulanır:
 
 1. **Durumu oku:** bu dosya → `production/session-state/active.md` →
    `git log --oneline -5` → `git status --short`.
-   (Git: `~/Applications/GitHub Desktop.app/Contents/Resources/app/git/bin/git` —
-   sistem git'i Xcode lisansına takılıyor.)
+   (Git: sistem git'i Xcode lisansına takılıyor — her komutta GitHub Desktop'un
+   git'ini PATH'in başına koy:
+   `D="$HOME/Applications/GitHub Desktop.app/Contents/Resources/app/git"; export PATH="$D/bin:$D/libexec/git-core:$PATH"`.
+   Kimlik doğrulama `gh auth git-credential` ile otomatik.)
 2. **Yarım kalan iş var mı?** Bir görev `[~]` durumundaysa veya çalışma ağacında
    commit'lenmemiş değişiklik varsa → **önce o görevi tamamla.** Baştan başlama:
    dosyalara ve commit'lere bakarak neyin bittiğini tespit et, kalan kısmı yap.
@@ -31,9 +33,11 @@ fark etmez) şu adımlar **sırayla** uygulanır:
    karar** (tasarım seçimi, kapsam, yeni bağımlılık) çıkarsa sorulur.
 5. **Doğrula:** testler (`tools/ci/run-tests.sh`), UI işlerinde ekran görüntüsü,
    görevin "Bitti kriteri".
-6. **Kapat:** commit at (Conventional Commits, gövdede `Task: C-XX`) → görevi
-   `[x] <commit>` yap → "Tamamlananlar" tablosuna ekle → üstteki "Son commit /
-   Aktif görev" alanlarını güncelle → `active.md`'ye kısa özet yaz.
+6. **Kapat:** görevi `[x] <commit>` yap → "Tamamlananlar" tablosuna ekle →
+   üstteki "Son commit / Aktif görev" alanlarını güncelle → `active.md`'ye kısa
+   özet yaz → **commit at ve push et** (`git push origin main`; kullanıcı
+   yetkilendirdi). Commit mesajı **her zaman anlamlı**: Conventional Commits
+   başlığı + gövdede *ne değişti ve neden*, nasıl doğrulandı, `Task: C-XX`.
 7. **Bir sonraki göreve geçme** — kullanıcının bir sonraki "devam"ını bekle
    (her "devam" = bir görev).
 
@@ -45,7 +49,7 @@ fark etmez) şu adımlar **sırayla** uygulanır:
 - Bir görev ertelenecekse `[-] ertelendi: <sebep>` yazılır; sessizce atlanmaz.
 - Kullanıcı başka bir iş isterse o yapılır; bitince bu dosyaya "Tamamlananlar"
   olarak işlenir, kuyruk sırası bozulmaz.
-- Push kullanıcı işidir (K-01) — Xcode lisansı kabul edilene kadar.
+- Her commit'ten sonra push edilir; push başarısız olursa sebebiyle birlikte kullanıcıya bildirilir.
 
 Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` ertelendi
 
@@ -55,7 +59,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 
 | ID | Durum | İş | Not |
 | --- | --- | --- | --- |
-| K-01 | [ ] | **Push:** origin'e gönderilmemiş commit'ler | GitHub Desktop → "Push origin". Kalıcı çözüm: terminalde `sudo xcodebuild -license` |
+| K-01 | [x] | **Push:** origin'e gönderilmemiş commit'ler | 2026-10-07 push edildi (`1206f14`); push artık protokolün parçası |
 | K-02 | [ ] | **Karar:** `ai_turn_execution` registry güncelleme önerisi | /architecture-review (2026-08-13) sonrası onay bekliyor — bkz. `active.md` |
 
 ## Görev Kuyruğu
@@ -91,3 +95,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-07 | Pixel art geçişi: 640×360, pixel fontlar (Fusion Pixel + Unifont), LocaleFontController | `5266962` |
 | 2026-10-07 | Tüm ekranlar 640×360'a yeniden yerleşti, pixel UI teması, RTL düzeltmeleri | `80fbc01` |
 | 2026-10-07 | Art Bible (9 bölüm) — `design/art/art-bible.md` | `da43161` |
+| 2026-10-07 | Devam indeksi + "devam" protokolü | `1206f14` |
