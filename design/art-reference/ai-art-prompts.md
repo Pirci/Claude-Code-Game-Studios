@@ -1,6 +1,6 @@
-# ASENA: Path of the Sky Wolf — AI Görsel Üretim Prompt'ları
+# ULUS: Blood of the Sky Wolf — AI Görsel Üretim Prompt'ları
 
-*Türkçe alt-başlık: Gök Kurt'un Yolu*
+*Türkçe alt-başlık: Gökkurt'un Kanı*
 
 Platform: **Gemini Nano Banana** (Nano Banana 2 / Nano Banana Pro)
 Stil referansı: Türk-bozkır kültürel estetiği + sulu boya el çizimi + **kozmik

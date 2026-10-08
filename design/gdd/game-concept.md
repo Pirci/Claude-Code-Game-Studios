@@ -1,6 +1,8 @@
-# Oyun Konsepti: ASENA — Path of the Sky Wolf
+# Oyun Konsepti: ULUS: Blood of the Sky Wolf
 
-*Türkçe alt-başlık: Gök Kurt'un Yolu*
+*Türkçe alt-başlık: Gökkurt'un Kanı*
+
+*İsim geçmişi: Steppeborn → ASENA (2026-10-07) → **ULUS: Blood of the Sky Wolf** (2026-10-08). "Ulus" = Türk-Moğol dünyasında yurt/devlet; logo kelimesi ULUS, alt başlık her dile çevrilir.*
 
 *Oluşturulma: 2026-07-10*
 *Son Güncelleme: 2026-07-14*

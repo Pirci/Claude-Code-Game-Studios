@@ -1,6 +1,6 @@
-# Sistem GDD İndeksi — ASENA: Path of the Sky Wolf
+# Sistem GDD İndeksi — ULUS: Blood of the Sky Wolf
 
-*Türkçe alt-başlık: Gök Kurt'un Yolu*
+*Türkçe alt-başlık: Gökkurt'un Kanı*
 *Son Güncelleme: 2026-07-14*
 
 Bu indeks tüm sistem GDD'lerini ve durumlarını takip eder. Yeni bir GDD

@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="ASENA"
+config/name="ULUS"
 config/description="Gök kurt Kök Böri'nin rehberliğinde Oğuz Kağan Destanı: dört yöne fetih, Erlik'in bozgununa karşı arınma."
 run/main_scene="res://contexts/root_context/root_context.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")

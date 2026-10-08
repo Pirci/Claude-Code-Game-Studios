@@ -1,6 +1,6 @@
 # Sistem GDD: Bölge Haritası ve Tur Akışı
 
-*Oyun: ASENA — Path of the Sky Wolf*
+*Oyun: ULUS: Blood of the Sky Wolf*
 *Oluşturulma: 2026-07-14*
 *Durum: Belgelenmiş (kod mevcut — `game/features/grid/`, `game/state/`)*
 *Katman: Core*

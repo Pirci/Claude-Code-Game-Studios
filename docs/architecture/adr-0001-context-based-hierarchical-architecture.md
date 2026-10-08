@@ -18,7 +18,7 @@ Technical direction (retroactive documentation of as-built architecture), valida
 
 ## Summary
 
-ASENA needs a scene/lifecycle structure that cleanly separates fundamentally
+ULUS needs a scene/lifecycle structure that cleanly separates fundamentally
 different game modes (main menu vs. in-game) while preserving long-lived state
 across transitions and avoiding global autoload singletons. We adopt a
 context-based hierarchy: a persistent `RootContext` scene owns `GameState` and

@@ -1,4 +1,4 @@
-# Art Bible — ASENA: Path of the Sky Wolf
+# Art Bible — ULUS: Blood of the Sky Wolf
 
 > **Durum**: Tamamlandı — 9/9 bölüm onaylandı (2026-10-07)
 > **Sanat yönü**: Pixel art (2026-10-07'de sulu boyadan geçildi)
@@ -62,7 +62,7 @@ süvarisi ve şu an sağlam" okunabilmeli.
 
 ### Pixel Art Konumlandırması
 
-ASENA **low-bit disiplin ile orta-bit palet** arasındadır: her asset basit,
+ULUS **low-bit disiplin ile orta-bit palet** arasındadır: her asset basit,
 ikonik ve hızla okunur; ama kozmik atmosfer için renkler katmanlıdır — **asset
 başına 16–32 renk, toplam ~64–128 renklik global palet**. Bu seviye solo
 üretim için sürdürülebilir ve kozmik ikiliği taşımaya yeter.
@@ -647,7 +647,7 @@ estetiğidir; dünyanın içinde olması gerekmez.
 - **Hiyerarşi boyutla değil renkle:** gövde ve butonlar 12px (Arapça 16px);
   başlık vurgusu `HeaderLabel` (altın `#EDC76B`); ikincil metin `#B8A689`.
   24px yalnızca özel tek başlıklar (sahne adı, rapor başlığı); 36px yalnızca oyun
-  adı "ASENA" (Latin, her dilde Fusion zinciri — keskin kalır).
+  adı "ULUS" (Latin, her dilde Fusion zinciri — keskin kalır).
 - **Arapça:** tek gövde boyutu (16px), hiyerarşi yalnızca renkle; 32px yalnızca
   özel başlık.
 - **Büyük harf:** büyük harfli metin çeviri dosyasında doğrudan büyük yazılır;
@@ -701,7 +701,7 @@ palet dışı renk üretir).
 ### Ekranlar
 
 - **Ana menü:** indigo `#141A33` zemin, soluk Kök Böri silüeti, kenarlarda altın
-  tündük; "ASENA" 36px altın; birincil buton süslü, diğerleri sade.
+  tündük; "ULUS" 36px altın; birincil buton süslü, diğerleri sade.
 - **Harita HUD:** üst bar (bölüm adı / altın / tur) ve alt bar (Ana Menü / Tur
   Bitir) **%70 opak koyu zemin** üzerinde; sağda 136px bölge bilgi paneli. HUD
   sade, harita odakta.
@@ -755,8 +755,8 @@ seçeneği.
 - **Export:** PNG, sRGB, **yalnızca 1× native boyut**. Alfa yalnızca 0 veya 255
   (yarı saydam piksel yok). Ölçeklenmiş varyant (`_2x` vb.) repoya girmez —
   büyütme Godot'un işidir (integer scaling).
-- **Global palet:** `art-source/global_palette_asena.ase` (tek kaynak, isimli
-  rampalar) → `art-source/global_palette_asena.gpl` (export, GIMP/Krita uyumu).
+- **Global palet:** `art-source/global_palette_ulus.ase` (tek kaynak, isimli
+  rampalar) → `art-source/global_palette_ulus.gpl` (export, GIMP/Krita uyumu).
   Bölüm 4 değişirse: `.ase` güncellenir → `.gpl` export edilir → doğrulayıcı
   yeniden çalışır → etkilenen asset'ler yeniden export edilir.
 - **Script ile üretilen asset'ler** (UI tema ikonları, dil adları) kaynak yerine
