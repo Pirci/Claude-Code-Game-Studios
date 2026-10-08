@@ -36,3 +36,4 @@
 - C-01-fix (b276316): hover outline = #EDC76B per bible (no separate hover tone). C-20 (5371770): run-tests.sh auto-detects Godot — GODOT env no longer needed.
 - C-02 (34ac70d): map labels use theme variation MapLabel (cream #F2E6C7, outline #1C170F, outline_size=2 = 1px each side) + ellipsis. Not LabelSettings (pins font_size, breaks Unifont swap). Bible §7 updated.
 - Screenshot helper scripts live in /tmp/ulus_shot (shot.gd, zoom.gd) — temp, outside repo. NEXT: C-03.
+- C-03 (db53df6): HUD theme variations HudBarTop/HudBarBottom/HudPanel (#1C150D @70%, 1px #8A6D4F). Bars wrapped in TopBarPanel/BottomBarPanel. Info panel → HudPanel. Bible §3 HUD border fixed to #8A6D4F. NEXT: C-04 (note: default "panel"/button styleboxes still old palette — C-04 scope).
