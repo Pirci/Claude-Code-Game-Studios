@@ -110,6 +110,18 @@ func _update_ui() -> void:
 func _refresh_map() -> void:
 	_campaign_map.refresh(_game_state.map_state)
 	_update_ui()
+	_update_focus_chain()
+
+
+## Dinamik Ordu Gönder butonunu odak zincirine bağlar (art bible §7): görünürken
+## Tur Bitir ↑ Ordu Gönder ↓ Tur Bitir; gizliyken bağ kaldırılır.
+func _update_focus_chain() -> void:
+	var send: Control = _info_panel.get_focus_target()
+	if send == null:
+		_end_turn_button.focus_neighbor_top = NodePath()
+		return
+	_end_turn_button.focus_neighbor_top = _end_turn_button.get_path_to(send)
+	send.focus_neighbor_bottom = send.get_path_to(_end_turn_button)
 
 
 func _on_region_clicked(region_id: StringName) -> void:

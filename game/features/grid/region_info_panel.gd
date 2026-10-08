@@ -72,6 +72,14 @@ func show_region(data: RegionData) -> void:
 	show()
 
 
+## Klavye/gamepad odak zincirine bağlanacak buton (Ordu Gönder) — görünür değilse null.
+## Panel kardeşlerini bilmez; zinciri ebeveyn kurar.
+func get_focus_target() -> Control:
+	if visible and _send_button.visible:
+		return _send_button
+	return null
+
+
 func hide_panel() -> void:
 	_region_id = &""
 	hide()
