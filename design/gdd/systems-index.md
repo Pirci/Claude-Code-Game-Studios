@@ -1,7 +1,7 @@
 # Sistem GDD İndeksi — ULUS: Blood of the Sky Wolf
 
 *Türkçe alt-başlık: Gökkurt'un Kanı*
-*Son Güncelleme: 2026-07-14*
+*Son Güncelleme: 2026-10-08* — son çapraz inceleme: [gdd-cross-review-2026-10-08.md](gdd-cross-review-2026-10-08.md) (FAIL)
 
 Bu indeks tüm sistem GDD'lerini ve durumlarını takip eder. Yeni bir GDD
 eklendiğinde buraya bir satır eklenmeli. Kaynak konsept: [game-concept.md](game-concept.md).
@@ -15,11 +15,11 @@ Foundation → Core → Feature → Presentation → Polish
 | Sistem | Katman | Dosya | Durum | Öncelik |
 | ---- | ---- | ---- | ---- | ---- |
 | **Oyun Konsepti** | Foundation | [game-concept.md](game-concept.md) | Taslak (revize edildi) | — |
-| **Bölge Fethi / Harita** | Core | [region-map-system.md](region-map-system.md) | Belgelendi (kod mevcut) | 1 |
+| **Bölge Fethi / Harita** | Core | [region-map-system.md](region-map-system.md) | Needs Revision | 1 |
 | **Kaynak Yönetimi** (altın/sürü/ruh) | Core | `resource-system.md` | Yazılmadı (gelir kodu mevcut) | 1 |
-| **Ordu & Birim Sistemi** | Core | [army-system.md](army-system.md) | Belgelendi (kod mevcut) | 1 |
-| **Savaş Çözümü** (otomatik + rapor) | Core | [combat-system.md](combat-system.md) | Belgelendi (kod mevcut) | 1 |
-| **Kök Böri / Ruh Sistemi** (imza) | Feature | [spirit-system.md](spirit-system.md) | Taslak yazıldı | 2 |
+| **Ordu & Birim Sistemi** | Core | [army-system.md](army-system.md) | Needs Revision | 1 |
+| **Savaş Çözümü** (otomatik + rapor) | Core | [combat-system.md](combat-system.md) | Needs Revision | 1 |
+| **Kök Böri / Ruh Sistemi** (imza) | Feature | [spirit-system.md](spirit-system.md) | Needs Revision | 2 |
 | **Katmanlı Düşman** (uluslar + Erlik) | Feature | `enemy-layers.md` | Yazılmadı | 2 |
 | **Erlik Bozgunu & Arındırma** | Feature | `corruption-purification.md` | Yazılmadı | 2 |
 | **Konsey (Altı Oğul)** | Feature | `council-system.md` | Yazılmadı | 3 |
