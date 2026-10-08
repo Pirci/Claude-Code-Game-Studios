@@ -31,18 +31,17 @@ func test_default_outline_is_dark_ramp_tone() -> void:
 	assert_str(node.get_outline_color().to_html(false)).is_equal("9a4220")
 
 
-func test_hover_changes_outline_not_fill() -> void:
+func test_hover_outline_is_gold_and_fill_unchanged() -> void:
 	var node: RegionNode = _node(RegionData.Owner.PLAYER)
 	node._on_mouse_entered()
-	assert_object(node.get_outline_color()).is_equal(RegionNode.COLOR_HOVER_OUTLINE)
+	assert_str(node.get_outline_color().to_html(false)).is_equal("edc76b")
 	assert_str(node.get_fill_color().to_html(false)).is_equal("47a3e8")
 	node._on_mouse_exited()
 	assert_str(node.get_outline_color().to_html(false)).is_equal("2e7ab8")
 
 
-func test_selected_outline_is_gold_and_overrides_hover() -> void:
+func test_selected_outline_is_gold_and_fill_unchanged() -> void:
 	var node: RegionNode = _node(RegionData.Owner.NEUTRAL)
-	node._on_mouse_entered()
 	node.is_selected = true
 	assert_str(node.get_outline_color().to_html(false)).is_equal("edc76b")
 	assert_str(node.get_fill_color().to_html(false)).is_equal("6b655a")

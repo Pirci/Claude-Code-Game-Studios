@@ -15,10 +15,8 @@ const RAMP_NEUTRAL: PackedColorArray = [Color("#4A453C"), Color("#6B655A"), Colo
 const RAMP_DARK: int = 0
 const RAMP_MAIN: int = 1
 const RAMP_LIGHT: int = 2
-## Seçim konturu — Ülgen altını rampası.
-const COLOR_SELECTED_OUTLINE := Color("#EDC76B")
-## Hover konturu — aynı rampanın bir alt tonu; seçimden ayırt edilsin diye.
-const COLOR_HOVER_OUTLINE := Color("#C99A3D")
+## Seçili / üzerine gelinen bölge konturu — Ülgen altını (art bible §4).
+const COLOR_HIGHLIGHT_OUTLINE := Color("#EDC76B")
 ## Bölge adı / ordu etiket kutusu (640×360 base, piksel).
 const LABEL_WIDTH: int = 96
 const LABEL_HEIGHT: int = 16
@@ -119,12 +117,10 @@ func get_fill_color() -> Color:
 	return get_owner_ramp(_owner)[RAMP_MAIN]
 
 
-## 1px kontur rengi: seçim > hover > rampanın koyu tonu.
+## 1px kontur rengi: seçili veya üzerine gelinmişse altın, değilse rampanın koyu tonu.
 func get_outline_color() -> Color:
-	if is_selected:
-		return COLOR_SELECTED_OUTLINE
-	if _is_hovered:
-		return COLOR_HOVER_OUTLINE
+	if is_selected or _is_hovered:
+		return COLOR_HIGHLIGHT_OUTLINE
 	return get_owner_ramp(_owner)[RAMP_DARK]
 
 
