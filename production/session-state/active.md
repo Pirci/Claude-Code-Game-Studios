@@ -45,3 +45,4 @@
 - C-09 (95d8f33): NumberFormatter.format_int + THOUSANDS_SEPARATOR key (fr/ru U+00A0). Used in HUD/region/info panel. Queued C-26 (to_lower in info panel → "runde" in German). NEXT: C-10.
 - C-10 (1eb1b88): art-source/global_palette_ulus.gpl (94 colours, single source; .ase dropped) + tools/asset-pipeline/validate_palette.gd, run by tools/ci/run-tests.sh after tests. All 32 PNGs clean. Queued C-27 (no GitHub Actions workflow exists). NEXT: C-11.
 - C-11 (7f0f5d5): game-concept.md watercolour passages → pixel art / art bible refs; only a historical note remains. NEXT: C-12 (ai-art-prompts.md rewrite).
+- C-12 (0f64d19): ai-art-prompts.md rewritten for pixel art; AI output = concept reference only (bible §9 updated). NEXT: C-13 (/review-all-gdds).
