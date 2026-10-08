@@ -13,16 +13,20 @@
 
 ## Conflicts Found (must resolve before architecture)
 
-🔴 **K1 — `effective_region_income` (formula)**
+🔴 **K1 — `effective_region_income` (formula)** — **RESOLVED 2026-10-08**
 - Registry (source `design/gdd/resource-system.md` F1):
   `floor(G_base × max(0, 1 − corruption_level × PROD_PENALTY_PER_LEVEL))`, output 0–5, integer.
 - `spirit-system.md` §4.3 defines its own `efektif_uretim = base_uretim × max(0, 1 −
   corruption_level × PROD_PENALTY_PER_LEVEL)` — different variable names, **rounding undefined**.
 - `spirit-system.md` §3.1 "seviye 3 = üretim durur" and AC7 "seviye 3 → **0**": with P = 0.25,
   level 3 keeps 25 %. Prolog regions (G_base ≤ 3) floor to 0, but 4–5 gold regions keep 1.
-- **Resolution:** spirit §4.3 references resource F1 instead of defining a formula; for level 3
-  either (a) reword to "üretim %25'e düşer" or (b) set P = 0.34 so level 3 truly stops production.
-  Design decision → **open**, tracked by C-33 / C-31 (cross-review W8).
+- **Resolution (user decision, option c):** the linear penalty is replaced by a data-driven
+  table `CORRUPTION_PRODUCTION_MULTIPLIERS = [1.0, 0.75, 0.5, 0.0]` (owned by spirit-system):
+  levels 1–2 unchanged, level 3 stops production in every region. Spirit §4.3 now supplies only
+  `M_c` and points to resource F1 for the formula. Registry: formula revised,
+  `prod_penalty_per_level` deprecated, `corruption_production_multipliers` added.
+  Compared: (a) P = 0.25 + reword (5-gold regions keep 1 at level 3), (b) P = 0.34 (2-gold regions
+  already 0 at level 2).
 
 🔴 **K2 — Corruption visuals: spirit ↔ art bible** — **RESOLVED 2026-10-08**
 - `spirit-system.md` §3.1: "Görsel: zehir yeşili → mor → siyah (seviyeye göre)".
@@ -53,7 +57,7 @@ None — all entries were written today from their source GDDs.
 
 ## Clean Entries
 
-✅ `prod_penalty_per_level` = 0.25 — spirit (source), registry and resource agree.
+✅ `prod_penalty_per_level` = 0.25 — agreed at scan time; deprecated after K1 resolution.
 ✅ `turn_income` — region-map §4 example ("tur geliri = 2") and AC5 agree with F2.
 ✅ `recruit_cap` — only referenced by its source GDD.
 ✅ Tamga IDs `oguz` / `erlik_beast` — region-map §7 agrees with art bible §5.
@@ -70,5 +74,5 @@ Not registered yet: `erlik_beast` entity — its owner type depends on decision 
 
 ## Verdict: CONFLICTS FOUND
 
-2 conflicts: K2 resolved; **K1 open** (design decision, C-33 / C-31). Both overlap cross-review
-findings W8 / W12. Re-run `/consistency-check` after C-33.
+2 conflicts, **both resolved the same day** (K1 by user decision, K2 by reference fix). They
+overlap cross-review findings W8 (level-3 part) and W12. Re-run `/consistency-check` after C-33.

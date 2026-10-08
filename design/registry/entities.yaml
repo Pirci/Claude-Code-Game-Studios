@@ -116,11 +116,12 @@ formulas:
     variables:
       - G_base
       - corruption_level
-      - PROD_PENALTY_PER_LEVEL
+      - CORRUPTION_PRODUCTION_MULTIPLIERS
     output_range: [0, 5]
-    expression: "floor(G_base * max(0, 1 - corruption_level * PROD_PENALTY_PER_LEVEL))"
+    # was: "floor(G_base * max(0, 1 - corruption_level * PROD_PENALTY_PER_LEVEL))" before 2026-10-08 (K1, consistency check)
+    expression: "floor(G_base * CORRUPTION_PRODUCTION_MULTIPLIERS[corruption_level])"
     added: 2026-10-08
-    revised: ""
+    revised: 2026-10-08
 
   - name: turn_income
     status: active
@@ -219,13 +220,24 @@ constants:
     revised: ""
 
   - name: prod_penalty_per_level
-    status: active
+    status: deprecated   # 2026-10-08: replaced by corruption_production_multipliers (K1)
     source: design/gdd/spirit-system.md
     referenced_by:
       - design/gdd/spirit-system.md
       - design/gdd/resource-system.md   # F1
     value: 0.25
     unit: fraction of production per corruption level
+    added: 2026-10-08
+    revised: ""
+
+  - name: corruption_production_multipliers
+    status: active
+    source: design/gdd/spirit-system.md
+    referenced_by:
+      - design/gdd/spirit-system.md
+      - design/gdd/resource-system.md   # F1 M_c
+    value: [1.0, 0.75, 0.5, 0.0]
+    unit: production multiplier per corruption level 0–3
     added: 2026-10-08
     revised: ""
 

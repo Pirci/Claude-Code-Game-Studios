@@ -38,8 +38,9 @@ geçmeliyim" baskısı hisseder; arındırdıkça "kutsandım" tatmini yaşar.
     Erlik Moru + Erlik Kömürü, dithering'li leke; sahiplik rengini gizlemez,
     üstüne biner). Yeşil arındırılmış toprağın rengidir. Seviyenin nasıl
     gösterileceği (dither yoğunluğu / leke boyutu) henüz tanımsız — C-30/C-31.
-  - Ceza: o bölgenin `gold_per_turn` ve `herd_per_turn` üretimi `corruption_level`
-    başına %25 azalır (seviye 3 = üretim durur)
+  - Ceza: o bölgenin `gold_per_turn` ve `herd_per_turn` üretimi seviyeye göre
+    çarpanla düşer: seviye 1 → ×0.75, seviye 2 → ×0.5, **seviye 3 → ×0 (üretim
+    durur)** (`CORRUPTION_PRODUCTION_MULTIPLIERS`, §4.3).
   - Bir "arınma direnci" (`corruption_strength`) taşır (bkz. Formüller)
 
 ### 3.2 Arındırma (Purification)
@@ -90,7 +91,7 @@ Değişkenler ve varsayılan (tuning) değerleri:
 | ---- | ---- | ---- | ---- |
 | `RUH_PER_LEVEL` | Seviye başına Ruh kazanımı | 10 | 5–20 |
 | `CORR_STR_PER_LEVEL` | Seviye başına arınma direnci | 4 | 2–8 |
-| `PROD_PENALTY_PER_LEVEL` | Seviye başına üretim cezası | 0.25 | 0.1–0.34 |
+| `CORRUPTION_PRODUCTION_MULTIPLIERS` | Seviye başına üretim çarpanı (seviye 0–3) | [1.0, 0.75, 0.5, 0.0] | azalan; son eleman 0–0.25 |
 | `BASE_BOON_COST` | İlk lütuf maliyeti | 30 | 10–60 |
 | `BOON_COST_STEP` | Lütuf başına maliyet artışı | 20 | 5–40 |
 | `ERLIK_SPREAD_INTERVAL` | Yayılma periyodu (tur) | 4 | 2–8 |
@@ -109,10 +110,13 @@ ruh_gain = round( corruption_level × RUH_PER_LEVEL × (1 + arinma_ustaligi_bonu
 Örnek: seviye 2, 1 Arınma Ustalığı lütfu → `round(2 × 10 × 1.20) = 24` Ruh.
 
 ### 4.3 Üretim cezası
+Bu sistem yalnızca **bozulma çarpanını** sağlar; gelir formülünün sahibi
+`resource-system.md`'dir (F1: `floor(G_base × M_c)`).
 ```
-efektif_uretim = base_uretim × max(0, 1 − corruption_level × PROD_PENALTY_PER_LEVEL)
+M_c = CORRUPTION_PRODUCTION_MULTIPLIERS[corruption_level]   # [1.0, 0.75, 0.5, 0.0]
 ```
-Örnek: base 3 altın, seviye 2 → `3 × (1 − 0.5) = 1.5 → floor = 1` altın.
+Örnek: base 3 altın, seviye 2 → `M_c = 0.5` → F1: `floor(3 × 0.5) = 1` altın.
+Seviye 3'te `M_c = 0` → bölge gelirine bakılmaksızın üretim durur.
 
 ### 4.4 Lütuf maliyeti (n = daha önce alınan lütuf sayısı)
 ```
@@ -189,7 +193,7 @@ hedef.corruption_level = min(3, hedef.corruption_level + 1)
 | ---- | ---- | ---- | ---- |
 | `RUH_PER_LEVEL` | Güç eğrisi hızı | 5–20 | Yüksek = hızlı güçlenme |
 | `CORR_STR_PER_LEVEL` | Arındırma zorluğu | 2–8 | Yüksek = daha çok ordu gerekir |
-| `PROD_PENALTY_PER_LEVEL` | Bozulmanın ekonomik baskısı | 0.1–0.34 | 0.34×3 ≈ üretim durması |
+| `CORRUPTION_PRODUCTION_MULTIPLIERS` | Bozulmanın ekonomik baskısı | azalan dizi; son eleman 0–0.25 | Son eleman >0 → seviye 3 bölgeler üretmeye devam eder; ara değerler çok düşükse küçük obalar seviye 1–2'de 0'a iner |
 | `BASE_BOON_COST` / `BOON_COST_STEP` | Lütuf sıklığı | 10–60 / 5–40 | Düşük = sık lütuf |
 | `ERLIK_SPREAD_INTERVAL` | Zaman baskısı | 2–8 tur | Düşük = agresif Erlik |
 | Lütuf etki yüzdeleri | Build gücü | %3–%15 | Denge kritik — çok yüksek zorluğu bozar |

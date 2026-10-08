@@ -136,17 +136,18 @@ birebir uygulayan bir Prolog simülasyonuyla seçildi (aday A — aşağıdaki d
 
 ### F1 — Bölgenin efektif geliri
 
-`effective_region_income = floor(G_base × M_c)`, burada `M_c = max(0, 1 − C × P)`.
+`effective_region_income = floor(G_base × M_c)`, burada
+`M_c = CORRUPTION_PRODUCTION_MULTIPLIERS[C]` (Ruh sistemi, §4.3).
 
 | Değişken | Sembol | Tip | Aralık | Açıklama |
 | --- | --- | --- | --- | --- |
 | Taban gelir | `G_base` | int | 0–5 | Bölge tanımındaki `gold_per_turn` |
 | Bozulma seviyesi | `C` | int | 0–3 | Ruh sisteminden gelir; MVP Prolog'da 0 |
-| Seviye başı ceza | `P` | float | 0.1–0.34 | `PROD_PENALTY_PER_LEVEL` (Ruh sistemi, varsayılan 0.25) |
-| Bozulma çarpanı | `M_c` | float | 0.0–1.0 | Ruh sisteminden gelen girdi |
+| Seviye çarpanları | — | float[4] | azalan, 1.0 → 0.0 | `CORRUPTION_PRODUCTION_MULTIPLIERS` (Ruh sistemi): [1.0, 0.75, 0.5, 0.0] |
+| Bozulma çarpanı | `M_c` | float | 0.0–1.0 | Seviyenin çarpanı; Ruh sisteminden gelen girdi |
 | Efektif gelir | `G_eff` | int | 0–5 | Aşağı yuvarlanmış |
 
-**Çıktı aralığı:** 0–5. Seviye 3 bozulmada 2 altınlık bölge `floor(0.5) = 0`.
+**Çıktı aralığı:** 0–5. Seviye 3 bozulmada her bölge 0 (`M_c = 0`).
 **Örnek:** Otağ `floor(2 × 1.0) = 2`; 2. seviye bozulmuş Bereket Vadisi
 `floor(3 × 0.5) = 1`.
 
@@ -353,7 +354,7 @@ kararıdır (→ ADR / uygulama).
 | Değer | Sahibi | Bu sisteme etkisi |
 | --- | --- | --- |
 | Bölge `gold_per_turn` | `region-map-system.md` (bölge verisi) | Hem geliri (F1) hem üretim tavanını (F3) belirler |
-| `PROD_PENALTY_PER_LEVEL` (`P`) | `spirit-system.md` | Bozulma çarpanı `M_c` |
+| `CORRUPTION_PRODUCTION_MULTIPLIERS` | `spirit-system.md` | Bozulma çarpanı `M_c` |
 | `B_add`, `M_g` (lütuflar) | `spirit-system.md` | Tur geliri (F2) |
 
 **Kritik etkileşim:** Başlangıç altını ve düşman takviyesi birlikte oyuncunun ne
