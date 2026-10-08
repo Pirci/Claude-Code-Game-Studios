@@ -17,6 +17,8 @@ var _send_button: Button
 func _ready() -> void:
 	# Yükseklik içerikten gelir (dil bazlı font boyutu değişebilir).
 	custom_minimum_size = Vector2(136, 0)
+	# HUD paneli: yarı opak zemin + 1px kenarlık (art bible §7 Panel Sistemi).
+	theme_type_variation = &"HudPanel"
 	# Panel her dilde haritanın boş kalan sağ şeridinde durur (harita aynalanmaz);
 	# içerik ise dile göre (Arapça → RTL) hizalanır.
 	layout_direction = Control.LAYOUT_DIRECTION_LTR

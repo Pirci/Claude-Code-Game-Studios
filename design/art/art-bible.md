@@ -256,7 +256,7 @@ hızla tanınır. Mevcut temel (keskin köşe, 1px kenarlık) doğrudur.
 - **Birincil aksiyon** (Tur Bitir, Saldır): 5×5 koçboynuzu köşe süsü, düz dolgu,
   1px kontrast kenarlık. **İkincil** (Geri, İptal): süs yok, daha düşük kontrast.
 - **Panel çerçeveleri:** 2px kilim bandı, köşelerde 5×5 koçboynuzu/tündük.
-- **Harita HUD:** yarı saydam koyu zemin (~%70), 1px altın kenarlık, köşe süsü
+- **Harita HUD:** yarı saydam koyu zemin (~%70), 1px `#8A6D4F` kenarlık (Bölüm 7 Panel Sistemi), köşe süsü
   yok — haritayı kapatmaz.
 
 *Tasarım testi:* Ana menü ve oyun HUD'u yan yana — ikisi de Türk mitolojik

@@ -72,10 +72,11 @@ func _setup_map_visuals() -> void:
 	_info_panel.anchor_right = 1.0
 	_info_panel.anchor_bottom = 1.0
 	# Harita x ≤ 491'de biter; panel sağ kenarda, alt barın üstünde yukarı doğru büyür.
+	# Alt bar 27px → panel ile arasında sağ kenardaki gibi 4px boşluk.
 	_info_panel.offset_left = -140.0
-	_info_panel.offset_top = -130.0
+	_info_panel.offset_top = -131.0
 	_info_panel.offset_right = -4.0
-	_info_panel.offset_bottom = -30.0
+	_info_panel.offset_bottom = -31.0
 	_info_panel.grow_horizontal = 0
 	_info_panel.grow_vertical = 0
 	add_child(_info_panel)

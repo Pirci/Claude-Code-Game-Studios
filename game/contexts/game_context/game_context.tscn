@@ -22,60 +22,60 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.133, 0.165, 0.094, 1)
 
-[node name="TopBar" type="HBoxContainer" parent="."]
+[node name="TopBarPanel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 8.0
-offset_top = 4.0
-offset_right = -8.0
-offset_bottom = 20.0
 grow_horizontal = 2
+theme_type_variation = &"HudBarTop"
+
+[node name="TopBar" type="HBoxContainer" parent="TopBarPanel"]
+layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="ChapterLabel" type="Label" parent="TopBar"]
+[node name="ChapterLabel" type="Label" parent="TopBarPanel/TopBar"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "CHAPTER_1_TITLE"
 text_overrun_behavior = 3
 
-[node name="GoldLabel" type="Label" parent="TopBar"]
+[node name="GoldLabel" type="Label" parent="TopBarPanel/TopBar"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "GOLD"
 horizontal_alignment = 1
 
-[node name="TurnLabel" type="Label" parent="TopBar"]
+[node name="TurnLabel" type="Label" parent="TopBarPanel/TopBar"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "TURN"
 horizontal_alignment = 2
 
-[node name="BottomBar" type="HBoxContainer" parent="."]
+[node name="BottomBarPanel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 4.0
-offset_top = -26.0
-offset_right = -4.0
-offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_type_variation = &"HudBarBottom"
+
+[node name="BottomBar" type="HBoxContainer" parent="BottomBarPanel"]
+layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="MenuButton" type="Button" parent="BottomBar"]
+[node name="MenuButton" type="Button" parent="BottomBarPanel/BottomBar"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "MAIN_MENU"
 
-[node name="Spacer" type="Control" parent="BottomBar"]
+[node name="Spacer" type="Control" parent="BottomBarPanel/BottomBar"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="EndTurnButton" type="Button" parent="BottomBar"]
+[node name="EndTurnButton" type="Button" parent="BottomBarPanel/BottomBar"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "END_TURN"

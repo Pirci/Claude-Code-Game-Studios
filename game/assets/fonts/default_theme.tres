@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=27 format=3]
+[gd_resource type="Theme" load_steps=30 format=3]
 
 [ext_resource type="Font" path="res://assets/fonts/default_font.tres" id="1_font"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/theme/slider_grabber.png" id="grabber"]
@@ -121,6 +121,39 @@ anti_aliasing = false
 
 [sub_resource type="StyleBoxEmpty" id="empty"]
 
+[sub_resource type="StyleBoxFlat" id="hud_bar_top"]
+content_margin_left = 8.0
+content_margin_top = 2.0
+content_margin_right = 8.0
+content_margin_bottom = 2.0
+bg_color = Color(0.109804, 0.0823529, 0.0509804, 0.7)
+border_width_bottom = 1
+border_color = Color(0.541176, 0.427451, 0.309804, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="hud_bar_bottom"]
+content_margin_left = 4.0
+content_margin_top = 3.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.109804, 0.0823529, 0.0509804, 0.7)
+border_width_top = 1
+border_color = Color(0.541176, 0.427451, 0.309804, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="hud_panel"]
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(0.109804, 0.0823529, 0.0509804, 0.7)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.541176, 0.427451, 0.309804, 1)
+anti_aliasing = false
+
 [resource]
 default_font = ExtResource("1_font")
 default_font_size = 12
@@ -174,3 +207,9 @@ MapLabel/base_type = &"Label"
 MapLabel/colors/font_color = Color(0.94902, 0.901961, 0.780392, 1)
 MapLabel/colors/font_outline_color = Color(0.109804, 0.0901961, 0.0588235, 1)
 MapLabel/constants/outline_size = 2
+HudBarTop/base_type = &"PanelContainer"
+HudBarTop/styles/panel = SubResource("hud_bar_top")
+HudBarBottom/base_type = &"PanelContainer"
+HudBarBottom/styles/panel = SubResource("hud_bar_bottom")
+HudPanel/base_type = &"PanelContainer"
+HudPanel/styles/panel = SubResource("hud_panel")
