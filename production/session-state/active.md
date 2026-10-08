@@ -46,3 +46,11 @@
 - C-10 (1eb1b88): art-source/global_palette_ulus.gpl (94 colours, single source; .ase dropped) + tools/asset-pipeline/validate_palette.gd, run by tools/ci/run-tests.sh after tests. All 32 PNGs clean. Queued C-27 (no GitHub Actions workflow exists). NEXT: C-11.
 - C-11 (7f0f5d5): game-concept.md watercolour passages → pixel art / art bible refs; only a historical note remains. NEXT: C-12 (ai-art-prompts.md rewrite).
 - C-12 (0f64d19): ai-art-prompts.md rewritten for pixel art; AI output = concept reference only (bible §9 updated). NEXT: C-13 (/review-all-gdds).
+
+## Session Extract — /review-all-gdds 2026-10-08
+- Verdict: FAIL
+- GDDs reviewed: 4 (region-map, army, combat, spirit) + concept + index
+- Flagged for revision: region-map-system.md, spirit-system.md, army-system.md, combat-system.md (+ resource-system.md to write)
+- Blocking issues: 7 — B1 no army production/gold sink; B2 Erlik overlay vs ENEMY owner; B3 purification not in arrival resolution; B4 spread owner + end_turn position; B5 corruption on conquest; B6 boon timing; B7 mid-turn win vs end-turn check
+- Recommended next: resolve design decisions C-28…C-32 (start with C-28 production / C-29 Erlik model), then C-33 fixes, C-34 re-run
+- Report: design/gdd/gdd-cross-review-2026-10-08.md

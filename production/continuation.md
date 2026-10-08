@@ -5,9 +5,9 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-08
-- **Son commit:** `0f64d19` (C-12 AI prompt seti)
+- **Son commit:** `b571487` (C-13 GDD çapraz inceleme — FAIL)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-13)
+- **Aktif görev:** — (yok; sıradaki: C-14)
 
 ---
 
@@ -80,11 +80,11 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-10 | [x] `1eb1b88` | Global palet dosyası `art-source/global_palette_ulus.gpl` + `tools/asset-pipeline/validate_palette.gd` + CI'a bağla | §8 | — | Mevcut asset'ler doğrulayıcıdan geçer (veya ihlaller listelenir) |
 | C-11 | [x] `7f0f5d5` | `game-concept.md`'deki kalan sulu boya ifadelerini art bible'a yönlendir (MDA "Duygu", oturum seviyesi, ilhamlar) | Tutarlılık | — | grep "sulu boya" yalnızca tarihsel notta |
 | C-12 | [x] `0f64d19` | `design/art-reference/ai-art-prompts.md`'yi pixel art kurallarına göre yeniden yaz (veya /asset-spec ile değiştir) | §9 | — | Art bible kurallarıyla uyumlu prompt seti |
-| C-13 | [ ] | `/review-all-gdds` | Technical Setup gate | — | Rapor dosyası |
+| C-13 | [x] `b571487` | `/review-all-gdds` | Technical Setup gate | — | Rapor dosyası |
 | C-14 | [ ] | `/consistency-check` (GDD'ler ↔ art bible ↔ entity registry) | Tutarlılık | C-13 | Rapor |
 | C-15 | [ ] | ADR: Additive Modifier / Stat Pipeline (`/architecture-decision`) | Arch. review 2026-08-13 | — | ADR dosyası |
 | C-16 | [ ] | ADR: Save/Load Persistence (`/architecture-decision`) | Arch. review 2026-08-13 | — | ADR dosyası |
-| C-17 | [ ] | `/architecture-review` yeniden → ADR'leri Accepted yap | Arch. review | C-15, C-16, K-02 | Rapor + ADR durumları |
+| C-17 | [ ] | `/architecture-review` yeniden → ADR'leri Accepted yap | Arch. review | C-15, C-16, K-02, C-34 | Rapor + ADR durumları |
 | C-18 | [ ] | `/create-architecture` | Technical Setup | C-17 | Mimari doküman |
 | C-19 | [ ] | ADR-0005 uygulaması: `game/features/ai/` altında `EnemyAIController` + `ErlikSpreadController` (saf `decide()`), `MapController` intent'leri uygular; `_run_enemy_ai()` taşınır | ADR-0005 (K-02 sırasında keşfedildi) | C-17 | Davranış aynı kalır; mevcut testler yeşil + `decide()` için izole testler |
 | C-20 | [x] `5371770` | `tools/ci/run-tests.sh` varsayılan Godot yolu eskimiş (`~/Downloads/Applications`); Godot artık `/Applications/Godot.app` → yaygın konumları sırayla dene | C-01 sırasında keşfedildi (script `GODOT` olmadan çalışmıyor) | — | `GODOT` ayarlamadan `run-tests.sh` testleri çalıştırır |
@@ -95,6 +95,13 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-25 | [ ] | **Karar + uygulama:** ekran açılışında başlangıç odağı yok (menü, ayarlar, oyun) → klavye/gamepad kullanıcısı gezinmeye başlayamıyor. Fare kullanıcısına sürekli altın odak çerçevesi göstermeden çözüm seç (ör. ilk yön tuşunda odak ver / Godot 4.7 odak görünürlüğü ayarını araştır) | C-08 sırasında keşfedildi | — | Her ekranda ilk ok/Tab tuşu bir butona odaklanır; fareyle açılışta çerçeve yok |
 | C-26 | [ ] | Bilgi panelinde `tr("TURN").to_lower()` → Almancada "2 / runde" (isimler büyük harf olmalı); bible programatik büyük/küçük harf dönüşümünü yasaklıyor. `PER_TURN` gibi ayrı çeviri key'i (11 dil) + kodda başka `to_lower()/to_upper()` kalmadığını doğrula | C-09 sırasında keşfedildi | — | grep `to_lower\|to_upper` oyuncuya görünen metinde yok; de ekran görüntüsü |
 | C-27 | [ ] | Gerçek CI hattı yok: `.github/workflows/` boş (yalnızca şablonlar). Coding standards "her push/PR'da testler çalışır, kırmızıysa merge yok" diyor → GitHub Actions: headless Godot 4.7 + `tools/ci/run-tests.sh` (testler + palet) | C-10 sırasında keşfedildi | — | Push'ta workflow yeşil; bilerek kırılan testte kırmızı |
+| C-28 | [ ] | **Karar + GDD:** ordu üretimi (maliyet, formül, sahibi) — `resource-system.md` yazılır veya `army-system.md`'ye eklenir; kartopu/bakım (D1, D2) burada değerlendirilir | `design/gdd/gdd-cross-review-2026-10-08.md` B1 | C-13 | GDD'de üretim formülü + ayar aralığı; Prolog kazanılabilirliği hesapla gösterilir |
+| C-29 | [ ] | **Karar + GDD:** Erlik modeli (bozulma katmanı mı, sahip türü mü — Prolog canavarı dahil), yayılım/bozulmanın sahibi GDD (spirit / corruption-purification / enemy-layers) ve tur sonundaki yeri → region-map §3.4 + AC4 + TR-map-003 güncellenir; Prolog'da Erlik baskısı (D3) | `design/gdd/gdd-cross-review-2026-10-08.md` B2, B4 | C-13 | Tek sahip GDD; tur sonu sırası tüm GDD/TR/ADR'de aynı |
+| C-30 | [ ] | **GDD:** arındırma eylemi (varış dalı mı ayrı eylem mi, aksiyon maliyeti, birliklerin yerleşmesi, sahipli+bozuk hedef) + fetihte bozulmanın akıbeti | `design/gdd/gdd-cross-review-2026-10-08.md` B3, B5 | C-29 | army §3.3 / spirit §3.2 tanımlı, kabul kriterli |
+| C-31 | [ ] | **GDD:** lütuf sunma zamanı, erteleme, etkinin başlangıcı, MVP alt kümesi; olmayan sistemlere dayanan lütuflar, Gök Kalkanı yığılması, Ruh ölçekleme yönü, maliyet eğrisi (W9–W11, D5) | `design/gdd/gdd-cross-review-2026-10-08.md` B6 | C-29 | spirit §3.4/§4/§7 güncel, sıfıra bölme yok |
+| C-32 | [ ] | **GDD:** tur ortası kazanma davranışı, kazanma/kaybetme önceliği, kazanma kapsamı (siyasi / + Erlik) ve formül metni (W7, D4) | `design/gdd/gdd-cross-review-2026-10-08.md` B7 | C-29 | region-map §3.3/§3.4/§3.6 tutarlı; kod davranışıyla eşleşiyor veya düzeltme görevi açıldı |
+| C-33 | [ ] | GDD düzeltmeleri: W1–W6, W8, W12 + bilgi notları (örnek hesap, berabere/hayatta kalanlar, 0 ordu, `draw_favors_defender`, §3.5 "planlı", eşitlik bozma, gelir formülü sahibi, bozulma görseli → art bible, indeks/konsept notları, bağımlılık asimetrisi) | `design/gdd/gdd-cross-review-2026-10-08.md` uyarılar | C-28 | Her uyarı kapandı veya gerekçeyle kaldı |
+| C-34 | [ ] | `/review-all-gdds` yeniden → PASS veya CONCERNS | C-13 FAIL | C-28, C-29, C-30, C-31, C-32, C-33 | Yeni rapor; engelleyici yok |
 
 ## Tamamlananlar
 
@@ -125,3 +132,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-08 | C-10: `art-source/global_palette_ulus.gpl` (94 renk, tek kaynak) + `validate_palette.gd`, `run-tests.sh`'e bağlı | `1eb1b88` |
 | 2026-10-08 | C-11: `game-concept.md` sulu boya ifadeleri → pixel art / art bible referansları | `7f0f5d5` |
 | 2026-10-08 | C-12: `ai-art-prompts.md` pixel art'a göre baştan yazıldı (AI = konsept referansı, 10 prompt, ortak stil/negatif blok) | `0f64d19` |
+| 2026-10-08 | C-13: `/review-all-gdds` → FAIL (7 engelleyici, 20 uyarı); rapor + indeks "Needs Revision"; çözüm görevleri C-28…C-34 | `b571487` |
