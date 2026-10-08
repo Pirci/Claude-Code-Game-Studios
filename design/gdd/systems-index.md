@@ -16,7 +16,7 @@ Foundation → Core → Feature → Presentation → Polish
 | ---- | ---- | ---- | ---- | ---- |
 | **Oyun Konsepti** | Foundation | [game-concept.md](game-concept.md) | Taslak (revize edildi) | — |
 | **Bölge Fethi / Harita** | Core | [region-map-system.md](region-map-system.md) | Needs Revision | 1 |
-| **Kaynak Yönetimi** (altın/sürü/ruh) | Core | `resource-system.md` | Yazılmadı (gelir kodu mevcut) | 1 |
+| **Kaynak Yönetimi** (altın + ordu üretimi; sürü arayüzü) | Core | [resource-system.md](resource-system.md) | Designed | 1 |
 | **Ordu & Birim Sistemi** | Core | [army-system.md](army-system.md) | Needs Revision | 1 |
 | **Savaş Çözümü** (otomatik + rapor) | Core | [combat-system.md](combat-system.md) | Needs Revision | 1 |
 | **Kök Böri / Ruh Sistemi** (imza) | Feature | [spirit-system.md](spirit-system.md) | Needs Revision | 2 |

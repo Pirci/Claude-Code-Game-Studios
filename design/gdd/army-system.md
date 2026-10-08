@@ -96,6 +96,9 @@ army=4. Hedefte 3 düşman varsa → savaş (4 vs 3), saldıran kazanır, hedef 
   `attempt_move`'u çağırır, aksiyon sayacını yönetir, düşman AI aynı taşıma
   kurallarını kullanır.
 - **Ruh Sistemi** (`spirit-system.md`) — arındırma da ordu gönderimi kullanır.
+- **Kaynak Yönetimi** (`resource-system.md`) — "Ordu Topla" üretimi `army_count`'u
+  artırır; ordunun büyüyebildiği tek kaynak budur (garnizon ve hareket kuralları
+  değişmez).
 
 ---
 
@@ -107,8 +110,8 @@ army=4. Hedefte 3 düşman varsa → savaş (4 vs 3), saldıran kazanır, hedef 
 | Aksiyon başına hareket | 1 aksiyon | Tur başına aksiyon `actions_per_turn` |
 
 **Genişleme (planlı)**: birim tipleri ve kompozisyon (süvari/okçu/piyade),
-kahraman birimleri, hareket menzili/maliyeti, ordu bakım maliyeti — konseptte
-var, kodda yok.
+kahraman birimleri, hareket menzili/maliyeti — konseptte var, kodda yok. Ordu
+üretimi ve bakım gideri `resource-system.md`'de tanımlıdır (F4, F7; bakım MVP'de 0).
 
 ---
 

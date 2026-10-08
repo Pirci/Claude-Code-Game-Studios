@@ -46,8 +46,10 @@ Oyuncu tüm bozkırı tek bakışta okur: kim nerede güçlü, hangi sınır zay
   seçim temizlenir, kazanma kontrol edilir.
 
 ### 3.4 Tur Bitişi (`end_turn`)
-Sıra: **(1)** düşman AI oynar → **(2)** gelir toplanır → **(3)** `current_turn+=1`,
-`actions_remaining = actions_per_turn` → **(4)** kazanma/kaybetme kontrolü.
+Sıra: **(1)** düşman AI oynar → **(2)** ekonomi adımı: oyuncu geliri + düşman
+takviyesi + bakım (`resource-system.md` §3.1) → **(3)** `current_turn+=1`,
+`actions_remaining = actions_per_turn`, bölge üretim sayaçları sıfırlanır →
+**(4)** kazanma/kaybetme kontrolü.
 
 ### 3.5 Düşman AI (`EnemyAIController.decide`)
 Düşman AI, saf bir karar servisidir (bkz. [ADR-0005](../../docs/architecture/adr-0005-ai-architecture.md)):
@@ -71,12 +73,11 @@ sinyal yaymaz. `MapController.end_turn()` intent'leri `ArmyController`/`CombatRe
 
 ## 4. Formulas
 
-### Gelir (Kaynak Sistemi ile ortak — `resource_controller.gd`)
-```
-tur_geliri = Σ (oyuncu bölgeleri).gold_per_turn
-game_state.gold += tur_geliri
-```
-Örnek (Prolog başlangıcı, sadece Oğuz Otağı, gold_per_turn=2): tur geliri = 2.
+### Gelir
+Gelir formülünün sahibi `resource-system.md`'dir (F1 efektif bölge geliri, F2 tur
+geliri). MVP'de bozulma ve lütuf yokken F2, oyuncu bölgelerinin `gold_per_turn`
+toplamına eşittir. Örnek (Prolog başlangıcı, sadece Oğuz Otağı, gold_per_turn=2):
+tur geliri = 2.
 
 ### Ele geçirilen nötr sayısı (kazanma kontrolü)
 ```
@@ -110,7 +111,9 @@ hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
 - **Ordu Sistemi** (`army-system.md`, kod: `army_controller.gd`).
 - **Savaş Çözümü** (`combat-system.md`, kod: `combat_resolver.gd`).
 - **Kaynak Yönetimi** (`resource-system.md`, kod: `resource_controller.gd`) —
-  tur geliri.
+  ekonomi adımı (gelir F2, düşman takviyesi F6, bakım F7), üretim sayaçları;
+  `ChapterMapDefinition` bu sistemin `starting_gold` ve
+  `enemy_reinforcement_per_turn` ayarlarını taşır.
 - **Oyun Durumu** (`game_state.gd`) — `map_state`, `gold`, (planlı: `ruh`, `boons`).
 - **Ruh Sistemi** (`spirit-system.md`) — `RegionData`'ya `corruption_level`
   eklenecek; Erlik yayılımı tur akışına girecek.
@@ -139,7 +142,8 @@ hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
 2. Seçili bölgeye tekrar tıklama seçimi kaldırır. *(Test)*
 3. Geçerli hareket `actions_remaining`'i 1 azaltır. *(Test)*
 4. `end_turn` sırası: AI → gelir → tur artışı → kontrol. *(Test)*
-5. Tur geliri = oyuncu bölgelerinin `gold_per_turn` toplamı. *(Test)*
+5. Tur geliri `resource-system.md` F2'ye eşittir (bozulma ve lütuf yokken oyuncu
+   bölgelerinin `gold_per_turn` toplamı). *(Test)*
 6. Düşman AI en düşük ordulu düşman-olmayan komşuya saldırır. *(Test)*
 7. 3 nötr ele geçirilip düşman yenilince `game_won` tetiklenir. *(Test)*
 8. Oyuncunun bölgesi kalmazsa `game_lost` tetiklenir. *(Test)*

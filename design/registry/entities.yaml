@@ -37,7 +37,7 @@
 #   Each entry: name, status, source, referenced_by[], attributes{}, added, revised
 
 version: 1
-last_updated: ""
+last_updated: "2026-10-08"
 
 # ─── ENTITIES ────────────────────────────────────────────────────────────────
 # Named game-world objects: enemies, NPCs, characters, factions, bosses.
@@ -106,7 +106,52 @@ items: []
 #   output_range[min, max], added
 # Optional: expression (the actual formula), notes
 
-formulas: []
+formulas:
+  - name: effective_region_income
+    status: active
+    source: design/gdd/resource-system.md
+    referenced_by:
+      - design/gdd/resource-system.md
+      - design/gdd/spirit-system.md   # bozulma çarpanı M_c girdisi
+    variables:
+      - G_base
+      - corruption_level
+      - PROD_PENALTY_PER_LEVEL
+    output_range: [0, 5]
+    expression: "floor(G_base * max(0, 1 - corruption_level * PROD_PENALTY_PER_LEVEL))"
+    added: 2026-10-08
+    revised: ""
+
+  - name: turn_income
+    status: active
+    source: design/gdd/resource-system.md
+    referenced_by:
+      - design/gdd/resource-system.md
+      - design/gdd/spirit-system.md       # B_add / M_g ekonomi lütufları
+      - design/gdd/region-map-system.md   # AC5, ekonomi adımı
+    variables:
+      - I_raw
+      - B_add
+      - M_g
+      - I_floor
+    output_range: [0, 100]
+    expression: "max(I_floor, floor((I_raw + B_add) * M_g)); 0 if player owns no region"
+    added: 2026-10-08
+    revised: ""
+
+  - name: recruit_cap
+    status: active
+    source: design/gdd/resource-system.md
+    referenced_by:
+      - design/gdd/resource-system.md
+    variables:
+      - R_min
+      - G_eff
+    output_range: [1, 5]
+    expression: "max(R_min, G_eff)"
+    notes: "HUD/bilgi paneli kalan tavanı gösterir."
+    added: 2026-10-08
+    revised: ""
 
 # Example:
 #
@@ -139,7 +184,50 @@ formulas: []
 #
 # Required fields: name, status, source, referenced_by, value, unit, added
 
-constants: []
+constants:
+  - name: recruit_cost
+    status: active
+    source: design/gdd/resource-system.md
+    referenced_by:
+      - design/gdd/resource-system.md
+      - design/gdd/army-system.md   # üretim army_count'u artırır
+    value: 2
+    unit: gold
+    added: 2026-10-08
+    revised: ""
+
+  - name: starting_gold_ch1
+    status: active
+    source: design/gdd/resource-system.md
+    referenced_by:
+      - design/gdd/resource-system.md
+      - design/gdd/region-map-system.md   # ChapterMapDefinition taşır
+    value: 6
+    unit: gold
+    added: 2026-10-08
+    revised: ""
+
+  - name: enemy_reinforcement_per_turn_ch1
+    status: active
+    source: design/gdd/resource-system.md
+    referenced_by:
+      - design/gdd/resource-system.md
+      - design/gdd/region-map-system.md   # ekonomi adımı, ChapterMapDefinition
+    value: 1
+    unit: army per enemy region per turn
+    added: 2026-10-08
+    revised: ""
+
+  - name: prod_penalty_per_level
+    status: active
+    source: design/gdd/spirit-system.md
+    referenced_by:
+      - design/gdd/spirit-system.md
+      - design/gdd/resource-system.md   # F1
+    value: 0.25
+    unit: fraction of production per corruption level
+    added: 2026-10-08
+    revised: ""
 
 # Example:
 #

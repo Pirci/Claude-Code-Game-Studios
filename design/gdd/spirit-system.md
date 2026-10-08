@@ -166,8 +166,10 @@ hedef.corruption_level = min(3, hedef.corruption_level + 1)
   `map_state.gd`) — `RegionData`'ya `corruption_level` alanı eklenmeli.
 - **Savaş Çözümü** (`combat-system.md`, kod: `combat_resolver.gd`) — arındırma
   çözümü `CombatResolver`'ı yeniden kullanır (ordu vs. corruption_strength).
-- **Kaynak Yönetimi** (`resource-system.md`) — Ruh yeni bir kaynak tipi;
-  `GameState.ruh` alanı.
+- **Kaynak Yönetimi** (`resource-system.md`) — gelir formülü (F1, F2) bu sistemin
+  bozulma çarpanını (`M_c`, §4.3) ve ekonomi lütuflarını (`B_add` / `M_g`:
+  Bereket, Sürü Kutsaması) uygular. Ruh bu sisteme aittir; Kaynak Yönetimi Ruh'u
+  okumaz ve yazmaz.
 - **Oyun Durumu** (`game_state.gd`) — kalıcı `boons` listesi + `ruh` alanı.
 - **Konsey (Altı Oğul)** (`council-system.md`) — konsey bonusları lütuflarla
   aynı toplamsal modifikatör hattını paylaşmalı (çift sayım önlenmeli).
