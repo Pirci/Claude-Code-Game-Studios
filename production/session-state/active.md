@@ -70,3 +70,5 @@
 - Provisional: herds inactive; enemy reinforcement is a temporary contract until enemy-layers.md; Bereket form deferred to C-31.
 - Counter-updates done (army, region-map, spirit, index); registry seeded. Implementation = existing milestone task C-37 (M1); duplicate C-35 row removed.
 - NEXT: queue order C-14 (/consistency-check); design follow-ups C-29…C-32.
+<!-- CONSISTENCY-CHECK: 2026-10-08 | GDDs checked: 5 + art bible | Conflicts found: 2 (1 resolved) | Report: docs/consistency-report-2026-10-08.md -->
+- C-14 (5ba890b): consistency check — K1 open (spirit formula copy / level-3 claim → C-33/C-31), K2 fixed (spirit visuals → art bible). Registry +3 constants. Failure log local only (gitignored).
