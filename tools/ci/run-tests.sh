@@ -4,7 +4,8 @@
 # Kullanım:
 #   GODOT=/path/to/Godot tools/ci/run-tests.sh [test_yolu]
 #
-# GODOT ayarlı değilse yaygın macOS konumu denenir.
+# GODOT ayarlı değilse sırayla denenir: /Applications, ~/Applications,
+# ~/Downloads/Applications (macOS), ardından PATH'teki `godot`.
 # Test yolu verilmezse tüm birim testleri çalışır (res://tests/unit).
 #
 # Not: Godot 4.7 + GDUnit4 v6.x. Headless'ta InputEvent gerektiren testler
@@ -12,12 +13,24 @@
 
 set -euo pipefail
 
-GODOT="${GODOT:-/Users/$USER/Downloads/Applications/Godot.app/Contents/MacOS/Godot}"
+if [[ -z "${GODOT:-}" ]]; then
+  for candidate in \
+    "/Applications/Godot.app/Contents/MacOS/Godot" \
+    "$HOME/Applications/Godot.app/Contents/MacOS/Godot" \
+    "$HOME/Downloads/Applications/Godot.app/Contents/MacOS/Godot" \
+    "$(command -v godot || true)"; do
+    if [[ -n "$candidate" && -x "$candidate" ]]; then
+      GODOT="$candidate"
+      break
+    fi
+  done
+fi
+GODOT="${GODOT:-}"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../game" && pwd)"
 TEST_PATH="${1:-res://tests/unit}"
 
 if [[ ! -x "$GODOT" ]]; then
-  echo "HATA: Godot bulunamadı: $GODOT (GODOT ortam değişkenini ayarla)" >&2
+  echo "HATA: Godot bulunamadı${GODOT:+: $GODOT} (GODOT ortam değişkenini ayarla)" >&2
   exit 1
 fi
 
