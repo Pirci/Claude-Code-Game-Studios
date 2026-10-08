@@ -1,39 +1,59 @@
 class_name RegionNode
 extends Node2D
 ## Haritada tıklanabilir bölge görsel temsili.
+##
+## Renkler art bible §4 "Sahiplik Renkleri"nden gelir: dolgu opak ana renk,
+## kenar 1px rampanın koyu tonu; hover/seçim 1px Ülgen altını kontur (dolgu değişmez).
 
 
 signal clicked(region_id: StringName)
 
-const COLOR_PLAYER := Color(0.2, 0.5, 0.9, 0.6)
-const COLOR_ENEMY := Color(0.9, 0.2, 0.2, 0.6)
-const COLOR_NEUTRAL := Color(0.6, 0.6, 0.6, 0.4)
-const COLOR_SELECTED := Color(1.0, 0.9, 0.3, 0.7)
-const COLOR_HOVER := Color(1.0, 1.0, 1.0, 0.15)
+## Sahiplik mini rampaları (koyu / ana / açık) — art bible §4. Opak; yarı saydam yasak.
+const RAMP_PLAYER: PackedColorArray = [Color("#2E7AB8"), Color("#47A3E8"), Color("#87C4F5")]
+const RAMP_ENEMY: PackedColorArray = [Color("#9A4220"), Color("#C45A2A"), Color("#E07E45")]
+const RAMP_NEUTRAL: PackedColorArray = [Color("#4A453C"), Color("#6B655A"), Color("#8F897D")]
+const RAMP_DARK: int = 0
+const RAMP_MAIN: int = 1
+const RAMP_LIGHT: int = 2
+## Seçim konturu — Ülgen altını rampası.
+const COLOR_SELECTED_OUTLINE := Color("#EDC76B")
+## Hover konturu — aynı rampanın bir alt tonu; seçimden ayırt edilsin diye.
+const COLOR_HOVER_OUTLINE := Color("#C99A3D")
 ## Bölge adı / ordu etiket kutusu (640×360 base, piksel).
 const LABEL_WIDTH: int = 96
 const LABEL_HEIGHT: int = 16
 
 var region_id: StringName = &""
-var is_selected: bool = false
+var is_selected: bool = false:
+	set(value):
+		if is_selected == value:
+			return
+		is_selected = value
+		queue_redraw()
 
-var _polygon: Polygon2D
+var _points: PackedVector2Array = PackedVector2Array()
+var _owner: RegionData.Owner = RegionData.Owner.NEUTRAL
 var _area: Area2D
 var _collision: CollisionPolygon2D
 var _label: Label
 var _army_label: Label
 var _is_hovered: bool = false
-var _base_color: Color = COLOR_NEUTRAL
+
+
+func _draw() -> void:
+	if _points.size() < 3:
+		return
+	draw_colored_polygon(_points, get_fill_color())
+	var outline: PackedVector2Array = _points.duplicate()
+	outline.append(_points[0])
+	# Negatif genişlik = 1px primitive çizgi (pixel grid'de keskin, ölçekten bağımsız).
+	draw_polyline(outline, get_outline_color(), -1.0)
 
 
 func setup(data: RegionData) -> void:
 	region_id = data.region_id
 	position = Vector2.ZERO
-
-	_polygon = Polygon2D.new()
-	_polygon.polygon = data.polygon_points
-	_polygon.color = _get_owner_color(data.owner)
-	add_child(_polygon)
+	_points = data.polygon_points
 
 	_area = Area2D.new()
 	_area.input_pickable = true
@@ -75,26 +95,37 @@ func setup(data: RegionData) -> void:
 
 
 func update_display(data: RegionData) -> void:
-	_base_color = _get_owner_color(data.owner)
-	if _polygon:
-		if is_selected:
-			_polygon.color = COLOR_SELECTED
-		else:
-			_polygon.color = _base_color
+	_owner = data.owner
+	queue_redraw()
 	if _army_label:
 		_army_label.text = "%s: %d" % [tr("ARMY"), data.army_count]
 	if _label:
 		_label.text = tr(String(data.display_name_key))
 
 
-func _get_owner_color(owner: RegionData.Owner) -> Color:
+## Sahibin 3 tonluk mini rampası (koyu / ana / açık).
+static func get_owner_ramp(owner: RegionData.Owner) -> PackedColorArray:
 	match owner:
 		RegionData.Owner.PLAYER:
-			return COLOR_PLAYER
+			return RAMP_PLAYER
 		RegionData.Owner.ENEMY:
-			return COLOR_ENEMY
+			return RAMP_ENEMY
 		_:
-			return COLOR_NEUTRAL
+			return RAMP_NEUTRAL
+
+
+## Opak dolgu rengi — sahibin ana tonu; hover/seçim dolguyu değiştirmez.
+func get_fill_color() -> Color:
+	return get_owner_ramp(_owner)[RAMP_MAIN]
+
+
+## 1px kontur rengi: seçim > hover > rampanın koyu tonu.
+func get_outline_color() -> Color:
+	if is_selected:
+		return COLOR_SELECTED_OUTLINE
+	if _is_hovered:
+		return COLOR_HOVER_OUTLINE
+	return get_owner_ramp(_owner)[RAMP_DARK]
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
@@ -106,11 +137,9 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 
 func _on_mouse_entered() -> void:
 	_is_hovered = true
-	if _polygon and not is_selected:
-		_polygon.color = _polygon.color.lightened(0.15)
+	queue_redraw()
 
 
 func _on_mouse_exited() -> void:
 	_is_hovered = false
-	if _polygon and not is_selected:
-		_polygon.color = _base_color
+	queue_redraw()
