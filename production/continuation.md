@@ -7,7 +7,7 @@
 - **Son güncelleme:** 2026-10-08
 - **Son commit:** `b571487` (C-13 GDD çapraz inceleme — FAIL)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-14)
+- **Aktif görev:** C-28 (kullanıcı seçimi; kuyruk sırası C-14)
 
 ---
 
@@ -52,8 +52,26 @@ fark etmez) şu adımlar **sırayla** uygulanır:
 - Kullanıcı başka bir iş isterse o yapılır; bitince bu dosyaya "Tamamlananlar"
   olarak işlenir, kuyruk sırası bozulmaz.
 - Her commit'ten sonra push edilir; push başarısız olursa sebebiyle birlikte kullanıcıya bildirilir.
+- **Kilometre taşı görevleri (M1: C-35…C-42, M2: C-43…C-48) korunur:** kullanıcı
+  açıkça onaylamadan `[-]` ertelenemez, birleştirilemez veya kuyruktan
+  çıkarılamaz. Her "devam"da 1. adımda "Kilometre Taşları" tablosuna bakılır;
+  bir taşın tüm görevleri `[x]` olunca taşın durumu güncellenir ve kullanıcıya
+  bildirilir.
 
 Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` ertelendi
+
+---
+
+## Kilometre Taşları
+
+> 2026-10-08'de kullanıcı isteğiyle eklendi: mevcut sıra korunur, ama Prolog demosu
+> ve vertical slice kuyrukta kalıcı olarak yer alır, unutulmaz.
+> Süreler `design/gdd/game-concept.md` → "Kapsam Kademeleri" tahminidir, taahhüt değildir.
+
+| ID | Kilometre taşı | Kapsam | Görevler | Tahmini süre | Durum |
+| --- | --- | --- | --- | --- | --- |
+| M1 | **Prolog Demo** (konseptteki MVP kademesi) | Prolog: Doğuş uçtan uca oynanır: fetih + altın + ordu üretimi + savaş + temel arındırma + Kök Böri ilk görünüşü + intro/outro; ses placeholder | C-35…C-42 | 6–8 hafta | [ ] |
+| M2 | **Vertical Slice** (Prolog + Perde 1) | M1 + Perde 1 (Doğu, Cürcet Kağan, 8 bölge) + ruh lütuf sistemi tam + Erlik katmanı, temsili kalitede sanat; Pre-Production → Production kapısı | C-43…C-48 | 3–4 ay | [ ] |
 
 ---
 
@@ -95,13 +113,27 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-25 | [ ] | **Karar + uygulama:** ekran açılışında başlangıç odağı yok (menü, ayarlar, oyun) → klavye/gamepad kullanıcısı gezinmeye başlayamıyor. Fare kullanıcısına sürekli altın odak çerçevesi göstermeden çözüm seç (ör. ilk yön tuşunda odak ver / Godot 4.7 odak görünürlüğü ayarını araştır) | C-08 sırasında keşfedildi | — | Her ekranda ilk ok/Tab tuşu bir butona odaklanır; fareyle açılışta çerçeve yok |
 | C-26 | [ ] | Bilgi panelinde `tr("TURN").to_lower()` → Almancada "2 / runde" (isimler büyük harf olmalı); bible programatik büyük/küçük harf dönüşümünü yasaklıyor. `PER_TURN` gibi ayrı çeviri key'i (11 dil) + kodda başka `to_lower()/to_upper()` kalmadığını doğrula | C-09 sırasında keşfedildi | — | grep `to_lower\|to_upper` oyuncuya görünen metinde yok; de ekran görüntüsü |
 | C-27 | [ ] | Gerçek CI hattı yok: `.github/workflows/` boş (yalnızca şablonlar). Coding standards "her push/PR'da testler çalışır, kırmızıysa merge yok" diyor → GitHub Actions: headless Godot 4.7 + `tools/ci/run-tests.sh` (testler + palet) | C-10 sırasında keşfedildi | — | Push'ta workflow yeşil; bilerek kırılan testte kırmızı |
-| C-28 | [ ] | **Karar + GDD:** ordu üretimi (maliyet, formül, sahibi) — `resource-system.md` yazılır veya `army-system.md`'ye eklenir; kartopu/bakım (D1, D2) burada değerlendirilir | `design/gdd/gdd-cross-review-2026-10-08.md` B1 | C-13 | GDD'de üretim formülü + ayar aralığı; Prolog kazanılabilirliği hesapla gösterilir |
+| C-28 | [~] (2026-10-08) | **Karar + GDD:** ordu üretimi (maliyet, formül, sahibi) — `resource-system.md` yazılır veya `army-system.md`'ye eklenir; kartopu/bakım (D1, D2) burada değerlendirilir | `design/gdd/gdd-cross-review-2026-10-08.md` B1 | C-13 | GDD'de üretim formülü + ayar aralığı; Prolog kazanılabilirliği hesapla gösterilir |
 | C-29 | [ ] | **Karar + GDD:** Erlik modeli (bozulma katmanı mı, sahip türü mü — Prolog canavarı dahil), yayılım/bozulmanın sahibi GDD (spirit / corruption-purification / enemy-layers) ve tur sonundaki yeri → region-map §3.4 + AC4 + TR-map-003 güncellenir; Prolog'da Erlik baskısı (D3) | `design/gdd/gdd-cross-review-2026-10-08.md` B2, B4 | C-13 | Tek sahip GDD; tur sonu sırası tüm GDD/TR/ADR'de aynı |
 | C-30 | [ ] | **GDD:** arındırma eylemi (varış dalı mı ayrı eylem mi, aksiyon maliyeti, birliklerin yerleşmesi, sahipli+bozuk hedef) + fetihte bozulmanın akıbeti | `design/gdd/gdd-cross-review-2026-10-08.md` B3, B5 | C-29 | army §3.3 / spirit §3.2 tanımlı, kabul kriterli |
 | C-31 | [ ] | **GDD:** lütuf sunma zamanı, erteleme, etkinin başlangıcı, MVP alt kümesi; olmayan sistemlere dayanan lütuflar, Gök Kalkanı yığılması, Ruh ölçekleme yönü, maliyet eğrisi (W9–W11, D5) | `design/gdd/gdd-cross-review-2026-10-08.md` B6 | C-29 | spirit §3.4/§4/§7 güncel, sıfıra bölme yok |
 | C-32 | [ ] | **GDD:** tur ortası kazanma davranışı, kazanma/kaybetme önceliği, kazanma kapsamı (siyasi / + Erlik) ve formül metni (W7, D4) | `design/gdd/gdd-cross-review-2026-10-08.md` B7 | C-29 | region-map §3.3/§3.4/§3.6 tutarlı; kod davranışıyla eşleşiyor veya düzeltme görevi açıldı |
 | C-33 | [ ] | GDD düzeltmeleri: W1–W6, W8, W12 + bilgi notları (örnek hesap, berabere/hayatta kalanlar, 0 ordu, `draw_favors_defender`, §3.5 "planlı", eşitlik bozma, gelir formülü sahibi, bozulma görseli → art bible, indeks/konsept notları, bağımlılık asimetrisi) | `design/gdd/gdd-cross-review-2026-10-08.md` uyarılar | C-28 | Her uyarı kapandı veya gerekçeyle kaldı |
 | C-34 | [ ] | `/review-all-gdds` yeniden → PASS veya CONCERNS | C-13 FAIL | C-28, C-29, C-30, C-31, C-32, C-33 | Yeni rapor; engelleyici yok |
+| C-35 | [ ] | **M1 · GDD:** `scene-flow.md` — sahne intro/outro anlatı ekranları, Kök Böri "genesis" sahnesi, Prolog kazanma → Kağan ilanı, bölüm unlock (`/design-system`) | Konsept MVP #5; M1 | C-32 | 8 zorunlu bölüm + indeks satırı; `/design-review` geçer |
+| C-36 | [ ] | **M1 · Harita:** Ötüken haritası → Oğuz ata yurdu (6 bölge, dağınık boylar + Erlik canavarı yerleşimi), data-driven `ChapterMapDefinition` + 11 dil bölge adları | Konsept "Sonraki Adımlar"; M1 | C-29, C-34 | Harita verisi + testler + ekran görüntüsü |
+| C-37 | [ ] | **M1 · Kod:** ordu üretimi + altın harcama (`resource-system.md` uygulaması) — UI butonu, maliyet/limit, düşman üretimi | C-28; M1 | C-18 | GDD kabul kriterleri birim testlerinde; ekran görüntüsü |
+| C-38 | [ ] | **M1 · Kod:** Erlik canavarı + temel arındırma (C-29/C-30 kararlarına göre) | Konsept MVP #4; M1 | C-18, C-19, C-30 | Kabul kriterleri testte; canavar yenilip bölge arınır |
+| C-39 | [ ] | **M1 · Kod:** Kök Böri çekirdeği — ruh kazanımı + ilk görünüş (MVP alt kümesi, C-31) | Konsept MVP #4; M1 | C-18, C-31 | Ruh kazanımı testli; HUD'da görünür |
+| C-40 | [ ] | **M1 · Kod:** sahne akışı — intro/outro ekranları, Kök Böri sahnesi, kazanma/kaybetme → outro (`features/campaign/`) | C-35; M1 | C-35, C-18 | Yeni kampanya → intro → harita → zafer → outro akışı; 11 dil key'leri |
+| C-41 | [ ] | **M1 · UX + Kod:** Prolog öğretici akışı (fetih → kaynak → üretim → savaş → arındırma sırasıyla tanıtım) — `/ux-design` spec + uygulama | Konsept "Prolog — ÖĞRETİCİ"; M1 | C-37, C-38, C-39, C-40 | UX spec dosyası; rehbersiz oyuncu her mekaniği bir kez görür |
+| C-42 | [ ] | **M1 · Kilometre taşı kapanışı: Prolog Demo** — uçtan uca oynanış, `/smoke-check`, `/playtest-report`, macOS/Windows demo export'u | M1 | C-36, C-37, C-38, C-39, C-40, C-41 | Başlangıçtan Kağan ilanına çökmeden oynanır (20–35 dk); smoke PASS; playtest raporu; çalışan export |
+| C-43 | [ ] | **M2 · Tasarım:** Perde 1 (Doğu — Cürcet Yönü) — 8 bölgelik harita/seviye, Cürcet Kağan AI'ı, çürümüş orman + körmös (`/team-level`) | Konsept "Perde 1"; M2 | C-42 | Seviye dokümanı + gerekli GDD güncellemeleri |
+| C-44 | [ ] | **M2 · Tasarım:** ruh lütuf sistemi tam kapsam + Erlik katmanı (enemy-layers / corruption-purification eksik GDD'leri), `/review-all-gdds` | Konsept "Vertical Slice" kademesi; M2 | C-42 | GDD'ler yazılı; çapraz inceleme PASS/CONCERNS |
+| C-45 | [ ] | **M2 · UX:** vertical slice ekranlarının UX spec'leri (HUD, savaş raporu, lütuf seçimi, sahne ekranları) — `/ux-design` + `/ux-review` | `/vertical-slice` ön koşulu; M2 | C-44 | Spec'ler APPROVED |
+| C-46 | [ ] | **M2 · Sanat:** Prolog + Perde 1 temsili kalite pixel art (harita, birim, tamga, illüstrasyon) — `/asset-spec` + üretim | Art bible; M2 | C-43 | Asset'ler palet doğrulayıcıdan geçer; manifest güncel |
+| C-47 | [ ] | **M2 · Kod:** Perde 1 + lütuf sistemi + Erlik katmanı uygulaması — önce `/create-epics` + `/create-stories` ile parçalanır, story'ler kuyruğa C-XX olarak eklenir | M2 | C-43, C-44, C-45 | Tüm story'ler Done; testler yeşil |
+| C-48 | [ ] | **M2 · Kilometre taşı kapanışı: Vertical Slice** — `/vertical-slice` + `/gate-check` (Pre-Production → Production) | M2 | C-46, C-47 | PROCEED/PIVOT/KILL kararı yazılı; PIVOT'ta düzeltme görevleri kuyruğa eklenir |
 
 ## Tamamlananlar
 
@@ -133,3 +165,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-08 | C-11: `game-concept.md` sulu boya ifadeleri → pixel art / art bible referansları | `7f0f5d5` |
 | 2026-10-08 | C-12: `ai-art-prompts.md` pixel art'a göre baştan yazıldı (AI = konsept referansı, 10 prompt, ortak stil/negatif blok) | `0f64d19` |
 | 2026-10-08 | C-13: `/review-all-gdds` → FAIL (7 engelleyici, 20 uyarı); rapor + indeks "Needs Revision"; çözüm görevleri C-28…C-34 | `b571487` |
+| 2026-10-08 | Kilometre taşları M1 Prolog Demo (C-35…C-42) + M2 Vertical Slice (C-43…C-48) kuyruğa eklendi; korunma kuralı | (bu commit) |
