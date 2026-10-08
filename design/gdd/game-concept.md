@@ -112,7 +112,7 @@ iki farklı meydan okuma — biri dış (krallar), biri iç/doğaüstü (Erlik).
 | ---- | ---- | ---- |
 | **Anlatı** (drama, hikaye yayı) | 1 | Tek destan omurgası, genişleme→miras yayı, Kök Böri üst-anlatısı |
 | **Fantazi** (rol yapma) | 2 | Doğaüstü ata-kahraman Oğuz rolü, Kök Böri'nin rehberliği |
-| **Duygu** (duyusal zevk) | 3 | Sulu boya el çizimi + kozmik mitolojik atmosfer (Ülgen göğü / Erlik çürümesi) |
+| **Duygu** (duyusal zevk) | 3 | Kilim dokusu gibi pixel art + kozmik mitolojik atmosfer (Ülgen göğü / Erlik çürümesi) — bkz. [art bible](../art/art-bible.md) §1–2 |
 | **Meydan Okuma** (ustalık) | 4 | Çift katmanlı düşman yönetimi, kaynak+ruh optimizasyonu, ordu kompozisyonu |
 | **Keşif** (araştırma, sırlar) | 5 | Destan olaylarını keşfetme, dört yönün haritaları, mitolojik lore |
 | **Teslimiyet** (rahatlama) | 6 | Sıra tabanlı tempo, düşünmeye zaman |
@@ -153,7 +153,7 @@ Bölge renkleri sahiplik + bozulma durumunu gösterir. Geri bildirim anlık.
 
 ### Oturum Seviyesi (20-35 dakika — Sahne)
 Bir sahne = 10-18 tur. Sahne başında Kök Böri belirir + destan intro (metin +
-sulu boya illüstrasyon). Hedef net: "bu yönü fethet + Erlik odağını temizle".
+tam ekran 640×360 pixel art illüstrasyon — art bible §7). Hedef net: "bu yönü fethet + Erlik odağını temizle".
 Sahne sonunda destan epilog + ruh lütfu + sonraki yön açılır.
 
 ### Uzun Vadeli İlerleme (Kampanya — 4-6 saat)
@@ -209,41 +209,29 @@ hazır — çekirdeği yeniden yazmadan.
 | Hades | Mitolojik dünya, tanrısal güçler, buff seçimi | Sıra tabanlı strateji, Türk mitolojisi | Mitolojinin oyunlaştırma gücü |
 
 **Oyun dışı ilhamlar**: Oğuz Kağan Destanı, Altay Yaratılış Destanı (Ülgen-Erlik),
-Türk mitolojisi (Kök Böri, körmös, tamga sistemi), sulu boya resim sanatı,
-Orta Asya bozkır kültürü.
+Türk mitolojisi (Kök Böri, körmös, tamga sistemi), Pazırık halısı, Altay/Göktürk
+kaya resimleri, Türkmen/Kırgız kilim ve şırdak desenleri, Timurlu minyatür
+geleneği, Orta Asya bozkır kültürü (görsel referansların tamamı: art bible §9).
 
 ---
 
 ## Görsel Kimlik Çapası
 
-> **⚠ Yön değişikliği (2026-10-07):** Sanat yönü **pixel art**'a geçti
-> (640×360 base, integer scaling, pixel fontlar — bkz.
-> `.claude/docs/technical-preferences.md` → Display & Scaling). Aşağıdaki sulu
-> boya ilkeleri tarihsel kayıttır; kozmik ikilik, Kök Böri motifi, Türk
-> mitolojik kimlik ve renk felsefesi pixel art'a uyarlanmak üzere `/art-bible`
-> ile yeniden yazılacak.
+Görsel yönün tek kaynağı **[art bible](../art/art-bible.md)**'dır (pixel art,
+640×360 base, integer scaling, pixel fontlar).
 
-### Seçilen Görsel Yön: Sulu Boya El Çizimi + Mitolojik Kozmik Atmosfer
+**Tek Satırlık Görsel Kural** (art bible §1): *"Her piksel bir bozkır kiliminin
+ipliği gibi — sade, keskin ve kalıcı; ama bir araya geldiğinde Oğuz'un
+destanını, Ülgen'in ışığını ve Erlik'in gölgesini dokur."*
 
-**Tek Satırlık Görsel Kural**: Her ekran bir bozkır şamanının rüya defterinden
-koparılmış bir sayfa gibi hissettirmeli — akıcı fırça darbeleri, doğal
-pigmentler, ve araya sızan gök/yeraltı ışığı.
+Konseptten taşınan çekirdek kalır, art bible'da pixel diline çevrildi:
+kozmik ikilik (Ülgen altın-indigo / Erlik mor-siyah leke — §1, §4), Kök Böri
+ışık motifi (§1, §5), Türk mitolojik kimlik (tamga, koçboynuzu, tündük, kilim
+— §3, §6, §7), renk felsefesi (krem/keçe zemin, deri kahve kontur, deel
+kırmızısı vurgu — §4).
 
-**Destekleyici Görsel İlkeler**:
-
-1. **Sulu Boya Temeli** — wet-on-wet geçişler, görünür fırça darbeleri, doğal
-   pigment granülasyonu.
-2. **Kozmik İkilik** — Ülgen katmanı: parlak, göksel, altın-indigo. Erlik
-   katmanı: karanlık, çürümüş, mor-siyah leke. Bozulmuş bölgeler görsel olarak
-   ayırt edilebilir olmalı.
-3. **Kök Böri Varlığı** — gök kurt tekrar eden ilahi motif; kritik anlarda
-   belirir (yarı-saydam, ışıklı).
-4. **Türk Mitolojik Kimlik** — tamga sembolleri, koçboynuzu, kartal, tündük
-   motifi UI ve kenarlıklarda.
-
-**Renk Felsefesi**: Krem/keçe beyazı arka plan, deri kahvesi çizgiler. İndigo
-+ altın = Ülgen/gök. Mor + kömür siyahı = Erlik/bozulma. Deel kırmızısı =
-Oğuz/ordu vurgusu.
+> **Tarihsel not:** 2026-10-07'ye kadar seçili yön *sulu boya el çizimi*ydi;
+> pixel art'a geçildi. Eski ilkeler git geçmişinde (bu bölümün C-11 öncesi sürümü).
 
 ---
 
@@ -431,7 +419,7 @@ tatmin edici buluyor."
 
 ## Sonraki Adımlar
 
-- [ ] Sanat bibliyasını güncelle (`/art-bible` — sulu boya + kozmik mitolojik katman)
+- [x] Art bible yazıldı — pixel art + kozmik mitolojik katman ([art-bible.md](../art/art-bible.md), 2026-10-07)
 - [ ] Konsepti sistemlere ayır (`/map-systems`)
 - [ ] İmza sistem GDD'si: Kök Böri / Ruh Sistemi (`/design-system spirit-system`)
 - [ ] Katmanlı düşman GDD'si (`/design-system enemy-layers`)
