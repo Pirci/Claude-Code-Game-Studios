@@ -27,3 +27,10 @@
 
 ## Session Extract — 2026-10-08 (rename)
 - Game renamed ASENA → **ULUS: Blood of the Sky Wolf**. GAME_TITLE = "ULUS" in all locales; GAME_SUBTITLE translated per locale; project.godot config/name="ULUS" (no colon — it is also the user:// folder name).
+
+## Session Extract — 2026-10-08 (C-01)
+- C-01 done (`656223d`): RegionNode draws via _draw() — opaque owner main tone fill, 1px dark-ramp outline, selection #EDC76B / hover #C99A3D outline. Tests 40/40. Screenshot pixel-checked.
+- Screenshot method: temp SceneTree script (outside repo) instantiates root_context, calls _on_new_campaign, saves root.get_texture() as PNG (640×360). Run windowed, not headless.
+- Godot now at /Applications/Godot.app → run tests with GODOT=/Applications/Godot.app/Contents/MacOS/Godot until C-20 fixes the default.
+- NEXT: C-02 (map labels LabelSettings outline + ellipsis).
+- C-01-fix (b276316): hover outline = #EDC76B per bible (no separate hover tone). C-20 (5371770): run-tests.sh auto-detects Godot — GODOT env no longer needed.
