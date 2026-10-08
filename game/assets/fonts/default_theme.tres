@@ -170,3 +170,7 @@ PopupMenu/icons/radio_checked = ExtResource("radio_on")
 PopupMenu/icons/radio_unchecked = ExtResource("radio_off")
 HeaderLabel/base_type = &"Label"
 HeaderLabel/colors/font_color = Color(0.93, 0.78, 0.42, 1)
+MapLabel/base_type = &"Label"
+MapLabel/colors/font_color = Color(0.94902, 0.901961, 0.780392, 1)
+MapLabel/colors/font_outline_color = Color(0.109804, 0.0901961, 0.0588235, 1)
+MapLabel/constants/outline_size = 2

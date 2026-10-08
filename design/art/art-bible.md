@@ -718,7 +718,9 @@ palet dışı renk üretir).
 - **Bölge adı etiketleri her zaman görünür** (destan coğrafyasını öğretir);
   ayarlardan gizlenebilir. 15 bölgelik Final haritasında prototipte yeniden
   değerlendirilir.
-- **Etiketler:** krem + 1px koyu kontur (`LabelSettings`, Bölüm 4); uzun
+- **Etiketler:** krem + 1px koyu kontur (`MapLabel` tema varyasyonu, Bölüm 4 —
+  `LabelSettings` değil: o font boyutunu sabitler ve dil bazlı pixel font
+  geçişini bozar; Godot `outline_size = 2` → her yönde 1px); uzun
   çeviriler `…` ile kısaltılır; çevirmen kuralı — bölge adı ≤12 karakter (en),
   diğer dillerde mümkün olan en kısa karşılık.
 - **Seçili bölge:** 1px altın kontur + köşelerde 2px `◆`.
@@ -740,7 +742,7 @@ Steam Deck post-launch — technical-preferences) post-launch değerlendirilir.
 
 ### Uygulama Notu — UI (koda yansıyacaklar)
 
-Üst/alt bara %70 opak zemin; harita etiketlerine `LabelSettings` konturu ve
+Üst/alt bara %70 opak zemin; harita etiketlerine `MapLabel` tema konturu ve
 `text_overrun_behavior` ellipsis; seçili bölge `◆` işaretleri; bölge merkezine
 tamga `Sprite2D`; buton taban genişlikleri; ayarlar ekranına üç erişilebilirlik
 seçeneği.

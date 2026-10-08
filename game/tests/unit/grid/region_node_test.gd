@@ -53,3 +53,21 @@ func test_owner_change_updates_fill() -> void:
 	data.owner = RegionData.Owner.PLAYER
 	node.update_display(data)
 	assert_str(node.get_fill_color().to_html(false)).is_equal("47a3e8")
+
+
+func test_map_labels_use_map_label_variation_and_ellipsis() -> void:
+	var labels: Array[Node] = _node(RegionData.Owner.PLAYER).find_children("*", "Label", false, false)
+	assert_int(labels.size()).is_equal(2)
+	for node: Node in labels:
+		var label: Label = node as Label
+		assert_str(String(label.theme_type_variation)).is_equal(String(RegionNode.MAP_LABEL_VARIATION))
+		assert_int(label.text_overrun_behavior).is_equal(TextServer.OVERRUN_TRIM_ELLIPSIS)
+
+
+func test_map_label_theme_is_cream_with_dark_1px_outline() -> void:
+	var theme: Theme = load("res://assets/fonts/default_theme.tres") as Theme
+	var v: StringName = RegionNode.MAP_LABEL_VARIATION
+	assert_str(theme.get_color(&"font_color", v).to_html(false)).is_equal("f2e6c7")
+	assert_str(theme.get_color(&"font_outline_color", v).to_html(false)).is_equal("1c170f")
+	# outline_size çap gibi davranır: 2 → her yönde 1px.
+	assert_int(theme.get_constant(&"outline_size", v)).is_equal(2)

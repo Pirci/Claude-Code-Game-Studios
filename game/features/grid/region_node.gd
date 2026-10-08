@@ -17,6 +17,10 @@ const RAMP_MAIN: int = 1
 const RAMP_LIGHT: int = 2
 ## Seçili / üzerine gelinen bölge konturu — Ülgen altını (art bible §4).
 const COLOR_HIGHLIGHT_OUTLINE := Color("#EDC76B")
+## Harita etiketi tema varyasyonu: krem metin + 1px koyu kontur (art bible §4).
+## LabelSettings değil: o font_size'ı sabitler, dil bazlı pixel font geçişini bozar.
+## Temada outline_size = 2 (çap gibi davranır → her yönde 1px).
+const MAP_LABEL_VARIATION: StringName = &"MapLabel"
 ## Bölge adı / ordu etiket kutusu (640×360 base, piksel).
 const LABEL_WIDTH: int = 96
 const LABEL_HEIGHT: int = 16
@@ -68,26 +72,20 @@ func setup(data: RegionData) -> void:
 	# (Fusion 12 / Arapça Unifont 16). Ara boyutlar pixel fontu bozar.
 	# Konumlar harita (dünya) koordinatıdır: RTL dillerde aynalanmamalı → LTR yerleşim;
 	# metnin kendisi text_direction=AUTO ile yine doğru yönde çizilir.
-	# Metin kutudan genişse (ör. Unifont 16) iki yana eşit büyüsün → GROW_DIRECTION_BOTH.
-	_label = Label.new()
-	_label.layout_direction = Control.LAYOUT_DIRECTION_LTR
-	_label.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	# Kutudan uzun metin (uzun çeviriler) "…" ile kısaltılır; kutu genişliği sabit kalır.
+	_label = _create_map_label()
 	_label.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	_label.text = tr(String(data.display_name_key))
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
 	_label.position = data.position - Vector2(LABEL_WIDTH / 2.0, LABEL_HEIGHT)
 	_label.size = Vector2(LABEL_WIDTH, LABEL_HEIGHT)
-	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_label)
 
-	_army_label = Label.new()
-	_army_label.layout_direction = Control.LAYOUT_DIRECTION_LTR
-	_army_label.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_army_label = _create_map_label()
 	_army_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_army_label.position = data.position - Vector2(LABEL_WIDTH / 2.0, 0)
 	_army_label.size = Vector2(LABEL_WIDTH, LABEL_HEIGHT)
-	_army_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_army_label)
 	update_display(data)
 
@@ -122,6 +120,15 @@ func get_outline_color() -> Color:
 	if is_selected or _is_hovered:
 		return COLOR_HIGHLIGHT_OUTLINE
 	return get_owner_ramp(_owner)[RAMP_DARK]
+
+
+func _create_map_label() -> Label:
+	var label: Label = Label.new()
+	label.theme_type_variation = MAP_LABEL_VARIATION
+	label.layout_direction = Control.LAYOUT_DIRECTION_LTR
+	label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return label
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
