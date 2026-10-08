@@ -5,9 +5,9 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-08
-- **Son commit:** `1eb1b88` (C-10 palet + doğrulayıcı)
+- **Son commit:** `7f0f5d5` (C-11 konsept → art bible)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-11)
+- **Aktif görev:** — (yok; sıradaki: C-12)
 
 ---
 
@@ -78,7 +78,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-08 | [x] `aadbab3` | Buton taban genişlikleri (ör. Tur Bitir ≥64px) + dinamik buton `focus_neighbor_*` | §7 | — | Uzun dillerde (de/ru) ekran görüntüsü |
 | C-09 | [x] `95d8f33` | Binlik ayırıcı: dil bazlı çeviri key'i + sayı biçimlendirme yardımcısı + birim testi | §7 | — | Testler |
 | C-10 | [x] `1eb1b88` | Global palet dosyası `art-source/global_palette_ulus.gpl` + `tools/asset-pipeline/validate_palette.gd` + CI'a bağla | §8 | — | Mevcut asset'ler doğrulayıcıdan geçer (veya ihlaller listelenir) |
-| C-11 | [ ] | `game-concept.md`'deki kalan sulu boya ifadelerini art bible'a yönlendir (MDA "Duygu", oturum seviyesi, ilhamlar) | Tutarlılık | — | grep "sulu boya" yalnızca tarihsel notta |
+| C-11 | [x] `7f0f5d5` | `game-concept.md`'deki kalan sulu boya ifadelerini art bible'a yönlendir (MDA "Duygu", oturum seviyesi, ilhamlar) | Tutarlılık | — | grep "sulu boya" yalnızca tarihsel notta |
 | C-12 | [ ] | `design/art-reference/ai-art-prompts.md`'yi pixel art kurallarına göre yeniden yaz (veya /asset-spec ile değiştir) | §9 | — | Art bible kurallarıyla uyumlu prompt seti |
 | C-13 | [ ] | `/review-all-gdds` | Technical Setup gate | — | Rapor dosyası |
 | C-14 | [ ] | `/consistency-check` (GDD'ler ↔ art bible ↔ entity registry) | Tutarlılık | C-13 | Rapor |
@@ -123,3 +123,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-08 | C-08: alt bar butonları ≥64px, Ordu Gönder odak zincirine bağlı (Tur Bitir ↕) | `aadbab3` |
 | 2026-10-08 | C-09: `THOUSANDS_SEPARATOR` (11 dil) + `NumberFormatter`, HUD/bölge/panel sayıları gruplanıyor | `95d8f33` |
 | 2026-10-08 | C-10: `art-source/global_palette_ulus.gpl` (94 renk, tek kaynak) + `validate_palette.gd`, `run-tests.sh`'e bağlı | `1eb1b88` |
+| 2026-10-08 | C-11: `game-concept.md` sulu boya ifadeleri → pixel art / art bible referansları | `7f0f5d5` |
