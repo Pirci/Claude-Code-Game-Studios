@@ -5,7 +5,7 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-08
-- **Son commit:** `5ba890b` (C-14 tutarlılık kontrolü)
+- **Son commit:** `18df1d4` (K1: bozulma üretim tablosu)
 - **Proje evresi:** Concept (`production/stage.txt`)
 - **Aktif görev:** — (yok; sıradaki: C-15)
 
@@ -168,3 +168,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-08 | Kilometre taşları M1 Prolog Demo (C-35…C-42) + M2 Vertical Slice (C-43…C-48) kuyruğa eklendi; korunma kuralı | (bu commit) |
 | 2026-10-08 | C-28: `resource-system.md` (altın + ordu üretimi, F1–F7, simülasyonla doğrulanmış Prolog değerleri, 24 AC); karşı GDD güncellemeleri, registry ilk kayıtlar | `1468973` |
 | 2026-10-08 | C-14: `/consistency-check` → 2 çakışma (K2 düzeltildi, K1 açık → C-33/C-31); registry +3 sabit; rapor `docs/consistency-report-2026-10-08.md` | `5ba890b` |
+| 2026-10-08 | K1 (C-14 çakışması): bozulma üretimi seviye tablosu `[1.0, 0.75, 0.5, 0.0]` — kullanıcı kararı; W8/W12 kapandı | `18df1d4` |

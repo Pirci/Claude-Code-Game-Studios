@@ -72,3 +72,4 @@
 - NEXT: queue order C-14 (/consistency-check); design follow-ups C-29…C-32.
 <!-- CONSISTENCY-CHECK: 2026-10-08 | GDDs checked: 5 + art bible | Conflicts found: 2 (1 resolved) | Report: docs/consistency-report-2026-10-08.md -->
 - C-14 (5ba890b): consistency check — K1 open (spirit formula copy / level-3 claim → C-33/C-31), K2 fixed (spirit visuals → art bible). Registry +3 constants. Failure log local only (gitignored).
+- K1 (18df1d4): user chose level table CORRUPTION_PRODUCTION_MULTIPLIERS [1.0,0.75,0.5,0.0]; registry revised/deprecated; W8+W12 closed. NEXT: C-15.
