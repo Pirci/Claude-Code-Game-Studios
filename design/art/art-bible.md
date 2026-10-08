@@ -492,6 +492,10 @@ nötr/dünya rampalarından seçilir; **mor ve Erlik kömürü kullanılmaz**.
 
 (Güneş diski Gün Han'ın sembolüdür — düşmana verilmez.)
 
+**Prolog canavarı** (Erlik'in ilk yaratığı, tek boynuzlu) bir kral değildir; tamgası
+**tek boynuz** işaretidir (`tamga_id = erlik_beast`, 2026-10-08 kararı). Kral
+tamgalarından ayrı durur, "kabile" değil "Erlik yaratığı" okunur.
+
 ### Erlik'in Ruhları (Körmös)
 
 Ortak aile kuralları — diğer tüm birimlerden ayrışma:
@@ -668,6 +672,10 @@ estetiğidir; dünyanın içinde olması gerekmez.
 - **Durum (7×7):** `✓` başarı, `⚠` uyarı, `✕` hata, `↑` kazanç, `↓` kayıp (renkler Bölüm 4).
 - **Tamgalar (7×7):** oyuncu tamgası sabit (Oğuz "kaşu" işareti); kral tamgaları
   data-driven (`tamga_id` → doku). Bölge merkezinde sahiplik belirteci.
+  Uygulama: 7×7 krem glif + yalnızca dış siluete 1px koyu outline → 9×9 PNG
+  (iç boşluklar şeffaf, bölge dolgusu görünür); `generate_tamga_icons.gd` üretir.
+  Bölgenin dikey ekseninde, ordu etiketinin hemen altında durur (merkez etiketlerle
+  çakışır).
 
 ### Panel Sistemi
 

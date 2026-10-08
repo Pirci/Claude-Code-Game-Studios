@@ -84,3 +84,45 @@ func test_diamond_rows_form_5x5_diamond_for_radius_2() -> void:
 func test_selection_mark_is_2px_radius() -> void:
 	# Art bible §4: "köşelerde 2px ◆".
 	assert_int(RegionNode.SELECTION_MARK_RADIUS).is_equal(2)
+
+
+func _tamga_texture() -> Texture2D:
+	return load(TamgaLibrary.texture_path(&"oguz")) as Texture2D
+
+
+func test_tamga_hidden_until_selected() -> void:
+	var node: RegionNode = _node(RegionData.Owner.PLAYER)
+	node.set_tamga(_tamga_texture())
+	assert_bool(node.is_tamga_visible()).is_false()
+	node._on_mouse_entered()
+	assert_bool(node.is_tamga_visible()).is_false()
+	node.is_selected = true
+	assert_bool(node.is_tamga_visible()).is_true()
+
+
+func test_colour_blind_mode_always_shows_tamga() -> void:
+	var node: RegionNode = _node(RegionData.Owner.ENEMY)
+	node.set_tamga(_tamga_texture())
+	node.show_tamga_always = true
+	assert_bool(node.is_tamga_visible()).is_true()
+
+
+func test_region_without_tamga_never_shows_one() -> void:
+	var node: RegionNode = _node(RegionData.Owner.NEUTRAL)
+	node.set_tamga(null)
+	node.is_selected = true
+	node.show_tamga_always = true
+	assert_bool(node.is_tamga_visible()).is_false()
+
+
+func test_tamga_sits_centred_below_army_label() -> void:
+	var data: RegionData = RegionData.new()
+	data.owner = RegionData.Owner.PLAYER
+	data.position = Vector2(288, 150)
+	data.polygon_points = PackedVector2Array([Vector2(0, 0), Vector2(10, 0), Vector2(10, 10)])
+	var node: RegionNode = auto_free(RegionNode.new()) as RegionNode
+	node.setup(data)
+	node.set_tamga(_tamga_texture())
+	var sprite: Sprite2D = node.find_children("*", "Sprite2D", false, false)[0] as Sprite2D
+	# 9×9: sütun 284..292 → merkez 288; üst = 150 + 16 + TAMGA_GAP(0).
+	assert_vector(sprite.position).is_equal(Vector2(284, 166))

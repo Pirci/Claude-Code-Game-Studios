@@ -128,6 +128,7 @@ hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
 | `must_defeat_all_enemies` | WinCondition | Prolog: true |
 | Bölge `army_count` / `gold_per_turn` | `.tres` | Denge |
 | `enemy_actions_per_turn` | ChapterMapDefinition / MapState | Düşmanın tur başına toplam aksiyonu (data-driven; MVP: 1) |
+| `player_tamga_id` / `enemy_tamga_id` | ChapterMapDefinition → MapState | Sahiplik tamgası (`icon_tamga_<id>.png`, art bible §5/§7). Prolog: `oguz` / `erlik_beast`. Bölgenin tamgası sahibinden türetilir → fetihte değişir; nötr tamgasız |
 
 ---
 
@@ -142,3 +143,5 @@ hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
 6. Düşman AI en düşük ordulu düşman-olmayan komşuya saldırır. *(Test)*
 7. 3 nötr ele geçirilip düşman yenilince `game_won` tetiklenir. *(Test)*
 8. Oyuncunun bölgesi kalmazsa `game_lost` tetiklenir. *(Test)*
+9. Seçili bölgenin merkez ekseninde sahibinin tamgası görünür (nötrde yok); fetihten
+   sonra tamga yeni sahibinkine geçer. *(Test)*

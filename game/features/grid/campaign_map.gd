@@ -7,6 +7,7 @@ signal region_clicked(region_id: StringName)
 
 var _region_nodes: Dictionary = {}  # StringName -> RegionNode
 var _line_drawer: AdjacencyLineDrawer
+var _tamgas: TamgaLibrary = TamgaLibrary.new()
 
 
 func build_map(map_state: MapState) -> void:
@@ -19,6 +20,7 @@ func build_map(map_state: MapState) -> void:
 	for region: RegionData in map_state.regions.values():
 		var node: RegionNode = RegionNode.new()
 		node.setup(region)
+		node.set_tamga(_tamgas.get_texture(map_state.get_owner_tamga_id(region.owner)))
 		node.clicked.connect(_on_region_clicked)
 		add_child(node)
 		_region_nodes[region.region_id] = node
@@ -29,6 +31,7 @@ func refresh(map_state: MapState) -> void:
 		var node: RegionNode = _region_nodes.get(region.region_id) as RegionNode
 		if node:
 			node.update_display(region)
+			node.set_tamga(_tamgas.get_texture(map_state.get_owner_tamga_id(region.owner)))
 
 
 func set_selected(region_id: StringName) -> void:

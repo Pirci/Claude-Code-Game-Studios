@@ -31,6 +31,10 @@ const MAP_LABEL_VARIATION: StringName = &"MapLabel"
 ## Bölge adı / ordu etiket kutusu (640×360 base, piksel).
 const LABEL_WIDTH: int = 96
 const LABEL_HEIGHT: int = 16
+## Tamga, ordu etiket kutusunun hemen altında, bölgenin dikey ekseninde durur
+## (merkezde etiketlerle çakışırdı). Kutunun alt boş satırları metinle arasında
+## ~2px bırakır; 0 boşlukla tamga ile alt kontur arasında da 1px dolgu kalır.
+const TAMGA_GAP: int = 0
 
 var region_id: StringName = &""
 var is_selected: bool = false:
@@ -39,6 +43,12 @@ var is_selected: bool = false:
 			return
 		is_selected = value
 		queue_redraw()
+		_update_tamga_visibility()
+## Renk Körlüğü Modu: tamga seçimden bağımsız her zaman görünür (art bible §4).
+var show_tamga_always: bool = false:
+	set(value):
+		show_tamga_always = value
+		_update_tamga_visibility()
 
 var _points: PackedVector2Array = PackedVector2Array()
 var _owner: RegionData.Owner = RegionData.Owner.NEUTRAL
@@ -46,6 +56,8 @@ var _area: Area2D
 var _collision: CollisionPolygon2D
 var _label: Label
 var _army_label: Label
+var _tamga: Sprite2D
+var _anchor: Vector2 = Vector2.ZERO
 var _is_hovered: bool = false
 
 
@@ -70,6 +82,7 @@ func setup(data: RegionData) -> void:
 	region_id = data.region_id
 	position = Vector2.ZERO
 	_points = data.polygon_points
+	_anchor = data.position
 
 	_area = Area2D.new()
 	_area.input_pickable = true
@@ -101,6 +114,14 @@ func setup(data: RegionData) -> void:
 	_army_label.position = data.position - Vector2(LABEL_WIDTH / 2.0, 0)
 	_army_label.size = Vector2(LABEL_WIDTH, LABEL_HEIGHT)
 	add_child(_army_label)
+
+	# centered=false + tam sayı konum: 9×9 doku piksel grid'ine oturur, merkez sütunu
+	# bölge ekseninde kalır.
+	_tamga = Sprite2D.new()
+	_tamga.centered = false
+	_update_tamga_position()
+	add_child(_tamga)
+	_update_tamga_visibility()
 	update_display(data)
 
 
@@ -111,6 +132,20 @@ func update_display(data: RegionData) -> void:
 		_army_label.text = "%s: %d" % [tr("ARMY"), data.army_count]
 	if _label:
 		_label.text = tr(String(data.display_name_key))
+
+
+## Sahibin tamga dokusu (null = tamgasız, ör. nötr bölge). Sahiplik değişince yeniden çağrılır.
+func set_tamga(texture: Texture2D) -> void:
+	if _tamga == null:
+		return
+	_tamga.texture = texture
+	_update_tamga_position()
+	_update_tamga_visibility()
+
+
+## Tamga şu an çiziliyor mu: dokusu var ve (seçili veya Renk Körlüğü Modu).
+func is_tamga_visible() -> bool:
+	return _tamga != null and _tamga.texture != null and (is_selected or show_tamga_always)
 
 
 ## Sahibin 3 tonluk mini rampası (koyu / ana / açık).
@@ -144,6 +179,19 @@ func get_outline_color() -> Color:
 	if is_selected or _is_hovered:
 		return COLOR_HIGHLIGHT_OUTLINE
 	return get_owner_ramp(_owner)[RAMP_DARK]
+
+
+func _update_tamga_visibility() -> void:
+	if _tamga:
+		_tamga.visible = is_tamga_visible()
+
+
+func _update_tamga_position() -> void:
+	if _tamga.texture == null:
+		return
+	var size: Vector2i = Vector2i(_tamga.texture.get_size())
+	var center: Vector2i = Vector2i(_anchor.round())
+	_tamga.position = Vector2(center.x - size.x / 2, center.y + LABEL_HEIGHT + TAMGA_GAP)
 
 
 func _create_map_label() -> Label:
