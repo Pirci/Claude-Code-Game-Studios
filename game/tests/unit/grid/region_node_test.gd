@@ -71,3 +71,16 @@ func test_map_label_theme_is_cream_with_dark_1px_outline() -> void:
 	assert_str(theme.get_color(&"font_outline_color", v).to_html(false)).is_equal("1c170f")
 	# outline_size çap gibi davranır: 2 → her yönde 1px.
 	assert_int(theme.get_constant(&"outline_size", v)).is_equal(2)
+
+
+func test_diamond_rows_form_5x5_diamond_for_radius_2() -> void:
+	var rows: Array[Rect2i] = RegionNode.diamond_rows(Vector2i(10, 20), 2)
+	assert_array(rows).is_equal([
+		Rect2i(10, 18, 1, 1), Rect2i(9, 19, 3, 1), Rect2i(8, 20, 5, 1),
+		Rect2i(9, 21, 3, 1), Rect2i(10, 22, 1, 1),
+	] as Array[Rect2i])
+
+
+func test_selection_mark_is_2px_radius() -> void:
+	# Art bible §4: "köşelerde 2px ◆".
+	assert_int(RegionNode.SELECTION_MARK_RADIUS).is_equal(2)

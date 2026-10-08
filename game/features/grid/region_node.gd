@@ -17,6 +17,13 @@ const RAMP_MAIN: int = 1
 const RAMP_LIGHT: int = 2
 ## Seçili / üzerine gelinen bölge konturu — Ülgen altını (art bible §4).
 const COLOR_HIGHLIGHT_OUTLINE := Color("#EDC76B")
+## Seçim köşe işareti ◆: altın elmas (yarıçap 2px → 5×5) + 1px koyu çerçeve;
+## yalnızca seçimde çizilir — hover'dan ayıran işaret budur (art bible §4, §7).
+const SELECTION_MARK_RADIUS: int = 2
+const COLOR_SELECTION_MARK_EDGE := Color("#1C170F")
+## 1px primitive çizgi köşe koordinatının bir piksel sol-üstüne düşer;
+## işaret kontur köşesine ortalansın diye aynı kayma uygulanır.
+const OUTLINE_PIXEL_OFFSET := Vector2i(-1, -1)
 ## Harita etiketi tema varyasyonu: krem metin + 1px koyu kontur (art bible §4).
 ## LabelSettings değil: o font_size'ı sabitler, dil bazlı pixel font geçişini bozar.
 ## Temada outline_size = 2 (çap gibi davranır → her yönde 1px).
@@ -50,6 +57,13 @@ func _draw() -> void:
 	outline.append(_points[0])
 	# Negatif genişlik = 1px primitive çizgi (pixel grid'de keskin, ölçekten bağımsız).
 	draw_polyline(outline, get_outline_color(), -1.0)
+	if is_selected:
+		for point: Vector2 in _points:
+			var center: Vector2i = Vector2i(point.round()) + OUTLINE_PIXEL_OFFSET
+			for row: Rect2i in diamond_rows(center, SELECTION_MARK_RADIUS + 1):
+				draw_rect(Rect2(row), COLOR_SELECTION_MARK_EDGE)
+			for row: Rect2i in diamond_rows(center, SELECTION_MARK_RADIUS):
+				draw_rect(Rect2(row), COLOR_HIGHLIGHT_OUTLINE)
 
 
 func setup(data: RegionData) -> void:
@@ -108,6 +122,16 @@ static func get_owner_ramp(owner: RegionData.Owner) -> PackedColorArray:
 			return RAMP_ENEMY
 		_:
 			return RAMP_NEUTRAL
+
+
+## [param center] pikseline ortalı, [param radius] yarıçaplı piksel elmasın satırları
+## (her satır 1px yüksek dikdörtgen; genişlikler 1, 3, …, 2r+1, …, 3, 1).
+static func diamond_rows(center: Vector2i, radius: int) -> Array[Rect2i]:
+	var rows: Array[Rect2i] = []
+	for dy: int in range(-radius, radius + 1):
+		var half: int = radius - absi(dy)
+		rows.append(Rect2i(center.x - half, center.y + dy, half * 2 + 1, 1))
+	return rows
 
 
 ## Opak dolgu rengi — sahibin ana tonu; hover/seçim dolguyu değiştirmez.
