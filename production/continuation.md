@@ -5,9 +5,9 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-08
-- **Son commit:** `6e3b99e` (C-06 tamga ikonları)
+- **Son commit:** `5a7aa9f` (C-07 erişilebilirlik ayarları)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-07)
+- **Aktif görev:** — (yok; sıradaki: C-08)
 
 ---
 
@@ -74,7 +74,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-04 | [x] `5c8dc51` | Tema paleti → UI paleti (panel `#1C150D`, kenarlık `#8A6D4F`, metin renkleri); `generate_ui_theme_icons.gd` renkleri + ikonları yeniden üret | §4, §7 | — | Ekran görüntüsü, kontrast tablosuyla eşleşme |
 | C-05 | [x] `eaccf54` | Seçili bölge köşelerine 2px `◆` işaretleri | §4, §7 | C-01 | Ekran görüntüsü |
 | C-06 | [x] `6e3b99e` | Tamga ikonları: oyuncu + 5 kral 7×7 (üretici script) → bölge merkezinde `Sprite2D`, data-driven `tamga_id` | §5, §7 | C-04 | Ekran görüntüsü + testler |
-| C-07 | [ ] | Erişilebilirlik ayarları: Renk Körlüğü Modu, Hareketi Azalt, Bölge Adlarını Göster/Gizle + 11 dil çeviri key'leri | §7 | C-02, C-06 | Ayar başına ekran görüntüsü + testler |
+| C-07 | [x] `5a7aa9f` | Erişilebilirlik ayarları: Renk Körlüğü Modu, Hareketi Azalt, Bölge Adlarını Göster/Gizle + 11 dil çeviri key'leri | §7 | C-02, C-06 | Ayar başına ekran görüntüsü + testler |
 | C-08 | [ ] | Buton taban genişlikleri (ör. Tur Bitir ≥64px) + dinamik buton `focus_neighbor_*` | §7 | — | Uzun dillerde (de/ru) ekran görüntüsü |
 | C-09 | [ ] | Binlik ayırıcı: dil bazlı çeviri key'i + sayı biçimlendirme yardımcısı + birim testi | §7 | — | Testler |
 | C-10 | [ ] | Global palet dosyası `art-source/global_palette_ulus.gpl` + `tools/asset-pipeline/validate_palette.gd` + CI'a bağla | §8 | — | Mevcut asset'ler doğrulayıcıdan geçer (veya ihlaller listelenir) |
@@ -116,3 +116,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-08 | C-04: tema → art bible UI paleti (stilbox + metin renkleri, `SecondaryLabel`), ikonlar yeniden üretildi, kontrast tablosu düzeltildi | `5c8dc51` |
 | 2026-10-08 | C-05: seçili bölge köşelerine 5×5 altın `◆` (1px koyu kenar), hover'da yok | `eaccf54` |
 | 2026-10-08 | C-06: 7 tamga ikonu (üretici), bölge sahibine göre data-driven tamga, seçimde görünür, fetihte değişir | `6e3b99e` |
+| 2026-10-08 | C-07: erişilebilirlik ayarları (Renk Körlüğü Modu: tamga + iç kontur, Bölge Adları, Hareketi Azalt bayrağı), 11 dil | `5a7aa9f` |
