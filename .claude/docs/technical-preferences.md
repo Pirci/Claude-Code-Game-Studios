@@ -26,11 +26,11 @@
 ## Input & Platform
 
 - **Target Platforms**: PC (Steam)
-- **Input Methods**: Keyboard/Mouse (birincil), Gamepad (opsiyonel)
-- **Primary Input**: Keyboard/Mouse — harita tıklama, menü navigasyonu
-- **Gamepad Support**: Partial (post-launch hedef)
+- **Input Methods**: Keyboard/Mouse (tek girdi yöntemi)
+- **Primary Input**: Keyboard/Mouse — harita tıklama, menü navigasyonu; klavye ile Tab/ok tuşu odak gezinmesi desteklenir
+- **Gamepad Support**: None (2026-10-08 kararı — hedeflenmiyor)
 - **Touch Support**: None
-- **Platform Notes**: Steam Deck uyumluluğu post-launch değerlendirilecek
+- **Platform Notes**: Sadece PC (Steam). Konsol, mobil ve Steam Deck hedeflenmiyor (2026-10-08 kararı)
 
 ## Naming Conventions
 
