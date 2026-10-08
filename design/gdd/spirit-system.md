@@ -34,7 +34,10 @@ geçmeliyim" baskısı hisseder; arındırdıkça "kutsandım" tatmini yaşar.
 ### 3.1 Erlik Bozgunu (Corruption)
 - Her bölge bir `corruption_level` değerine sahiptir: `0` (temiz) – `3` (ağır).
 - Bozulmuş bölge (`corruption_level ≥ 1`):
-  - Görsel: zehir yeşili → mor → siyah (seviyeye göre)
+  - Görsel: art bible §4 "Sahiplik Renkleri" → Erlik bozgunu katmanı (yalnızca
+    Erlik Moru + Erlik Kömürü, dithering'li leke; sahiplik rengini gizlemez,
+    üstüne biner). Yeşil arındırılmış toprağın rengidir. Seviyenin nasıl
+    gösterileceği (dither yoğunluğu / leke boyutu) henüz tanımsız — C-30/C-31.
   - Ceza: o bölgenin `gold_per_turn` ve `herd_per_turn` üretimi `corruption_level`
     başına %25 azalır (seviye 3 = üretim durur)
   - Bir "arınma direnci" (`corruption_strength`) taşır (bkz. Formüller)

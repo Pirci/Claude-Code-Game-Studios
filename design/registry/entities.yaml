@@ -229,6 +229,41 @@ constants:
     added: 2026-10-08
     revised: ""
 
+  - name: actions_per_turn
+    status: active
+    source: design/gdd/region-map-system.md
+    referenced_by:
+      - design/gdd/region-map-system.md
+      - design/gdd/army-system.md       # her hareket 1 aksiyon
+      - design/gdd/resource-system.md   # üretim aksiyon harcamaz
+    value: 1
+    unit: player actions per turn (MVP)
+    added: 2026-10-08
+    revised: ""
+
+  - name: enemy_actions_per_turn
+    status: active
+    source: design/gdd/region-map-system.md
+    referenced_by:
+      - design/gdd/region-map-system.md
+      - docs/architecture/adr-0005-ai-architecture.md
+    value: 1
+    unit: enemy actions per turn (MVP)
+    added: 2026-10-08
+    revised: ""
+
+  - name: garrison_minimum
+    status: active
+    source: design/gdd/army-system.md
+    referenced_by:
+      - design/gdd/army-system.md
+      - design/gdd/region-map-system.md   # düşman AI aynı kuralla army−1 gönderir
+      - design/gdd/resource-system.md     # üret + hareket: army_count − 1
+    value: 1
+    unit: army left in source region
+    added: 2026-10-08
+    revised: ""
+
 # Example:
 #
 # constants:
