@@ -4,10 +4,10 @@
 > Görev listesi, durumlar ve tamamlanan işlerin kaydı burada tutulur;
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
-- **Son güncelleme:** 2026-10-07
-- **Son commit:** `9f26595` (K-02 onayı) — push bekliyor (2026-10-07 GitHub Git Operations arızası)
+- **Son güncelleme:** 2026-10-08
+- **Son commit:** `656223d` (C-01 sahiplik renkleri)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-01)
+- **Aktif görev:** — (yok; sıradaki: C-02)
 
 ---
 
@@ -68,7 +68,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 
 | ID | Durum | Görev | Kaynak | Bağımlı | Bitti kriteri |
 | --- | --- | --- | --- | --- | --- |
-| C-01 | [ ] | Sahiplik renkleri opak mini rampalara: oyuncu `#47A3E8`, düşman `#C45A2A`, nötr `#6B655A`, seçim 1px altın kontur (`region_node.gd`) | Art bible §4 | — | Ekran görüntüsü + testler |
+| C-01 | [x] `656223d` | Sahiplik renkleri opak mini rampalara: oyuncu `#47A3E8`, düşman `#C45A2A`, nötr `#6B655A`, seçim 1px altın kontur (`region_node.gd`) | Art bible §4 | — | Ekran görüntüsü + testler |
 | C-02 | [ ] | Harita etiketleri: `LabelSettings` krem + 1px `#1C170F` kontur, `text_overrun_behavior` ellipsis | §4, §7 | — | en/ar/de ekran görüntüsü |
 | C-03 | [ ] | HUD üst/alt bara ~%70 opak `#1C150D` zemin + 1px kenarlık | §7 | — | Ekran görüntüsü |
 | C-04 | [ ] | Tema paleti → UI paleti (panel `#1C150D`, kenarlık `#8A6D4F`, metin renkleri); `generate_ui_theme_icons.gd` renkleri + ikonları yeniden üret | §4, §7 | — | Ekran görüntüsü, kontrast tablosuyla eşleşme |
@@ -87,6 +87,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-17 | [ ] | `/architecture-review` yeniden → ADR'leri Accepted yap | Arch. review | C-15, C-16, K-02 | Rapor + ADR durumları |
 | C-18 | [ ] | `/create-architecture` | Technical Setup | C-17 | Mimari doküman |
 | C-19 | [ ] | ADR-0005 uygulaması: `game/features/ai/` altında `EnemyAIController` + `ErlikSpreadController` (saf `decide()`), `MapController` intent'leri uygular; `_run_enemy_ai()` taşınır | ADR-0005 (K-02 sırasında keşfedildi) | C-17 | Davranış aynı kalır; mevcut testler yeşil + `decide()` için izole testler |
+| C-20 | [ ] | `tools/ci/run-tests.sh` varsayılan Godot yolu eskimiş (`~/Downloads/Applications`); Godot artık `/Applications/Godot.app` → yaygın konumları sırayla dene | C-01 sırasında keşfedildi (script `GODOT` olmadan çalışmıyor) | — | `GODOT` ayarlamadan `run-tests.sh` testleri çalıştırır |
 
 ## Tamamlananlar
 
@@ -102,3 +103,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-07 | Devam indeksi + "devam" protokolü | `1206f14` |
 | 2026-10-07 | Push protokole eklendi, anlamlı commit kuralı | `60f66b2` |
 | 2026-10-07 | K-02: `ai_turn_execution` kuralı onaylandı | `9f26595` |
+| 2026-10-08 | C-01: opak sahiplik rampaları, 1px koyu ton kenar, altın seçim / hover konturu | `656223d` |
