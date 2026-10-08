@@ -43,3 +43,4 @@
 - C-07 (5a7aa9f): AccessibilitySettings (state) injected RootContext → Menu/Settings + GameContext. CB mode = tamgas always + inner light-tone contour on owned regions; names hidden → army+tamga centred; reduce_motion flag only (no animations yet). Session-only (C-16). NEXT: C-08.
 - C-08 (aadbab3): End Turn/Main Menu min width 64; GameContext._update_focus_chain links Send Army ↕ End Turn (RegionInfoPanel.get_focus_target). Queued C-25 (initial focus for keyboard/gamepad — design decision). NEXT: C-09.
 - C-09 (95d8f33): NumberFormatter.format_int + THOUSANDS_SEPARATOR key (fr/ru U+00A0). Used in HUD/region/info panel. Queued C-26 (to_lower in info panel → "runde" in German). NEXT: C-10.
+- C-10 (1eb1b88): art-source/global_palette_ulus.gpl (94 colours, single source; .ase dropped) + tools/asset-pipeline/validate_palette.gd, run by tools/ci/run-tests.sh after tests. All 32 PNGs clean. Queued C-27 (no GitHub Actions workflow exists). NEXT: C-11.
