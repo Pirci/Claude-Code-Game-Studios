@@ -68,5 +68,5 @@
 - Active task still C-28 (resource-system GDD, §1–§8 written).
 - Status: Complete (Designed, pending /design-review in a fresh session). All 11 sections written.
 - Provisional: herds inactive; enemy reinforcement is a temporary contract until enemy-layers.md; Bereket form deferred to C-31.
-- Counter-updates done (army, region-map, spirit, index); registry seeded. Implementation queued as C-35.
+- Counter-updates done (army, region-map, spirit, index); registry seeded. Implementation = existing milestone task C-37 (M1); duplicate C-35 row removed.
 - NEXT: queue order C-14 (/consistency-check); design follow-ups C-29…C-32.
