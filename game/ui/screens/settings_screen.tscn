@@ -18,7 +18,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.094, 0.082, 0.055, 1)
+color = Color(0.05098, 0.039216, 0.023529, 1)
 
 [node name="Panel" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -37,6 +37,7 @@ theme_override_constants/separation = 6
 
 [node name="Title" type="Label" parent="Panel"]
 layout_mode = 2
+theme_type_variation = &"HeaderLabel"
 text = "SETTINGS"
 horizontal_alignment = 1
 

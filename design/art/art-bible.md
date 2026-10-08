@@ -377,20 +377,21 @@ Ton kaydırma yalnızca zemin `CanvasLayer`'ına uygulanır (Bölüm 2). Hex de�
 
 UI dünya paletinden türer; daha az ton, daha yüksek kontrast. Hedef WCAG AA:
 metin ≥4.5:1, UI bileşen kenarları ≥3:1. Oranlar panel zemini üzerinde
-**hesaplanmıştır**.
+WCAG 2.x formülüyle **hesaplanmıştır** (bir ondalığa aşağı yuvarlanmış — kontrast asla olduğundan yüksek yazılmaz);
+`tests/unit/ui/ui_palette_contrast_test.gd` tema renklerini bu tabloya karşı doğrular.
 
 | Öğe | Hex | Kontrast (panel zemini üzerinde) | Kullanım |
 | --- | --- | --- | --- |
 | Panel zemini | `#1C150D` (Deri Kahve) | — | Tüm paneller, HUD (haritada ~%70 opak) |
-| Birincil metin | `#F2E6C7` | 14.7:1 | Metin, etiket, buton yazısı |
-| İkincil metin | `#B8A689` | 7.7:1 | Açıklama, alt başlık |
-| Devre dışı metin | `#6B655A` | 3.2:1 (kasıtlı düşük) | İnaktif öğe |
-| Kenarlık | `#8A6D4F` | 3.8:1 | 1px panel/buton kenarlığı, ayırıcı |
-| Vurgu / birincil aksiyon | `#EDC76B` | 11.3:1 | Tur Bitir, Saldır; başlık (HeaderLabel) |
-| Hover | `#F5DE9E` | 13.7:1 | Üzerine gelme |
-| Başarı | `#87B85C` + `✓`/`↑` | 7.8:1 | Arındırma, kazanç |
-| Uyarı | `#E87A7A` + `⚠` | 6.5:1 | "Erlik yayılıyor", tehlike |
-| Hata | `#FFADAD` + `✕` | 10.3:1 | Geçersiz hamle, yetersiz kaynak |
+| Birincil metin | `#F2E6C7` | 14.5:1 | Metin, etiket, buton yazısı |
+| İkincil metin | `#B8A689` | 7.6:1 | Açıklama, alt başlık |
+| Devre dışı metin | `#6B655A` | 3.1:1 (kasıtlı düşük) | İnaktif öğe |
+| Kenarlık | `#8A6D4F` | 3.7:1 | 1px panel/buton kenarlığı, ayırıcı |
+| Vurgu / birincil aksiyon | `#EDC76B` | 11.1:1 | Tur Bitir, Saldır; başlık (HeaderLabel) |
+| Hover | `#F5DE9E` | 13.6:1 | Üzerine gelme |
+| Başarı | `#87B85C` + `✓`/`↑` | 7.7:1 | Arındırma, kazanç |
+| Uyarı | `#E87A7A` + `⚠` | 6.4:1 | "Erlik yayılıyor", tehlike |
+| Hata | `#FFADAD` + `✕` | 10.1:1 | Geçersiz hamle, yetersiz kaynak |
 
 Uyarı ve hata aynı aileden olduğu için **ikonla** ayrılır. Metne outline
 uygulanmaz (harita etiketleri hariç — yukarıda).
@@ -417,11 +418,11 @@ uygulanmaz (harita etiketleri hariç — yukarıda).
 
 ### Uygulama Notu (koda yansıyacaklar)
 
-Mevcut geçici değerler bu bölüme göre güncellenecek: `region_node.gd` yarı
-saydam sahiplik renkleri → opak mini rampalar (oyuncu mavi / düşman pas / nötr
-keçe grisi); harita etiketlerine 1px koyu kontur; `default_theme.tres` ve
-`generate_ui_theme_icons.gd` paleti → UI paleti tablosu (panel zemini
-`#1C150D`, kenarlık `#8A6D4F`).
+Uygulandı (2026-10-08): `region_node.gd` opak sahiplik mini rampaları (C-01);
+harita etiketleri `MapLabel` krem + 1px koyu kontur (C-02); `default_theme.tres`,
+`generate_ui_theme_icons.gd` ve `generate_language_name_icons.gd` → UI paleti
+tablosu (C-04). Kalan: harita zemini ve komşuluk çizgilerinin palete bağlanması
+(C-22).
 
 ## 5. Karakter Tasarım Yönü
 

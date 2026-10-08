@@ -19,7 +19,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.094, 0.082, 0.055, 1)
+color = Color(0.05098, 0.039216, 0.023529, 1)
 
 [node name="MainPanel" type="VBoxContainer" parent="."]
 unique_name_in_owner = true
@@ -39,6 +39,7 @@ theme_override_constants/separation = 6
 
 [node name="TitleLabel" type="Label" parent="MainPanel"]
 layout_mode = 2
+theme_type_variation = &"HeaderLabel"
 theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 36
 text = "GAME_TITLE"
@@ -47,6 +48,7 @@ vertical_alignment = 1
 
 [node name="SubtitleLabel" type="Label" parent="MainPanel"]
 layout_mode = 2
+theme_type_variation = &"SecondaryLabel"
 text = "GAME_SUBTITLE"
 horizontal_alignment = 1
 vertical_alignment = 1

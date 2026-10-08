@@ -10,7 +10,7 @@ extends SceneTree
 ##   godot --path game --script ../tools/asset-pipeline/generate_language_name_icons.gd
 
 const OUT: String = "res://assets/art/ui/theme/"
-const CREAM := Color(0.95, 0.9, 0.78)
+const CREAM := Color("#F2E6C7")  # Art bible §4 birincil metin
 const LATIN: String = "res://assets/fonts/fusion_pixel_12px_latin.woff2"
 const NAMES: Dictionary[String, Array] = {
 	"en": ["English", LATIN, 12],
