@@ -776,10 +776,11 @@ seçeneği.
 - **Export:** PNG, sRGB, **yalnızca 1× native boyut**. Alfa yalnızca 0 veya 255
   (yarı saydam piksel yok). Ölçeklenmiş varyant (`_2x` vb.) repoya girmez —
   büyütme Godot'un işidir (integer scaling).
-- **Global palet:** `art-source/global_palette_ulus.ase` (tek kaynak, isimli
-  rampalar) → `art-source/global_palette_ulus.gpl` (export, GIMP/Krita uyumu).
-  Bölüm 4 değişirse: `.ase` güncellenir → `.gpl` export edilir → doğrulayıcı
-  yeniden çalışır → etkilenen asset'ler yeniden export edilir.
+- **Global palet:** `art-source/global_palette_ulus.gpl` — **tek kaynak** (metin,
+  diff'te incelenebilir; Aseprite "Load Palette" ve GIMP/Krita doğrudan açar; renk
+  adları rampa + sıra + hex). Bölüm 4 değişirse: önce bu tablo → `.gpl` güncellenir
+  → doğrulayıcı yeniden çalışır → etkilenen asset'ler yeniden export edilir.
+  (2026-10-08: ayrı `.ase` palet dosyası bırakıldı — iki kaynak senkron kayması riski.)
 - **Script ile üretilen asset'ler** (UI tema ikonları, dil adları) kaynak yerine
   `tools/asset-pipeline/*.gd` üreticileriyle yeniden üretilir.
 
@@ -888,7 +889,7 @@ orta pikseli); Godot'ta `Sprite2D.offset` / `centered=false` ile ayarlanır.
 bağımlılık yok): `game/assets/art/` altındaki tüm PNG'leri tarar; alfa 0 pikselleri
 atlar, alfa 0/255 dışını ve global palet (`.gpl`) dışındaki her rengi dosya +
 piksel + hex ile raporlar; hata varsa exit 1. CI test adımından sonra çalışır
-(`tools/ci/`).
+(`tools/ci/run-tests.sh`; testler geçse bile palet ihlali betiği düşürür).
 
 ### Teknik Yasaklar
 

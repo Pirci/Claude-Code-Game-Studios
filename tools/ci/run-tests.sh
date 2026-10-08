@@ -7,6 +7,7 @@
 # GODOT ayarlı değilse sırayla denenir: /Applications, ~/Applications,
 # ~/Downloads/Applications (macOS), ardından PATH'teki `godot`.
 # Test yolu verilmezse tüm birim testleri çalışır (res://tests/unit).
+# Testlerden sonra palet doğrulayıcı çalışır (tools/asset-pipeline/validate_palette.gd).
 #
 # Not: Godot 4.7 + GDUnit4 v6.x. Headless'ta InputEvent gerektiren testler
 # çalışmaz; saf mantık testleri için --ignoreHeadlessMode kullanılır.
@@ -45,7 +46,26 @@ fi
 # Class cache'in güncel olması için önce import (ilk çalıştırmada gerekli).
 "$GODOT" --headless --import >/dev/null 2>&1 || true
 
+# Her iki adım da çalışır; biri başarısızsa betik sıfır olmayan kodla biter.
+set +e
 "$GODOT" --headless \
   -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd \
   --ignoreHeadlessMode \
   -a "$TEST_PATH"
+TEST_EXIT=$?
+
+# Palet doğrulama (art bible §8): game/assets/art altındaki PNG'ler global palette uymalı.
+"$GODOT" --headless --path . \
+  --script ../tools/asset-pipeline/validate_palette.gd \
+  -- "$PROJECT_DIR/../art-source/global_palette_ulus.gpl" res://assets/art
+PALETTE_EXIT=$?
+set -e
+
+if [[ $TEST_EXIT -ne 0 ]]; then
+  echo "HATA: testler başarısız (exit $TEST_EXIT)" >&2
+  exit "$TEST_EXIT"
+fi
+if [[ $PALETTE_EXIT -ne 0 ]]; then
+  echo "HATA: palet doğrulama başarısız (exit $PALETTE_EXIT)" >&2
+  exit "$PALETTE_EXIT"
+fi

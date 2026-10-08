@@ -1,0 +1,115 @@
+GIMP Palette
+Name: ULUS Global Palette
+Columns: 7
+#
+# Tek kaynak: design/art/art-bible.md §4 "Global Palet" (14 rampa, koyudan açığa).
+# Doğrulayıcı: tools/asset-pipeline/validate_palette.gd — bu dosya dışındaki renk asset'e giremez.
+# Aseprite: Palette > Load Palette ile açılır; değişiklik önce bible'a, sonra buraya.
+# Keçe Krem
+ 28  23  15	Keçe Krem 1 #1C170F
+ 61  52  38	Keçe Krem 2 #3D3426
+ 92  79  58	Keçe Krem 3 #5C4F3A
+138 122  94	Keçe Krem 4 #8A7A5E
+184 166 137	Keçe Krem 5 #B8A689
+212 196 163	Keçe Krem 6 #D4C4A3
+242 230 199	Keçe Krem 7 #F2E6C7
+# Deri Kahve
+ 13  10   6	Deri Kahve 1 #0D0A06
+ 28  21  13	Deri Kahve 2 #1C150D
+ 58  40  23	Deri Kahve 3 #3A2817
+ 92  66  41	Deri Kahve 4 #5C4229
+138 109  79	Deri Kahve 5 #8A6D4F
+184 148  93	Deri Kahve 6 #B8945D
+# Ülgen Altını
+ 61  46  10	Ülgen Altını 1 #3D2E0A
+107  79  18	Ülgen Altını 2 #6B4F12
+154 112  32	Ülgen Altını 3 #9A7020
+201 154  61	Ülgen Altını 4 #C99A3D
+237 199 107	Ülgen Altını 5 #EDC76B
+245 222 158	Ülgen Altını 6 #F5DE9E
+255 244 212	Ülgen Altını 7 #FFF4D4
+# Ülgen İndigosu
+ 10  13  28	Ülgen İndigosu 1 #0A0D1C
+ 20  26  51	Ülgen İndigosu 2 #141A33
+ 31  43  82	Ülgen İndigosu 3 #1F2B52
+ 46  65 120	Ülgen İndigosu 4 #2E4178
+ 66  90 168	Ülgen İndigosu 5 #425AA8
+107 135 201	Ülgen İndigosu 6 #6B87C9
+163 184 232	Ülgen İndigosu 7 #A3B8E8
+# Kök Böri Gök Mavisi
+ 10  26  41	Kök Böri Gök Mavisi 1 #0A1A29
+ 20  51  77	Kök Böri Gök Mavisi 2 #14334D
+ 31  82 120	Kök Böri Gök Mavisi 3 #1F5278
+ 46 122 184	Kök Böri Gök Mavisi 4 #2E7AB8
+ 71 163 232	Kök Böri Gök Mavisi 5 #47A3E8
+135 196 245	Kök Böri Gök Mavisi 6 #87C4F5
+212 237 255	Kök Böri Gök Mavisi 7 #D4EDFF
+# Erlik Moru
+ 18  10  20	Erlik Moru 1 #120A14
+ 31  15  38	Erlik Moru 2 #1F0F26
+ 51  23  61	Erlik Moru 3 #33173D
+ 82  41  97	Erlik Moru 4 #522961
+122  61 143	Erlik Moru 5 #7A3D8F
+168 107 196	Erlik Moru 6 #A86BC4
+# Erlik Kömürü
+  5   5   5	Erlik Kömürü 1 #050505
+ 15  13  14	Erlik Kömürü 2 #0F0D0E
+ 26  23  25	Erlik Kömürü 3 #1A1719
+ 46  41  43	Erlik Kömürü 4 #2E292B
+ 71  66  63	Erlik Kömürü 5 #47423F
+107 101  97	Erlik Kömürü 6 #6B6561
+# Deel Kırmızısı
+ 36  10  10	Deel Kırmızısı 1 #240A0A
+ 61  20  20	Deel Kırmızısı 2 #3D1414
+102  31  31	Deel Kırmızısı 3 #661F1F
+153  46  46	Deel Kırmızısı 4 #992E2E
+204  71  71	Deel Kırmızısı 5 #CC4747
+232 122 122	Deel Kırmızısı 6 #E87A7A
+255 173 173	Deel Kırmızısı 7 #FFADAD
+# Pas Turuncusu
+ 43  18   8	Pas Turuncusu 1 #2B1208
+ 77  32  15	Pas Turuncusu 2 #4D200F
+122  51  24	Pas Turuncusu 3 #7A3318
+154  66  32	Pas Turuncusu 4 #9A4220
+196  90  42	Pas Turuncusu 5 #C45A2A
+224 126  69	Pas Turuncusu 6 #E07E45
+245 169 112	Pas Turuncusu 7 #F5A970
+# Bozkır Yeşili
+ 15  20  10	Bozkır Yeşili 1 #0F140A
+ 26  38  20	Bozkır Yeşili 2 #1A2614
+ 43  61  31	Bozkır Yeşili 3 #2B3D1F
+ 67  97  41	Bozkır Yeşili 4 #436129
+ 92 138  61	Bozkır Yeşili 5 #5C8A3D
+135 184  92	Bozkır Yeşili 6 #87B85C
+184 212 158	Bozkır Yeşili 7 #B8D49E
+# Orman Koyu Yeşili
+  7  13   5	Orman Koyu Yeşili 1 #070D05
+ 15  26  13	Orman Koyu Yeşili 2 #0F1A0D
+ 26  46  23	Orman Koyu Yeşili 3 #1A2E17
+ 41  71  38	Orman Koyu Yeşili 4 #294726
+ 61 107  61	Orman Koyu Yeşili 5 #3D6B3D
+ 92 143  92	Orman Koyu Yeşili 6 #5C8F5C
+# Buz Mavi-Beyazı
+ 13  20  25	Buz Mavi-Beyazı 1 #0D1419
+ 26  43  61	Buz Mavi-Beyazı 2 #1A2B3D
+ 46  71  97	Buz Mavi-Beyazı 3 #2E4761
+ 71 107 143	Buz Mavi-Beyazı 4 #476B8F
+107 153 196	Buz Mavi-Beyazı 5 #6B99C4
+163 196 232	Buz Mavi-Beyazı 6 #A3C4E8
+212 232 255	Buz Mavi-Beyazı 7 #D4E8FF
+# Kum
+ 28  20  10	Kum 1 #1C140A
+ 61  41  20	Kum 2 #3D2914
+ 97  71  41	Kum 3 #614729
+138 107  71	Kum 4 #8A6B47
+184 158 107	Kum 5 #B89E6B
+212 196 158	Kum 6 #D4C49E
+245 232 204	Kum 7 #F5E8CC
+# Keçe Grisi
+ 26  24  20	Keçe Grisi 1 #1A1814
+ 46  42  36	Keçe Grisi 2 #2E2A24
+ 74  69  60	Keçe Grisi 3 #4A453C
+107 101  90	Keçe Grisi 4 #6B655A
+143 137 125	Keçe Grisi 5 #8F897D
+181 175 163	Keçe Grisi 6 #B5AFA3
+217 212 200	Keçe Grisi 7 #D9D4C8
