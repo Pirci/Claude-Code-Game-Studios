@@ -44,3 +44,4 @@ WIN_CONDITION_CH1,Unite 3 tribes and slay the beast of Erlik,3 boyu birleştir v
 COLOR_BLIND_MODE,Color Blind Mode,Renk Körlüğü Modu,Farbenblind-Modus,Mode daltonien,Modo daltónico,色盲模式,色覚サポート,색맹 모드,Режим для дальтоников,Modo daltônico,وضع عمى الألوان
 REDUCE_MOTION,Reduce Motion,Hareketi Azalt,Bewegung reduzieren,Réduire les animations,Reducir movimiento,减少动态效果,アニメーションを減らす,동작 줄이기,Уменьшить движение,Reduzir movimento,تقليل الحركة
 SHOW_REGION_NAMES,Show Region Names,Bölge Adlarını Göster,Regionsnamen anzeigen,Afficher les noms des régions,Mostrar nombres de regiones,显示地区名称,地域名を表示,지역 이름 표시,Названия регионов,Mostrar nomes das regiões,إظهار أسماء المناطق
+THOUSANDS_SEPARATOR,",",.,., ,.,",",",",",", ,.,","

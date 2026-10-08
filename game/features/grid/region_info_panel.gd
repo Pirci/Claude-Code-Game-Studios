@@ -65,8 +65,8 @@ func show_region(data: RegionData) -> void:
 			owner_text = tr("OWNER_NEUTRAL")
 	_owner_label.text = owner_text
 
-	_army_label.text = "%s: %d" % [tr("ARMY"), data.army_count]
-	_gold_label.text = "%s: %d / %s" % [tr("GOLD"), data.gold_per_turn, tr("TURN").to_lower()]
+	_army_label.text = "%s: %s" % [tr("ARMY"), NumberFormatter.format_int(data.army_count)]
+	_gold_label.text = "%s: %s / %s" % [tr("GOLD"), NumberFormatter.format_int(data.gold_per_turn), tr("TURN").to_lower()]
 
 	_send_button.visible = data.owner == RegionData.Owner.PLAYER and data.army_count > 1
 	show()

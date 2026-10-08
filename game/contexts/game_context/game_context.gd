@@ -102,8 +102,8 @@ func _connect_signals() -> void:
 
 func _update_ui() -> void:
 	_chapter_label.text = tr("CHAPTER_1_TITLE")
-	_gold_label.text = "%s: %d" % [tr("GOLD"), _game_state.gold]
-	_turn_label.text = "%s: %d" % [tr("TURN"), _game_state.map_state.current_turn]
+	_gold_label.text = "%s: %s" % [tr("GOLD"), NumberFormatter.format_int(_game_state.gold)]
+	_turn_label.text = "%s: %s" % [tr("TURN"), NumberFormatter.format_int(_game_state.map_state.current_turn)]
 	_end_turn_button.disabled = false
 
 

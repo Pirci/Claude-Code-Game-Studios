@@ -660,7 +660,10 @@ estetiğidir; dünyanın içinde olması gerekmez.
 - **Sayılar:** Arap rakamı (Roma rakamı yok). Kazanç `+123` + `↑` (yeşil), kayıp
   `−45` + `↓` (açık kırmızı). Binlik ayırıcı dile göre çeviri key'inden gelir
   (tr/de `.`, en `,` …) — `TranslationServer.format_number()` gruplama yapmaz
-  (Godot 4.7'de doğrulandı).
+  (Godot 4.7'de doğrulandı). Uygulama: `THOUSANDS_SEPARATOR` key'i +
+  `NumberFormatter.format_int()`; fr/ru ayırıcısı kırılmaz boşluk U+00A0 (ince
+  boşluk U+202F Fusion Pixel Latin'de yok). Dikkat: kayıp işareti `−` (U+2212) da
+  Fusion Pixel Latin'de yok — kazanç/kayıp gösterimi uygulanırken glif kontrol edilmeli.
 
 ### İkonografi
 

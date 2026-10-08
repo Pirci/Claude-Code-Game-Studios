@@ -147,7 +147,7 @@ func update_display(data: RegionData) -> void:
 	_owner = data.owner
 	queue_redraw()
 	if _army_label:
-		_army_label.text = "%s: %d" % [tr("ARMY"), data.army_count]
+		_army_label.text = "%s: %s" % [tr("ARMY"), NumberFormatter.format_int(data.army_count)]
 	if _label:
 		_label.text = tr(String(data.display_name_key))
 
