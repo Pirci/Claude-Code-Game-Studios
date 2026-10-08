@@ -932,8 +932,10 @@ ne alındığı** ve **neyden ayrışıldığı** bellidir; iki referans aynı y
   alınması yasaktır**.
 - **AI görsel üretimi:** prompt'larda sanatçı/eser/oyun adı yazılmaz; teknik
   tarif edilir (ör. "düz renk alanları, 1px koyu kontur, sınırlı palet").
-  `design/art-reference/ai-art-prompts.md` sulu boya dönemine aittir ve bu
-  bölüme göre yeniden yazılmalıdır.
+  AI çıktısı **konsept/kompozisyon referansıdır, doğrudan oyuna girmez** —
+  asset Aseprite'ta native boyutta `.gpl` paletiyle çizilir ve palet
+  doğrulayıcıdan geçer (Bölüm 8). Prompt seti:
+  `design/art-reference/ai-art-prompts.md` (2026-10-08, pixel art).
 - Temel set sabittir; yeni bir görsel sorun (su, sis, kar efekti vb.) için ek
   referanslar aşağıya eklenir.
 
