@@ -34,3 +34,5 @@
 - Godot now at /Applications/Godot.app → run tests with GODOT=/Applications/Godot.app/Contents/MacOS/Godot until C-20 fixes the default.
 - NEXT: C-02 (map labels LabelSettings outline + ellipsis).
 - C-01-fix (b276316): hover outline = #EDC76B per bible (no separate hover tone). C-20 (5371770): run-tests.sh auto-detects Godot — GODOT env no longer needed.
+- C-02 (34ac70d): map labels use theme variation MapLabel (cream #F2E6C7, outline #1C170F, outline_size=2 = 1px each side) + ellipsis. Not LabelSettings (pins font_size, breaks Unifont swap). Bible §7 updated.
+- Screenshot helper scripts live in /tmp/ulus_shot (shot.gd, zoom.gd) — temp, outside repo. NEXT: C-03.

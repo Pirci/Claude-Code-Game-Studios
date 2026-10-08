@@ -5,9 +5,9 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-08
-- **Son commit:** `5371770` (C-20 run-tests.sh Godot tespiti)
+- **Son commit:** `34ac70d` (C-02 harita etiketleri)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-02)
+- **Aktif görev:** — (yok; sıradaki: C-03)
 
 ---
 
@@ -69,7 +69,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | ID | Durum | Görev | Kaynak | Bağımlı | Bitti kriteri |
 | --- | --- | --- | --- | --- | --- |
 | C-01 | [x] `656223d` | Sahiplik renkleri opak mini rampalara: oyuncu `#47A3E8`, düşman `#C45A2A`, nötr `#6B655A`, seçim 1px altın kontur (`region_node.gd`) | Art bible §4 | — | Ekran görüntüsü + testler |
-| C-02 | [ ] | Harita etiketleri: `LabelSettings` krem + 1px `#1C170F` kontur, `text_overrun_behavior` ellipsis | §4, §7 | — | en/ar/de ekran görüntüsü |
+| C-02 | [x] `34ac70d` | Harita etiketleri: krem + 1px `#1C170F` kontur, `text_overrun_behavior` ellipsis | §4, §7 | — | en/ar/de ekran görüntüsü |
 | C-03 | [ ] | HUD üst/alt bara ~%70 opak `#1C150D` zemin + 1px kenarlık | §7 | — | Ekran görüntüsü |
 | C-04 | [ ] | Tema paleti → UI paleti (panel `#1C150D`, kenarlık `#8A6D4F`, metin renkleri); `generate_ui_theme_icons.gd` renkleri + ikonları yeniden üret | §4, §7 | — | Ekran görüntüsü, kontrast tablosuyla eşleşme |
 | C-05 | [ ] | Seçili bölge köşelerine 2px `◆` işaretleri | §4, §7 | C-01 | Ekran görüntüsü |
@@ -106,3 +106,5 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-08 | C-01: opak sahiplik rampaları, 1px koyu ton kenar, altın seçim / hover konturu | `656223d` |
 | 2026-10-08 | C-01-fix: hover konturu da bible'daki altın `#EDC76B` (seçimle aynı) | `b276316` |
 | 2026-10-08 | C-20: `run-tests.sh` Godot'u otomatik buluyor (/Applications, ~/Applications, ~/Downloads/Applications, PATH) | `5371770` |
+| 2026-10-08 | `project.godot` editör normalizasyonu (davranış değişmedi) + eksik kalan oturum notları | `4dfdcc2` |
+| 2026-10-08 | C-02: `MapLabel` tema varyasyonu (krem + 1px koyu kontur), uzun adlarda `…` | `34ac70d` |
