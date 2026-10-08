@@ -745,6 +745,13 @@ palet dışı renk üretir).
 | **Hareketi Azalt** | Erlik lekesi ve Kök Böri animasyonları durur (orta kare sabit), arındırma anında tamamlanır, UI geçişleri düz kesme |
 | **Bölge Adlarını Göster/Gizle** | Varsayılan: göster |
 
+Uygulama (2026-10-08, C-07): `AccessibilitySettings` (state) RootContext'te tek
+örnek, ayarlar ekranı yazar, harita okur. Renk Körlüğü Modu'ndaki "ek 1px kontur"
+= koyu kenarın hemen içinde rampanın **açık** tonu (yalnız oyuncu/düşman; nötr
+yok). Bölge adları gizliyken ordu sayısı ve tamga bölge ortasına kayar. Hareketi
+Azalt bayrağı mevcut; oyunda henüz animasyon yok — Erlik lekesi, Kök Böri ve
+geçiş animasyonları bu bayrağı okumalı. Ayarlar henüz kalıcı değil (C-16).
+
 **Ertelenen:** Büyük metin modu (24px — tüm yerleşimlerin ikinci versiyonu
 demek) ve Steam Deck dokunmatik hedef boyutları (dokunmatik desteği "None",
 Steam Deck post-launch — technical-preferences) post-launch değerlendirilir.

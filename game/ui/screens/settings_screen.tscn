@@ -28,9 +28,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -128.0
-offset_top = -104.0
+offset_top = -136.0
 offset_right = 128.0
-offset_bottom = 104.0
+offset_bottom = 136.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 6
@@ -111,6 +111,48 @@ size_flags_horizontal = 3
 text = "FULLSCREEN"
 
 [node name="FullscreenCheck" type="CheckButton" parent="Panel/FullscreenRow"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Separator4" type="HSeparator" parent="Panel"]
+layout_mode = 2
+
+[node name="ColorBlindRow" type="HBoxContainer" parent="Panel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/ColorBlindRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "COLOR_BLIND_MODE"
+text_overrun_behavior = 3
+
+[node name="ColorBlindCheck" type="CheckButton" parent="Panel/ColorBlindRow"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ReduceMotionRow" type="HBoxContainer" parent="Panel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/ReduceMotionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "REDUCE_MOTION"
+text_overrun_behavior = 3
+
+[node name="ReduceMotionCheck" type="CheckButton" parent="Panel/ReduceMotionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RegionNamesRow" type="HBoxContainer" parent="Panel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/RegionNamesRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SHOW_REGION_NAMES"
+text_overrun_behavior = 3
+
+[node name="RegionNamesCheck" type="CheckButton" parent="Panel/RegionNamesRow"]
 unique_name_in_owner = true
 layout_mode = 2
 

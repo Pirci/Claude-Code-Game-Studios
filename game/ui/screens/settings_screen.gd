@@ -24,24 +24,38 @@ const LOCALES: Array[Dictionary] = [
 const LOCALE_NAME_ICON_PATH: String = "res://assets/art/ui/theme/lang_name_%s.png"
 
 
+var _accessibility: AccessibilitySettings = null
+
 @onready var _language_option: OptionButton = %LanguageOption
 @onready var _master_slider: HSlider = %MasterSlider
 @onready var _music_slider: HSlider = %MusicSlider
 @onready var _sfx_slider: HSlider = %SfxSlider
 @onready var _fullscreen_check: CheckButton = %FullscreenCheck
+@onready var _color_blind_check: CheckButton = %ColorBlindCheck
+@onready var _reduce_motion_check: CheckButton = %ReduceMotionCheck
+@onready var _region_names_check: CheckButton = %RegionNamesCheck
 @onready var _back_button: Button = %BackButton
+
+
+## Erişilebilirlik anahtarlarının okuyup yazacağı tercihler (null ise anahtarlar gizlenir).
+func bind_services(accessibility: AccessibilitySettings) -> void:
+	_accessibility = accessibility
 
 
 func _ready() -> void:
 	_setup_language_options()
 	_setup_audio_sliders()
 	_setup_fullscreen()
+	_setup_accessibility()
 
 	_language_option.item_selected.connect(_on_language_selected)
 	_master_slider.value_changed.connect(_on_master_changed)
 	_music_slider.value_changed.connect(_on_music_changed)
 	_sfx_slider.value_changed.connect(_on_sfx_changed)
 	_fullscreen_check.toggled.connect(_on_fullscreen_toggled)
+	_color_blind_check.toggled.connect(_on_color_blind_toggled)
+	_reduce_motion_check.toggled.connect(_on_reduce_motion_toggled)
+	_region_names_check.toggled.connect(_on_region_names_toggled)
 	_back_button.pressed.connect(_on_back_pressed)
 
 
@@ -86,6 +100,17 @@ func _setup_fullscreen() -> void:
 	_fullscreen_check.button_pressed = (mode == DisplayServer.WINDOW_MODE_FULLSCREEN)
 
 
+func _setup_accessibility() -> void:
+	var enabled: bool = _accessibility != null
+	for check: CheckButton in [_color_blind_check, _reduce_motion_check, _region_names_check]:
+		check.disabled = not enabled
+	if not enabled:
+		return
+	_color_blind_check.button_pressed = _accessibility.color_blind_mode
+	_reduce_motion_check.button_pressed = _accessibility.reduce_motion
+	_region_names_check.button_pressed = _accessibility.show_region_names
+
+
 func _get_bus_volume(bus_name: String) -> float:
 	var bus_index: int = AudioServer.get_bus_index(bus_name)
 	if bus_index < 0:
@@ -121,6 +146,18 @@ func _on_fullscreen_toggled(enabled: bool) -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+
+
+func _on_color_blind_toggled(enabled: bool) -> void:
+	_accessibility.color_blind_mode = enabled
+
+
+func _on_reduce_motion_toggled(enabled: bool) -> void:
+	_accessibility.reduce_motion = enabled
+
+
+func _on_region_names_toggled(enabled: bool) -> void:
+	_accessibility.show_region_names = enabled
 
 
 func _on_back_pressed() -> void:

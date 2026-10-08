@@ -103,7 +103,7 @@ func test_tamga_hidden_until_selected() -> void:
 func test_colour_blind_mode_always_shows_tamga() -> void:
 	var node: RegionNode = _node(RegionData.Owner.ENEMY)
 	node.set_tamga(_tamga_texture())
-	node.show_tamga_always = true
+	node.color_blind_mode = true
 	assert_bool(node.is_tamga_visible()).is_true()
 
 
@@ -111,7 +111,7 @@ func test_region_without_tamga_never_shows_one() -> void:
 	var node: RegionNode = _node(RegionData.Owner.NEUTRAL)
 	node.set_tamga(null)
 	node.is_selected = true
-	node.show_tamga_always = true
+	node.color_blind_mode = true
 	assert_bool(node.is_tamga_visible()).is_false()
 
 
@@ -126,3 +126,35 @@ func test_tamga_sits_centred_below_army_label() -> void:
 	var sprite: Sprite2D = node.find_children("*", "Sprite2D", false, false)[0] as Sprite2D
 	# 9×9: sütun 284..292 → merkez 288; üst = 150 + 16 + TAMGA_GAP(0).
 	assert_vector(sprite.position).is_equal(Vector2(284, 166))
+
+
+func test_colour_blind_inner_outline_only_on_owned_regions() -> void:
+	var player: RegionNode = _node(RegionData.Owner.PLAYER)
+	var neutral: RegionNode = _node(RegionData.Owner.NEUTRAL)
+	assert_bool(player.has_inner_outline()).is_false()
+	player.color_blind_mode = true
+	neutral.color_blind_mode = true
+	assert_bool(player.has_inner_outline()).is_true()
+	assert_bool(neutral.has_inner_outline()).is_false()
+	# Rampanın açık tonu (art bible §4 mini rampa).
+	assert_str(player.get_inner_outline_color().to_html(false)).is_equal("87c4f5")
+
+
+func test_hiding_name_centres_army_label_and_tamga() -> void:
+	var data: RegionData = RegionData.new()
+	data.owner = RegionData.Owner.PLAYER
+	data.position = Vector2(288, 150)
+	data.polygon_points = PackedVector2Array([Vector2(0, 0), Vector2(10, 0), Vector2(10, 10)])
+	var node: RegionNode = auto_free(RegionNode.new()) as RegionNode
+	node.setup(data)
+	node.set_tamga(_tamga_texture())
+	var labels: Array[Node] = node.find_children("*", "Label", false, false)
+	var name_label: Label = labels[0] as Label
+	var army_label: Label = labels[1] as Label
+	var sprite: Sprite2D = node.find_children("*", "Sprite2D", false, false)[0] as Sprite2D
+	node.show_name_label = false
+	assert_bool(name_label.visible).is_false()
+	assert_float(army_label.position.y).is_equal(150.0 - RegionNode.LABEL_HEIGHT / 2)
+	assert_float(sprite.position.y).is_equal(150.0 + RegionNode.LABEL_HEIGHT / 2 + RegionNode.TAMGA_GAP)
+	node.show_name_label = true
+	assert_float(army_label.position.y).is_equal(150.0)

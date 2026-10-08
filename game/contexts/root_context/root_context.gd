@@ -14,6 +14,7 @@ const GAME_SCENE: PackedScene = preload("res://contexts/game_context/game_contex
 
 var _current_context: Node = null
 var _game_state: GameState = null
+var _accessibility: AccessibilitySettings = AccessibilitySettings.new()
 var _locale_fonts: LocaleFontController = null
 
 
@@ -38,6 +39,7 @@ func _switch_to(context_name: StringName) -> void:
 	match context_name:
 		&"menu":
 			var menu: MenuContext = MENU_SCENE.instantiate() as MenuContext
+			menu.bind_services(_accessibility)
 			menu.new_campaign_requested.connect(_on_new_campaign)
 			menu.quit_requested.connect(_on_quit)
 			_current_context = menu
@@ -45,7 +47,7 @@ func _switch_to(context_name: StringName) -> void:
 		&"game":
 			_game_state = GameState.new()
 			var game: GameContext = GAME_SCENE.instantiate() as GameContext
-			game.bind_services(_game_state)
+			game.bind_services(_game_state, _accessibility)
 			game.return_to_menu_requested.connect(_on_return_to_menu)
 			_current_context = game
 

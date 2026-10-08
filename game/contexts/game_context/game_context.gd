@@ -15,6 +15,7 @@ const COMBAT_CONFIG: CombatConfig = preload("res://features/combat/data/combat_c
 @onready var _menu_button: Button = %MenuButton
 
 var _game_state: GameState
+var _accessibility: AccessibilitySettings
 var _map_controller: MapController
 var _army_controller: ArmyController
 var _resource_controller: ResourceController
@@ -25,8 +26,9 @@ var _awaiting_target: bool = false
 var _send_from_id: StringName = &""
 
 
-func bind_services(game_state: GameState) -> void:
+func bind_services(game_state: GameState, accessibility: AccessibilitySettings) -> void:
 	_game_state = game_state
+	_accessibility = accessibility
 
 
 func _ready() -> void:
@@ -63,6 +65,7 @@ func _setup_map_visuals() -> void:
 	add_child(_campaign_map)
 	move_child(_campaign_map, 1)
 	_campaign_map.build_map(_game_state.map_state)
+	_campaign_map.apply_accessibility(_accessibility)
 
 	_info_panel = RegionInfoPanel.new()
 	_info_panel.layout_mode = 1

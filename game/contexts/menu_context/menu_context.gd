@@ -14,6 +14,12 @@ const SETTINGS_SCENE: PackedScene = preload("res://ui/screens/settings_screen.ts
 @onready var _quit_button: Button = %QuitButton
 
 var _settings_screen: SettingsScreen = null
+var _accessibility: AccessibilitySettings = null
+
+
+## Ayarlar ekranına aktarılacak erişilebilirlik tercihleri.
+func bind_services(accessibility: AccessibilitySettings) -> void:
+	_accessibility = accessibility
 
 
 func _ready() -> void:
@@ -29,6 +35,7 @@ func _on_new_campaign_pressed() -> void:
 func _on_settings_pressed() -> void:
 	_main_panel.visible = false
 	_settings_screen = SETTINGS_SCENE.instantiate() as SettingsScreen
+	_settings_screen.bind_services(_accessibility)
 	_settings_screen.back_requested.connect(_on_settings_back)
 	add_child(_settings_screen)
 

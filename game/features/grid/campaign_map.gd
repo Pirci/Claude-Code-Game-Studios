@@ -40,6 +40,15 @@ func set_selected(region_id: StringName) -> void:
 		node.is_selected = (id == region_id)
 
 
+## Erişilebilirlik tercihlerini tüm bölgelere uygular (null = varsayılanlar).
+func apply_accessibility(settings: AccessibilitySettings) -> void:
+	if settings == null:
+		return
+	for node: RegionNode in _region_nodes.values():
+		node.color_blind_mode = settings.color_blind_mode
+		node.show_name_label = settings.show_region_names
+
+
 func clear_selection() -> void:
 	for node: RegionNode in _region_nodes.values():
 		node.is_selected = false

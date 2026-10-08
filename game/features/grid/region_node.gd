@@ -44,13 +44,24 @@ var is_selected: bool = false:
 		is_selected = value
 		queue_redraw()
 		_update_tamga_visibility()
-## Renk Körlüğü Modu: tamga seçimden bağımsız her zaman görünür (art bible §4).
-var show_tamga_always: bool = false:
+## Renk Körlüğü Modu (art bible §4): tamga seçimden bağımsız hep görünür ve
+## sahipli bölgeler rampanın açık tonunda ek 1px iç kontur alır.
+var color_blind_mode: bool = false:
 	set(value):
-		show_tamga_always = value
+		color_blind_mode = value
+		queue_redraw()
 		_update_tamga_visibility()
+## Bölge adı etiketi (Bölge Adlarını Göster/Gizle); ordu sayısı hep görünür.
+## Ad gizliyken ordu etiketi (ve altındaki tamga) yarım satır yukarı, ortaya kayar.
+var show_name_label: bool = true:
+	set(value):
+		show_name_label = value
+		if _label:
+			_label.visible = value
+		_layout_army_and_tamga()
 
 var _points: PackedVector2Array = PackedVector2Array()
+var _inner_points: PackedVector2Array = PackedVector2Array()
 var _owner: RegionData.Owner = RegionData.Owner.NEUTRAL
 var _area: Area2D
 var _collision: CollisionPolygon2D
@@ -69,6 +80,10 @@ func _draw() -> void:
 	outline.append(_points[0])
 	# Negatif genişlik = 1px primitive çizgi (pixel grid'de keskin, ölçekten bağımsız).
 	draw_polyline(outline, get_outline_color(), -1.0)
+	if has_inner_outline() and _inner_points.size() >= 3:
+		var inner: PackedVector2Array = _inner_points.duplicate()
+		inner.append(_inner_points[0])
+		draw_polyline(inner, get_inner_outline_color(), -1.0)
 	if is_selected:
 		for point: Vector2 in _points:
 			var center: Vector2i = Vector2i(point.round()) + OUTLINE_PIXEL_OFFSET
@@ -83,6 +98,9 @@ func setup(data: RegionData) -> void:
 	position = Vector2.ZERO
 	_points = data.polygon_points
 	_anchor = data.position
+	# 1px içe kaydırılmış poligon: çizildiğinde konturun hemen içindeki piksellere düşer.
+	var inset: Array[PackedVector2Array] = Geometry2D.offset_polygon(_points, -1.0, Geometry2D.JOIN_MITER)
+	_inner_points = inset[0] if not inset.is_empty() else PackedVector2Array()
 
 	_area = Area2D.new()
 	_area.input_pickable = true
@@ -107,11 +125,11 @@ func setup(data: RegionData) -> void:
 	_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
 	_label.position = data.position - Vector2(LABEL_WIDTH / 2.0, LABEL_HEIGHT)
 	_label.size = Vector2(LABEL_WIDTH, LABEL_HEIGHT)
+	_label.visible = show_name_label
 	add_child(_label)
 
 	_army_label = _create_map_label()
 	_army_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_army_label.position = data.position - Vector2(LABEL_WIDTH / 2.0, 0)
 	_army_label.size = Vector2(LABEL_WIDTH, LABEL_HEIGHT)
 	add_child(_army_label)
 
@@ -119,8 +137,8 @@ func setup(data: RegionData) -> void:
 	# bölge ekseninde kalır.
 	_tamga = Sprite2D.new()
 	_tamga.centered = false
-	_update_tamga_position()
 	add_child(_tamga)
+	_layout_army_and_tamga()
 	_update_tamga_visibility()
 	update_display(data)
 
@@ -139,13 +157,23 @@ func set_tamga(texture: Texture2D) -> void:
 	if _tamga == null:
 		return
 	_tamga.texture = texture
-	_update_tamga_position()
+	_layout_army_and_tamga()
 	_update_tamga_visibility()
 
 
 ## Tamga şu an çiziliyor mu: dokusu var ve (seçili veya Renk Körlüğü Modu).
 func is_tamga_visible() -> bool:
-	return _tamga != null and _tamga.texture != null and (is_selected or show_tamga_always)
+	return _tamga != null and _tamga.texture != null and (is_selected or color_blind_mode)
+
+
+## Renk Körlüğü Modu'nda sahipli (oyuncu/düşman) bölgeler ek iç kontur alır; nötr almaz.
+func has_inner_outline() -> bool:
+	return color_blind_mode and _owner != RegionData.Owner.NEUTRAL
+
+
+## Ek iç kontur rengi — sahibin rampasındaki açık ton.
+func get_inner_outline_color() -> Color:
+	return get_owner_ramp(_owner)[RAMP_LIGHT]
 
 
 ## Sahibin 3 tonluk mini rampası (koyu / ana / açık).
@@ -186,12 +214,17 @@ func _update_tamga_visibility() -> void:
 		_tamga.visible = is_tamga_visible()
 
 
-func _update_tamga_position() -> void:
-	if _tamga.texture == null:
+## Ordu etiketi çapa noktasının altında (ad gizliyse yarım satır yukarıda, ortada);
+## tamga onun hemen altında, aynı dikey eksende.
+func _layout_army_and_tamga() -> void:
+	if _army_label == null:
 		return
-	var size: Vector2i = Vector2i(_tamga.texture.get_size())
 	var center: Vector2i = Vector2i(_anchor.round())
-	_tamga.position = Vector2(center.x - size.x / 2, center.y + LABEL_HEIGHT + TAMGA_GAP)
+	var army_top: int = center.y if show_name_label else center.y - LABEL_HEIGHT / 2
+	_army_label.position = Vector2(center.x - LABEL_WIDTH / 2.0, army_top)
+	if _tamga and _tamga.texture:
+		var size: Vector2i = Vector2i(_tamga.texture.get_size())
+		_tamga.position = Vector2(center.x - size.x / 2, army_top + LABEL_HEIGHT + TAMGA_GAP)
 
 
 func _create_map_label() -> Label:
