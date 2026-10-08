@@ -54,3 +54,19 @@
 - Blocking issues: 7 — B1 no army production/gold sink; B2 Erlik overlay vs ENEMY owner; B3 purification not in arrival resolution; B4 spread owner + end_turn position; B5 corruption on conquest; B6 boon timing; B7 mid-turn win vs end-turn check
 - Recommended next: resolve design decisions C-28…C-32 (start with C-28 production / C-29 Erlik model), then C-33 fixes, C-34 re-run
 - Report: design/gdd/gdd-cross-review-2026-10-08.md
+
+## Session Extract — /design-system resource-system (C-28) 2026-10-08
+- Task: Designing resource-system GDD (C-28, fixes cross-review B1)
+- Scope decision: gold income + army production fully defined; herds interface only (later act); Ruh stays in spirit-system
+- File: design/gdd/resource-system.md
+- Current section: §1–§11 all written (candidate A: cost 2, start 6, cap max(1,G_eff), enemy +1 every enemy region, income_floor 0, upkeep 0; sim in /tmp/ulus_sim — not in repo); next Phase 5 validation (self-check, registry, index, counter-updates); counter-updates to army/region-map/spirit/index pending after GDD
+- Review mode: lean
+
+## Session Extract — 2026-10-08 (milestones)
+- User: keep current queue order, but Prolog demo + vertical slice must be in the queue so they are not forgotten.
+- continuation.md: new "Kilometre Taşları" table — M1 Prolog Demo (C-35…C-42, ~6–8 wk), M2 Vertical Slice (C-43…C-48, ~3–4 mo). Protected: cannot be deferred/removed without user approval; checked at every "devam".
+- Active task still C-28 (resource-system GDD, §1–§8 written).
+- Status: Complete (Designed, pending /design-review in a fresh session). All 11 sections written.
+- Provisional: herds inactive; enemy reinforcement is a temporary contract until enemy-layers.md; Bereket form deferred to C-31.
+- Counter-updates done (army, region-map, spirit, index); registry seeded. Implementation queued as C-35.
+- NEXT: queue order C-14 (/consistency-check); design follow-ups C-29…C-32.

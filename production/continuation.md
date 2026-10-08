@@ -5,9 +5,9 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-08
-- **Son commit:** `b571487` (C-13 GDD çapraz inceleme — FAIL)
+- **Son commit:** `1468973` (C-28 resource-system GDD)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** C-28 (kullanıcı seçimi; kuyruk sırası C-14)
+- **Aktif görev:** — (yok; sıradaki: C-14)
 
 ---
 
@@ -113,13 +113,14 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-25 | [ ] | **Karar + uygulama:** ekran açılışında başlangıç odağı yok (menü, ayarlar, oyun) → klavye/gamepad kullanıcısı gezinmeye başlayamıyor. Fare kullanıcısına sürekli altın odak çerçevesi göstermeden çözüm seç (ör. ilk yön tuşunda odak ver / Godot 4.7 odak görünürlüğü ayarını araştır) | C-08 sırasında keşfedildi | — | Her ekranda ilk ok/Tab tuşu bir butona odaklanır; fareyle açılışta çerçeve yok |
 | C-26 | [ ] | Bilgi panelinde `tr("TURN").to_lower()` → Almancada "2 / runde" (isimler büyük harf olmalı); bible programatik büyük/küçük harf dönüşümünü yasaklıyor. `PER_TURN` gibi ayrı çeviri key'i (11 dil) + kodda başka `to_lower()/to_upper()` kalmadığını doğrula | C-09 sırasında keşfedildi | — | grep `to_lower\|to_upper` oyuncuya görünen metinde yok; de ekran görüntüsü |
 | C-27 | [ ] | Gerçek CI hattı yok: `.github/workflows/` boş (yalnızca şablonlar). Coding standards "her push/PR'da testler çalışır, kırmızıysa merge yok" diyor → GitHub Actions: headless Godot 4.7 + `tools/ci/run-tests.sh` (testler + palet) | C-10 sırasında keşfedildi | — | Push'ta workflow yeşil; bilerek kırılan testte kırmızı |
-| C-28 | [~] (2026-10-08) | **Karar + GDD:** ordu üretimi (maliyet, formül, sahibi) — `resource-system.md` yazılır veya `army-system.md`'ye eklenir; kartopu/bakım (D1, D2) burada değerlendirilir | `design/gdd/gdd-cross-review-2026-10-08.md` B1 | C-13 | GDD'de üretim formülü + ayar aralığı; Prolog kazanılabilirliği hesapla gösterilir |
+| C-28 | [x] `1468973` | **Karar + GDD:** ordu üretimi (maliyet, formül, sahibi) — `resource-system.md` yazılır veya `army-system.md`'ye eklenir; kartopu/bakım (D1, D2) burada değerlendirilir | `design/gdd/gdd-cross-review-2026-10-08.md` B1 | C-13 | GDD'de üretim formülü + ayar aralığı; Prolog kazanılabilirliği hesapla gösterilir |
 | C-29 | [ ] | **Karar + GDD:** Erlik modeli (bozulma katmanı mı, sahip türü mü — Prolog canavarı dahil), yayılım/bozulmanın sahibi GDD (spirit / corruption-purification / enemy-layers) ve tur sonundaki yeri → region-map §3.4 + AC4 + TR-map-003 güncellenir; Prolog'da Erlik baskısı (D3) | `design/gdd/gdd-cross-review-2026-10-08.md` B2, B4 | C-13 | Tek sahip GDD; tur sonu sırası tüm GDD/TR/ADR'de aynı |
 | C-30 | [ ] | **GDD:** arındırma eylemi (varış dalı mı ayrı eylem mi, aksiyon maliyeti, birliklerin yerleşmesi, sahipli+bozuk hedef) + fetihte bozulmanın akıbeti | `design/gdd/gdd-cross-review-2026-10-08.md` B3, B5 | C-29 | army §3.3 / spirit §3.2 tanımlı, kabul kriterli |
 | C-31 | [ ] | **GDD:** lütuf sunma zamanı, erteleme, etkinin başlangıcı, MVP alt kümesi; olmayan sistemlere dayanan lütuflar, Gök Kalkanı yığılması, Ruh ölçekleme yönü, maliyet eğrisi (W9–W11, D5) | `design/gdd/gdd-cross-review-2026-10-08.md` B6 | C-29 | spirit §3.4/§4/§7 güncel, sıfıra bölme yok |
 | C-32 | [ ] | **GDD:** tur ortası kazanma davranışı, kazanma/kaybetme önceliği, kazanma kapsamı (siyasi / + Erlik) ve formül metni (W7, D4) | `design/gdd/gdd-cross-review-2026-10-08.md` B7 | C-29 | region-map §3.3/§3.4/§3.6 tutarlı; kod davranışıyla eşleşiyor veya düzeltme görevi açıldı |
 | C-33 | [ ] | GDD düzeltmeleri: W1–W6, W8, W12 + bilgi notları (örnek hesap, berabere/hayatta kalanlar, 0 ordu, `draw_favors_defender`, §3.5 "planlı", eşitlik bozma, gelir formülü sahibi, bozulma görseli → art bible, indeks/konsept notları, bağımlılık asimetrisi) | `design/gdd/gdd-cross-review-2026-10-08.md` uyarılar | C-28 | Her uyarı kapandı veya gerekçeyle kaldı |
 | C-34 | [ ] | `/review-all-gdds` yeniden → PASS veya CONCERNS | C-13 FAIL | C-28, C-29, C-30, C-31, C-32, C-33 | Yeni rapor; engelleyici yok |
+| C-35 | [ ] | **Uygulama:** `resource-system.md` — `starting_gold` ve `enemy_reinforcement_per_turn` bölüm verisine (koddaki sabit 100 kalkar), ekonomi adımı (F2 gelir, F6 takviye, F7 bakım), "Ordu Topla" + bölge sayaçları (F3/F4), HUD tahmini gelir + bilgi paneli UI (§10), 8 çeviri anahtarı × 11 dil, oyun geneli ayar dosyası | C-28 | C-28 (önerilen: önce taze oturumda `/design-review design/gdd/resource-system.md`) | §8 AC1–AC24 (birim + entegrasyon testleri yeşil), de/ru/ar ekran görüntüsü |
 | C-35 | [ ] | **M1 · GDD:** `scene-flow.md` — sahne intro/outro anlatı ekranları, Kök Böri "genesis" sahnesi, Prolog kazanma → Kağan ilanı, bölüm unlock (`/design-system`) | Konsept MVP #5; M1 | C-32 | 8 zorunlu bölüm + indeks satırı; `/design-review` geçer |
 | C-36 | [ ] | **M1 · Harita:** Ötüken haritası → Oğuz ata yurdu (6 bölge, dağınık boylar + Erlik canavarı yerleşimi), data-driven `ChapterMapDefinition` + 11 dil bölge adları | Konsept "Sonraki Adımlar"; M1 | C-29, C-34 | Harita verisi + testler + ekran görüntüsü |
 | C-37 | [ ] | **M1 · Kod:** ordu üretimi + altın harcama (`resource-system.md` uygulaması) — UI butonu, maliyet/limit, düşman üretimi | C-28; M1 | C-18 | GDD kabul kriterleri birim testlerinde; ekran görüntüsü |
@@ -166,3 +167,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-08 | C-12: `ai-art-prompts.md` pixel art'a göre baştan yazıldı (AI = konsept referansı, 10 prompt, ortak stil/negatif blok) | `0f64d19` |
 | 2026-10-08 | C-13: `/review-all-gdds` → FAIL (7 engelleyici, 20 uyarı); rapor + indeks "Needs Revision"; çözüm görevleri C-28…C-34 | `b571487` |
 | 2026-10-08 | Kilometre taşları M1 Prolog Demo (C-35…C-42) + M2 Vertical Slice (C-43…C-48) kuyruğa eklendi; korunma kuralı | (bu commit) |
+| 2026-10-08 | C-28: `resource-system.md` (altın + ordu üretimi, F1–F7, simülasyonla doğrulanmış Prolog değerleri, 24 AC); karşı GDD güncellemeleri, registry ilk kayıtlar | `1468973` |
