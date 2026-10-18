@@ -165,7 +165,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-08 | C-11: `game-concept.md` sulu boya ifadeleri → pixel art / art bible referansları | `7f0f5d5` |
 | 2026-10-08 | C-12: `ai-art-prompts.md` pixel art'a göre baştan yazıldı (AI = konsept referansı, 10 prompt, ortak stil/negatif blok) | `0f64d19` |
 | 2026-10-08 | C-13: `/review-all-gdds` → FAIL (7 engelleyici, 20 uyarı); rapor + indeks "Needs Revision"; çözüm görevleri C-28…C-34 | `b571487` |
-| 2026-10-08 | Kilometre taşları M1 Prolog Demo (C-35…C-42) + M2 Vertical Slice (C-43…C-48) kuyruğa eklendi; korunma kuralı | `62de438` |
+| 2026-10-08 | Kilometre taşları M1 Prolog Demo (C-35…C-42) + M2 Vertical Slice (C-43…C-48) kuyruğa eklendi; korunma kuralı | `b7e5af5` |
 | 2026-10-08 | C-28: `resource-system.md` (altın + ordu üretimi, F1–F7, simülasyonla doğrulanmış Prolog değerleri, 24 AC); karşı GDD güncellemeleri, registry ilk kayıtlar | `1468973` |
 | 2026-10-08 | C-14: `/consistency-check` → 2 çakışma (K2 düzeltildi, K1 açık → C-33/C-31); registry +3 sabit; rapor `docs/consistency-report-2026-10-08.md` | `5ba890b` |
 | 2026-10-08 | K1 (C-14 çakışması): bozulma üretimi seviye tablosu `[1.0, 0.75, 0.5, 0.0]` — kullanıcı kararı; W8/W12 kapandı | `18df1d4` |
