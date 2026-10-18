@@ -73,3 +73,9 @@
 <!-- CONSISTENCY-CHECK: 2026-10-08 | GDDs checked: 5 + art bible | Conflicts found: 2 (1 resolved) | Report: docs/consistency-report-2026-10-08.md -->
 - C-14 (5ba890b): consistency check — K1 open (spirit formula copy / level-3 claim → C-33/C-31), K2 fixed (spirit visuals → art bible). Registry +3 constants. Failure log local only (gitignored).
 - K1 (18df1d4): user chose level table CORRUPTION_PRODUCTION_MULTIPLIERS [1.0,0.75,0.5,0.0]; registry revised/deprecated; W8+W12 closed. NEXT: C-15.
+
+## Session Extract — C-15 ADR-0006 (2026-10-18)
+- ADR-0006 Additive Modifier / Stat Pipeline written (Proposed). Kararlar (kullanıcı onaylı): düz toplam sonra çarpan `(base+Σflat)×(1+Σpct)`; çift sayım = kaynak anahtarlı kayıt + `exclusive_group` (kaynak başına).
+- Godot uzmanı: ModifierController RefCounted, typed-array değişmezliği notu, ModifierSource = Resource.
+- Registry +3 (state `modifiers`, interface `stat_resolution`, forbidden `unkeyed_or_duplicate_bonus_summation`); traceability TR-spirit-006 ✅.
+- NEXT: C-16 (Save/Load ADR). Not: spirit GDD'deki `bozkurt_bonuses` → `modifiers` göçü uygulamada (C-39).

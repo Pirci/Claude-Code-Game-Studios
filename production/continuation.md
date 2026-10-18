@@ -4,10 +4,10 @@
 > Görev listesi, durumlar ve tamamlanan işlerin kaydı burada tutulur;
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
-- **Son güncelleme:** 2026-10-08
-- **Son commit:** `18df1d4` (K1: bozulma üretim tablosu)
+- **Son güncelleme:** 2026-10-18
+- **Son commit:** C-15 commit'i (ADR-0006)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-15)
+- **Aktif görev:** — (yok; sıradaki: C-16)
 
 ---
 
@@ -100,7 +100,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-12 | [x] `0f64d19` | `design/art-reference/ai-art-prompts.md`'yi pixel art kurallarına göre yeniden yaz (veya /asset-spec ile değiştir) | §9 | — | Art bible kurallarıyla uyumlu prompt seti |
 | C-13 | [x] `b571487` | `/review-all-gdds` | Technical Setup gate | — | Rapor dosyası |
 | C-14 | [x] `5ba890b` | `/consistency-check` (GDD'ler ↔ art bible ↔ entity registry) | Tutarlılık | C-13 | Rapor |
-| C-15 | [ ] | ADR: Additive Modifier / Stat Pipeline (`/architecture-decision`) | Arch. review 2026-08-13 | — | ADR dosyası |
+| C-15 | [x] `(bu commit)` | ADR: Additive Modifier / Stat Pipeline (`/architecture-decision`) | Arch. review 2026-08-13 | — | ADR dosyası |
 | C-16 | [ ] | ADR: Save/Load Persistence (`/architecture-decision`) | Arch. review 2026-08-13 | — | ADR dosyası |
 | C-17 | [ ] | `/architecture-review` yeniden → ADR'leri Accepted yap | Arch. review | C-15, C-16, K-02, C-34 | Rapor + ADR durumları |
 | C-18 | [ ] | `/create-architecture` | Technical Setup | C-17 | Mimari doküman |
@@ -169,3 +169,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-08 | C-28: `resource-system.md` (altın + ordu üretimi, F1–F7, simülasyonla doğrulanmış Prolog değerleri, 24 AC); karşı GDD güncellemeleri, registry ilk kayıtlar | `1468973` |
 | 2026-10-08 | C-14: `/consistency-check` → 2 çakışma (K2 düzeltildi, K1 açık → C-33/C-31); registry +3 sabit; rapor `docs/consistency-report-2026-10-08.md` | `5ba890b` |
 | 2026-10-08 | K1 (C-14 çakışması): bozulma üretimi seviye tablosu `[1.0, 0.75, 0.5, 0.0]` — kullanıcı kararı; W8/W12 kapandı | `18df1d4` |
+| 2026-10-18 | C-15: ADR-0006 Additive Modifier / Stat Pipeline (kaynak anahtarlı `StatModifier`, saf `StatResolver`, `exclusive_group`); registry +3 durus; TR-spirit-006 kapandı | (bu commit) |

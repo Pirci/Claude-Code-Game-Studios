@@ -30,7 +30,7 @@
 | TR-spirit-003 | spirit-system | Kök Böri / Ruh | Purification reuses `CombatResolver` | ADR-0002 / ADR-0003 | ✅ |
 | TR-spirit-004 | spirit-system | Kök Böri / Ruh | Deterministic seeded boon offer | ADR-0003 / ADR-0004 | ✅ |
 | TR-spirit-005 | spirit-system | Kök Böri / Ruh | Erlik spread AI (deterministic, periodic) | — | ❌ |
-| TR-spirit-006 | spirit-system | Kök Böri / Ruh | Shared additive modifier pipeline (boons + council) | — | ❌ |
+| TR-spirit-006 | spirit-system | Kök Böri / Ruh | Shared additive modifier pipeline (boons + council) | ADR-0006 | ✅ |
 | TR-spirit-007 | spirit-system | Kök Böri / Ruh | Corruption visual state (color by level) | — | ❌ |
 | TR-concept-001 | game-concept | Sahne Akışı | Menu → campaign → scene flow with progress | ADR-0001 | ✅ |
 | TR-concept-002 | game-concept | Kampanya İlerlemesi | Progress persists between sessions (save/load) | ADR-0004 | ⚠️ |

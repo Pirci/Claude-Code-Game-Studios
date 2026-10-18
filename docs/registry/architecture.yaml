@@ -30,7 +30,7 @@
 #   Superseded entries:     Grep pattern="status: superseded"
 
 version: 1
-last_updated: "2026-08-13"
+last_updated: "2026-10-18"
 
 # ─── STATE OWNERSHIP ─────────────────────────────────────────────────────────
 # Who is the authoritative owner of each piece of shared game state.
@@ -54,6 +54,18 @@ state_ownership:
       - docs/architecture/adr-0001-context-based-hierarchical-architecture.md
       - docs/architecture/adr-0004-state-segregation.md   # defines the data-only shape of this state
     added: 2026-08-13
+    revised: ""
+
+  - state: modifiers
+    status: active
+    owner_system: modifier-system
+    adr: docs/architecture/adr-0006-additive-modifier-stat-pipeline.md
+    interface: "GameState.modifiers: Array[StatModifier] (data-only; one record per (source_id, stat_id, kind)). Read only through StatResolver."
+    write_access: modifier-controller-only   # ModifierController.add_source()/remove_source()
+    referenced_by:
+      - docs/architecture/adr-0006-additive-modifier-stat-pipeline.md
+      - docs/architecture/adr-0004-state-segregation.md   # data-only shape
+    added: 2026-10-18
     revised: ""
 
 # Example:
@@ -108,6 +120,21 @@ interfaces:
     referenced_by:
       - docs/architecture/adr-0005-ai-architecture.md
     added: 2026-08-13
+    revised: ""
+
+  - contract: stat_resolution
+    status: active
+    pattern: direct_call     # consumers call a pure static resolver; no signals
+    producer: modifier-system (StatResolver)
+    consumers:
+      - resource-controller  # B_add / M_g for income (resource-system F2)
+      - combat-resolver      # attack/defense strength stats
+      - spirit-ui            # tooltips / HUD
+    adr: docs/architecture/adr-0006-additive-modifier-stat-pipeline.md
+    signal_signature: "StatResolver.resolve(stat_id: StringName, base: float, modifiers: Array[StatModifier]) -> float  = (base + flat_sum) * (1 + percent_sum); caller rounds. ModifierController.modifiers_changed(stat_id: StringName) signals refresh."
+    referenced_by:
+      - docs/architecture/adr-0006-additive-modifier-stat-pipeline.md
+    added: 2026-10-18
     revised: ""
 
 # Example:
@@ -287,3 +314,14 @@ forbidden_patterns:
 #       ownership model. The owning system must be the sole writer."
 #     adr: docs/architecture/adr-0000-architecture-principles.md
 #     added: 2026-03-26
+
+  - pattern: unkeyed_or_duplicate_bonus_summation
+    status: active
+    description: "Boon/council/other player bonuses must be registered as source-keyed
+      StatModifier records via ModifierController and read through StatResolver. No
+      system may keep its own bonus sum or iterate GameState.modifiers outside
+      game/features/modifiers/. Same-effect sources share an exclusive_group."
+    why: "Prevents double-counting (TR-spirit-006) and keeps one auditable answer to
+      'what affects this stat'."
+    adr: docs/architecture/adr-0006-additive-modifier-stat-pipeline.md
+    added: 2026-10-18

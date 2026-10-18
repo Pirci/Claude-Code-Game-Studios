@@ -74,6 +74,8 @@
 - **ADR-0002** (Proposed): Feature encapsulation — her sistem kendi klasöründe, minimal dış bağımlılık. → [adr-0002](../../docs/architecture/adr-0002-feature-encapsulation.md)
 - **ADR-0003** (Proposed): Dependency injection — bind_services() pattern ile servis bağlama. → [adr-0003](../../docs/architecture/adr-0003-dependency-injection.md)
 - **ADR-0004** (Proposed): State segregation — game state objeleri sadece veri tutar, mantık controller'larda. → [adr-0004](../../docs/architecture/adr-0004-state-segregation.md)
+- **ADR-0005** (Proposed): AI mimarisi — saf `decide()` servisleri, MapController uygular. → [adr-0005](../../docs/architecture/adr-0005-ai-architecture.md)
+- **ADR-0006** (Proposed): Additive modifier / stat pipeline — kaynak anahtarlı `StatModifier` + saf `StatResolver`, çift sayım yok. → [adr-0006](../../docs/architecture/adr-0006-additive-modifier-stat-pipeline.md)
 
 > Tümü `/architecture-decision` ile geriye dönük yazıldı (as-built). Taze bir oturumda `/architecture-review` çalıştırıp doğruladıktan sonra Status → Accepted yapılabilir.
 
