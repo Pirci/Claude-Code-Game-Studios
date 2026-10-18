@@ -303,6 +303,17 @@ constants:
     added: 2026-10-18
     revised: ""
 
+  - name: bereket_gold_bonus
+    status: active
+    source: design/gdd/spirit-system.md
+    referenced_by:
+      - design/gdd/spirit-system.md    # §3.5 lütuf kataloğu
+      - design/gdd/resource-system.md  # F2 B_add
+    value: 1
+    unit: gold per turn per Bereket stack (flat, B_add)
+    added: 2026-10-18
+    revised: ""
+
 # Example:
 #
 # constants:

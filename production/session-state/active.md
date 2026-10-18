@@ -100,3 +100,10 @@
 - Yeni görev C-50 (bozulma seviyesi görseli + bilgi paneli satırı; C-38 bağımlılığı).
 - Not: bu container'da Godot yok → kod görevlerinde test için kurulum gerekecek.
 - NEXT: C-31 (lütuf zamanlaması, B6 + W9–W11, D5).
+
+## Session Extract — C-31 lütuf zamanlaması (2026-10-18, gece modu)
+- Kararlar (önerilen seçenek, "Otonom Kararlar" tablosunda): sunum = oyuncu tur başı (en fazla 1) veya sahne zaferi (zorunlu, sıralı); erteleme aynı 3 lütfu korur (HUD düğmesi, her tur başı yeniden); etki seçildiği an (ADR-0006 add_source); durum türetilir (ruh ≥ boon_cost(n) + uygun havuz) → kayıtta bayrak yok (TR-spirit-008, ADR-0007 notu).
+- Katalog: stat_id/tür/gerektirir/yığılma sınırı sütunları; Bereket +1 altın (B_add), Kurt Gücü/Demir Post +1 etkin güç (combat §4 "Etkin güç", M2), Gök Kalkanı +1 tur (sınır 3, `last_erlik_spread_turn` sayacı), Sürü/Yiğit Ruhu kilitli. M1 havuzu: Arınma Ustalığı, Bereket, Gök Kalkanı. boon_index = seçilen lütuf sayısı.
+- D5: doğrusal eğri korunur, hedef finalde 6–8 lütuf. W11: ödül seviyeyle artar, konsept metni düzeltildi.
+- Güncellenen: spirit §3.4/3.5/3.6/3.7/3.8(yeni)/4/5/7/8, combat §3/§4/§6/AC7–8, resource F2 notu + açık soru #1, region-map §3.1, game-concept, cross-review B6/W9/W10/W11/D5, ADR-0007 örneği, registry +1 (bereket_gold_bonus), TR-spirit-008.
+- NEXT: C-32 (tur ortası kazanma, B7 + W7, D4).

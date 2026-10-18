@@ -81,7 +81,7 @@ Oyunda bu, hem anlatısal çapa hem de temel güç/ilerleme sistemidir:
 - Ruh, **ilahi lütuflara** harcanır — roguelite tarzı buff seçimi (her sunumda
   3 seçenekten biri: ordu bonusu, ekonomi bonusu, arındırma gücü vb.)
 - Lütuflar birikimli — sahneler arası taşınır, finalde tümü aktif
-- Erlik güçlendikçe (bozulmuş bölge sayısı arttıkça) ruh kazanımı zorlaşır —
+- Erlik güçlendikçe (bozulma seviyesi arttıkça) arındırma zorlaşır ama ödülü büyür —
   ilerlemeyi ihmal etmenin bedeli var
 
 > **Tasarım köprüsü**: Bu sistem, eski konseptteki "Bozkurt bonusu"nun
@@ -154,7 +154,8 @@ Bölge renkleri sahiplik + bozulma durumunu gösterir. Geri bildirim anlık.
 ### Oturum Seviyesi (20-35 dakika — Sahne)
 Bir sahne = 10-18 tur. Sahne başında Kök Böri belirir + destan intro (metin +
 tam ekran 640×360 pixel art illüstrasyon — art bible §7). Hedef net: "bu yönü fethet + Erlik odağını temizle".
-Sahne sonunda destan epilog + ruh lütfu + sonraki yön açılır.
+Sahne sonunda destan epilog + bekleyen ruh lütfu + sonraki yön açılır. Lütuf eşiği
+sahne içinde aşılırsa Kök Böri bir sonraki tur başında da belirir (`spirit-system.md` §3.4).
 
 ### Uzun Vadeli İlerleme (Kampanya — 4-6 saat)
 6 sahne (Prolog + 4 yön + Final). Mekanikler Prolog + ilk yönde öğretilir,

@@ -167,9 +167,10 @@ sonuç 0'dır.
 
 **Çıktı aralığı:** Prolog'da 2 (yalnızca Otağ) ile 10 (tam fetih) arası.
 **Örnek:** Otağ + Bereket Vadisi → `I_raw = 2 + 3 = 5` → `max(0, floor(5 × 1.0)) = 5`.
-**Not:** Lütfün düz bonus mu yüzde mi olacağına C-31 karar verecek. Ekonomi
-tasarımcısı küçük tam sayılarda %10'un yuvarlamada kaybolduğunu, bu yüzden
-"+1 altın/tur"un daha iyi olduğunu söylüyor. Formül iki biçimi de destekliyor.
+**Bereket (C-31 kararı):** düz bonus — yığın başına **+1 altın/tur** (`B_add`,
+`spirit-system.md` §3.5). Küçük tam sayılarda %10 yuvarlamada kaybolur
+(`floor(5 × 1.1) = 5`); +1 her zaman görünür. `M_g` formülde kalır (gelecekteki
+yüzde kaynakları için), MVP'de 1.0.
 
 ### F3 — Bölge üretim tavanı
 
@@ -495,7 +496,7 @@ Tamamı art bible'a bağlıdır.
 
 | # | Soru | Sahibi | Hedef |
 | --- | --- | --- | --- |
-| 1 | Bereket lütfu düz bonus mu (+1 altın/tur), yüzde mi (%10)? | Kullanıcı / game-designer | C-31 |
+| 1 | ~~Bereket lütfu düz bonus mu (+1 altın/tur), yüzde mi (%10)?~~ **Çözüldü (C-31, 2026-10-18):** düz +1 altın/tur, yığın başına (`B_add`). | Kullanıcı / game-designer | C-31 ✅ |
 | 2 | Prolog simülasyonu (§4) repoya alınsın mı (ör. `tools/balance/`), AC15 otomatik testle mi kontrol edilsin? | Kullanıcı | Uygulama görevi |
 | 3 | Sürü ne zaman etkinleşir ve neyi besler/tüketir? Konsept "nüfus ve ordu büyümesi" diyor. | game-designer | Perde 1 tasarımı |
 | 4 | Katmanlı Düşman GDD'si takviyeyi devraldığında düşman ekonomisi simetrik mi olacak? | game-designer | `enemy-layers.md` |

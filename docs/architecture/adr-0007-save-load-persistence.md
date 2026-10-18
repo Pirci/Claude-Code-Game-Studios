@@ -80,8 +80,8 @@ Persist as **versioned JSON text**.
   "game": {                                  // GameState
     "current_chapter": 1, "gold": 6,
     "chapters_completed": [],
-    "modifiers": [ { "source_id": "boon:bereket", "stat_id": "gold_income", "kind": 1, "value": 0.1, "stacks": 1 } ],
-    "map": { "current_turn": 4, "chapter_id": 1, "player_tamga_id": "...", "enemy_tamga_id": "...",
+    "modifiers": [ { "source_id": "boon:bereket", "stat_id": "gold_income", "kind": 0, "value": 1.0, "stacks": 1 } ],  // C-31: Bereket = FLAT +1
+    "map": { "current_turn": 4, "chapter_id": 1, "last_erlik_spread_turn": 3, "player_tamga_id": "...", "enemy_tamga_id": "...",
              "regions": { "r1": { "owner": 1, "army_count": 3, "corruption_level": 0, "...": 0 } } }
   }
 }
@@ -90,6 +90,7 @@ Persist as **versioned JSON text**.
 - Only **saved game state** is written. Derived/static data (region geometry, adjacency, polygons, names) is **not** saved: it is reconstructed from `ChapterMapDefinition` content by `chapter_id` and only the **mutable fields** of each region are stored.
 - Enums are stored as ints with a documented table; ids as strings.
 - `modifiers` store `StatModifier` records (ADR-0006), **not** sources; sources are content.
+- The pending Kök Böri boon offer is **not** saved: it is derived from `ruh` and the boon list on load (`spirit-system.md` §3.4, TR-spirit-008, C-31).
 
 ### Components
 

@@ -176,6 +176,14 @@ requirements:
     revised: ""
     status: active
 
+  - id: TR-spirit-008
+    system: spirit
+    gdd: design/gdd/spirit-system.md
+    requirement: "Boon offer state derived from ruh/boons (no saved flag); presented at player turn start (max 1) or at scene victory (mandatory); deferral keeps the same deterministic offer; eligible pool gated by required systems and stack caps"
+    created: 2026-10-18
+    revised: ""
+    status: active
+
   # --- game-concept (slug: concept) ---
   - id: TR-concept-001
     system: concept

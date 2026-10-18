@@ -33,7 +33,8 @@ Oyuncu tüm bozkırı tek bakışta okur: kim nerede güçlü, hangi sınır zay
 - **RegionData**: `region_id`, `display_name_key`, `owner` (NEUTRAL/PLAYER/ENEMY),
   `army_count`, `gold_per_turn`, `position`, `polygon_points`, `adjacent_regions`.
 - **MapState**: `regions` (id→RegionData), `current_turn`, `actions_remaining`,
-  `actions_per_turn`, `selected_region_id`, `chapter_id`.
+  `actions_per_turn`, `selected_region_id`, `chapter_id` (planlı:
+  `last_erlik_spread_turn` — yayılım sayacı, `spirit-system.md` §3.6, C-31).
 - Harita tanımı `ChapterMapDefinition` Resource'undan üretilir (`create_map_state()`).
 
 ### 3.2 Bölge Seçimi (`select_region`)

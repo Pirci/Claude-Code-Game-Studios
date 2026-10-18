@@ -73,7 +73,7 @@ both after `attempt_move` and at the end of `end_turn`.
 - **Options:** (A) corruption persists (purify separately); (B) conquest auto-purifies (no Ruh);
   (C) corrupted enemy regions must be purified before they can be attacked.
 
-🔴 **B6 — Boon offer timing and UI flow undefined**
+🔴 **B6 — Boon offer timing and UI flow undefined** — ✅ **RESOLVED 2026-10-18 (C-31):** offer at the start of the next player turn or at scene victory (mandatory there); deferral keeps the same 3 boons (HUD button, re-shown each turn start); effects apply from selection; derived state (no saved flag); MVP subset §3.8 (M1 pool: Arınma Ustalığı, Bereket, Gök Kalkanı)
 - `spirit-system.md` §3.4 triggers an offer "Toplam Ruh eşiğine ulaştığında" (mid-scene);
   `game-concept.md`: "Sahne sonunda destan epilog + ruh lütfu". §5 allows deferral ("ertelerse")
   but no re-offer rule; whether effects apply this turn or next is unspecified (matters for
@@ -126,15 +126,15 @@ ile ortak"); spirit §4.3 modifies it (corruption penalty + floor), "Bereket" +%
 corruption exists. Spirit §3.1 "seviye 3 = üretim durur" / AC7 "0" vs `PROD_PENALTY_PER_LEVEL =
 0.25` → level 3 keeps 25 %.
 
-⚠️ **W9 — Boons reference non-existent hooks** — "Sürü Kutsaması" (`herd_per_turn`; no herd field),
+⚠️ **W9 — Boons reference non-existent hooks** — ✅ C-31: `requires` gating (Sürü, Yiğit Ruhu locked); Kurt Gücü / Demir Post / Bereket → flat +1; combat "Etkin güç" (M2); purification of level 3 needs 13 (feasible with production, C-28; C-49 verifies) — "Sürü Kutsaması" (`herd_per_turn`; no herd field),
 "Yiğit Ruhu" (hero units, no GDD), "Kurt Gücü"/"Demir Post" ±5 % on integer A/D of 2–6 → no effect;
 combat §3 "üç girdiyle" lists two. Purification needs A > 4 × level; Prolog max army 5 → level 3
 (12) unpurifiable.
 
-⚠️ **W10 — "Gök Kalkanı" stacking breaks** — boons stack "aksi belirtilmedikçe"; `ceil(I / (1 −
+⚠️ **W10 — "Gök Kalkanı" stacking breaks** — ✅ C-31: `I_eff = I + min(k, 3) × 1`, counter-based spread turn — boons stack "aksi belirtilmedikçe"; `ceil(I / (1 −
 0.20 × kalkan_sayisi))` divides by zero at 5 stacks, negative beyond. Cap or change formula. *Quick edit.*
 
-⚠️ **W11 — Ruh scaling direction** — concept: "Erlik güçlendikçe … ruh kazanımı zorlaşır";
+⚠️ **W11 — Ruh scaling direction** — ✅ C-31: kept (reward scales with difficulty); concept wording fixed — concept: "Erlik güçlendikçe … ruh kazanımı zorlaşır";
 spirit §4.2 `ruh_gain` rises with `corruption_level`, nothing scales with corrupted-region count.
 
 ⚠️ **W12 — Spirit visuals stale vs Art Bible** — §3.1 "zehir yeşili → mor → siyah", AC10 "seviyeye
@@ -166,7 +166,7 @@ start with 1–2 corrupted regions, interval 2, or require purification for the 
 ⚠️ **D4 — Win condition scope** — political only vs political + spiritual (no corrupted regions)
 is not stated anywhere; affects thematic closure (winning with visible corruption).
 
-⚠️ **D5 — Boon cost curve** — `boon_cost(n) = 30 + n × 20` → 3 600 Ruh for 18 boons; either
+⚠️ **D5 — Boon cost curve** — ✅ addressed C-31: linear kept, target 6–8 boons by final (~600–800 Ruh); verify in C-44 — `boon_cost(n) = 30 + n × 20` → 3 600 Ruh for 18 boons; either
 unfundable at interval 4 or power creep at interval 2. Options: exponential cost, cap ~12,
 diminishing tiers. Run `/balance-check` after B1–B4.
 

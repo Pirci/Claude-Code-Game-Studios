@@ -29,7 +29,8 @@ sayısal üstünlük önemlidir ama ucuz değildir — kazansan bile kayıp veri
 
 ## 3. Detailed Rules
 
-- Savaş üç girdiyle çözülür: `attacker_army`, `defender_army`.
+- Savaş iki girdiyle çözülür: `attacker_army`, `defender_army` (planlı üçüncü girdi:
+  oyuncunun lütuf modifikatörleri → §4 "Etkin güç", M2).
 - Üç sonuç dalı vardır: saldıran üstün, savunan üstün, eşitlik.
 - Kazanan taraf bölgeyi elde tutar/alır; kaybeden ordusunu (büyük oranda) yitirir.
 - Kalan ordu asla negatif olamaz (`max(0, …)`).
@@ -75,6 +76,27 @@ attacker_remaining=0, defender_remaining=5.
 **Örnek 3** (A=4, D=4): eşitlik → attacker_losses=ceil(2.8)=3, defender_losses=2,
 attacker_remaining=1, defender_remaining=2, savunan kazanır.
 
+### Etkin güç (lütuf modifikatörleri) — *planlı, M2 (C-31 kararı)*
+Kurt Gücü / Demir Post lütufları (`spirit-system.md` §3.5) **etkin gücü** değiştirir;
+birlik sayısı değişmez. Modifikatörler yalnızca **oyuncunun** tarafına uygulanır
+(ADR-0006 `StatResolver`, yuvarlama `ceil`):
+```
+A_eff = ceil(resolve(&"army_attack",  A))   # saldıran oyuncuysa; değilse A_eff = A
+D_eff = ceil(resolve(&"army_defense", D))   # savunan oyuncuysa; değilse D_eff = D
+Dal seçimi A_eff ile D_eff karşılaştırılarak yapılır.
+Dal 1 (A_eff > D_eff): attacker_losses = ceil(D_eff × awr),  defender_losses = D
+Dal 2 (D_eff > A_eff): attacker_losses = A,                  defender_losses = ceil(A_eff × dwr)
+Dal 3 (A_eff = D_eff): attacker_losses = ceil(D_eff × dar),  defender_losses = ceil(A_eff × ddr)
+kalan = max(0, kendi_birlik − kayıp)
+```
+`awr/dwr/dar/ddr` = §7'deki oranlar. Kural: bir tarafın kaybını **karşı tarafın etkin
+gücü** belirler. Modifikatör yokken (`A_eff = A`, `D_eff = D`) formüller yukarıdaki
+Dal 1–3 ile birebir aynıdır (Dal 3'te `A = D` olduğundan `ceil(D × 0.7) = ceil(A × 0.7)`).
+Arındırmada `D = corruption_strength`'tir ve savunma modifikatörü almaz.
+**Örnek** (Kurt Gücü 1 yığın, A=4, D=4): `A_eff = 5 > 4` → Dal 1, attacker_losses =
+ceil(4 × 0.5) = 2, attacker_remaining = 2, defender_remaining = 0 — lütufsuz aynı savaş
+berabere (savunan kazanır) olurdu.
+
 ---
 
 ## 5. Edge Cases
@@ -102,7 +124,8 @@ attacker_remaining=1, defender_remaining=2, savunan kazanır.
   uygular (`apply_combat_result`).
 - **Harita/Tur Akışı** (`region-map-system.md`, kod: `map_controller.gd`) —
   `attempt_move` ve düşman AI savaşları tetikler.
-- **Ruh Sistemi** (`spirit-system.md`) — arındırma çözümü bu resolver'ı yeniden
+- **Ruh Sistemi** (`spirit-system.md`) — Kurt Gücü / Demir Post lütufları etkin gücü
+  değiştirir (§4 "Etkin güç", ADR-0006); arındırma çözümü bu resolver'ı yeniden
   kullanır (`resolve(P, corruption_strength)`, §5); başarı/başarısızlığın sonucunu
   Ruh ve Ordu sistemleri uygular (`spirit-system.md` §3.2, `army-system.md` §3.3).
 
@@ -139,3 +162,7 @@ GDD konseptte var ama kodda henüz yok.
 4. Hiçbir `*_remaining` değeri negatif olamaz. *(Test)*
 5. Tüm kayıplar `ceil` ile hesaplanır (kayıpsız zafer yok, taraf ≥1 iken). *(Test)*
 6. Çözüm deterministiktir — aynı girdi her zaman aynı sonuç. *(Test)*
+7. Modifikatör yokken etkin güç yolu AC1–3 sonuçlarını değiştirmez. *(Test — M2)*
+8. Kurt Gücü 1 yığınla A=4, D=4 → saldıran kazanır; attacker_remaining=2,
+   defender_remaining=0. Demir Post 1 yığınla oyuncu savunurken A=4, D=4 →
+   `D_eff = 5`, savunan kazanır; defender_losses = ceil(4 × 0.3) = 2. *(Test — M2)*
