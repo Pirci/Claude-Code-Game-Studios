@@ -5,9 +5,9 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-18
-- **Son commit:** `e0eae22` (C-29: Erlik modeli)
+- **Son commit:** `__H__` (C-30: arındırma eylemi)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-30)
+- **Aktif görev:** — (yok; sıradaki: C-31)
 
 ---
 
@@ -82,6 +82,16 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | K-01 | [x] | **Push:** origin'e gönderilmemiş commit'ler | 2026-10-07 push edildi (`1206f14`); push artık protokolün parçası |
 | K-02 | [x] | **Karar:** `ai_turn_execution` registry güncelleme önerisi | 2026-10-07 onaylandı — kayıt (13 Ağustos'ta yazılmıştı) olduğu gibi kaldı |
 
+## Otonom Kararlar (gece modu — kullanıcı incelemesi bekliyor)
+
+> 2026-10-18 gecesi kullanıcı talimatı: "sabaha kadar devam, önerileni kabul et".
+> Kullanıcıya ait kararlar bu modda **önerilen seçenekle** verildi; her biri
+> aşağıda listelenir. Beğenilmeyen karar için düzeltme görevi (`C-XX-fix`) açılır.
+
+| Görev | Karar | Reddedilen alternatifler | Geri alma maliyeti |
+| --- | --- | --- | --- |
+| C-30 | Arındırma = ordu varışının 2. dalı (ayrı eylem değil); fetih bozulmayı korur (B5-A); başarısız arındırmada gelen kuvvetin tamamı kaybolur; düşman AI bozulmayı yok sayar | Ayrı "Arındır" eylemi; fetih otomatik arındırır (B5-B); bozuk bölgeye saldırmadan önce arındırma şartı (B5-C); başarısızlıkta Dal 3 kalanı geri döner | Düşük — yalnızca GDD (kod C-38'de) |
+
 ## Görev Kuyruğu
 
 | ID | Durum | Görev | Kaynak | Bağımlı | Bitti kriteri |
@@ -115,16 +125,17 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-27 | [ ] | Gerçek CI hattı yok: `.github/workflows/` boş (yalnızca şablonlar). Coding standards "her push/PR'da testler çalışır, kırmızıysa merge yok" diyor → GitHub Actions: headless Godot 4.7 + `tools/ci/run-tests.sh` (testler + palet) | C-10 sırasında keşfedildi | — | Push'ta workflow yeşil; bilerek kırılan testte kırmızı |
 | C-28 | [x] `1468973` | **Karar + GDD:** ordu üretimi (maliyet, formül, sahibi) — `resource-system.md` yazılır veya `army-system.md`'ye eklenir; kartopu/bakım (D1, D2) burada değerlendirilir | `design/gdd/gdd-cross-review-2026-10-08.md` B1 | C-13 | GDD'de üretim formülü + ayar aralığı; Prolog kazanılabilirliği hesapla gösterilir |
 | C-29 | [x] `e0eae22` | **Karar + GDD:** Erlik modeli (bozulma katmanı mı, sahip türü mü — Prolog canavarı dahil), yayılım/bozulmanın sahibi GDD (spirit / corruption-purification / enemy-layers) ve tur sonundaki yeri → region-map §3.4 + AC4 + TR-map-003 güncellenir; Prolog'da Erlik baskısı (D3) | `design/gdd/gdd-cross-review-2026-10-08.md` B2, B4 | C-13 | Tek sahip GDD; tur sonu sırası tüm GDD/TR/ADR'de aynı |
-| C-30 | [ ] | **GDD:** arındırma eylemi (varış dalı mı ayrı eylem mi, aksiyon maliyeti, birliklerin yerleşmesi, sahipli+bozuk hedef) + fetihte bozulmanın akıbeti | `design/gdd/gdd-cross-review-2026-10-08.md` B3, B5 | C-29 | army §3.3 / spirit §3.2 tanımlı, kabul kriterli |
+| C-30 | [x] `__H__` | **GDD:** arındırma eylemi (varış dalı mı ayrı eylem mi, aksiyon maliyeti, birliklerin yerleşmesi, sahipli+bozuk hedef) + fetihte bozulmanın akıbeti | `design/gdd/gdd-cross-review-2026-10-08.md` B3, B5 | C-29 | army §3.3 / spirit §3.2 tanımlı, kabul kriterli |
 | C-31 | [ ] | **GDD:** lütuf sunma zamanı, erteleme, etkinin başlangıcı, MVP alt kümesi; olmayan sistemlere dayanan lütuflar, Gök Kalkanı yığılması, Ruh ölçekleme yönü, maliyet eğrisi (W9–W11, D5) | `design/gdd/gdd-cross-review-2026-10-08.md` B6 | C-29 | spirit §3.4/§4/§7 güncel, sıfıra bölme yok |
 | C-32 | [ ] | **GDD:** tur ortası kazanma davranışı, kazanma/kaybetme önceliği, kazanma kapsamı (siyasi / + Erlik) ve formül metni (W7, D4) | `design/gdd/gdd-cross-review-2026-10-08.md` B7 | C-29 | region-map §3.3/§3.4/§3.6 tutarlı; kod davranışıyla eşleşiyor veya düzeltme görevi açıldı |
 | C-33 | [ ] | GDD düzeltmeleri: W1–W6 + bilgi notları (örnek hesap, berabere/hayatta kalanlar, 0 ordu, `draw_favors_defender`, §3.5 "planlı", eşitlik bozma, indeks/konsept notları, bağımlılık asimetrisi). W8 (gelir sahibi C-28, seviye 3 → K1) ve W12 (bozulma görseli → K2) kapandı | `design/gdd/gdd-cross-review-2026-10-08.md` uyarılar | C-28 | Her uyarı kapandı veya gerekçeyle kaldı |
 | C-34 | [ ] | `/review-all-gdds` yeniden → PASS veya CONCERNS | C-13 FAIL | C-28, C-29, C-30, C-31, C-32, C-33 | Yeni rapor; engelleyici yok |
 | C-49 | [ ] | **Prolog Erlik modeli etki takibi:** Canavarın İni nötr + bozulma 3 olunca Prolog'da `ENEMY` bölgesi kalmıyor → düşman AI/takviye (F6) boşta, `game_lost` tetiklenemez; resource-system §4 Prolog kazanılabilirlik hesabı (canavar eşiği 12 direnç vs eski A≥7) ve `ERLIK_SPREAD_INTERVAL=3` `/balance-check` ile yeniden doğrulanır; Prolog'da siyasi düşman/kayıp koşulu var mı kararı (kullanıcı) | C-29 sırasında keşfedildi | C-29, C-32 | Karar kaydı + güncel Prolog sayıları GDD'de + balance raporu |
+| C-50 | [ ] | **Art bible + UI spec:** bozulma seviyesi görseli (seviye 1–3: Erlik Moru + Kömürü dither yoğunluğu / leke boyutu, sahiplik rengini gizlemeden) art bible §4'e; bölge bilgi panelinde bozulma seviyesi + Erlik direnci satırının yerleşimi | C-30 sırasında keşfedildi (spirit §3.1/§3.2, AC10/AC14) | C-30 | Art bible'da seviye görsel kuralı (palet doğrulayıcıyla uyumlu); bilgi paneli satırı tanımlı |
 | C-35 | [ ] | **M1 · GDD:** `scene-flow.md` — sahne intro/outro anlatı ekranları, Kök Böri "genesis" sahnesi, Prolog kazanma → Kağan ilanı, bölüm unlock (`/design-system`) | Konsept MVP #5; M1 | C-32 | 8 zorunlu bölüm + indeks satırı; `/design-review` geçer |
 | C-36 | [ ] | **M1 · Harita:** Ötüken haritası → Oğuz ata yurdu (6 bölge, dağınık boylar + Erlik canavarı yerleşimi), data-driven `ChapterMapDefinition` + 11 dil bölge adları | Konsept "Sonraki Adımlar"; M1 | C-29, C-34, C-49 | Harita verisi + testler + ekran görüntüsü |
 | C-37 | [ ] | **M1 · Kod:** ordu üretimi + altın harcama (`resource-system.md` uygulaması) — UI butonu, maliyet/limit, düşman üretimi | C-28; M1 | C-18 | GDD kabul kriterleri birim testlerinde; ekran görüntüsü |
-| C-38 | [ ] | **M1 · Kod:** Erlik canavarı + temel arındırma (C-29/C-30 kararlarına göre) | Konsept MVP #4; M1 | C-18, C-19, C-30 | Kabul kriterleri testte; canavar yenilip bölge arınır |
+| C-38 | [ ] | **M1 · Kod:** Erlik canavarı + temel arındırma (C-29/C-30 kararlarına göre) | Konsept MVP #4; M1 | C-18, C-19, C-30, C-50 | Kabul kriterleri testte; canavar yenilip bölge arınır |
 | C-39 | [ ] | **M1 · Kod:** Kök Böri çekirdeği — ruh kazanımı + ilk görünüş (MVP alt kümesi, C-31) | Konsept MVP #4; M1 | C-18, C-31 | Ruh kazanımı testli; HUD'da görünür |
 | C-40 | [ ] | **M1 · Kod:** sahne akışı — intro/outro ekranları, Kök Böri sahnesi, kazanma/kaybetme → outro (`features/campaign/`) | C-35; M1 | C-35, C-18 | Yeni kampanya → intro → harita → zafer → outro akışı; 11 dil key'leri |
 | C-41 | [ ] | **M1 · UX + Kod:** Prolog öğretici akışı (fetih → kaynak → üretim → savaş → arındırma sırasıyla tanıtım) — `/ux-design` spec + uygulama | Konsept "Prolog — ÖĞRETİCİ"; M1 | C-37, C-38, C-39, C-40 | UX spec dosyası; rehbersiz oyuncu her mekaniği bir kez görür |
@@ -173,3 +184,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-18 | C-15: ADR-0006 Additive Modifier / Stat Pipeline (kaynak anahtarlı `StatModifier`, saf `StatResolver`, `exclusive_group`); registry +3 durus; TR-spirit-006 kapandı | `62de438` |
 | 2026-10-18 | C-16: ADR-0007 Save/Load Persistence (versiyonlu JSON, saf SaveSerializer, atomik .bak rotasyonu, tur sonu otomatik kayıt); ADR-0004 göç planı kısmen supersede; registry +3 durus; TR-concept-002 kapandı; resource-system açık soru #6 çözüldü | `bf4f2ff` |
 | 2026-10-18 | C-29: Erlik modeli = bozulma katmanı (canavar = bozuk nötr bölge, ERLIK sahip türü yok); sahip spirit-system; `end_turn`: AI → Erlik yayılımı → gelir → tur+1 → kontrol; Prolog: Canavarın İni seviye 3 + aralık 3; B2/B4/D3 kapandı; yeni görev C-49 | `e0eae22` |
+| 2026-10-18 | C-30: arındırma = ordu varışının 2. dalı (yabancı garnizon yok + bozuk → `CombatResolver(P, corruption_strength)`, 1 aksiyon, başarısızlıkta kuvvet kaybolur, düşman arındıramaz); fetih bozulmayı korur (B5-A); B3/B5 kapandı; registry +2; yeni görev C-50 *(gece modu: önerilen seçenek)* | `__H__` |

@@ -45,7 +45,7 @@ both after `attempt_move` and at the end of `end_turn`.
   type (ERLIK); (c) declare the beast political-layer and move "ilk arındırma" to a separate
   corrupted Prolog region.
 
-🔴 **B3 — Purification is not part of army arrival resolution**
+🔴 **B3 — Purification is not part of army arrival resolution** — ✅ **RESOLVED 2026-10-18 (C-30):** third arrival branch (`army-system.md` §3.3 dal 2): no foreign garrison + corrupted → `CombatResolver(P, corruption_strength)`; 1 action; success settles survivors (occupies), failure loses the whole force; enemy AI ignores corruption
 - `army-system.md` §3.3 has only two branches: "Barışçıl … VEYA `army_count == 0`" and "Savaş";
   §6 claims "arındırma da ordu gönderimi kullanır".
 - `spirit-system.md` §3.2 does not define: whether survivors occupy the region, whether ownership
@@ -66,7 +66,7 @@ both after `attempt_move` and at the end of `end_turn`.
 - **Decide:** (a) which GDD owns spread/corruption; (b) exact end_turn position (before AI /
   after AI before income / after income / at player-turn start); then update region-map §3.4 + AC4.
 
-🔴 **B5 — Fate of corruption on conquest undefined** (scenario walkthrough)
+🔴 **B5 — Fate of corruption on conquest undefined** (scenario walkthrough) — ✅ **RESOLVED 2026-10-18 (C-30):** option (A) — corruption persists on conquest, no Ruh; purify with a later move (`spirit-system.md` §3.2)
 - `combat-system.md` §3.3 "Kazanılırsa → hedef `owner = PLAYER`, `army_count = attacker_remaining`"
   — silent on `corruption_level`; `spirit-system.md` §3.2 "komşu/sahip olduğu bir bölgeden …"
   is ambiguous about attacking corrupted enemy regions.
@@ -194,7 +194,7 @@ acceptable for the Prolog tutorial, needs Erlik-flavoured behaviour from scene 2
 | Gold | Region income at end_turn | **none defined** (B1) | Accumulates forever |
 | Army | **none** (production undefined) | Combat losses | Monotonically decreasing |
 | Ruh | Purification only | Boons only | Closed loop |
-| Actions | 1 / turn | Move / attack (purify?) | Healthy scarcity |
+| Actions | 1 / turn | Move / attack / purify (C-30: purify = move) | Healthy scarcity |
 | Regions | Conquest | Enemy AI conquest only | Snowball risk |
 | Corruption | Erlik spread (every 4 turns) | Purification | Depends on interval |
 

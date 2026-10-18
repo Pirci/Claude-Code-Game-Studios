@@ -42,8 +42,9 @@ Oyuncu tüm bozkırı tek bakışta okur: kim nerede güçlü, hangi sınır zay
 
 ### 3.3 Hareket (`attempt_move`)
 - Seçili bölge kaynak, tıklanan bölge hedeftir.
-- Ordu Sistemi doğrulaması geçerse hareket/savaş uygulanır, `actions_remaining−=1`,
-  seçim temizlenir, kazanma kontrol edilir.
+- Ordu Sistemi doğrulaması geçerse varış çözülür — savaş, arındırma veya barışçıl
+  dal (`army-system.md` §3.3) — `actions_remaining−=1`, seçim temizlenir, kazanma
+  kontrol edilir.
 
 ### 3.4 Tur Bitişi (`end_turn`)
 Sıra: **(1)** düşman AI oynar → **(2)** Erlik yayılımı (`spirit-system.md` §3.6;
@@ -124,7 +125,9 @@ hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
 - **Oyun Durumu** (`game_state.gd`) — `map_state`, `gold`, (planlı: `ruh`, `boons`).
 - **Ruh Sistemi** (`spirit-system.md`) — `RegionData`'ya `corruption_level`
   eklenecek; Erlik yayılımı `end_turn` 2. adımında çalışır (§3.4). Erlik modeli,
-  sahiplik ve yayılımın sahibi: `spirit-system.md` §3.7.
+  sahiplik ve yayılımın sahibi: `spirit-system.md` §3.7. Arındırma oyuncu
+  hamlesinin bir varış dalıdır (`army-system.md` §3.3, spirit §3.2); bilgi paneli
+  bozuk bölgede seviye + direnç gösterir.
 - **Kök Böri / Kozmik katman**: düşman AI'nin yanına Erlik yayılım AI'si eklenecek
   (ADR-0005, `ErlikSpreadController`).
 

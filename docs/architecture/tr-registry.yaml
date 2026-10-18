@@ -25,7 +25,7 @@
 # STATUS VALUES: active | deprecated | superseded-by: TR-[system]-NNN
 
 version: 2
-last_updated: "2026-08-13"
+last_updated: "2026-10-18"
 
 requirements:
   # --- region-map-system (slug: map) ---
@@ -89,9 +89,9 @@ requirements:
   - id: TR-army-002
     system: army
     gdd: design/gdd/army-system.md
-    requirement: "Arrival resolution routes to combat (enemy target) or peaceful merge/occupation"
+    requirement: "Arrival resolution routes by target state in priority order: combat (foreign garrison) -> purification (no foreign garrison + corrupted; player only) -> peaceful merge/occupation"
     created: 2026-08-13
-    revised: ""
+    revised: "2026-10-18"
     status: active
 
   # --- combat-system (slug: combat) ---
@@ -139,9 +139,9 @@ requirements:
   - id: TR-spirit-003
     system: spirit
     gdd: design/gdd/spirit-system.md
-    requirement: "Purification reuses CombatResolver (army strength vs corruption_strength)"
+    requirement: "Purification reuses CombatResolver (arriving force vs corruption_strength); failure loses the whole arriving force; conquest keeps corruption"
     created: 2026-08-13
-    revised: ""
+    revised: "2026-10-18"
     status: active
 
   - id: TR-spirit-004

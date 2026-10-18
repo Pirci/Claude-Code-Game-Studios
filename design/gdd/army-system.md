@@ -7,6 +7,7 @@
 
 > Mevcut kodu belgeler. MVP'de ordu tek bir soyut sayıdır (`army_count`) — birim
 > tipleri (süvari/okçu/piyade) ve kahramanlar henüz kodda yok (§7).
+> **Planlı (kodda yok):** §3.3'teki 2. dal (arındırma) C-30 kararıdır; uygulama C-38.
 
 ---
 
@@ -40,17 +41,43 @@ Hareket geçerlidir ancak ve ancak:
 - Kaynak bölge `army_count = 1` olur (garnizon).
 
 ### 3.3 Varış Çözümü
-- **Barışçıl** (hedef oyuncunun VEYA `army_count == 0`):
-  - Hedef zaten oyuncunun → `army_count += moving`.
-  - Hedef değilse → `owner = PLAYER`, `army_count = moving`.
-- **Savaş** (hedef oyuncunun değil ve `army_count > 0`):
-  - `CombatResolver.resolve(moving, hedef.army_count)` çağrılır.
-  - Kazanılırsa → hedef `owner = PLAYER`, `army_count = attacker_remaining`.
-  - Kaybedilirse → hedef sahibi kalır, `army_count = defender_remaining`.
+Varış, hedefin **o anki** durumuna göre **tek bir dala** gider; dallar aşağıdaki
+öncelik sırasıyla denenir. Bir hamle tek bir katmanla uğraşır: önce siyasi
+garnizon, sonra Erlik bozulması (C-30, 2026-10-18 — çapraz inceleme B3/B5).
+*Yabancı garnizon* = sahibi oyuncu olmayan (nötr veya düşman) ve `army_count > 0`.
+
+1. **Savaş** (hedefte yabancı garnizon var):
+   - `CombatResolver.resolve(moving, hedef.army_count)` çağrılır.
+   - Kazanılırsa → hedef `owner = PLAYER`, `army_count = attacker_remaining`.
+     **Hedefin `corruption_level`'ı değişmez** — fetih arındırmaz, Ruh vermez
+     (`spirit-system.md` §3.2).
+   - Kaybedilirse → hedef sahibi kalır, `army_count = defender_remaining`.
+2. **Arındırma** *(planlı — C-38)* (yabancı garnizon yok — hedef oyuncunun ya da
+   `army_count == 0` — **ve** `corruption_level ≥ 1`):
+   - Arındırma gücü `P = moving`: yalnızca gelen kuvvet; hedefte zaten duran
+     oyuncu garnizonu katılmaz.
+   - `CombatResolver.resolve(P, corruption_strength)` çağrılır
+     (`corruption_strength`: `spirit-system.md` §4.1).
+   - **Başarı** (`P > corruption_strength`): `corruption_level = 0`, oyuncu Ruh
+     kazanır (`spirit-system.md` §3.2). Hayatta kalanlar (`attacker_remaining`)
+     yerleşir: hedef oyuncunun değilse `owner = PLAYER`,
+     `army_count = attacker_remaining`; oyuncununsa `army_count += attacker_remaining`.
+   - **Başarısızlık** (`P ≤ corruption_strength`, eşitlik dahil): gelen kuvvetin
+     **tamamı kaybolur**; hedefin sahibi, ordusu ve bozulması değişmez.
+3. **Barışçıl** (yabancı garnizon yok ve bozulma yok):
+   - Hedef zaten oyuncunun → `army_count += moving`.
+   - Değilse → `owner = PLAYER`, `army_count = moving`.
+
+**Düşman AI hamleleri** yalnızca 1. ve 3. dalı kullanır (kendi bakış açısından:
+yabancı garnizon = sahibi düşman olmayan ve ordulu bölge). Bozulma düşmanın
+hedef seçimini ve varışını etkilemez; düşman arındıramaz ve bozulma düşmanın
+aldığı bölgede kalır. (Kuralların sahip-bağımsız yazımı: çapraz inceleme W5 → C-33.)
 
 ### 3.4 Aksiyon Tüketimi
-- Her başarılı hareket `actions_remaining` değerini 1 azaltır (Harita/Tur
-  Akışı'nda, bkz. `region-map-system.md`).
+- Her geçerli hareket — hangi dala giderse gitsin; kaybedilen savaş ve başarısız
+  arındırma dahil — `actions_remaining` değerini 1 azaltır (Harita/Tur Akışı'nda,
+  bkz. `region-map-system.md`). Arındırma ayrı bir eylem değildir, ek aksiyon
+  istemez.
 
 ---
 
@@ -70,6 +97,25 @@ target.army_count = moving_army
 ```
 Savaş sonucu Savaş Çözümü GDD'sindeki formüllerle belirlenir; kalan ordu oradan gelir.
 
+Arındırma (2. dal; `S` = `corruption_strength = corruption_level × CORR_STR_PER_LEVEL`,
+`spirit-system.md` §4.1):
+```
+P = moving_army
+başarı        ⇔ P > S
+başarıda kalan = P − ceil(S × attacker_win_loss_ratio)   # CombatResolver Dal 1
+başarısızlıkta kalan = 0                                  # gelen kuvvet tamamen kaybolur
+```
+| Seviye | `S` | En az `P` | Başarı kaybı | Kaynakta gereken ordu |
+| ---- | ---- | ---- | ---- | ---- |
+| 1 | 4 | 5 | 2 | ≥ 6 |
+| 2 | 8 | 9 | 4 | ≥ 10 |
+| 3 | 12 | 13 | 6 | ≥ 14 |
+
+**Örnek (arındırma):** Kaynak army=10 → P=9. Hedef garnizonsuz nötr, seviye 2 (S=8)
+→ 9 > 8 başarı, kayıp ceil(4)=4, bölge oyuncunun, army=5, `corruption_level=0`,
+Ruh +20. Aynı hedefe P=8 gönderilseydi → eşitlik = başarısızlık, 8 birlik kaybolur,
+bölge nötr / army 0 / seviye 2 kalır.
+
 **Örnek**: Kaynak army=5 → moving=4, kaynak=1. Hedef boş nötr → hedef oyuncunun,
 army=4. Hedefte 3 düşman varsa → savaş (4 vs 3), saldıran kazanır, hedef army=3
 (bkz. combat-system Örnek 1).
@@ -85,6 +131,16 @@ army=4. Hedefte 3 düşman varsa → savaş (4 vs 3), saldıran kazanır, hedef 
 - **Kendi bölgene hareket**: barışçıl birleşme (takviye).
 - **Seçili kaynak yokken hareket denemesi**: Harita akışı bunu engeller
   (`attempt_move` seçili bölge yoksa `false` döner).
+- **Bozulmuş + yabancı garnizonlu hedef**: 1. dal (savaş). Kazanılırsa oyuncu bölgeyi
+  bozulmasıyla devralır (düşük üretim, `resource-system.md` F1); arındırmak için
+  sonraki bir hamlede bölgeye kuvvet gönderir (2. dal, kendi bölgesi). İki katman =
+  iki hamle.
+- **Kendi bozuk bölgene takviye**: 2. dal — takviye bir arındırma girişimidir;
+  `P ≤ S` ise gelen kuvvet kaybolur, garnizon değişmez. Bilgi paneli seviyeyi ve
+  direnci gösterir (`spirit-system.md` §3.2), sonuç hamleden önce hesaplanabilir.
+- **Başarısız arındırma**: aksiyon harcanır, kuvvet kaybolur, kaynakta garnizon (1) kalır.
+- **Ordusu 0 olan bozuk düşman bölgesi** (berabere sonrası, çapraz inceleme W3):
+  yabancı garnizon yok → 2. dal; başarıda bölge oyuncunun olur.
 
 ---
 
@@ -95,7 +151,9 @@ army=4. Hedefte 3 düşman varsa → savaş (4 vs 3), saldıran kazanır, hedef 
 - **Harita/Tur Akışı** (`region-map-system.md`, kod: `map_controller.gd`) —
   `attempt_move`'u çağırır, aksiyon sayacını yönetir, düşman AI aynı taşıma
   kurallarını kullanır.
-- **Ruh Sistemi** (`spirit-system.md`) — arındırma da ordu gönderimi kullanır.
+- **Ruh Sistemi** (`spirit-system.md`) — arındırma, varış çözümünün 2. dalıdır
+  (§3.3); arındırma kuralları, `corruption_strength` ve Ruh kazanımı spirit §3.2 /
+  §4.1–4.2'ye aittir. Bu sistem yalnızca dal seçimini ve kuvvetin yerleşmesini uygular.
 - **Kaynak Yönetimi** (`resource-system.md`) — "Ordu Topla" üretimi `army_count`'u
   artırır; ordunun büyüyebildiği tek kaynak budur (garnizon ve hareket kuralları
   değişmez).
@@ -124,3 +182,13 @@ kahraman birimleri, hareket menzili/maliyeti — konseptte var, kodda yok. Ordu
 5. Boş nötr bölgeye hareket → bölge oyuncunun, army = taşınan. *(Test)*
 6. Oyuncunun bölgesine hareket → takviye (army += taşınan). *(Test)*
 7. Düşman bölgeye hareket → savaş tetiklenir ve sonuç uygulanır. *(Test)*
+8. Garnizonsuz nötr, seviye 2 (S=8) bölgeye P=9 → bölge oyuncunun, army=5,
+   `corruption_level=0`, Ruh +20. *(Test — BLOCKING, C-38)*
+9. Aynı bölgeye P=8 → kuvvet tamamen kaybolur; bölge nötr, army 0, seviye 2 kalır;
+   Ruh değişmez; `actions_remaining` 1 azalır. *(Test, C-38)*
+10. Seviye 1 bozuk, 3 garnizonlu nötr bölgeye P=5 → savaş dalı; kazanılınca bölge
+    oyuncunun, army=3, `corruption_level` hâlâ 1, Ruh değişmez. *(Test, C-38)*
+11. Oyuncunun seviye 1 bozuk bölgesine (garnizon 2, S=4) P=5 → arındırma başarılı,
+    army = 2 + (5 − 2) = 5, `corruption_level=0`. *(Test, C-38)*
+12. Düşman AI bozuk bir bölgeye girdiğinde `corruption_level` değişmez ve kimse Ruh
+    kazanmaz. *(Test, C-38)*

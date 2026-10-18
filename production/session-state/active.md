@@ -91,3 +91,12 @@
 - Güncellenen: spirit §3.6/§3.7/§6/AC8, region-map §3.4/§5/§6/AC1/AC4, resource-system adım numaraları (ekonomi 3., sayaç 4.), TR-map-003, systems-index, cross-review (B2/B4/D3 kapandı).
 - Keşif: canavar nötr olunca Prolog'da ENEMY bölgesi kalmıyor → düşman AI/takviye boşta, game_lost tetiklenemez, denge yeniden doğrulanmalı → yeni görev C-49 (C-36'nın bağımlılığı).
 - NEXT: C-30 (arındırma eylemi + fetihte bozulma, B3/B5).
+
+## Session Extract — C-30 arındırma eylemi (2026-10-18, gece modu)
+- Kullanıcı talimatı: "sabaha kadar devam, önerileni kabul et" → kararlar önerilen seçenekle verildi; continuation.md "Otonom Kararlar" tablosunda listeleniyor (sabah incelemesi).
+- Karar: arındırma = ordu varışının 2. dalı (army §3.3: savaş → arındırma → barışçıl). Yabancı garnizon yok + bozuk → `CombatResolver(P, corruption_strength)`, P = gelen kuvvet; başarı: seviye 0 + Ruh + kalanlar yerleşir; başarısızlık (eşitlik dahil): gelen kuvvet tamamen kaybolur. 1 aksiyon. Düşman AI bozulmayı yok sayar.
+- B5: fetih bozulmayı korur, Ruh vermez (seçenek A). Eşik tablosu 5/9/13, kayıp 2/4/6; Canavarın İni S=12 → 30 Ruh = ilk lütuf eşiği.
+- Güncellenen: army §3.3/§3.4/§4/§5/§6/AC8–12, spirit §3.1/§3.2/§3.7/§4.1/§5/§6/AC11–14, combat §5/§6, region-map §3.3/§6, cross-review B3/B5 ✅, TR-army-002 + TR-spirit-003 revised, registry +2 (corruption_strength, corr_str_per_level).
+- Yeni görev C-50 (bozulma seviyesi görseli + bilgi paneli satırı; C-38 bağımlılığı).
+- Not: bu container'da Godot yok → kod görevlerinde test için kurulum gerekecek.
+- NEXT: C-31 (lütuf zamanlaması, B6 + W9–W11, D5).

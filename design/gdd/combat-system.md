@@ -86,6 +86,13 @@ attacker_remaining=1, defender_remaining=2, savunan kazanır.
 - **Yuvarlama**: tüm kayıplar `ceil` ile hesaplanır → en az 1 kayıp garantisi
   (D≥1 veya A≥1 iken). Küçük ordularda bile kayıpsız zafer olmaz.
 - **Kalan negatif**: `max(0, …)` ile engellenir.
+- **Arındırma çağrısı** (`spirit-system.md` §3.2, C-30): resolver `A = P` (gelen
+  kuvvet), `D = corruption_strength` ile çağrılır; başarı = `attacker_won`.
+  Başarıda kalan `attacker_remaining`'dir; başarısızlıkta gelen kuvvet **tamamen**
+  kaybolur (Dal 3'ün kalanı kullanılmaz) ve `defender_remaining` yok sayılır —
+  bozulma kısmen azalmaz.
+- **Fetih ve bozulma**: savaş sonucu yalnızca sahipliği ve orduyu değiştirir;
+  hedefin `corruption_level`'ı korunur (çapraz inceleme B5, `army-system.md` §3.3).
 
 ---
 
@@ -96,7 +103,8 @@ attacker_remaining=1, defender_remaining=2, savunan kazanır.
 - **Harita/Tur Akışı** (`region-map-system.md`, kod: `map_controller.gd`) —
   `attempt_move` ve düşman AI savaşları tetikler.
 - **Ruh Sistemi** (`spirit-system.md`) — arındırma çözümü bu resolver'ı yeniden
-  kullanacak (ordu vs. corruption_strength).
+  kullanır (`resolve(P, corruption_strength)`, §5); başarı/başarısızlığın sonucunu
+  Ruh ve Ordu sistemleri uygular (`spirit-system.md` §3.2, `army-system.md` §3.3).
 
 ---
 

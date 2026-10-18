@@ -36,22 +36,47 @@ geçmeliyim" baskısı hisseder; arındırdıkça "kutsandım" tatmini yaşar.
 - Bozulmuş bölge (`corruption_level ≥ 1`):
   - Görsel: art bible §4 "Sahiplik Renkleri" → Erlik bozgunu katmanı (yalnızca
     Erlik Moru + Erlik Kömürü, dithering'li leke; sahiplik rengini gizlemez,
-    üstüne biner). Yeşil arındırılmış toprağın rengidir. Seviyenin nasıl
-    gösterileceği (dither yoğunluğu / leke boyutu) henüz tanımsız — C-30/C-31.
+    üstüne biner). Yeşil arındırılmış toprağın rengidir. Seviye bilgi panelinde
+    sayıyla gösterilir (§3.2, C-30); haritadaki seviye görseli (dither yoğunluğu /
+    leke boyutu) art bible'da henüz tanımsız → **C-50** (C-38'den önce).
   - Ceza: o bölgenin `gold_per_turn` ve `herd_per_turn` üretimi seviyeye göre
     çarpanla düşer: seviye 1 → ×0.75, seviye 2 → ×0.5, **seviye 3 → ×0 (üretim
     durur)** (`CORRUPTION_PRODUCTION_MULTIPLIERS`, §4.3).
   - Bir "arınma direnci" (`corruption_strength`) taşır (bkz. Formüller)
 
-### 3.2 Arındırma (Purification)
-- Oyuncu, komşu/sahip olduğu bir bölgeden bozulmuş bölgeye **ordu göndererek**
-  arındırma başlatır.
-- Çözüm mevcut savaş sistemini yeniden kullanır: gönderilen ordu gücü vs.
-  `corruption_strength`.
-- **Başarı** (ordu > direnç): bölge `corruption_level = 0` olur, üretim geri
-  döner, oyuncu `ruh_gain` kadar Ruh kazanır. Ordu kaybı savaş formülüne göre.
-- **Başarısızlık**: ordu kaybeder, bölge bozuk kalır, Ruh kazanılmaz.
+### 3.2 Arındırma (Purification) — C-30 kararı (2026-10-18)
+- **Eylem:** Arındırma ayrı bir eylem değildir; **ordu varışının 2. dalıdır**
+  (`army-system.md` §3.3). Oyuncu, sahip olduğu komşu bir bölgeden bozulmuş bölgeye
+  normal hareketle ordu gönderir (`can_move` kuralları aynen geçerli). Hamle **1
+  aksiyon** harcar — başarısız olsa da.
+- **Ne zaman arındırma olur:** hedefte yabancı garnizon yoksa (hedef oyuncunun ya
+  da `army_count == 0`) **ve** `corruption_level ≥ 1` ise. Yabancı garnizon varsa
+  hamle **savaştır** (1. dal) ve bozulmaya o hamlede dokunulmaz.
+- **Çözüm:** `CombatResolver.resolve(P, corruption_strength)`; `P` = gelen kuvvet
+  (`kaynak.army_count − 1`). Hedefte zaten duran oyuncu garnizonu katılmaz.
+- **Başarı** (`P > corruption_strength`): `corruption_level = 0`, üretim geri döner,
+  oyuncu `ruh_gain` (§4.2, arındırma *öncesi* seviyeyle) kadar Ruh kazanır. Hayatta
+  kalanlar (`P − ceil(S × attacker_win_loss_ratio)`) bölgeye yerleşir: bölge
+  oyuncunun değilse `owner = PLAYER` olur; oyuncununsa garnizona eklenir.
+- **Başarısızlık** (`P ≤ corruption_strength`, eşitlik dahil): gelen kuvvetin
+  **tamamı kaybolur** ("Erlik yuttu"); bölgenin sahibi, ordusu ve bozulması
+  değişmez; Ruh kazanılmaz. (Savaş §7 "kaybeden taraf tamamen yok olur" kuralıyla aynı.)
 - Bir bölge tek arındırmada tamamen temizlenir (kısmi arındırma yok — MVP sadeliği).
+- **Fetih arındırmaz (B5):** Bozulmuş bir bölgeyi savaşla ele geçirmek
+  `corruption_level`'ı değiştirmez ve Ruh vermez. Oyuncu bölgeyi bozulmasıyla
+  (düşük üretimle) devralır; arındırmak için sonraki bir hamlede bölgeye kuvvet
+  gönderir. Gerekçe: Ruh'un tek musluğu arındırmadır (§3.3) ve Erlik katmanı
+  sahiplikten bağımsızdır (§3.7) — fetih siyasi, arındırma kozmik katmandır.
+- **Yalnızca oyuncu arındırır:** Düşman AI bozulmayı yok sayar (hedef seçiminde ve
+  varışta). Düşman bozuk bölgeye girebilir veya onu alabilir; bozulma kalır, kimse
+  Ruh kazanmaz.
+- **Görünürlük:** Bölge bilgi paneli bozulmuş bölgede seviyeyi ve
+  `corruption_strength`'i gösterir; çözüm deterministik olduğundan sonuç hamleden
+  önce hesaplanabilir (Epik Ama Erişilebilir).
+- **Prolog canavarı:** Canavarın İni (seviye 3) `S = 12` → en az 13'lük kuvvet
+  (kaynakta ≥ 14 ordu) gerekir; başarı 30 Ruh verir = ilk lütuf eşiği
+  (`BASE_BOON_COST`). Önerilen garnizon 0 (canavar = bozulma direncinin kendisi);
+  kesin veri ve kazanılabilirlik hesabı **C-49**'da, lütuf sunum zamanı **C-31**'de.
 
 ### 3.3 Ruh Kaynağı
 - Ruh, `GameState` içinde tutulan kalıcı bir kaynaktır (altın/sürüden ayrı).
@@ -102,8 +127,8 @@ geçmeliyim" baskısı hisseder; arındırdıkça "kutsandım" tatmini yaşar.
   `/balance-check` ile doğrulanacak (C-33 / C-49).
 - **Zafer kapsamı (D4) → C-32:** Prolog zaferi "3 nötr fethi + Canavarın İni
   arındırılması"dır; genel kural (siyasi / + Erlik) C-32'de kesinleşir.
-- **Açık, sonraki görevlerde:** arındırmanın ordu varış çözümündeki yeri ve
-  fetihte bozulmanın akıbeti (B3/B5) → **C-30**; lütuf zamanlaması → C-31.
+- **Arındırmanın yeri ve fetihte bozulma (B3/B5):** ✅ C-30 — §3.2 (varışın 2. dalı;
+  fetih bozulmayı korur). Lütuf zamanlaması → C-31.
 
 > **Etki uyarısı:** Canavarın İni nötr olduğundan Prolog'da `ENEMY` bölgesi kalmaz →
 > düşman AI ve düşman takviyesi (`resource-system.md` F6) Prolog'da boşta kalır,
@@ -130,6 +155,8 @@ Değişkenler ve varsayılan (tuning) değerleri:
 corruption_strength = corruption_level × CORR_STR_PER_LEVEL
 ```
 Örnek: seviye 2 bölge → `2 × 4 = 8` direnç.
+Arındırma eşiği `P ≥ corruption_strength + 1`: seviye 1/2/3 → en az 5/9/13 kuvvet;
+başarı kaybı `ceil(S × 0.5)` = 2/4/6 (`army-system.md` §4 tablosu).
 
 ### 4.2 Ruh kazanımı
 ```
@@ -184,8 +211,20 @@ hedef.corruption_level = min(3, hedef.corruption_level + 1)
   yapılır. Seçim anında maliyet düşülür; kalan Ruh birikmeye devam eder.
 - **Havuz tükenmesi**: Havuzdaki benzersiz lütuf sayısı 3'ten azsa, sunum mevcut
   olanları tekrar edebilir (aynı lütuf iki slotta görünebilir) — 3 slot her zaman dolu.
-- **Arındırma sırasında ordu yok olursa**: Ordu direnci geçemezse bölge bozuk kalır;
-  Ruh verilmez; kısmi ilerleme kaydedilmez.
+- **Arındırma başarısız olursa** (`P ≤ S`): gelen kuvvet tamamen kaybolur; bölge
+  bozuk kalır; Ruh verilmez; kısmi ilerleme kaydedilmez; aksiyon harcanmış olur.
+- **Eşitlik** (`P == S`): başarısızlıktır (CombatResolver Dal 3, savunma avantajı
+  direnç lehine).
+- **Bozulmuş + yabancı garnizonlu bölge**: önce savaş (fetih), bozulma kalır;
+  arındırma ayrı, sonraki bir hamledir (§3.2).
+- **Ruh çiftçiliği riski**: Arındırılmış bölge yayılımla yeniden bozulabilir; tekrar
+  arındırılınca yine Ruh verir — Erlik'i geri püskürtmek bilinçli olarak
+  ödüllendirilir. Risk: oyuncu kaynak bölgeyi (seviye 3) bilerek bırakıp komşusunu
+  her yayılımda tekrar arındırabilir (≈ her interval'de 10 Ruh; bedeli 2 ordu +
+  1 aksiyon). Artan lütuf maliyeti (§4.4) ve sahne zaman baskısı bunu sınırlar;
+  C-49 `/balance-check`'inde izlenir, gerekirse "tekrar arındırma çarpanı" knob'u eklenir.
+- **Bozuk bölgeyi düşman alırsa**: bozulma kalır; düşman takviyesi etkilenmez
+  (düşmanın hazinesi yok, `resource-system.md` F6).
 - **Seviye 0 bölgeyi arındırma denemesi**: Geçersiz aksiyon — arındırma yalnızca
   `corruption_level ≥ 1` için sunulur.
 - **Erlik yayılacak temiz komşu yoksa**: Yayılım o tur atlanır (hata değil).
@@ -200,8 +239,11 @@ hedef.corruption_level = min(3, hedef.corruption_level + 1)
 
 - **Bölge Fethi / Harita** (`region-map-system.md`, kod: `region_data.gd`,
   `map_state.gd`) — `RegionData`'ya `corruption_level` alanı eklenmeli.
+- **Ordu Sistemi** (`army-system.md` §3.3) — arındırma, varış çözümünün 2. dalıdır;
+  dal seçimi ve kuvvetin yerleşmesi orada, arındırma kuralları ve Ruh burada.
 - **Savaş Çözümü** (`combat-system.md`, kod: `combat_resolver.gd`) — arındırma
-  çözümü `CombatResolver`'ı yeniden kullanır (ordu vs. corruption_strength).
+  çözümü `CombatResolver.resolve(P, corruption_strength)`'ı yeniden kullanır;
+  başarısızlıkta kalan kuvvet bu sistemin kuralıyla 0'dır.
 - **Kaynak Yönetimi** (`resource-system.md`) — gelir formülü (F1, F2) bu sistemin
   bozulma çarpanını (`M_c`, §4.3) ve ekonomi lütuflarını (`B_add` / `M_g`:
   Bereket, Sürü Kutsaması) uygular. Ruh bu sisteme aittir; Kaynak Yönetimi Ruh'u
@@ -252,3 +294,11 @@ hedef.corruption_level = min(3, hedef.corruption_level + 1)
    *(Test)*
 10. Bozulmuş bölge görsel olarak temiz bölgeden ayırt edilebilir (seviyeye göre
     renk). *(Görsel — screenshot + lead onayı, ADVISORY)*
+11. Seviye 2, garnizonsuz bozuk bölgeye P=9 → arındırma başarılı: `corruption_level 0`,
+    bölge oyuncunun, army 5, Ruh +20; P=8 → kuvvet kaybolur, bölge ve bozulma aynı
+    kalır, Ruh +0. *(Test — BLOCKING)*
+12. Bozuk bir bölgeyi savaşla fethetmek `corruption_level`'ı değiştirmez ve Ruh
+    vermez. *(Test)*
+13. Başarısız arındırma da `actions_remaining`'i 1 azaltır. *(Test)*
+14. Bilgi paneli bozuk bölgede seviyeyi ve `corruption_strength`'i gösterir; temiz
+    bölgede bu satır yoktur. *(UI — walkthrough/ekran görüntüsü, ADVISORY)*
