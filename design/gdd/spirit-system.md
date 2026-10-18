@@ -163,8 +163,9 @@ yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı.
   öğretici hedeftir); `ERLIK_SPREAD_INTERVAL` Prolog sahnesinde **3** tura iner
   (sahne override, bkz. Edge Cases "Final sahnesi" ile aynı mekanizma). Kesin değerler
   `/balance-check` ile doğrulanacak (C-33 / C-49).
-- **Zafer kapsamı (D4) → C-32:** Prolog zaferi "3 nötr fethi + Canavarın İni
-  arındırılması"dır; genel kural (siyasi / + Erlik) C-32'de kesinleşir.
+- **Zafer kapsamı (D4) — ✅ C-32:** zafer = siyasi koşul + nötr genişleme + bölümün
+  `erlik_foci` listesindeki odakların arındırılması (`region-map-system.md` §3.6);
+  odak dışı bozulma zaferi engellemez. Prolog: 3 nötr (odak hariç) + Canavarın İni.
 - **Arındırmanın yeri ve fetihte bozulma (B3/B5):** ✅ C-30 — §3.2 (varışın 2. dalı;
   fetih bozulmayı korur). Lütuf zamanlaması: ✅ C-31 — §3.4.
 

@@ -72,9 +72,9 @@ requirements:
   - id: TR-map-006
     system: map
     gdd: design/gdd/region-map-system.md
-    requirement: "Data-driven win/lose condition evaluation (WinCondition: defeat-all-enemies + required neutral conquests)"
+    requirement: "Data-driven win/lose evaluation (WinCondition: defeat-all-enemies + initially-neutral non-focus conquests + erlik_foci purified); checked after each player move and at end_turn (lose before win); game_result latch ends the game once"
     created: 2026-08-13
-    revised: ""
+    revised: "2026-10-18"
     status: active
 
   # --- army-system (slug: army) ---

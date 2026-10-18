@@ -91,6 +91,7 @@ Persist as **versioned JSON text**.
 - Enums are stored as ints with a documented table; ids as strings.
 - `modifiers` store `StatModifier` records (ADR-0006), **not** sources; sources are content.
 - The pending Kök Böri boon offer is **not** saved: it is derived from `ruh` and the boon list on load (`spirit-system.md` §3.4, TR-spirit-008, C-31).
+- `MapState.game_result` (C-32) is **not** saved: the end-of-turn autosave only runs while the result is `ONGOING`; a won/lost scene is handed to the scene flow (`scene-flow.md`, C-35), which owns how scene completion is persisted.
 
 ### Components
 

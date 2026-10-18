@@ -45,14 +45,15 @@ Oyuncu tüm bozkırı tek bakışta okur: kim nerede güçlü, hangi sınır zay
 - Seçili bölge kaynak, tıklanan bölge hedeftir.
 - Ordu Sistemi doğrulaması geçerse varış çözülür — savaş, arındırma veya barışçıl
   dal (`army-system.md` §3.3) — `actions_remaining−=1`, seçim temizlenir, kazanma
-  kontrol edilir.
+  kontrol edilir. Kazanma sağlanırsa oyun **o anda biter** (§3.7): `game_won` bir kez
+  yayılır, kalan aksiyonlar geçersizdir, `end_turn` çalışmaz.
 
 ### 3.4 Tur Bitişi (`end_turn`)
 Sıra: **(1)** düşman AI oynar → **(2)** Erlik yayılımı (`spirit-system.md` §3.6;
 yalnızca yayılım turunda, aksi halde atlanır) → **(3)** ekonomi adımı: oyuncu
 geliri + düşman takviyesi + bakım (`resource-system.md` §3.1) → **(4)**
 `current_turn+=1`, `actions_remaining = actions_per_turn`, bölge üretim sayaçları
-sıfırlanır → **(5)** kazanma/kaybetme kontrolü.
+sıfırlanır → **(5)** oyun sonu kontrolü: önce kaybetme, sonra kazanma (§3.6–3.7).
 
 > **Neden yayılım gelirden önce (C-29, 2026-10-18):** yayılan bozulmanın üretim
 > cezası (`M_c`) o turun gelirine hemen yansır — oyuncu çürümenin bedelini aynı
@@ -72,10 +73,33 @@ sinyal yaymaz. `MapController.end_turn()` intent'leri `ArmyController`/`CombatRe
 - Düşman tur başına en fazla `enemy_actions_per_turn` aksiyon yapar (data-driven,
   `MapState.enemy_actions_per_turn`; her düşman bölgesi en fazla 1 hamle). MVP: 1.
 
-### 3.6 Kazanma / Kaybetme
-- **Kazanma** (`WinCondition.is_met`): `must_defeat_all_enemies` ise düşman bölgesi
-  kalmamalı **ve** ele geçirilen nötr sayısı `required_neutral_conquests`'e ulaşmalı.
+### 3.6 Kazanma / Kaybetme — C-32 kararı (2026-10-18)
+- **Kazanma** (`WinCondition.is_met`) üç koşulun **hepsi** sağlanınca:
+  1. **Siyasi:** `must_defeat_all_enemies` ise hiç `ENEMY` bölgesi kalmamış.
+  2. **Genişleme:** başlangıçta nötr olan ve Erlik odağı olmayan bölgelerden oyuncunun
+     elindekilerin sayısı `required_neutral_conquests`'e ulaşmış (formül §4).
+  3. **Erlik odağı (kapsam kararı, D4):** bölümün `erlik_foci` listesindeki her bölge
+     arındırılmış (`corruption_level == 0`). Odak dışındaki bozulma zaferi engellemez —
+     hedef "bu yönü fethet + Erlik odağını temizle"dir (konsept), bütün bozulmayı
+     silmek değil. Liste boşsa koşul kendiliğinden sağlanır.
 - **Kaybetme**: oyuncunun hiç bölgesi kalmazsa.
+- **Öncelik:** İkisi aynı anda sağlanamaz (kazanma en az bir oyuncu bölgesi ister).
+  Savunmacı kural: bir kontrol noktasında önce kaybetme, sonra kazanma değerlendirilir.
+- **Kontrol noktaları:** (a) her geçerli oyuncu hamlesinden sonra yalnızca kazanma
+  (oyuncu kendi hamlesiyle son bölgesini kaybedemez — kaynakta garnizon kalır);
+  (b) `end_turn` 5. adımında kaybetme → kazanma (gelecekte tur sonunda sahiplik
+  değiştiren sistemler için; bugün tur sonu kazanma üretemez).
+
+### 3.7 Oyun Sonu (C-32)
+- Oyun sonucu state'te tutulur: `MapState.game_result` ∈ {`ONGOING`, `WON`, `LOST`}
+  (ADR-0004: yalnızca veri). Başlangıç `ONGOING`.
+- Sonuç `ONGOING` dışına çıktığında **bir kez** ilgili sinyal yayılır (`game_won` /
+  `game_lost`) ve oyun kilitlenir: `attempt_move` `false` döner, `end_turn` hiçbir adımı
+  çalıştırmaz (AI, yayılım, gelir, tur artışı yok), üretim reddedilir. Bölge seçimi
+  (bilgi paneli) okuma amaçlı serbesttir.
+- Tur ortası zaferde kalan aksiyonlar ve o turun geliri kaybolur — zafer anında sahne
+  biter. Ardından sahne akışı devralır: bekleyen Kök Böri sunumları
+  (`spirit-system.md` §3.4) → outro (`scene-flow.md`, C-35).
 
 ---
 
@@ -87,11 +111,21 @@ geliri). MVP'de bozulma ve lütuf yokken F2, oyuncu bölgelerinin `gold_per_turn
 toplamına eşittir. Örnek (Prolog başlangıcı, sadece Oğuz Otağı, gold_per_turn=2):
 tur geliri = 2.
 
-### Ele geçirilen nötr sayısı (kazanma kontrolü)
+### Kazanma kontrolü (C-32; eski metin W7'deki bire-bir hatayı taşıyordu)
 ```
-conquered_count = oyuncu_bölge_sayısı − 1     # −1: başlangıç bölgesi
-kazandı = (düşman_bölgesi == 0) AND (conquered_count ≥ required_neutral_conquests)
+N = { r : initial_owner(r) == NEUTRAL  ∧  r ∉ erlik_foci }
+conquered_neutral_count = | { r ∈ N : r.owner == PLAYER } |
+siyasi    = (NOT must_defeat_all_enemies) OR (düşman_bölgesi == 0)
+genişleme = conquered_neutral_count ≥ required_neutral_conquests
+odak      = ∀ f ∈ erlik_foci : f.corruption_level == 0
+kazandı   = siyasi AND genişleme AND odak AND (oyuncu_bölgesi ≥ 1)
 ```
+`initial_owner` bölüm tanımından (`ChapterMapDefinition`, içerik) okunur; kayda
+yazılmaz (ADR-0007). Eski formül `oyuncu_bölge_sayısı − 1` başlangıç bölgesi
+kaybedilince eksik, ele geçirilen düşman bölgelerini ve odağı nötr fethi gibi sayıyordu.
+**Örnek (Prolog, C-36 verisiyle):** 4 nötr + Canavarın İni (odak) + Otağ. Oyuncu 3 nötrü
+alıp ini arındırınca `conquered_neutral_count = 3 ≥ 3`, odak temiz, düşman yok → zafer;
+yalnızca 3 nötr alınmış ve in bozuksa zafer yok.
 
 ### Düşman AI hedef seçimi
 ```
@@ -107,8 +141,19 @@ hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
 - **Aksiyon bitti**: hareket reddedilir; oyuncu tur bitirmeli.
 - **Düşman hareket edecek hedef yok** (tüm komşular düşman veya army≤1): o düşman
   atlanır.
-- **Kazanma tur ortasında** (`attempt_move` sonrası): anında `game_won` sinyali.
-- **Kazanma/kaybetme tur sonunda**: `end_turn` sonunda kontrol.
+- **Kazanma tur ortasında** (`attempt_move` sonrası): oyun anında biter (§3.7);
+  `game_won` bir kez, `end_turn` artık çalışmaz — o turun düşman AI'ı, yayılımı ve
+  geliri olmaz.
+- **Kazanma/kaybetme tur sonunda**: `end_turn` 5. adımında önce kaybetme, sonra kazanma.
+- **Oyun bittikten sonra hamle/tur bitirme denemesi**: reddedilir (`false` / no-op),
+  sinyal tekrar yayılmaz.
+- **Başlangıç bölgesi kaybedildi**: sayım `initial_owner`'a dayandığı için etkilenmez;
+  oyuncunun başka bölgesi varsa oyun sürer.
+- **Odak arındırıldı, sonra yayılımla yeniden bozuldu**: odak koşulu kontrol anındaki
+  duruma bakar → yeniden arındırılana kadar zafer yok.
+- **Ele geçirilen düşman bölgesi**: genişleme sayımına girmez (siyasi koşulun parçasıdır).
+- **Ordusu 0 kalan düşman bölgesi** (berabere, çapraz inceleme W3): hâlâ `ENEMY` sayılır
+  ve siyasi koşulu engeller — W3 kararı C-33'te.
 - **Prolog kazanma kriteri**: `required_neutral_conquests = 3` + Canavarın İni
   **arındırılmalı** (C-29: canavar siyasi düşman değil, bozulmuş nötr bölgedir —
   `spirit-system.md` §3.7). Veri/zafer koşulu güncellemesi C-32 / C-49 / C-36.
@@ -141,7 +186,8 @@ hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
 | `actions_per_turn` | ChapterMapDefinition | MVP: 1 |
 | Bölge sayısı / layout | `.tres` (veri-güdümlü) | Prolog: 6 |
 | `required_neutral_conquests` | WinCondition | Prolog: 3 |
-| `must_defeat_all_enemies` | WinCondition | Prolog: true |
+| `must_defeat_all_enemies` | WinCondition | Prolog: true (C-29 sonrası Prolog'da düşman yok → koşul kendiliğinden sağlanır; C-49) |
+| `erlik_foci` | WinCondition | Arındırılması zorunlu Erlik odakları (region_id listesi). Prolog: [Canavarın İni] (C-36) |
 | Bölge `army_count` / `gold_per_turn` | `.tres` | Denge |
 | `enemy_actions_per_turn` | ChapterMapDefinition / MapState | Düşmanın tur başına toplam aksiyonu (data-driven; MVP: 1) |
 | `player_tamga_id` / `enemy_tamga_id` | ChapterMapDefinition → MapState | Sahiplik tamgası (`icon_tamga_<id>.png`, art bible §5/§7). Prolog: `oguz` / `erlik_beast` *(C-29: canavar artık nötr olduğundan `enemy_tamga_id` Prolog'da kullanılmaz; Erlik görseli tamga değil bozulma katmanıdır — C-36'da veri temizlenir)*. Bölgenin tamgası sahibinden türetilir → fetihte değişir; nötr tamgasız |
@@ -160,7 +206,13 @@ hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
 5. Tur geliri `resource-system.md` F2'ye eşittir (bozulma ve lütuf yokken oyuncu
    bölgelerinin `gold_per_turn` toplamı). *(Test)*
 6. Düşman AI en düşük ordulu düşman-olmayan komşuya saldırır. *(Test)*
-7. 3 nötr ele geçirilip düşman yenilince `game_won` tetiklenir. *(Test)*
-8. Oyuncunun bölgesi kalmazsa `game_lost` tetiklenir. *(Test)*
+7. 3 nötr (odak hariç) ele geçirilip düşman kalmayınca ve odaklar temizken, hamleden
+   hemen sonra `game_won` **bir kez** tetiklenir; ardından `end_turn` çağrılsa da AI,
+   yayılım, gelir ve tur artışı çalışmaz. *(Test)*
+8. Oyuncunun bölgesi kalmazsa `game_lost` tetiklenir; sonra `attempt_move` `false` döner. *(Test)*
 9. Seçili bölgenin merkez ekseninde sahibinin tamgası görünür (nötrde yok); fetihten
    sonra tamga yeni sahibinkine geçer. *(Test)*
+10. Başlangıç bölgesi kaybedilmiş, 3 başlangıçta-nötr bölge oyuncudaysa genişleme
+    koşulu sağlanır (eski `−1` formülünün hatası yok). *(Test)*
+11. Odak bölge bozukken diğer koşullar sağlansa da zafer yok; odak arındırılınca o
+    hamlenin sonunda zafer. *(Test — bozulma C-38 ile gelir)*

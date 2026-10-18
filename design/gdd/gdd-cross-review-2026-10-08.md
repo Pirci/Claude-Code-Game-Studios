@@ -81,7 +81,7 @@ both after `attempt_move` and at the end of `end_turn`.
   Perde 1, but the GDD has no MVP subset.
 - **Options:** immediate modal vs end_turn step vs scene end; effects next turn (safest).
 
-🔴 **B7 — Mid-turn win vs end-of-turn check**
+🔴 **B7 — Mid-turn win vs end-of-turn check** — ✅ **RESOLVED 2026-10-18 (C-32):** option (A) — mid-turn win ends the game at once (`MapState.game_result` latch; `end_turn`/moves rejected, signal once); end-of-turn check order lose → win; code fix C-51
 - `region-map-system.md` §3.3: "`attempt_move` sonrası: anında `game_won`"; §3.4 step 4 checks
   at turn end. Code does both. Undefined whether the game ends immediately or `end_turn` can
   still run (duplicate `game_won`, or AI conquering the last player region after a win).
@@ -117,7 +117,7 @@ Army §3.1 `can_move` requires "`owner == PLAYER`", §3.3 hard-codes "`owner = P
 alfabetik ilk"; ADR-0005 "lowest army_count, then region_id alphabetical". Order of spending
 `enemy_actions_per_turn` across enemy regions unspecified. *Quick edit (pick one).*
 
-⚠️ **W7 — Win formula wording** — "ele geçirilen nötr sayısı" / AC7 "3 nötr ele geçirilip", but
+⚠️ **W7 — Win formula wording** — ✅ C-32: `conquered_neutral_count` over initially-neutral, non-focus regions (`initial_owner` from chapter data) — "ele geçirilen nötr sayısı" / AC7 "3 nötr ele geçirilip", but
 `conquered_count = oyuncu_bölge_sayısı − 1` counts all owned regions (incl. the lair); off by one
 if the start region is lost.
 
@@ -163,7 +163,7 @@ attacker losses.
 a 12-turn scene) → < 10 % income impact; "İki Katmanlı Tehdit" not load-bearing early. Options:
 start with 1–2 corrupted regions, interval 2, or require purification for the win (ties to B2).
 
-⚠️ **D4 — Win condition scope** — political only vs political + spiritual (no corrupted regions)
+⚠️ **D4 — Win condition scope** — ✅ C-32: political + expansion + designated Erlik foci purified (`erlik_foci`); other corruption does not block — political only vs political + spiritual (no corrupted regions)
 is not stated anywhere; affects thematic closure (winning with visible corruption).
 
 ⚠️ **D5 — Boon cost curve** — ✅ addressed C-31: linear kept, target 6–8 boons by final (~600–800 Ruh); verify in C-44 — `boon_cost(n) = 30 + n × 20` → 3 600 Ruh for 18 boons; either

@@ -107,3 +107,10 @@
 - D5: doğrusal eğri korunur, hedef finalde 6–8 lütuf. W11: ödül seviyeyle artar, konsept metni düzeltildi.
 - Güncellenen: spirit §3.4/3.5/3.6/3.7/3.8(yeni)/4/5/7/8, combat §3/§4/§6/AC7–8, resource F2 notu + açık soru #1, region-map §3.1, game-concept, cross-review B6/W9/W10/W11/D5, ADR-0007 örneği, registry +1 (bereket_gold_bonus), TR-spirit-008.
 - NEXT: C-32 (tur ortası kazanma, B7 + W7, D4).
+
+## Session Extract — C-32 kazanma/kaybetme (2026-10-18, gece modu)
+- Kararlar (önerilen): B7 seçenek A — tur ortası zafer oyunu anında bitirir; `MapState.game_result` (ONGOING/WON/LOST) kilidi, sinyal bir kez, sonra hamle/tur bitirme/üretim reddedilir. Tur sonu kontrolü: kaybetme → kazanma.
+- D4: kazanma = siyasi (düşman yok) + genişleme (başlangıçta nötr, odak hariç `conquered_neutral_count` ≥ gerekli) + `erlik_foci` arındırılmış; odak dışı bozulma engellemez. W7: eski `oyuncu_bölge − 1` sayımı kalktı (`initial_owner` bölüm verisinden).
+- Güncellenen: region-map §3.3/§3.4/§3.6/§3.7(yeni)/§4/§5/§7/AC7–11, spirit §3.7, cross-review B7/W7/D4, TR-map-006, ADR-0007 notu (game_result kaydedilmez).
+- Kod uyuşmuyor → yeni görev C-51 (game_result kilidi + sayım + erlik_foci + testler).
+- NEXT: C-33 (GDD düzeltmeleri W1–W6 + bilgi notları).

@@ -5,9 +5,9 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-18
-- **Son commit:** `ae8abdd` (C-31: lütuf zamanlaması)
+- **Son commit:** `__H__` (C-32: kazanma/kaybetme)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-32)
+- **Aktif görev:** — (yok; sıradaki: C-33)
 
 ---
 
@@ -90,6 +90,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 
 | Görev | Karar | Reddedilen alternatifler | Geri alma maliyeti |
 | --- | --- | --- | --- |
+| C-32 | Tur ortası zafer oyunu anında bitirir (`game_result` kilidi; seçenek A); kontrol sırası kaybetme → kazanma; kazanma = siyasi + nötr genişleme (başlangıçta nötr, odak hariç) + `erlik_foci` arındırılmış; odak dışı bozulma engellemez | B: bayrak + atla; C: yalnızca tur sonu kontrol; kazanma için tüm bozulmanın temizlenmesi; eski `−1` sayımı | Düşük — GDD; kod C-51 |
 | C-31 | Lütuf sunumu tur başında (en fazla 1) veya sahne zaferinde (zorunlu); erteleme aynı 3 lütfu korur; etki seçildiği an; Bereket/Kurt Gücü/Demir Post düz +1; Gök Kalkanı +1 tur, 3 yığın sınırı, sayaçlı yayılım; Sürü/Yiğit Ruhu kilitli; M1 havuzu Arınma Ustalığı + Bereket + Gök Kalkanı; doğrusal maliyet eğrisi korunur (hedef finalde 6–8 lütuf) | Anında modal (tur ortası); yalnızca sahne sonu; yüzde bonuslar; Gök Kalkanı bölme formülü + üst sınır; üstel maliyet eğrisi | Düşük — yalnızca GDD/ADR örneği (kod C-39 / M2) |
 | C-30 | Arındırma = ordu varışının 2. dalı (ayrı eylem değil); fetih bozulmayı korur (B5-A); başarısız arındırmada gelen kuvvetin tamamı kaybolur; düşman AI bozulmayı yok sayar | Ayrı "Arındır" eylemi; fetih otomatik arındırır (B5-B); bozuk bölgeye saldırmadan önce arındırma şartı (B5-C); başarısızlıkta Dal 3 kalanı geri döner | Düşük — yalnızca GDD (kod C-38'de) |
 
@@ -128,11 +129,12 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-29 | [x] `e0eae22` | **Karar + GDD:** Erlik modeli (bozulma katmanı mı, sahip türü mü — Prolog canavarı dahil), yayılım/bozulmanın sahibi GDD (spirit / corruption-purification / enemy-layers) ve tur sonundaki yeri → region-map §3.4 + AC4 + TR-map-003 güncellenir; Prolog'da Erlik baskısı (D3) | `design/gdd/gdd-cross-review-2026-10-08.md` B2, B4 | C-13 | Tek sahip GDD; tur sonu sırası tüm GDD/TR/ADR'de aynı |
 | C-30 | [x] `f8e3737` | **GDD:** arındırma eylemi (varış dalı mı ayrı eylem mi, aksiyon maliyeti, birliklerin yerleşmesi, sahipli+bozuk hedef) + fetihte bozulmanın akıbeti | `design/gdd/gdd-cross-review-2026-10-08.md` B3, B5 | C-29 | army §3.3 / spirit §3.2 tanımlı, kabul kriterli |
 | C-31 | [x] `ae8abdd` | **GDD:** lütuf sunma zamanı, erteleme, etkinin başlangıcı, MVP alt kümesi; olmayan sistemlere dayanan lütuflar, Gök Kalkanı yığılması, Ruh ölçekleme yönü, maliyet eğrisi (W9–W11, D5) | `design/gdd/gdd-cross-review-2026-10-08.md` B6 | C-29 | spirit §3.4/§4/§7 güncel, sıfıra bölme yok |
-| C-32 | [ ] | **GDD:** tur ortası kazanma davranışı, kazanma/kaybetme önceliği, kazanma kapsamı (siyasi / + Erlik) ve formül metni (W7, D4) | `design/gdd/gdd-cross-review-2026-10-08.md` B7 | C-29 | region-map §3.3/§3.4/§3.6 tutarlı; kod davranışıyla eşleşiyor veya düzeltme görevi açıldı |
+| C-32 | [x] `__H__` | **GDD:** tur ortası kazanma davranışı, kazanma/kaybetme önceliği, kazanma kapsamı (siyasi / + Erlik) ve formül metni (W7, D4) | `design/gdd/gdd-cross-review-2026-10-08.md` B7 | C-29 | region-map §3.3/§3.4/§3.6 tutarlı; kod davranışıyla eşleşiyor veya düzeltme görevi açıldı |
 | C-33 | [ ] | GDD düzeltmeleri: W1–W6 + bilgi notları (örnek hesap, berabere/hayatta kalanlar, 0 ordu, `draw_favors_defender`, §3.5 "planlı", eşitlik bozma, indeks/konsept notları, bağımlılık asimetrisi). W8 (gelir sahibi C-28, seviye 3 → K1) ve W12 (bozulma görseli → K2) kapandı | `design/gdd/gdd-cross-review-2026-10-08.md` uyarılar | C-28 | Her uyarı kapandı veya gerekçeyle kaldı |
 | C-34 | [ ] | `/review-all-gdds` yeniden → PASS veya CONCERNS | C-13 FAIL | C-28, C-29, C-30, C-31, C-32, C-33 | Yeni rapor; engelleyici yok |
 | C-49 | [ ] | **Prolog Erlik modeli etki takibi:** Canavarın İni nötr + bozulma 3 olunca Prolog'da `ENEMY` bölgesi kalmıyor → düşman AI/takviye (F6) boşta, `game_lost` tetiklenemez; resource-system §4 Prolog kazanılabilirlik hesabı (canavar eşiği 12 direnç vs eski A≥7) ve `ERLIK_SPREAD_INTERVAL=3` `/balance-check` ile yeniden doğrulanır; Prolog'da siyasi düşman/kayıp koşulu var mı kararı (kullanıcı) | C-29 sırasında keşfedildi | C-29, C-32 | Karar kaydı + güncel Prolog sayıları GDD'de + balance raporu |
 | C-50 | [ ] | **Art bible + UI spec:** bozulma seviyesi görseli (seviye 1–3: Erlik Moru + Kömürü dither yoğunluğu / leke boyutu, sahiplik rengini gizlemeden) art bible §4'e; bölge bilgi panelinde bozulma seviyesi + Erlik direnci satırının yerleşimi | C-30 sırasında keşfedildi (spirit §3.1/§3.2, AC10/AC14) | C-30 | Art bible'da seviye görsel kuralı (palet doğrulayıcıyla uyumlu); bilgi paneli satırı tanımlı |
+| C-51 | [ ] | **Kod düzeltmesi (C-32):** `MapState.game_result` kilidi (tur ortası zaferde `attempt_move`/`end_turn`/üretim reddedilir, `game_won`/`game_lost` bir kez), kontrol sırası kaybetme → kazanma, `WinCondition`: `conquered_neutral_count` (`initial_owner`, odak hariç) + `erlik_foci` alanı (bozulma C-38 ile etkinleşir) + testler | C-32 sırasında keşfedildi: `map_controller.gd` iki noktada kontrol ediyor, kazanma önce; `win_condition.gd` `oyuncu_bölge − 1` sayıyor | C-32 | region-map AC7, AC8, AC10 testleri yeşil (AC11 C-38'de) |
 | C-35 | [ ] | **M1 · GDD:** `scene-flow.md` — sahne intro/outro anlatı ekranları, Kök Böri "genesis" sahnesi, Prolog kazanma → Kağan ilanı, bölüm unlock (`/design-system`) | Konsept MVP #5; M1 | C-32 | 8 zorunlu bölüm + indeks satırı; `/design-review` geçer |
 | C-36 | [ ] | **M1 · Harita:** Ötüken haritası → Oğuz ata yurdu (6 bölge, dağınık boylar + Erlik canavarı yerleşimi), data-driven `ChapterMapDefinition` + 11 dil bölge adları | Konsept "Sonraki Adımlar"; M1 | C-29, C-34, C-49 | Harita verisi + testler + ekran görüntüsü |
 | C-37 | [ ] | **M1 · Kod:** ordu üretimi + altın harcama (`resource-system.md` uygulaması) — UI butonu, maliyet/limit, düşman üretimi | C-28; M1 | C-18 | GDD kabul kriterleri birim testlerinde; ekran görüntüsü |
@@ -187,3 +189,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-18 | C-29: Erlik modeli = bozulma katmanı (canavar = bozuk nötr bölge, ERLIK sahip türü yok); sahip spirit-system; `end_turn`: AI → Erlik yayılımı → gelir → tur+1 → kontrol; Prolog: Canavarın İni seviye 3 + aralık 3; B2/B4/D3 kapandı; yeni görev C-49 | `e0eae22` |
 | 2026-10-18 | C-30: arındırma = ordu varışının 2. dalı (yabancı garnizon yok + bozuk → `CombatResolver(P, corruption_strength)`, 1 aksiyon, başarısızlıkta kuvvet kaybolur, düşman arındıramaz); fetih bozulmayı korur (B5-A); B3/B5 kapandı; registry +2; yeni görev C-50 *(gece modu: önerilen seçenek)* | `f8e3737` |
 | 2026-10-18 | C-31: lütuf sunumu tur başı / sahne zaferi, erteleme, etki seçildiği an, türetilmiş durum (TR-spirit-008); katalog `stat_id` + `requires` + yığılma sınırı; Bereket/Kurt Gücü/Demir Post düz +1, savaş "Etkin güç" (M2); Gök Kalkanı `I + min(k,3)`; MVP alt kümesi §3.8; B6/W9/W10/W11/D5 kapandı; resource açık soru #1 çözüldü *(gece modu: önerilen seçenek)* | `ae8abdd` |
+| 2026-10-18 | C-32: tur ortası zafer oyunu anında bitirir (`MapState.game_result` kilidi), tur sonu kontrolü kaybetme → kazanma, kazanma kapsamı siyasi + genişleme + `erlik_foci` (D4), `conquered_neutral_count` (W7); B7/W7/D4 kapandı; TR-map-006 revised; kod düzeltmesi C-51 açıldı *(gece modu: önerilen seçenek)* | `__H__` |
