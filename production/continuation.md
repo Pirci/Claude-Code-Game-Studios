@@ -5,7 +5,7 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-18
-- **Son commit:** `__H__` (C-31: lütuf zamanlaması)
+- **Son commit:** `ae8abdd` (C-31: lütuf zamanlaması)
 - **Proje evresi:** Concept (`production/stage.txt`)
 - **Aktif görev:** — (yok; sıradaki: C-32)
 
@@ -127,7 +127,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-28 | [x] `1468973` | **Karar + GDD:** ordu üretimi (maliyet, formül, sahibi) — `resource-system.md` yazılır veya `army-system.md`'ye eklenir; kartopu/bakım (D1, D2) burada değerlendirilir | `design/gdd/gdd-cross-review-2026-10-08.md` B1 | C-13 | GDD'de üretim formülü + ayar aralığı; Prolog kazanılabilirliği hesapla gösterilir |
 | C-29 | [x] `e0eae22` | **Karar + GDD:** Erlik modeli (bozulma katmanı mı, sahip türü mü — Prolog canavarı dahil), yayılım/bozulmanın sahibi GDD (spirit / corruption-purification / enemy-layers) ve tur sonundaki yeri → region-map §3.4 + AC4 + TR-map-003 güncellenir; Prolog'da Erlik baskısı (D3) | `design/gdd/gdd-cross-review-2026-10-08.md` B2, B4 | C-13 | Tek sahip GDD; tur sonu sırası tüm GDD/TR/ADR'de aynı |
 | C-30 | [x] `f8e3737` | **GDD:** arındırma eylemi (varış dalı mı ayrı eylem mi, aksiyon maliyeti, birliklerin yerleşmesi, sahipli+bozuk hedef) + fetihte bozulmanın akıbeti | `design/gdd/gdd-cross-review-2026-10-08.md` B3, B5 | C-29 | army §3.3 / spirit §3.2 tanımlı, kabul kriterli |
-| C-31 | [x] `__H__` | **GDD:** lütuf sunma zamanı, erteleme, etkinin başlangıcı, MVP alt kümesi; olmayan sistemlere dayanan lütuflar, Gök Kalkanı yığılması, Ruh ölçekleme yönü, maliyet eğrisi (W9–W11, D5) | `design/gdd/gdd-cross-review-2026-10-08.md` B6 | C-29 | spirit §3.4/§4/§7 güncel, sıfıra bölme yok |
+| C-31 | [x] `ae8abdd` | **GDD:** lütuf sunma zamanı, erteleme, etkinin başlangıcı, MVP alt kümesi; olmayan sistemlere dayanan lütuflar, Gök Kalkanı yığılması, Ruh ölçekleme yönü, maliyet eğrisi (W9–W11, D5) | `design/gdd/gdd-cross-review-2026-10-08.md` B6 | C-29 | spirit §3.4/§4/§7 güncel, sıfıra bölme yok |
 | C-32 | [ ] | **GDD:** tur ortası kazanma davranışı, kazanma/kaybetme önceliği, kazanma kapsamı (siyasi / + Erlik) ve formül metni (W7, D4) | `design/gdd/gdd-cross-review-2026-10-08.md` B7 | C-29 | region-map §3.3/§3.4/§3.6 tutarlı; kod davranışıyla eşleşiyor veya düzeltme görevi açıldı |
 | C-33 | [ ] | GDD düzeltmeleri: W1–W6 + bilgi notları (örnek hesap, berabere/hayatta kalanlar, 0 ordu, `draw_favors_defender`, §3.5 "planlı", eşitlik bozma, indeks/konsept notları, bağımlılık asimetrisi). W8 (gelir sahibi C-28, seviye 3 → K1) ve W12 (bozulma görseli → K2) kapandı | `design/gdd/gdd-cross-review-2026-10-08.md` uyarılar | C-28 | Her uyarı kapandı veya gerekçeyle kaldı |
 | C-34 | [ ] | `/review-all-gdds` yeniden → PASS veya CONCERNS | C-13 FAIL | C-28, C-29, C-30, C-31, C-32, C-33 | Yeni rapor; engelleyici yok |
@@ -186,4 +186,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-18 | C-16: ADR-0007 Save/Load Persistence (versiyonlu JSON, saf SaveSerializer, atomik .bak rotasyonu, tur sonu otomatik kayıt); ADR-0004 göç planı kısmen supersede; registry +3 durus; TR-concept-002 kapandı; resource-system açık soru #6 çözüldü | `bf4f2ff` |
 | 2026-10-18 | C-29: Erlik modeli = bozulma katmanı (canavar = bozuk nötr bölge, ERLIK sahip türü yok); sahip spirit-system; `end_turn`: AI → Erlik yayılımı → gelir → tur+1 → kontrol; Prolog: Canavarın İni seviye 3 + aralık 3; B2/B4/D3 kapandı; yeni görev C-49 | `e0eae22` |
 | 2026-10-18 | C-30: arındırma = ordu varışının 2. dalı (yabancı garnizon yok + bozuk → `CombatResolver(P, corruption_strength)`, 1 aksiyon, başarısızlıkta kuvvet kaybolur, düşman arındıramaz); fetih bozulmayı korur (B5-A); B3/B5 kapandı; registry +2; yeni görev C-50 *(gece modu: önerilen seçenek)* | `f8e3737` |
-| 2026-10-18 | C-31: lütuf sunumu tur başı / sahne zaferi, erteleme, etki seçildiği an, türetilmiş durum (TR-spirit-008); katalog `stat_id` + `requires` + yığılma sınırı; Bereket/Kurt Gücü/Demir Post düz +1, savaş "Etkin güç" (M2); Gök Kalkanı `I + min(k,3)`; MVP alt kümesi §3.8; B6/W9/W10/W11/D5 kapandı; resource açık soru #1 çözüldü *(gece modu: önerilen seçenek)* | `__H__` |
+| 2026-10-18 | C-31: lütuf sunumu tur başı / sahne zaferi, erteleme, etki seçildiği an, türetilmiş durum (TR-spirit-008); katalog `stat_id` + `requires` + yığılma sınırı; Bereket/Kurt Gücü/Demir Post düz +1, savaş "Etkin güç" (M2); Gök Kalkanı `I + min(k,3)`; MVP alt kümesi §3.8; B6/W9/W10/W11/D5 kapandı; resource açık soru #1 çözüldü *(gece modu: önerilen seçenek)* | `ae8abdd` |
