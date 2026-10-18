@@ -53,6 +53,7 @@ state_ownership:
     referenced_by:
       - docs/architecture/adr-0001-context-based-hierarchical-architecture.md
       - docs/architecture/adr-0004-state-segregation.md   # defines the data-only shape of this state
+      - docs/architecture/adr-0007-save-load-persistence.md   # serialized by SaveSerializer
     added: 2026-08-13
     revised: ""
 
@@ -65,6 +66,17 @@ state_ownership:
     referenced_by:
       - docs/architecture/adr-0006-additive-modifier-stat-pipeline.md
       - docs/architecture/adr-0004-state-segregation.md   # data-only shape
+    added: 2026-10-18
+    revised: ""
+
+  - state: save_files
+    status: active
+    owner_system: save-system
+    adr: docs/architecture/adr-0007-save-load-persistence.md
+    interface: "user://saves/campaign.json (+ .bak/.tmp) and user://settings.json; versioned JSON (schema_version). Read/written only through SaveController -> SaveStore."
+    write_access: save-controller-only   # SaveStore is the sole file writer
+    referenced_by:
+      - docs/architecture/adr-0007-save-load-persistence.md
     added: 2026-10-18
     revised: ""
 
@@ -134,6 +146,21 @@ interfaces:
     signal_signature: "StatResolver.resolve(stat_id: StringName, base: float, modifiers: Array[StatModifier]) -> float  = (base + flat_sum) * (1 + percent_sum); caller rounds. ModifierController.modifiers_changed(stat_id: StringName) signals refresh."
     referenced_by:
       - docs/architecture/adr-0006-additive-modifier-stat-pipeline.md
+    added: 2026-10-18
+    revised: ""
+
+  - contract: save_load
+    status: active
+    pattern: direct_call     # SaveSerializer is pure; SaveController orchestrates; failures signal up
+    producer: save-system (SaveSerializer, SaveStore, SaveController)
+    consumers:
+      - game-context         # autosave after turn_ended
+      - menu-context         # Continue
+      - root-context         # settings load at startup
+    adr: docs/architecture/adr-0007-save-load-persistence.md
+    signal_signature: "SaveSerializer.to_dict(game_state: GameState) -> Dictionary; SaveSerializer.from_dict(data: Dictionary, map_factory: Callable) -> LoadResult; SaveController.save_failed(reason: StringName); SaveController.loaded(game_state: GameState)"
+    referenced_by:
+      - docs/architecture/adr-0007-save-load-persistence.md
     added: 2026-10-18
     revised: ""
 
@@ -324,4 +351,14 @@ forbidden_patterns:
     why: "Prevents double-counting (TR-spirit-006) and keeps one auditable answer to
       'what affects this stat'."
     adr: docs/architecture/adr-0006-additive-modifier-stat-pipeline.md
+    added: 2026-10-18
+
+  - pattern: untrusted_resource_loading
+    status: active
+    description: "Never load user-controlled files (user:// saves, settings, mods) with load(),
+      ResourceLoader, str_to_var, bytes_to_var or get_var(true). Parse versioned JSON via
+      JSON.new().parse() and validate before use."
+    why: ".tres/.res and object-enabled variant decoding can instantiate embedded scripts,
+      i.e. code execution from a data file."
+    adr: docs/architecture/adr-0007-save-load-persistence.md
     added: 2026-10-18

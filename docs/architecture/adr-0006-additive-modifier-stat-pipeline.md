@@ -26,7 +26,7 @@ Proposed
 | **Depends On** | ADR-0003 (dependency injection — resolver is injected), ADR-0004 (state segregation — modifier list is data-only state) |
 | **Enables** | Spirit/boon implementation (TR-spirit-006), council-system GDD, resource-system F2 (`B_add`/`M_g`) wiring (C-37), `CombatResolver` stat inputs |
 | **Blocks** | Spirit (boons) and council implementation stories |
-| **Ordering Note** | Save/Load ADR (C-16) serializes `GameState.modifiers`; keep `StatModifier` a plain field-only class so its `RefCounted → Resource` migration is mechanical (`ModifierSource` is a `Resource` from the start) |
+| **Ordering Note** | Save/Load ADR (C-16) serializes `GameState.modifiers`; keep `StatModifier` a plain field-only class; ADR-0007 serializes it as JSON via `SaveSerializer` (it stays `RefCounted`; `ModifierSource` is content, a `Resource`, never saved) |
 
 ## Context
 
@@ -185,7 +185,7 @@ func remove_source(source_id: StringName) -> void
 - Double-counting is prevented by the `(source_id, stat_id, kind)` uniqueness invariant plus `exclusive_group`.
 - Single audit point: filtering `GameState.modifiers` by stat explains every bonus (UI tooltip, debug).
 - Pure resolver → trivially unit-testable; matches resource F2 and spirit stacking text exactly.
-- Data-only list serializes cleanly with the save/load migration (`StatModifier` becomes `Resource`; `ModifierSource` already is).
+- Data-only list serializes cleanly with the save/load migration (ADR-0007: `StatModifier` is serialized to JSON by `SaveSerializer`; sources are content and not saved).
 
 ### Negative
 

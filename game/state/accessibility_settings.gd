@@ -3,7 +3,7 @@ extends RefCounted
 ## Erişilebilirlik tercihleri (art bible §7 "Erişilebilirlik Ayarları"). Mantık yok, sadece veri.
 ##
 ## RootContext oturum boyunca tek örnek tutar; ayarlar ekranı yazar, oyun bağlamı okur.
-## Kalıcılık henüz yok (diğer ayarlar gibi) — Save/Load ADR'ı (C-16) ile gelecek.
+## Kalıcılık henüz yok (diğer ayarlar gibi) — ADR-0007 (`user://settings.json`, SaveSerializer) ile gelecek.
 
 
 ## Tamgalar her bölgede görünür + sahipli bölgelere ek 1px iç kontur.

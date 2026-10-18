@@ -7,7 +7,7 @@
 - **Son güncelleme:** 2026-10-18
 - **Son commit:** `62de438` (C-15: ADR-0006)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-16)
+- **Aktif görev:** — (yok; sıradaki: C-17 → bağımlılığı C-34 bitmediği için önce C-29…C-33 zinciri; ilk başlanabilir: C-29)
 
 ---
 
@@ -101,7 +101,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-13 | [x] `b571487` | `/review-all-gdds` | Technical Setup gate | — | Rapor dosyası |
 | C-14 | [x] `5ba890b` | `/consistency-check` (GDD'ler ↔ art bible ↔ entity registry) | Tutarlılık | C-13 | Rapor |
 | C-15 | [x] `62de438` | ADR: Additive Modifier / Stat Pipeline (`/architecture-decision`) | Arch. review 2026-08-13 | — | ADR dosyası |
-| C-16 | [~] (2026-10-18) | ADR: Save/Load Persistence (`/architecture-decision`) | Arch. review 2026-08-13 | — | ADR dosyası |
+| C-16 | [x] `__H__` | ADR: Save/Load Persistence (`/architecture-decision`) | Arch. review 2026-08-13 | — | ADR dosyası |
 | C-17 | [ ] | `/architecture-review` yeniden → ADR'leri Accepted yap | Arch. review | C-15, C-16, K-02, C-34 | Rapor + ADR durumları |
 | C-18 | [ ] | `/create-architecture` | Technical Setup | C-17 | Mimari doküman |
 | C-19 | [ ] | ADR-0005 uygulaması: `game/features/ai/` altında `EnemyAIController` + `ErlikSpreadController` (saf `decide()`), `MapController` intent'leri uygular; `_run_enemy_ai()` taşınır | ADR-0005 (K-02 sırasında keşfedildi) | C-17 | Davranış aynı kalır; mevcut testler yeşil + `decide()` için izole testler |
@@ -170,3 +170,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-08 | C-14: `/consistency-check` → 2 çakışma (K2 düzeltildi, K1 açık → C-33/C-31); registry +3 sabit; rapor `docs/consistency-report-2026-10-08.md` | `5ba890b` |
 | 2026-10-08 | K1 (C-14 çakışması): bozulma üretimi seviye tablosu `[1.0, 0.75, 0.5, 0.0]` — kullanıcı kararı; W8/W12 kapandı | `18df1d4` |
 | 2026-10-18 | C-15: ADR-0006 Additive Modifier / Stat Pipeline (kaynak anahtarlı `StatModifier`, saf `StatResolver`, `exclusive_group`); registry +3 durus; TR-spirit-006 kapandı | `62de438` |
+| 2026-10-18 | C-16: ADR-0007 Save/Load Persistence (versiyonlu JSON, saf SaveSerializer, atomik .bak rotasyonu, tur sonu otomatik kayıt); ADR-0004 göç planı kısmen supersede; registry +3 durus; TR-concept-002 kapandı; resource-system açık soru #6 çözüldü | `__H__` |

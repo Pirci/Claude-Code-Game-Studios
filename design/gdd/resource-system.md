@@ -306,7 +306,7 @@ inde 2, Doğu Obası'nda 4 ordu oluyor.
 | Harita / Tur Akışı — düşman tarafı | **Sert** | Düşman takviyesi (F6) ekonomi adımında uygulanır. |
 | Kök Böri / Ruh (`spirit-system.md`) | Yumuşak | Bereket ve Sürü Kutsaması lütuflarının etkisi bu sistemin gelir formülünden (F2) geçer. |
 | HUD / Bilgi paneli | Sert | Altın, tahmini gelir, Ordu Topla kontrolü (§10). |
-| Kayıt / Yükleme (C-16, ADR yazılacak) | Sert | Sahne ortasında kayıt alınırsa `gold` ve bölge üretim sayaçları saklanmalı. |
+| Kayıt / Yükleme (ADR-0007) | Sert | Tur sonu otomatik kayıt: `gold` ve bölge üretim sayaçları tur sonunda saklanır; tur ortası kayıt yok. |
 | Katmanlı Düşman (`enemy-layers.md`, yazılmadı) | Gelecek | Düşman takviyesini devralacak (geçici sözleşme). |
 
 ### Diğer GDD'lerde gereken karşı güncellemeler
@@ -500,5 +500,5 @@ Tamamı art bible'a bağlıdır.
 | 3 | Sürü ne zaman etkinleşir ve neyi besler/tüketir? Konsept "nüfus ve ordu büyümesi" diyor. | game-designer | Perde 1 tasarımı |
 | 4 | Katmanlı Düşman GDD'si takviyeyi devraldığında düşman ekonomisi simetrik mi olacak? | game-designer | `enemy-layers.md` |
 | 5 | Toparlanma mekanizması ve bakım gideri (çapraz inceleme D1/D2): `I_floor` ve `U` açılsın mı? | Kullanıcı | İlk Prolog playtesti |
-| 6 | Sahne ortası kayıtta altın ve üretim sayaçları nasıl saklanacak? | technical-director | C-16 (Save/Load ADR) |
+| 6 | ~~Sahne ortası kayıtta altın ve üretim sayaçları nasıl saklanacak?~~ **Çözüldü (ADR-0007, 2026-10-18):** yalnızca tur sonu otomatik kayıt; altın ve üretim sayaçları tur sonunda oturmuş haliyle JSON'a yazılır, tur ortası kayıt yok. | technical-director | C-16 ✅ |
 | 7 | Kusursuz oyunla 4 turda zafer öğretici için fazla hızlı mı? Hedef: tipik oyuncu 10–18 tur. | Kullanıcı | İlk Prolog playtesti |

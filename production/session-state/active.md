@@ -79,3 +79,9 @@
 - Godot uzmanı: ModifierController RefCounted, typed-array değişmezliği notu, ModifierSource = Resource.
 - Registry +3 (state `modifiers`, interface `stat_resolution`, forbidden `unkeyed_or_duplicate_bonus_summation`); traceability TR-spirit-006 ✅.
 - NEXT: C-16 (Save/Load ADR). Not: spirit GDD'deki `bozkurt_bonuses` → `modifiers` göçü uygulamada (C-39).
+
+## Session Extract — C-16 ADR-0007 (2026-10-18)
+- ADR-0007 Save/Load Persistence (Proposed). Kullanıcı kararları: versiyonlu JSON + saf SaveSerializer (state RefCounted kalır; ADR-0004 göç planı kısmen supersede); tur sonu otomatik kayıt, tek slot.
+- Godot uzmanı: .bak rotasyonu (rename-overwrite'a güvenme), kapat→rename sırası, LoadResult (static last_error yok), @abstract SaveStore, enum adı Error değil.
+- Registry +3 (save_files, save_load, untrusted_resource_loading); ADR-0004/0006 notları; resource-system #6 çözüldü; TR-concept-002 ✅.
+- NEXT: C-17 `/architecture-review` — AYNI OTURUMDA ÇALIŞTIRMA, taze oturum gerekir (bağımlılıklar: C-15 ✅, C-16 ✅, K-02 ✅, C-34 ❌ — C-34 bitmeden C-17 başlayamaz; sıradaki başlanabilir görev C-29).

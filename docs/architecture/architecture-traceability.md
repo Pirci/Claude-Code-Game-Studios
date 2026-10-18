@@ -33,7 +33,7 @@
 | TR-spirit-006 | spirit-system | Kök Böri / Ruh | Shared additive modifier pipeline (boons + council) | ADR-0006 | ✅ |
 | TR-spirit-007 | spirit-system | Kök Böri / Ruh | Corruption visual state (color by level) | — | ❌ |
 | TR-concept-001 | game-concept | Sahne Akışı | Menu → campaign → scene flow with progress | ADR-0001 | ✅ |
-| TR-concept-002 | game-concept | Kampanya İlerlemesi | Progress persists between sessions (save/load) | ADR-0004 | ⚠️ |
+| TR-concept-002 | game-concept | Kampanya İlerlemesi | Progress persists between sessions (save/load) | ADR-0007 | ✅ |
 | TR-concept-003 | game-concept | Kaynak Yönetimi | 3 data-driven resources, extensible | ADR-0002 | ⚠️ |
 | TR-concept-004 | game-concept | Kök Böri / Ruh | Boons accumulate across scenes within a run | ADR-0001 / ADR-0004 | ✅ |
 | TR-concept-005 | game-concept | Modüler Genişleme | Grand-strategy expansion without core rewrite | ADR-0001 / ADR-0002 | ✅ |

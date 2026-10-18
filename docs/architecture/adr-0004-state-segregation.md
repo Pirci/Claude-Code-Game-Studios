@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Proposed — **partially superseded by ADR-0007 (2026-10-18)**: the `RefCounted → Resource` save/load migration (Decision bullet 4, Alternative 2 deferral, Migration Plan) is replaced by a JSON `SaveSerializer`; state classes stay `RefCounted`. The data-only segregation rule is unchanged.
 
 ## Date
 

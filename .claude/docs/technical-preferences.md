@@ -76,6 +76,7 @@
 - **ADR-0004** (Proposed): State segregation — game state objeleri sadece veri tutar, mantık controller'larda. → [adr-0004](../../docs/architecture/adr-0004-state-segregation.md)
 - **ADR-0005** (Proposed): AI mimarisi — saf `decide()` servisleri, MapController uygular. → [adr-0005](../../docs/architecture/adr-0005-ai-architecture.md)
 - **ADR-0006** (Proposed): Additive modifier / stat pipeline — kaynak anahtarlı `StatModifier` + saf `StatResolver`, çift sayım yok. → [adr-0006](../../docs/architecture/adr-0006-additive-modifier-stat-pipeline.md)
+- **ADR-0007** (Proposed): Save/load — versiyonlu JSON + saf `SaveSerializer`, atomik `.bak` rotasyonu, tur sonu otomatik kayıt; ADR-0004 göç planını kısmen supersede eder. → [adr-0007](../../docs/architecture/adr-0007-save-load-persistence.md)
 
 > Tümü `/architecture-decision` ile geriye dönük yazıldı (as-built). Taze bir oturumda `/architecture-review` çalıştırıp doğruladıktan sonra Status → Accepted yapılabilir.
 
