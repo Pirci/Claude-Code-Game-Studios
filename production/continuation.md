@@ -7,7 +7,7 @@
 - **Son güncelleme:** 2026-10-18
 - **Son commit:** `1390df2` (C-33: GDD düzeltmeleri)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-34)
+- **Aktif görev:** C-34 (`/review-all-gdds` yeniden)
 
 ---
 
@@ -132,7 +132,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-31 | [x] `ae8abdd` | **GDD:** lütuf sunma zamanı, erteleme, etkinin başlangıcı, MVP alt kümesi; olmayan sistemlere dayanan lütuflar, Gök Kalkanı yığılması, Ruh ölçekleme yönü, maliyet eğrisi (W9–W11, D5) | `design/gdd/gdd-cross-review-2026-10-08.md` B6 | C-29 | spirit §3.4/§4/§7 güncel, sıfıra bölme yok |
 | C-32 | [x] `b48e788` | **GDD:** tur ortası kazanma davranışı, kazanma/kaybetme önceliği, kazanma kapsamı (siyasi / + Erlik) ve formül metni (W7, D4) | `design/gdd/gdd-cross-review-2026-10-08.md` B7 | C-29 | region-map §3.3/§3.4/§3.6 tutarlı; kod davranışıyla eşleşiyor veya düzeltme görevi açıldı |
 | C-33 | [x] `1390df2` | GDD düzeltmeleri: W1–W6 + bilgi notları (örnek hesap, berabere/hayatta kalanlar, 0 ordu, `draw_favors_defender`, §3.5 "planlı", eşitlik bozma, indeks/konsept notları, bağımlılık asimetrisi). W8 (gelir sahibi C-28, seviye 3 → K1) ve W12 (bozulma görseli → K2) kapandı | `design/gdd/gdd-cross-review-2026-10-08.md` uyarılar | C-28 | Her uyarı kapandı veya gerekçeyle kaldı |
-| C-34 | [ ] | `/review-all-gdds` yeniden → PASS veya CONCERNS | C-13 FAIL | C-28, C-29, C-30, C-31, C-32, C-33 | Yeni rapor; engelleyici yok |
+| C-34 | [~] (2026-10-18) | `/review-all-gdds` yeniden → PASS veya CONCERNS | C-13 FAIL | C-28, C-29, C-30, C-31, C-32, C-33 | Yeni rapor; engelleyici yok |
 | C-49 | [ ] | **Prolog Erlik modeli etki takibi:** Canavarın İni nötr + bozulma 3 olunca Prolog'da `ENEMY` bölgesi kalmıyor → düşman AI/takviye (F6) boşta, `game_lost` tetiklenemez; resource-system §4 Prolog kazanılabilirlik hesabı (canavar eşiği 12 direnç vs eski A≥7) ve `ERLIK_SPREAD_INTERVAL=3` `/balance-check` ile yeniden doğrulanır; Prolog'da siyasi düşman/kayıp koşulu var mı kararı (kullanıcı) | C-29 sırasında keşfedildi | C-29, C-32 | Karar kaydı + güncel Prolog sayıları GDD'de + balance raporu |
 | C-50 | [ ] | **Art bible + UI spec:** bozulma seviyesi görseli (seviye 1–3: Erlik Moru + Kömürü dither yoğunluğu / leke boyutu, sahiplik rengini gizlemeden) art bible §4'e; bölge bilgi panelinde bozulma seviyesi + Erlik direnci satırının yerleşimi | C-30 sırasında keşfedildi (spirit §3.1/§3.2, AC10/AC14) | C-30 | Art bible'da seviye görsel kuralı (palet doğrulayıcıyla uyumlu); bilgi paneli satırı tanımlı |
 | C-51 | [ ] | **Kod düzeltmesi (C-32):** `MapState.game_result` kilidi (tur ortası zaferde `attempt_move`/`end_turn`/üretim reddedilir, `game_won`/`game_lost` bir kez), kontrol sırası kaybetme → kazanma, `WinCondition`: `conquered_neutral_count` (`initial_owner`, odak hariç) + `erlik_foci` alanı (bozulma C-38 ile etkinleşir) + testler | C-32 sırasında keşfedildi: `map_controller.gd` iki noktada kontrol ediyor, kazanma önce; `win_condition.gd` `oyuncu_bölge − 1` sayıyor | C-32 | region-map AC7, AC8, AC10 testleri yeşil (AC11 C-38'de) |
