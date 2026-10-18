@@ -33,7 +33,7 @@ both after `attempt_move` and at the end of `end_turn`.
 - **Options:** (a) write `resource-system.md` with production formula + cost; (b) add production
   to `army-system.md`; (c) change Prolog data / win condition until production exists.
 
-🔴 **B2 — Erlik is modelled two incompatible ways**
+🔴 **B2 — Erlik is modelled two incompatible ways** — ✅ **RESOLVED 2026-10-18 (C-29):** corruption overlay; beast = corrupted neutral region (`spirit-system.md` §3.7)
 - `spirit-system.md` §3.1/§3.2: Erlik = `corruption_level` overlay removed by purification;
   Ruh "Sadece arındırmadan kazanılır". `game-concept.md`: Prolog "İlk Erlik canavarı —
   arındırmanın tanıtımı".
@@ -54,7 +54,7 @@ both after `attempt_move` and at the end of `end_turn`.
 - **Options:** third arrival branch owned by `army-system.md` §3.3, or a separate "purify" action
   defined in `spirit-system.md`.
 
-🔴 **B4 — Ownership of Erlik spread / corruption and its end_turn position unresolved**
+🔴 **B4 — Ownership of Erlik spread / corruption and its end_turn position unresolved** — ✅ **RESOLVED 2026-10-18 (C-29):** owner `spirit-system.md`; order AI → Erlik spread → income → turn++ → check (region-map §3.4)
 - Index lists "Erlik Bozgunu & Arındırma → `corruption-purification.md`" and "Katmanlı Düşman →
   `enemy-layers.md`" as separate systems, yet `spirit-system.md` §3.1/§3.6/§4 already defines
   corruption, purification and spread and owns `ERLIK_SPREAD_INTERVAL`, `CORR_STR_PER_LEVEL`;
@@ -159,7 +159,7 @@ Options: slower Erlik when trailing, cheaper boons when trailing, defensive bonu
 accumulates unlimited army. Options: upkeep (e.g. 1 gold / 5 army), idle attrition, higher
 attacker losses.
 
-⚠️ **D3 — Erlik ignorable in Prolog** — no initial corruption, spread every 4 turns (~3 events in
+⚠️ **D3 — Erlik ignorable in Prolog** — ✅ addressed 2026-10-18 (C-29): beast level 3 + interval 3 in Prolog; values to be verified by C-49 — no initial corruption, spread every 4 turns (~3 events in
 a 12-turn scene) → < 10 % income impact; "İki Katmanlı Tehdit" not load-bearing early. Options:
 start with 1–2 corrupted regions, interval 2, or require purification for the win (ties to B2).
 

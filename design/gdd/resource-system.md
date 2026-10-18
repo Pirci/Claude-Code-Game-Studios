@@ -71,8 +71,8 @@ Biriktirmek de gerçek bir seçenek olmalı.
    - **Ruh** `spirit-system.md`'ye aittir; bu sistem Ruh'u okumaz ve yazmaz.
 2. **Başlangıç:** Sahne başında `gold = starting_gold` olur. Değer bölüm verisinden
    (`ChapterMapDefinition`) gelir; koddaki sabit 100 kalkar.
-3. **Gelir:** Gelir, tur sonunun **ekonomi adımında** (region-map §3.4'teki 2. adım,
-   düşman AI'dan sonra) toplanır.
+3. **Gelir:** Gelir, tur sonunun **ekonomi adımında** (region-map §3.4'teki 3. adım,
+   düşman AI ve Erlik yayılımından sonra) toplanır.
    - Altın, oyuncu bölgelerinin efektif gelirlerinin toplamı kadar artar (formül §4).
    - Bölge başına çarpanlar (ör. Ruh sisteminin bozulma cezası) ve toplam üzerindeki
      çarpanlar (ör. Bereket lütfu) bu sisteme girdi olarak gelir; **toplama ve
@@ -86,7 +86,7 @@ Biriktirmek de gerçek bir seçenek olmalı.
    - **Aksiyon harcamaz.** Birlikler hemen kullanılabilir, aynı tur hareket edebilir.
 5. **Bölge tavanı:** Her bölge bir turda en fazla `recruit_cap` birlik çıkarabilir.
    Tavan, bölgenin efektif üretiminden türer (§4); büyük obalar daha çok yiğit verir.
-   - Sayaç her yeni oyuncu turunun başında sıfırlanır (tur sonunun 3. adımı).
+   - Sayaç her yeni oyuncu turunun başında sıfırlanır (tur sonunun 4. adımı).
 6. **Düşman takviyesi** (geçici sözleşme): Ekonomi adımında her düşman bölgesine
    `+enemy_reinforcement_per_turn` ordu eklenir. Değer bölüm verisinden gelir.
    - Düşmanın hazinesi yoktur.
@@ -109,7 +109,7 @@ Biriktirmek de gerçek bir seçenek olmalı.
 | Varlık | Durum | Geçiş | Tetik |
 | --- | --- | --- | --- |
 | Bölge üretim sayacı | Açık (`üretilen < recruit_cap`) | → Tükendi | Üretim tavana ulaşınca |
-| Bölge üretim sayacı | Tükendi | → Açık (sayaç = 0) | Yeni oyuncu turu (tur sonu 3. adım) |
+| Bölge üretim sayacı | Tükendi | → Açık (sayaç = 0) | Yeni oyuncu turu (tur sonu 4. adım) |
 | Bölge üretim sayacı | Herhangi | → Yok sayılır | Bölge sahip değiştirince (sayaç yeni sahipte de 0'dan başlar) |
 | Üretim düğmesi | Etkin | → Pasif | `gold < recruit_cost` veya sayaç tükendi veya bölge oyuncunun değil |
 | Hazine | Altın değeri | +gelir / −üretim / −bakım | Ekonomi adımı / Ordu Topla |
@@ -118,7 +118,7 @@ Biriktirmek de gerçek bir seçenek olmalı.
 
 | Sistem | Giren veri | Çıkan veri | Arayüzün sahibi |
 | --- | --- | --- | --- |
-| Harita / Tur Akışı (`region-map-system.md`) | Bölge sahipliği, `gold_per_turn`; tur sonu sırası | Ekonomi adımını çağırır (gelir + düşman takviyesi + bakım); 3. adımda sayaçları sıfırlar | Sıra: Harita · İçerik: Kaynak |
+| Harita / Tur Akışı (`region-map-system.md`) | Bölge sahipliği, `gold_per_turn`; tur sonu sırası | Ekonomi adımını çağırır (gelir + düşman takviyesi + bakım); 4. adımda sayaçları sıfırlar | Sıra: Harita · İçerik: Kaynak |
 | Ordu (`army-system.md`) | — | Üretim `army_count`'u artırır; garnizon ve hareket kuralları değişmez | Kaynak |
 | Kök Böri / Ruh (`spirit-system.md`) | Bölge başına üretim çarpanı (bozulma), toplam gelir çarpanları (lütuflar) | — (Ruh'a dokunmaz) | Çarpanlar: Ruh · Uygulama: Kaynak |
 | Savaş (`combat-system.md`) | — | — (dolaylı: üretilen ordu savaşa girer) | — |
@@ -295,7 +295,7 @@ inde 2, Doğu Obası'nda 4 ordu oluyor.
 
 | Sistem | Tür | Arayüz |
 | --- | --- | --- |
-| Harita / Tur Akışı (`region-map-system.md`) | **Sert** | Bölge sahipliği ve `gold_per_turn` (`MapState`). Tur sonu sırasında ekonomi adımı (2. adım) ve sayaç sıfırlama (3. adım). Bölüm verisi `ChapterMapDefinition`: `starting_gold`, `enemy_reinforcement_per_turn`. |
+| Harita / Tur Akışı (`region-map-system.md`) | **Sert** | Bölge sahipliği ve `gold_per_turn` (`MapState`). Tur sonu sırasında ekonomi adımı (3. adım) ve sayaç sıfırlama (4. adım). Bölüm verisi `ChapterMapDefinition`: `starting_gold`, `enemy_reinforcement_per_turn`. |
 | Kök Böri / Ruh (`spirit-system.md`) | Yumuşak | Bölge başına bozulma çarpanı `M_c`, lütuf bonusları `B_add` ve `M_g`. Ruh sistemi yoksa değerler `M_c = 1`, `B_add = 0`, `M_g = 1` olur ve sistem tam çalışır. |
 
 ### Bu sisteme dayananlar (aşağı akış)
@@ -318,7 +318,7 @@ inde 2, Doğu Obası'nda 4 ordu oluyor.
 2. **`region-map-system.md`:**
    - §4'teki gelir formülü bu GDD'nin F2'sine yönlendirilecek; gelirin sahibi
      artık bu GDD.
-   - §3.4'ün 2. adımı "ekonomi adımı (gelir + düşman takviyesi + bakım)" olarak
+   - §3.4'ün ekonomi adımı (artık 3.) "ekonomi adımı (gelir + düşman takviyesi + bakım)" olarak
      yeniden adlandırılacak.
    - §6'ya bu GDD eklenecek. AC5 F2'ye göre güncellenecek.
 3. **`spirit-system.md` §6:** "Kaynak Sistemi (yazılmadı)" ifadesi
@@ -386,7 +386,7 @@ Test tipi her grubun başında; birim ve entegrasyon testleri BLOCKING.
   istenir, **THEN** reddedilir; altın ve ordu değişmez.
 - **AC7:** **GIVEN** 3 altın ve maliyet 2, **WHEN** `k=2` istenir, **THEN** tamamen
   reddedilir (kısmi üretim yok), altın 3 kalır.
-- **AC8:** **GIVEN** üretim sayaçları tükenmiş, **WHEN** `end_turn` 3. adımı (yeni tur
+- **AC8:** **GIVEN** üretim sayaçları tükenmiş, **WHEN** `end_turn` 4. adımı (yeni tur
   başlangıcı) tamamlanır, **THEN** oyuncunun tüm bölgelerinde sayaç 0 olur.
 - **AC9:** **GIVEN** efektif geliri 0 olan bölge (`G_base` 0 veya seviye 3 bozulma),
   **THEN** `recruit_cap = 1`.
@@ -412,7 +412,7 @@ Test tipi her grubun başında; birim ve entegrasyon testleri BLOCKING.
 ### Entegrasyon (BLOCKING)
 
 - **AC11:** **GIVEN** düşman AI `end_turn`'ün 1. adımında bir bölge ele geçirmiş,
-  **WHEN** 2. adım çalışır, **THEN** o bölge de +1 takviye alır.
+  **WHEN** ekonomi adımı (3. adım) çalışır, **THEN** o bölge de +1 takviye alır.
 - **AC13:** **GIVEN** oyuncu bir bölgede üretip aynı tur oradan hareket ediyor,
   **THEN** hareket eden kuvvet yeni birlikler dahil `army_count − 1`'dir.
 - **AC19:** **GIVEN** oyuncu bu tur bir bölge ele geçirmiş, **WHEN** orada üretim

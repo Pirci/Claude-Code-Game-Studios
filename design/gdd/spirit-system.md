@@ -80,6 +80,35 @@ geçmeliyim" baskısı hisseder; arındırdıkça "kutsandım" tatmini yaşar.
 ### 3.6 Erlik Yayılımı (AI Katmanı)
 - Her `ERLIK_SPREAD_INTERVAL` turda bir, Erlik yayılır (bkz. Formüller).
 - Yayılım deterministiktir: kurallı hedef seçimi (rastgele değil).
+- **Tur sonundaki yeri (C-29):** `end_turn` sırasının **2. adımı** — düşman AI'dan
+  sonra, ekonomi adımından önce (`region-map-system.md` §3.4). Yayılan bozulma o
+  turun gelirine hemen yansır. Yayılım turu: `current_turn` bu sistemin interval'ine
+  bölünebildiğinde (`current_turn % interval == 0`; ilk yayılım `interval`. turun sonu).
+- **Sahip:** Yayılım, bozulma ve arındırma bu GDD'ye aittir; ayrı bir
+  `corruption-purification.md` MVP için yazılmaz (bkz. §3.7).
+
+### 3.7 Erlik Modeli ve Sahiplik (C-29 kararı, 2026-10-18)
+- **Tek model — bozulma katmanı:** Erlik, bölge *sahipliğinden bağımsız* bir
+  `corruption_level` (0–3) katmanıdır. Sahip türleri yalnızca `NEUTRAL / PLAYER /
+  ENEMY`'dir; **`ERLIK` sahip türü yoktur.** `ENEMY` yalnızca siyasi krallar içindir
+  (Art Bible: pas turuncusu = düşman kral; mor = yalnızca Erlik).
+- **Erlik canavarı = bozulmuş bölge.** Prolog'daki "Canavarın İni", `owner = NEUTRAL`
+  ve başlangıçta `corruption_level = 3` olan bir bölgedir; **fetihle değil
+  arındırmayla** yenilir (§3.2) ve ilk Ruh'u verir. Canavar siyasi bir aktör değildir:
+  düşman AI'ya katılmaz, kendiliğinden hareket etmez.
+- **Prolog baskısı (D3):** Canavarın İni seviye 3'te başlar (üretimi durur, arındırması
+  öğretici hedeftir); `ERLIK_SPREAD_INTERVAL` Prolog sahnesinde **3** tura iner
+  (sahne override, bkz. Edge Cases "Final sahnesi" ile aynı mekanizma). Kesin değerler
+  `/balance-check` ile doğrulanacak (C-33 / C-49).
+- **Zafer kapsamı (D4) → C-32:** Prolog zaferi "3 nötr fethi + Canavarın İni
+  arındırılması"dır; genel kural (siyasi / + Erlik) C-32'de kesinleşir.
+- **Açık, sonraki görevlerde:** arındırmanın ordu varış çözümündeki yeri ve
+  fetihte bozulmanın akıbeti (B3/B5) → **C-30**; lütuf zamanlaması → C-31.
+
+> **Etki uyarısı:** Canavarın İni nötr olduğundan Prolog'da `ENEMY` bölgesi kalmaz →
+> düşman AI ve düşman takviyesi (`resource-system.md` F6) Prolog'da boşta kalır,
+> `game_lost` (oyuncunun bölgesi kalmaz) tetiklenemez ve Prolog'un denge hesabı
+> (resource-system §4, canavar eşiği "A ≥ 7") yeniden doğrulanmalıdır. Takip: **C-49**.
 
 ---
 
@@ -180,7 +209,8 @@ hedef.corruption_level = min(3, hedef.corruption_level + 1)
 - **Oyun Durumu** (`game_state.gd`) — kalıcı `boons` listesi + `ruh` alanı.
 - **Konsey (Altı Oğul)** (`council-system.md`) — konsey bonusları lütuflarla
   aynı toplamsal modifikatör hattını paylaşmalı (çift sayım önlenmeli).
-- **Katmanlı Düşman** (`enemy-layers.md`) — Erlik yayılımı bu sistemin AI tarafı.
+- **Katmanlı Düşman** (`enemy-layers.md`) — yalnızca *siyasi* krallar; Erlik
+  yayılımı/bozulması bu GDD'nin sorumluluğundadır (§3.7), `enemy-layers.md`'ye taşınmaz.
 
 > Karşılıklı bağımlılık notu: yukarıdaki dokümanlar yazıldığında bu sisteme
 > geri referans vermeli (Ruh alanı, corruption_level, CombatResolver kullanımı).
@@ -214,7 +244,10 @@ hedef.corruption_level = min(3, hedef.corruption_level + 1)
 6. Alınan lütuflar sahne geçişinde korunur (`GameState.boons` boşalmaz). *(Test)*
 7. Seviye 3 bozulmuş bölgenin `gold_per_turn` üretimi **0**'a düşer. *(Test)*
 8. Erlik, `ERLIK_SPREAD_INTERVAL` turda bir, kurala göre (en düşük ordulu komşu)
-   **deterministik** yayılır. *(Test)*
+   **deterministik** yayılır; yayılım `end_turn`'ün 2. adımında (AI'dan sonra, gelirden
+   önce) çalışır ve o turun geliri yayılan bozulmayı yansıtır. *(Test)*
+8b. Prolog verisinde Canavarın İni `NEUTRAL` + `corruption_level 3` yüklenir; `ENEMY`
+   sahip yalnızca siyasi krallar içindir. *(Test — veri C-36/C-49 ile gelir)*
 9. "Gök Kalkanı" lütfu efektif yayılma interval'ini artırır (yayılım seyrekleşir).
    *(Test)*
 10. Bozulmuş bölge görsel olarak temiz bölgeden ayırt edilebilir (seviyeye göre

@@ -48,9 +48,9 @@ requirements:
   - id: TR-map-003
     system: map
     gdd: design/gdd/region-map-system.md
-    requirement: "Turn-flow orchestration (end_turn: enemy AI -> income -> turn++ -> win-check) over injected systems"
+    requirement: "Turn-flow orchestration (end_turn: enemy AI -> Erlik spread -> income -> turn++ -> win-check) over injected systems"
     created: 2026-08-13
-    revised: ""
+    revised: "2026-10-18"
     status: active
 
   - id: TR-map-004

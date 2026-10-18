@@ -46,10 +46,16 @@ Oyuncu tüm bozkırı tek bakışta okur: kim nerede güçlü, hangi sınır zay
   seçim temizlenir, kazanma kontrol edilir.
 
 ### 3.4 Tur Bitişi (`end_turn`)
-Sıra: **(1)** düşman AI oynar → **(2)** ekonomi adımı: oyuncu geliri + düşman
-takviyesi + bakım (`resource-system.md` §3.1) → **(3)** `current_turn+=1`,
-`actions_remaining = actions_per_turn`, bölge üretim sayaçları sıfırlanır →
-**(4)** kazanma/kaybetme kontrolü.
+Sıra: **(1)** düşman AI oynar → **(2)** Erlik yayılımı (`spirit-system.md` §3.6;
+yalnızca yayılım turunda, aksi halde atlanır) → **(3)** ekonomi adımı: oyuncu
+geliri + düşman takviyesi + bakım (`resource-system.md` §3.1) → **(4)**
+`current_turn+=1`, `actions_remaining = actions_per_turn`, bölge üretim sayaçları
+sıfırlanır → **(5)** kazanma/kaybetme kontrolü.
+
+> **Neden yayılım gelirden önce (C-29, 2026-10-18):** yayılan bozulmanın üretim
+> cezası (`M_c`) o turun gelirine hemen yansır — oyuncu çürümenin bedelini aynı
+> tur öder. Sıra ADR-0005'teki `end_turn` şemasıyla (AI → Erlik) uyumludur.
+> Erlik yayılımının **sahibi `spirit-system.md`**'dir; bu sistem yalnızca sırayı tutar.
 
 ### 3.5 Düşman AI (`EnemyAIController.decide`)
 Düşman AI, saf bir karar servisidir (bkz. [ADR-0005](../../docs/architecture/adr-0005-ai-architecture.md)):
@@ -101,8 +107,9 @@ hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
   atlanır.
 - **Kazanma tur ortasında** (`attempt_move` sonrası): anında `game_won` sinyali.
 - **Kazanma/kaybetme tur sonunda**: `end_turn` sonunda kontrol.
-- **Prolog kazanma kriteri**: `required_neutral_conquests = 3` + düşman (Canavarın
-  İni) yenilmeli (`chapter_1_map.tres`).
+- **Prolog kazanma kriteri**: `required_neutral_conquests = 3` + Canavarın İni
+  **arındırılmalı** (C-29: canavar siyasi düşman değil, bozulmuş nötr bölgedir —
+  `spirit-system.md` §3.7). Veri/zafer koşulu güncellemesi C-32 / C-49 / C-36.
 
 ---
 
@@ -116,8 +123,10 @@ hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
   `enemy_reinforcement_per_turn` ayarlarını taşır.
 - **Oyun Durumu** (`game_state.gd`) — `map_state`, `gold`, (planlı: `ruh`, `boons`).
 - **Ruh Sistemi** (`spirit-system.md`) — `RegionData`'ya `corruption_level`
-  eklenecek; Erlik yayılımı tur akışına girecek.
-- **Kök Böri / Kozmik katman**: düşman AI'nin yanına Erlik yayılım AI'si eklenecek.
+  eklenecek; Erlik yayılımı `end_turn` 2. adımında çalışır (§3.4). Erlik modeli,
+  sahiplik ve yayılımın sahibi: `spirit-system.md` §3.7.
+- **Kök Böri / Kozmik katman**: düşman AI'nin yanına Erlik yayılım AI'si eklenecek
+  (ADR-0005, `ErlikSpreadController`).
 
 ---
 
@@ -131,17 +140,19 @@ hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
 | `must_defeat_all_enemies` | WinCondition | Prolog: true |
 | Bölge `army_count` / `gold_per_turn` | `.tres` | Denge |
 | `enemy_actions_per_turn` | ChapterMapDefinition / MapState | Düşmanın tur başına toplam aksiyonu (data-driven; MVP: 1) |
-| `player_tamga_id` / `enemy_tamga_id` | ChapterMapDefinition → MapState | Sahiplik tamgası (`icon_tamga_<id>.png`, art bible §5/§7). Prolog: `oguz` / `erlik_beast`. Bölgenin tamgası sahibinden türetilir → fetihte değişir; nötr tamgasız |
+| `player_tamga_id` / `enemy_tamga_id` | ChapterMapDefinition → MapState | Sahiplik tamgası (`icon_tamga_<id>.png`, art bible §5/§7). Prolog: `oguz` / `erlik_beast` *(C-29: canavar artık nötr olduğundan `enemy_tamga_id` Prolog'da kullanılmaz; Erlik görseli tamga değil bozulma katmanıdır — C-36'da veri temizlenir)*. Bölgenin tamgası sahibinden türetilir → fetihte değişir; nötr tamgasız |
 
 ---
 
 ## 8. Acceptance Criteria
 
 1. Prolog haritası 6 bölgeyle yüklenir; sahiplikler doğru (Oğuz Otağı=oyuncu,
-   Canavarın İni=düşman, 4 nötr). *(Test)*
+   Canavarın İni=nötr + `corruption_level 3`, diğer 4 nötr). *(Test — veri
+   güncellemesi C-36/C-49 ile gelir; o zamana dek mevcut `chapter_1_map.tres`
+   eski modelde: Canavarın İni=düşman.)*
 2. Seçili bölgeye tekrar tıklama seçimi kaldırır. *(Test)*
 3. Geçerli hareket `actions_remaining`'i 1 azaltır. *(Test)*
-4. `end_turn` sırası: AI → gelir → tur artışı → kontrol. *(Test)*
+4. `end_turn` sırası: AI → Erlik yayılımı → gelir → tur artışı → kontrol. *(Test)*
 5. Tur geliri `resource-system.md` F2'ye eşittir (bozulma ve lütuf yokken oyuncu
    bölgelerinin `gold_per_turn` toplamı). *(Test)*
 6. Düşman AI en düşük ordulu düşman-olmayan komşuya saldırır. *(Test)*

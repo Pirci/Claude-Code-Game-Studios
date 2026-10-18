@@ -85,3 +85,9 @@
 - Godot uzmanı: .bak rotasyonu (rename-overwrite'a güvenme), kapat→rename sırası, LoadResult (static last_error yok), @abstract SaveStore, enum adı Error değil.
 - Registry +3 (save_files, save_load, untrusted_resource_loading); ADR-0004/0006 notları; resource-system #6 çözüldü; TR-concept-002 ✅.
 - NEXT: C-17 `/architecture-review` — AYNI OTURUMDA ÇALIŞTIRMA, taze oturum gerekir (bağımlılıklar: C-15 ✅, C-16 ✅, K-02 ✅, C-34 ❌ — C-34 bitmeden C-17 başlayamaz; sıradaki başlanabilir görev C-29).
+
+## Session Extract — C-29 Erlik modeli (2026-10-18)
+- Kullanıcı kararları: (B2) Erlik = bozulma katmanı, canavar = bozuk NÖTR bölge, ERLIK sahip türü yok; (B4) sahip spirit-system.md; end_turn: AI → Erlik yayılımı → gelir → tur+1 → kontrol; (D3) Canavarın İni seviye 3, Prolog aralığı 3.
+- Güncellenen: spirit §3.6/§3.7/§6/AC8, region-map §3.4/§5/§6/AC1/AC4, resource-system adım numaraları (ekonomi 3., sayaç 4.), TR-map-003, systems-index, cross-review (B2/B4/D3 kapandı).
+- Keşif: canavar nötr olunca Prolog'da ENEMY bölgesi kalmıyor → düşman AI/takviye boşta, game_lost tetiklenemez, denge yeniden doğrulanmalı → yeni görev C-49 (C-36'nın bağımlılığı).
+- NEXT: C-30 (arındırma eylemi + fetihte bozulma, B3/B5).

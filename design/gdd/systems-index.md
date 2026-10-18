@@ -20,8 +20,8 @@ Foundation → Core → Feature → Presentation → Polish
 | **Ordu & Birim Sistemi** | Core | [army-system.md](army-system.md) | Needs Revision | 1 |
 | **Savaş Çözümü** (otomatik + rapor) | Core | [combat-system.md](combat-system.md) | Needs Revision | 1 |
 | **Kök Böri / Ruh Sistemi** (imza) | Feature | [spirit-system.md](spirit-system.md) | Needs Revision | 2 |
-| **Katmanlı Düşman** (uluslar + Erlik) | Feature | `enemy-layers.md` | Yazılmadı | 2 |
-| **Erlik Bozgunu & Arındırma** | Feature | `corruption-purification.md` | Yazılmadı | 2 |
+| **Katmanlı Düşman** (siyasi krallar; Erlik burada değil — C-29) | Feature | `enemy-layers.md` | Yazılmadı | 2 |
+| **Erlik Bozgunu & Arındırma** (MVP'de `spirit-system.md` §3.6–3.7 kapsar; ayrı GDD planlı değil — C-29) | Feature | [spirit-system.md](spirit-system.md) | Designed (spirit içinde) | 2 |
 | **Konsey (Altı Oğul)** | Feature | `council-system.md` | Yazılmadı | 3 |
 | **Diplomasi** (ittifak/fetih) | Feature | `diplomacy-system.md` | Yazılmadı | 3 |
 | **Mevsim / Çevre Etkisi** | Feature | `season-system.md` | Yazılmadı | 3 |
