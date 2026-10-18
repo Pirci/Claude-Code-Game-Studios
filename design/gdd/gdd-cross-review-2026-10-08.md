@@ -91,29 +91,29 @@ both after `attempt_move` and at the end of `end_turn`.
 
 ### Warnings
 
-⚠️ **W1 — Wrong worked example** — `army-system.md` §4: "Hedefte 3 düşman varsa → savaş (4 vs 3),
+⚠️ **W1 — Wrong worked example** — ✅ C-33 (army §4: hedef army=2) — `army-system.md` §4: "Hedefte 3 düşman varsa → savaş (4 vs 3),
 saldıran kazanır, hedef army=3 (bkz. combat-system Örnek 1)". Combat Dal 1 gives 4 − ceil(1.5) = **2**;
 Örnek 1 uses A = 5. *Quick edit.*
 
-⚠️ **W2 — "Loser always wiped" vs draw survivors** — `combat-system.md` §7 "Kaybeden taraf her zaman
+⚠️ **W2 — "Loser always wiped" vs draw survivors** — ✅ C-33: loser's survivors disperse (not placed; report shows them) — `combat-system.md` §7 "Kaybeden taraf her zaman
 tamamen yok olur"; §3 "(büyük oranda) yitirir"; Örnek 3 / AC3 `attacker_remaining = 1`.
 `army-system.md` §3.3 does not say where survivors go (code drops them). Define return/disband
 or reword.
 
-⚠️ **W3 — Draw can leave an owned region at 0 army** — A = D = 1 → `defender_remaining = 0`, owner
+⚠️ **W3 — Draw can leave an owned region at 0 army** — ✅ C-33: a region left with 0 troops after combat becomes NEUTRAL (code C-52) — A = D = 1 → `defender_remaining = 0`, owner
 kept. Army §3.3 then treats it as peaceful ("VEYA `army_count == 0`"); a 0-army ENEMY region still
 blocks `must_defeat_all_enemies`, a 0-army PLAYER region blocks `game_lost`. Define floor / revert
 to neutral.
 
-⚠️ **W4 — `draw_favors_defender` knob vs formula** — listed as tunable in combat §7; §4 Dal 3
+⚠️ **W4 — `draw_favors_defender` knob vs formula** — ✅ C-33: Dal 3 `attacker_won = NOT draw_favors_defender` documented — listed as tunable in combat §7; §4 Dal 3
 hard-codes `attacker_won = false`. Code honours the knob (with `false`, 1v1 draw captures with 0 army).
 
-⚠️ **W5 — region-map §3.5 documents ADR-0005 as current** — "`EnemyAIController.decide(map_state)` …"
+⚠️ **W5 — region-map §3.5 documents ADR-0005 as current** — ✅ C-33: §3.5 marked planned (C-19); army §3.1–3.3 owner-agnostic (`mover`) — "`EnemyAIController.decide(map_state)` …"
 while header says "Belgelenmiş (kod mevcut)"; ADR-0005 is Proposed, AI is inline `_run_enemy_ai()`.
 Army §3.1 `can_move` requires "`owner == PLAYER`", §3.3 hard-codes "`owner = PLAYER`", so army §6
 "düşman AI aynı taşıma kurallarını kullanır" does not hold. Mark planned or make rules owner-agnostic.
 
-⚠️ **W6 — Tie-breaks differ** — region-map §4 "eşitlikte ilk bulunan"; spirit §4.6 "region_id
+⚠️ **W6 — Tie-breaks differ** — ✅ C-33: lowest army, then `region_id` alphabetical everywhere; enemy regions processed by `region_id` (code C-52) — region-map §4 "eşitlikte ilk bulunan"; spirit §4.6 "region_id
 alfabetik ilk"; ADR-0005 "lowest army_count, then region_id alphabetical". Order of spending
 `enemy_actions_per_turn` across enemy regions unspecified. *Quick edit (pick one).*
 
@@ -227,6 +227,11 @@ on income.
 ---
 
 ## Info (documents)
+
+> ✅ 2026-10-18 (C-33): all items below fixed — index date/dependency column/missing
+> systems, concept date + next steps, MapState field list + AC9 colour-blind mode,
+> `scene_id` = `chapter_id` (Prolog 1), Cyrillic typo, spread target set vs edge case,
+> army ↔ spirit dependency (C-30).
 
 - ℹ️ `systems-index.md`: "Son Güncelleme: 2026-07-14" stale; no dependency column; Game State,
   accessibility, localization, tamga not listed; note "spirit … MVP sonrası ilk yazılacak GDD"

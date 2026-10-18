@@ -32,9 +32,14 @@ sayısal üstünlük önemlidir ama ucuz değildir — kazansan bile kayıp veri
 - Savaş iki girdiyle çözülür: `attacker_army`, `defender_army` (planlı üçüncü girdi:
   oyuncunun lütuf modifikatörleri → §4 "Etkin güç", M2).
 - Üç sonuç dalı vardır: saldıran üstün, savunan üstün, eşitlik.
-- Kazanan taraf bölgeyi elde tutar/alır; kaybeden ordusunu (büyük oranda) yitirir.
+- Kazanan taraf bölgeyi elde tutar/alır. Kaybeden tarafın hayatta kalanları
+  (yalnızca beraberlikte > 0 olabilir) haritada kalmaz — **dağılır**; rapor bunları
+  gösterir (C-33, W2). Uygulamayı Ordu Sistemi yapar (`army-system.md` §3.3).
 - Kalan ordu asla negatif olamaz (`max(0, …)`).
-- Eşitlikte **savunan kazanır** (savunma avantajı) ve iki taraf da ağır kayıp verir.
+- Eşitlikte varsayılan olarak **savunan kazanır** (savunma avantajı,
+  `draw_favors_defender = true`) ve iki taraf da ağır kayıp verir.
+- Savaştan sonra bölgede 0 birlik kalırsa bölge sahipsiz olur (`army-system.md` §3.3,
+  W3) — bu sistem yalnızca sayıları üretir.
 
 ---
 
@@ -58,10 +63,13 @@ defender_losses = ceil(A × 0.3)
 
 ### Dal 3 — Eşitlik (`A == D`)
 ```
-attacker_won   = false            # savunma avantajı
+attacker_won   = NOT draw_favors_defender   # varsayılan true → false (savunma avantajı)
 attacker_losses = ceil(A × 0.7)
 defender_losses = ceil(D × 0.5)
 ```
+`draw_favors_defender = false` yapılırsa beraberlikte saldıran kazanır ve
+`attacker_remaining` ile bölgeyi alır; 0 kalırsa bölge sahipsiz olur (W3). Kayıp
+oranları knob'dan bağımsızdır (C-33, W4).
 
 ### Kalan ordu (her dal)
 ```
@@ -146,7 +154,9 @@ varsayılanları kullanılır (test kolaylığı).
 | `draw_defender_loss_ratio` | 0.5 | Eşitlikte savunan kaybı |
 | `draw_favors_defender` | true | Eşitlik kazananı (savunma avantajı) |
 
-> Not: Kaybeden taraf her zaman tamamen yok olur (bu bir kural, tunable değil).
+> Not: Kaybeden tarafın hayatta kalanları dağılır — haritaya geri dönmez (kural,
+> tunable değil; W2). Kayıp formülleri değişmez; rapordaki `*_remaining` kaybeden için
+> "dağılan" sayısıdır.
 
 **Genişleme (planlı)**: kompozisyon bonusu (süvari>okçu>piyade), arazi etkisi,
 taktik seçimi (Hücum/Savunma/Geri Çekilme), kahraman birim modifikatörü —
@@ -158,7 +168,7 @@ GDD konseptte var ama kodda henüz yok.
 
 1. A=5, D=3 → saldıran kazanır; attacker_remaining=3, defender_remaining=0. *(Test — BLOCKING)*
 2. A=3, D=6 → savunan kazanır; attacker_remaining=0, defender_remaining=5. *(Test)*
-3. A=4, D=4 → savunan kazanır; attacker_remaining=1, defender_remaining=2. *(Test)*
+3. A=4, D=4 → savunan kazanır; attacker_remaining=1 (dağılır), defender_remaining=2. *(Test)*
 4. Hiçbir `*_remaining` değeri negatif olamaz. *(Test)*
 5. Tüm kayıplar `ceil` ile hesaplanır (kayıpsız zafer yok, taraf ≥1 iken). *(Test)*
 6. Çözüm deterministiktir — aynı girdi her zaman aynı sonuç. *(Test)*
@@ -166,3 +176,6 @@ GDD konseptte var ama kodda henüz yok.
 8. Kurt Gücü 1 yığınla A=4, D=4 → saldıran kazanır; attacker_remaining=2,
    defender_remaining=0. Demir Post 1 yığınla oyuncu savunurken A=4, D=4 →
    `D_eff = 5`, savunan kazanır; defender_losses = ceil(4 × 0.3) = 2. *(Test — M2)*
+9. `draw_favors_defender = false` iken A=4, D=4 → `attacker_won = true`,
+   attacker_remaining=1; A=D=1 → iki taraf 0 (bölgeyi sahipsiz yapma kararı Ordu
+   Sistemi'nde, `army-system.md` AC13). *(Test)*

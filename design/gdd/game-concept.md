@@ -5,7 +5,7 @@
 *İsim geçmişi: Steppeborn → ASENA (2026-10-07) → **ULUS: Blood of the Sky Wolf** (2026-10-08). "Ulus" = Türk-Moğol dünyasında yurt/devlet; logo kelimesi ULUS, alt başlık her dile çevrilir.*
 
 *Oluşturulma: 2026-07-10*
-*Son Güncelleme: 2026-07-14*
+*Son Güncelleme: 2026-10-18*
 *Durum: Taslak — Oğuz Kağan omurgasına revize edildi*
 
 ---
@@ -421,8 +421,8 @@ tatmin edici buluyor."
 ## Sonraki Adımlar
 
 - [x] Art bible yazıldı — pixel art + kozmik mitolojik katman ([art-bible.md](../art/art-bible.md), 2026-10-07)
-- [ ] Konsepti sistemlere ayır (`/map-systems`)
-- [ ] İmza sistem GDD'si: Kök Böri / Ruh Sistemi (`/design-system spirit-system`)
+- [x] Konsepti sistemlere ayır (`/map-systems`) — [systems-index.md](systems-index.md)
+- [x] İmza sistem GDD'si: Kök Böri / Ruh Sistemi — [spirit-system.md](spirit-system.md) (2026-07-14; C-29…C-33 revizyonları)
 - [ ] Katmanlı düşman GDD'si (`/design-system enemy-layers`)
 - [ ] Mevcut Prolog haritasını destana uyarla (Ötüken → Oğuz ata yurdu)
 - [ ] Prototip: çift katmanlı düşman hipotezini test et (`/prototype`)

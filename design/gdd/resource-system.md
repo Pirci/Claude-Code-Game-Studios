@@ -272,8 +272,8 @@ inde 2, Doğu Obası'nda 4 ordu oluyor.
 - **Seviye 3 bozulma:** Gelir 0 olur, tavan 1'de kalır ("her obada birkaç yiğit").
 - **Düşman tur sonunda yeni bir bölge ele geçirirse:** Takviye ekonomi adımında,
   düşman AI'dan sonra uygulandığı için yeni bölge de aynı tur +E_r alır.
-- **Ordusu 0 olan düşman bölgesi:** Berabere sonucunda kalabilir (çapraz inceleme
-  W3). Sahibi düşman olduğu sürece +E_r takviye alır.
+- **Ordusu 0 olan düşman bölgesi:** Oluşmaz — beraberlikte boşalan bölge sahipsiz
+  olur (`army-system.md` §3.3, C-33/W3); sahipsiz bölge takviye almaz.
 - **Nötr bölgeler:** Gelir de takviye de almaz. Oyuncu ele geçirene kadar ordusu
   sabittir.
 - **Bakım gideri altını aşarsa** (yalnızca `U > 0` olduğunda): Mevcut altın

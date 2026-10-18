@@ -33,8 +33,9 @@ Oyuncu tüm bozkırı tek bakışta okur: kim nerede güçlü, hangi sınır zay
 - **RegionData**: `region_id`, `display_name_key`, `owner` (NEUTRAL/PLAYER/ENEMY),
   `army_count`, `gold_per_turn`, `position`, `polygon_points`, `adjacent_regions`.
 - **MapState**: `regions` (id→RegionData), `current_turn`, `actions_remaining`,
-  `actions_per_turn`, `selected_region_id`, `chapter_id` (planlı:
-  `last_erlik_spread_turn` — yayılım sayacı, `spirit-system.md` §3.6, C-31).
+  `actions_per_turn`, `enemy_actions_per_turn`, `selected_region_id`, `chapter_id`,
+  `player_tamga_id`, `enemy_tamga_id` (planlı: `last_erlik_spread_turn` — yayılım
+  sayacı, `spirit-system.md` §3.6, C-31; `game_result` — §3.7, C-32).
 - Harita tanımı `ChapterMapDefinition` Resource'undan üretilir (`create_map_state()`).
 
 ### 3.2 Bölge Seçimi (`select_region`)
@@ -60,15 +61,21 @@ sıfırlanır → **(5)** oyun sonu kontrolü: önce kaybetme, sonra kazanma (§
 > tur öder. Sıra ADR-0005'teki `end_turn` şemasıyla (AI → Erlik) uyumludur.
 > Erlik yayılımının **sahibi `spirit-system.md`**'dir; bu sistem yalnızca sırayı tutar.
 
-### 3.5 Düşman AI (`EnemyAIController.decide`)
-Düşman AI, saf bir karar servisidir (bkz. [ADR-0005](../../docs/architecture/adr-0005-ai-architecture.md)):
+### 3.5 Düşman AI
+> **Durum (C-33, W5):** Aşağıdaki kurallar bugünkü kodda `MapController._run_enemy_ai()`
+> içinde satır içi çalışır. `EnemyAIController.decide()` ayrımı **planlıdır**
+> (ADR-0005, Proposed; uygulama C-19) — kurallar aynı kalır, yalnızca yeri değişir.
+
+Hedef mimaride düşman AI saf bir karar servisidir (bkz. [ADR-0005](../../docs/architecture/adr-0005-ai-architecture.md)):
 `EnemyAIController.decide(map_state) -> Array[MoveIntent]` yalnızca `MapState`'i
 **okur** ve deterministik bir hamle listesi (intent) döndürür — state'i değiştirmez,
 sinyal yaymaz. `MapController.end_turn()` intent'leri `ArmyController`/`CombatResolver`
 üzerinden **uygular** ve mevcut sinyalleri yayar.
 
+- Düşman bölgeleri `region_id` artan (alfabetik) sırayla işlenir (C-33, W6).
 - Her düşman bölgesi için (army > 1):
-  - Komşular arasında düşman-olmayan, `army_count`'u en düşük hedefi seç.
+  - Komşular arasında düşman-olmayan, `army_count`'u en düşük hedefi seç; eşitlikte
+    `region_id` alfabetik ilk (W6 — Erlik yayılımı ve ADR-0005 ile aynı kural).
   - Kuvvet (army−1) gönder; hedefte ordu varsa savaş, yoksa işgal.
 - Düşman tur başına en fazla `enemy_actions_per_turn` aksiyon yapar (data-driven,
   `MapState.enemy_actions_per_turn`; her düşman bölgesi en fazla 1 hamle). MVP: 1.
@@ -130,7 +137,8 @@ yalnızca 3 nötr alınmış ve in bozuksa zafer yok.
 ### Düşman AI hedef seçimi
 ```
 hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
-        eşitlikte ilk bulunan
+        eşitlikte region_id alfabetik ilk          # C-33, W6 (eski: "ilk bulunan")
+işlem sırası = düşman bölgeleri region_id artan; bütçe enemy_actions_per_turn bitince dur
 ```
 
 ---
@@ -152,8 +160,9 @@ hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
 - **Odak arındırıldı, sonra yayılımla yeniden bozuldu**: odak koşulu kontrol anındaki
   duruma bakar → yeniden arındırılana kadar zafer yok.
 - **Ele geçirilen düşman bölgesi**: genişleme sayımına girmez (siyasi koşulun parçasıdır).
-- **Ordusu 0 kalan düşman bölgesi** (berabere, çapraz inceleme W3): hâlâ `ENEMY` sayılır
-  ve siyasi koşulu engeller — W3 kararı C-33'te.
+- **Beraberlikte boşalan bölge** (çapraz inceleme W3, C-33): 0 birlikle kalan bölge
+  sahipsiz olur (`army-system.md` §3.3) → 0 ordulu `ENEMY` bölgesi siyasi koşulu,
+  0 ordulu `PLAYER` bölgesi `game_lost`'u engellemez; böyle bölge oluşmaz.
 - **Prolog kazanma kriteri**: `required_neutral_conquests = 3` + Canavarın İni
   **arındırılmalı** (C-29: canavar siyasi düşman değil, bozulmuş nötr bölgedir —
   `spirit-system.md` §3.7). Veri/zafer koşulu güncellemesi C-32 / C-49 / C-36.
@@ -205,13 +214,16 @@ hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
 4. `end_turn` sırası: AI → Erlik yayılımı → gelir → tur artışı → kontrol. *(Test)*
 5. Tur geliri `resource-system.md` F2'ye eşittir (bozulma ve lütuf yokken oyuncu
    bölgelerinin `gold_per_turn` toplamı). *(Test)*
-6. Düşman AI en düşük ordulu düşman-olmayan komşuya saldırır. *(Test)*
+6. Düşman AI en düşük ordulu düşman-olmayan komşuya saldırır; eşit ordulu iki komşuda
+   `region_id` alfabetik ilkini seçer; düşman bölgeleri `region_id` sırasıyla işlenir.
+   *(Test — eşitlik bozma kodu C-52)*
 7. 3 nötr (odak hariç) ele geçirilip düşman kalmayınca ve odaklar temizken, hamleden
    hemen sonra `game_won` **bir kez** tetiklenir; ardından `end_turn` çağrılsa da AI,
    yayılım, gelir ve tur artışı çalışmaz. *(Test)*
 8. Oyuncunun bölgesi kalmazsa `game_lost` tetiklenir; sonra `attempt_move` `false` döner. *(Test)*
 9. Seçili bölgenin merkez ekseninde sahibinin tamgası görünür (nötrde yok); fetihten
-   sonra tamga yeni sahibinkine geçer. *(Test)*
+   sonra tamga yeni sahibinkine geçer. Renk Körlüğü Modu açıkken tamga seçimden
+   bağımsız olarak her sahipli bölgede görünür (C-07). *(Test)*
 10. Başlangıç bölgesi kaybedilmiş, 3 başlangıçta-nötr bölge oyuncudaysa genişleme
     koşulu sağlanır (eski `−1` formülünün hatası yok). *(Test)*
 11. Odak bölge bozukken diğer koşullar sağlansa da zafer yok; odak arındırılınca o

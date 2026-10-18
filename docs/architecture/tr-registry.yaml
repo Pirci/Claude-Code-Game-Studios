@@ -64,9 +64,9 @@ requirements:
   - id: TR-map-005
     system: map
     gdd: design/gdd/region-map-system.md
-    requirement: "Enemy AI: per-enemy-region target selection (lowest-army non-enemy neighbour) with a per-turn action budget"
+    requirement: "Enemy AI: per-enemy-region target selection (lowest-army non-enemy neighbour, ties by region_id alphabetical; enemy regions processed in region_id order) with a per-turn action budget"
     created: 2026-08-13
-    revised: ""
+    revised: "2026-10-18"
     status: active
 
   - id: TR-map-006
@@ -81,9 +81,9 @@ requirements:
   - id: TR-army-001
     system: army
     gdd: design/gdd/army-system.md
-    requirement: "Move validation + garrison rule (always leave 1) + action consumption, with logic in the controller not state"
+    requirement: "Owner-agnostic move validation (mover = PLAYER or ENEMY) + garrison rule (always leave 1) + action consumption, with logic in the controller not state; a region left with 0 troops after combat becomes NEUTRAL"
     created: 2026-08-13
-    revised: ""
+    revised: "2026-10-18"
     status: active
 
   - id: TR-army-002

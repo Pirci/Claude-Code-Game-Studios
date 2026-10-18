@@ -253,7 +253,7 @@ Arz tahmini Perde 1 verisiyle M2'de doğrulanır (C-44 `/balance-check`).
 ### 4.5 Deterministik 3'lü sunum
 ```
 pool     = uygun havuz (§3.5), boon_id'ye göre sıralı
-seed     = (scene_id × 31 + boon_index × 7) mod pool_size
+seed     = (scene_id × 31 + boon_index × 7) mod pool_size   # scene_id = MapState.chapter_id (Prolog 1)
 offer[k] = pool[ (seed + k) mod pool_size ]  , k ∈ {0,1,2}
 ```
 `boon_index` = `n` = o ana kadar **seçilen** lütuf sayısı (C-31: ertelenen sunum
@@ -261,20 +261,25 @@ aynı kalsın diye "yapılan sunum" değil "seçilen lütuf" sayılır). `pool_s
 iken üç slot farklıdır; `pool_size < 3` ise slotlar tekrar eder (§5).
 Bu, rastgelelik olmadan tekrarlanabilir sunum üretir (test determinizmi). İleride
 oyuncu-görünmez bir seed `GameState`'e eklenerek çeşitlilik artırılabilir.
-Örnek (M1 havuzu `[arinma_ustaligi, bereket, gok_kalkani]`, Prolog `scene_id = 0`,
-`n = 0`): seed 0 → sunum: Arınma Ustalığı, Bereket, Gök Kalkanı.
+Örnek (M1 havuzu `[arinma_ustaligi, bereket, gok_kalkani]`, Prolog `chapter_id = 1`,
+`n = 0`): seed = 31 mod 3 = 1 → sunum: Bereket, Gök Kalkanı, Arınma Ustalığı.
 
 ### 4.6 Erlik yayılımı
-Her `ERLIK_SPREAD_INTERVAL` turda:
+Her yayılım turunda (aşağıdaki `I_eff`), tek bir bölge 1 seviye bozulur:
 ```
-hedef = temiz VEYA seviyesi < 3 olan, herhangi bir bozuk bölgeye komşu bölgeler
-        içinden, army_count'u EN DÜŞÜK olan (eşitlikte region_id alfabetik ilk)
-hedef.corruption_level = min(3, hedef.corruption_level + 1)
+adaylar = { r : r.corruption_level < 3  ∧  ∃ n ∈ adj(r) : n.corruption_level ≥ 1 }
+hedef   = argmin(army_count) over adaylar; eşitlikte region_id alfabetik ilk
+hedef.corruption_level += 1
 ```
+Adaylar sahipten bağımsızdır (oyuncu, nötr, düşman) ve zaten bozuk bölgeleri de
+içerebilir (bozuk bir komşusu olan seviye 1–2 bölge derinleşir). Seviye 3 bölgeler
+aday değildir. Örnek: yalnızca Canavarın İni (3) bozuksa adaylar inin komşularıdır;
+en az ordulu komşu 1. seviyeye iner.
 Efektif aralık (C-31 — eski bölme formülü 5 yığında sıfıra bölüyordu, W10):
 ```
 I_eff = ERLIK_SPREAD_INTERVAL(sahne) + min(k, GOK_KALKANI_MAX_STACKS) × GOK_KALKANI_INTERVAL_BONUS
 yayılım ⇔ current_turn − last_erlik_spread_turn ≥ I_eff
+yayılım turunda (hedef bulunsun bulunmasın): last_erlik_spread_turn = current_turn
 ```
 `k` = Gök Kalkanı yığını. Örnek: Prolog aralığı 3; 1 kalkan → 4, 3 kalkan → 6.
 Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
@@ -318,7 +323,9 @@ Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
   (düşmanın hazinesi yok, `resource-system.md` F6).
 - **Seviye 0 bölgeyi arındırma denemesi**: Geçersiz aksiyon — arındırma yalnızca
   `corruption_level ≥ 1` için sunulur.
-- **Erlik yayılacak temiz komşu yoksa**: Yayılım o tur atlanır (hata değil).
+- **Yayılım adayı yoksa** (bozuk bölge yok ya da tüm bozuk bölgelerin komşuları
+  seviye 3): yayılım o tur atlanır (hata değil); `last_erlik_spread_turn` yine
+  güncellenir, sayaç yeniden başlar.
 - **Final sahnesi**: Erlik yayılımı hızlanabilir (senaryo override) — bu sistem
   interval'i sahne başına ayarlanabilir olmalı.
 - **Sahne geçişi**: Lütuflar taşınır; sahneye özel bozulma durumu sıfırlanır
@@ -375,8 +382,8 @@ Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
    hamleden hemen sonra **açılmaz**; bir sonraki oyuncu turunun başında tam olarak
    **1 sunum** açılır ve **3 lütuf** gösterilir. *(Test)*
 4. Aynı `scene_id` ve `boon_index` (= seçilen lütuf sayısı) ile sunum **her
-   çalıştırmada aynı 3 lütfu** üretir (determinizm); M1 havuzu, `scene_id 0`, `n 0` →
-   Arınma Ustalığı, Bereket, Gök Kalkanı. *(Test)*
+   çalıştırmada aynı 3 lütfu** üretir (determinizm); M1 havuzu, `chapter_id 1`, `n 0` →
+   Bereket, Gök Kalkanı, Arınma Ustalığı. *(Test)*
 5. Lütuf seçildiğinde maliyet Ruh'tan düşer; seçilmeyenler kaybolur. *(Test)*
 6. Alınan lütuflar sahne geçişinde korunur (`GameState.boons` boşalmaz). *(Test)*
 7. Seviye 3 bozulmuş bölgenin `gold_per_turn` üretimi **0**'a düşer. *(Test)*

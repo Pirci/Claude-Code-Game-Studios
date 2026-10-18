@@ -114,3 +114,9 @@
 - Güncellenen: region-map §3.3/§3.4/§3.6/§3.7(yeni)/§4/§5/§7/AC7–11, spirit §3.7, cross-review B7/W7/D4, TR-map-006, ADR-0007 notu (game_result kaydedilmez).
 - Kod uyuşmuyor → yeni görev C-51 (game_result kilidi + sayım + erlik_foci + testler).
 - NEXT: C-33 (GDD düzeltmeleri W1–W6 + bilgi notları).
+
+## Session Extract — C-33 GDD düzeltmeleri (2026-10-18, gece modu)
+- W1 army örneği (4v3 → army 2); W2 kaybedenin hayatta kalanları dağılır; W3 savaş sonrası 0 birlikli bölge NEUTRAL olur (sahipli 0 ordu yok); W4 Dal 3 `attacker_won = NOT draw_favors_defender`; W5 army §3.1–3.3 sahip-bağımsız (`mover`), region-map §3.5 "planlı (C-19)"; W6 eşitlik bozma her yerde `region_id` alfabetik + düşman bölgeleri `region_id` sırasıyla.
+- Bilgi notları: indeks (tarih, bağımlılık sütunu, Oyun Durumu/erişilebilirlik/yerelleştirme/tamga satırları), konsept (tarih, sonraki adımlar), MapState alan listesi, AC9 renk körlüğü, `scene_id = chapter_id` (Prolog 1 → M1 sunumu Bereket, Gök Kalkanı, Arınma Ustalığı), yayılım aday kümesi formal + `last_erlik_spread_turn` güncelleme kuralı.
+- TR-map-005, TR-army-001 revised. Kod düzeltmesi C-52 açıldı (W3 + W6).
+- NEXT: C-34 `/review-all-gdds` yeniden (taze bağlamda daha iyi; gece modunda bu oturumda çalıştırılacak).
