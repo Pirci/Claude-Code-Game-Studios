@@ -11,7 +11,16 @@ signal drained
 ## Arka plan karartması — art bible §7 koyu zemin (`#1C150D`), alfa sabit (fade yok).
 const BACKDROP_COLOR := Color(0.109804, 0.082353, 0.05098, 0.6)
 
+## Modal yerleşimi: ortada (varsayılan) ya da üst/alt kenara yaslı, yatayda ortalı (harita
+## üstü paneller işaretleri örtmesin diye — scene-flow §3.5).
+enum Placement { CENTER, TOP, BOTTOM }
+
+## Üst/alt yaslı modalların HUD çubuklarından uzaklığı (GameContext çubuk boylarından verir).
+var top_margin: float = 40.0
+var bottom_margin: float = 31.0
+
 var _queue: Array[Control] = []
+var _placements: Array[Placement] = []
 var _current: Control = null
 var _return_focus: Control = null
 var _center: CenterContainer
@@ -33,9 +42,10 @@ func _ready() -> void:
 
 
 ## Modalı sıraya ekler; açık modal yoksa hemen gösterir.
-func push(modal: Control) -> void:
+func push(modal: Control, placement: Placement = Placement.CENTER) -> void:
 	assert(modal.has_signal(&"closed"), "ModalQueue: modal `closed` sinyali yaymalı")
 	_queue.append(modal)
+	_placements.append(placement)
 	if _current == null:
 		_return_focus = get_viewport().gui_get_focus_owner()
 		_show_next()
@@ -50,6 +60,24 @@ func current() -> Control:
 	return _current
 
 
+## Açık bir kenar modalını üst ya da alt kenara (yatayda ortalı) taşır.
+func place(modal: Control, placement: Placement) -> void:
+	if placement == Placement.CENTER or modal.get_parent() != self:
+		return
+	var preset: Control.LayoutPreset = Control.PRESET_CENTER_TOP if placement == Placement.TOP \
+		else Control.PRESET_CENTER_BOTTOM
+	var margin: float = top_margin if placement == Placement.TOP else bottom_margin
+	modal.set_anchors_and_offsets_preset(preset, Control.PRESET_MODE_MINSIZE, int(margin))
+
+
+## Kenar modalının o yerleşimde kaplayacağı alan (en küçük boyuttan; yerleşim seçimi için).
+func rect_for(modal: Control, placement: Placement) -> Rect2:
+	var size: Vector2 = modal.get_combined_minimum_size()
+	var x: float = (self.size.x - size.x) / 2.0
+	var y: float = top_margin if placement == Placement.TOP else self.size.y - bottom_margin - size.y
+	return Rect2(Vector2(x, y), size)
+
+
 func _show_next() -> void:
 	if _queue.is_empty():
 		_current = null
@@ -60,7 +88,12 @@ func _show_next() -> void:
 		drained.emit()
 		return
 	_current = _queue.pop_front()
-	_center.add_child(_current)
+	var placement: Placement = _placements.pop_front()
+	if placement == Placement.CENTER:
+		_center.add_child(_current)
+	else:
+		add_child(_current)
+		place(_current, placement)
 	_current.connect(&"closed", _on_current_closed, CONNECT_ONE_SHOT)
 	show()
 	if _current.has_method(&"get_focus_target"):
@@ -69,6 +102,6 @@ func _show_next() -> void:
 
 func _on_current_closed() -> void:
 	var closed_modal: Control = _current
-	_center.remove_child(closed_modal)
+	closed_modal.get_parent().remove_child(closed_modal)
 	closed_modal.queue_free()
 	_show_next()

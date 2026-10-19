@@ -109,15 +109,15 @@ func test_hud_shows_objective_progress_and_erlik_shadow_warning() -> void:
 	var game: GameContext = _start(root_ctx)
 	var objective: Label = game.find_child("ObjectiveLabel", true, false) as Label
 	assert_str(objective.text).is_equal("%s: %s" % [tr("OBJECTIVE_LABEL"), tr("WIN_CONDITION_CH1")])
-	assert_str((game.find_child("ProgressLabel", true, false) as Label).text).contains("0 / 3")
-	assert_str((game.find_child("ShadowLabel", true, false) as Label).text).is_equal("Erlik's Shadow: 4 / 9")
+	assert_str((game.find_child("ProgressLabel", true, false) as Label).text).contains(NumberFormatter.fraction(0, 3))
+	assert_str((game.find_child("ShadowLabel", true, false) as Label).text).is_equal("Erlik's Shadow: %s" % NumberFormatter.fraction(4, 9))
 	assert_str(objective.text).starts_with(tr("OBJECTIVE_LABEL"))
 	var state: GameState = game.get("_game_state") as GameState
 	state.map_state.get_region(&"dogu_bozkir").corruption_level = 3
 	state.map_state.get_region(&"sinir_bolge").corruption_level = 3
 	state.map_state.get_region(&"altai").corruption_level = 2  # 3 + 3 + 2 = 8 = eşik − 1
 	game.call("_refresh_views")
-	assert_str((game.find_child("ShadowLabel", true, false) as Label).text).is_equal("Erlik's Shadow: 8 / 9")
+	assert_str((game.find_child("ShadowLabel", true, false) as Label).text).is_equal("Erlik's Shadow: %s" % NumberFormatter.fraction(8, 9))
 	assert_str(objective.text).is_equal(tr("ERLIK_SHADOW_WARNING"))
 
 

@@ -10,6 +10,10 @@ extends RefCounted
 const SEPARATOR_KEY: StringName = &"THOUSANDS_SEPARATOR"
 const FALLBACK_SEPARATOR: String = ","
 const GROUP_SIZE: int = 3
+## Unicode yön yalıtımı (LRI … PDI): sayısal ifade sağdan sola metinde de soldan sağa kalır —
+## Arapçada "4 / 9" → "9 / 4", "(+2)" → "(2+)" ters dönmesin (C-69). Görünmez karakterlerdir.
+const LTR_ISOLATE: String = "\u2066"
+const POP_ISOLATE: String = "\u2069"
 
 
 ## Etkin dilin ayırıcısıyla biçimlendirir: 12345 → "12,345" (en) / "12.345" (tr).
@@ -23,6 +27,16 @@ static func current_separator() -> String:
 	if separator.is_empty() or separator == String(SEPARATOR_KEY):
 		return FALLBACK_SEPARATOR
 	return separator
+
+
+## Sayısal ifadeyi (kesir, işaretli sayı) soldan sağa yalıtır; LTR dillerde görünür etkisi yok.
+static func ltr(text: String) -> String:
+	return LTR_ISOLATE + text + POP_ISOLATE
+
+
+## "a / b" — her dilde soldan sağa okunan kesir (ilerleme, tavan, Erlik'in Gölgesi).
+static func fraction(current: int, total: int) -> String:
+	return ltr("%s / %s" % [format_int(current), format_int(total)])
 
 
 ## [param value] rakamlarını sağdan üçerli gruplar; negatiflerde "-" önde kalır.

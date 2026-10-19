@@ -31,8 +31,7 @@ func _init(reason_key: StringName = &"", erlik_power: int = 0, erlik_threshold: 
 	vbox.add_child(title)
 	vbox.add_child(_wrapped("ReasonText", tr(String(reason_key))))
 	if erlik_threshold > 0:
-		vbox.add_child(_wrapped("ErlikValue", tr("ERLIK_SHADOW_VALUE") % [
-			NumberFormatter.format_int(erlik_power), NumberFormatter.format_int(erlik_threshold)]))
+		vbox.add_child(_wrapped("ErlikValue", tr("ERLIK_SHADOW_VALUE") % NumberFormatter.fraction(erlik_power, erlik_threshold)))
 	vbox.add_child(_wrapped("ProgressKept", tr("DEFEAT_PROGRESS_KEPT")))
 	var buttons: HBoxContainer = HBoxContainer.new()
 	buttons.alignment = BoxContainer.ALIGNMENT_CENTER

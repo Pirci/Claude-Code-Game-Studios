@@ -308,3 +308,6 @@
 
 ## Session Extract — C-41 Prolog öğreticisi (2026-10-19)
 - features/tutorial (TutorialRules, TutorialProgress, ui/hint_bubble), SettingsSnapshot.seen_hints + serializer, Settings reset button → MenuContext → RootContext, GameContext hint triggers + HUD ObjectiveBar (ObjectiveLabel/ProgressLabel/ShadowLabel), HudModel/HudPresenter objective+erlik, RegionNode objective mark, CampaignMap.set_objective_markers. design/ux/prolog-tutorial.md. Tests 312/312. Yeni görev C-69.
+
+## Session Extract — C-69 (2026-10-19)
+- NumberFormatter.ltr/fraction (LRI/PDI) everywhere numeric; ERLIK_SHADOW_VALUE single %s; ADR-0009 amendment. ui/panel_placement.gd + ModalQueue Placement (CENTER/TOP/BOTTOM, place, rect_for); objective panel bottom→top; hint bubble corners. icon_objective_marker_0/1.png via tools/asset-pipeline/generate_objective_marker.gd; RegionNode draws texture 1 fps. Tests 316/316.

@@ -54,9 +54,11 @@ düğmedir. Hareketi Azalt: balon ve işaret zaten animasyonsuzdur.
 - İşaret Canavarın İni'nde; arındırınca söner, yayılımla döner (scene-flow AC6). *(Test)*
 - en/de/ar'da taşma yok. *(Ekran görüntüsü — bilinen: Arapçada 2. satır dar, bkz. §7)*
 
-## 7. Açık noktalar
+## 7. Çözülenler (C-69)
 
-- Arapça (Unifont 16px) üst çubuk 2. satırı dar: ilerleme + gölge sığmayınca gölgenin son rakamı alt satıra
-  kayıyor → C-45 UX incelemesi (satırı bölme ya da kısa biçim).
-- Hedef paneli şimdilik ekran ortasında; işaretleri örtmeme kuralı C-45.
-- `icon_objective_marker` sanatı: işaret şimdilik kodla çizilen yer tutucu elmas; sanat görevi C-67 ile birlikte.
+- Arapça üst çubuk: sorun darlık değil **yön** idi ("4 / 9" → "9 / 4", "(+2)" → "(2+)"). Sayısal ifadeler
+  LRI … PDI ile soldan sağa yalıtıldı (`NumberFormatter.fraction` / `ltr`; ADR-0009 eki).
+- Hedef paneli alt-orta; işaret örtülürse üst-orta, ikisi de örterse en az örten (`PanelPlacement`).
+  İpucu balonu sol üst → sağ üst → sol alt aynı kuralla.
+- `icon_objective_marker_0/1.png` (9×9, 2 kare / 1 fps, palet renkleri;
+  `tools/asset-pipeline/generate_objective_marker.gd`); Hareketi Azalt'ta sabit kare.

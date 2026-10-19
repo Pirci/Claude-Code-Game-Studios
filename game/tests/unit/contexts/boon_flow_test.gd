@@ -116,4 +116,4 @@ func test_saved_boons_rebuild_modifiers_on_context_start() -> void:
 	add_child(game)
 	auto_free(game)
 	assert_float(StatResolver.resolve(&"gold_income", 0.0, state.modifiers)).is_equal(1.0)
-	assert_str((game.find_child("GoldLabel", true, false) as Label).text).is_equal("Gold: 6 (+3)")
+	assert_str((game.find_child("GoldLabel", true, false) as Label).text).is_equal("Gold: 6 %s" % NumberFormatter.ltr("(+3)"))

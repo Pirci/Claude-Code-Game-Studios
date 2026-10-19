@@ -25,8 +25,7 @@ func _init(turns: int = 0, regions_held: int = 0, regions_total: int = 0, ruh_ga
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(title)
 	vbox.add_child(_line("TurnsLine", tr("RESULT_TURNS") % NumberFormatter.format_int(turns)))
-	vbox.add_child(_line("RegionsLine", tr("RESULT_REGIONS") % ("%s / %s" % [
-		NumberFormatter.format_int(regions_held), NumberFormatter.format_int(regions_total)])))
+	vbox.add_child(_line("RegionsLine", tr("RESULT_REGIONS") % NumberFormatter.fraction(regions_held, regions_total)))
 	vbox.add_child(_line("RuhLine", tr("RESULT_RUH_GAINED") % NumberFormatter.format_int(ruh_gained)))
 	_continue_button = Button.new()
 	_continue_button.name = "ContinueButton"

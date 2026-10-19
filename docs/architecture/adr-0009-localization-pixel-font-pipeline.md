@@ -141,6 +141,11 @@ static func group_digits(value: int, separator: String) -> String
 - A new symbol or script: run the glyph-coverage test; if it fails, draw an icon or pick a
   covered character — do not add a system-font fallback.
 - New HUD/panel containers: decide explicitly — map-anchored → `LTR`, content → application locale.
+- *Amendment (C-69, 2026-10-19):* numeric expressions inside RTL text are isolated left-to-right
+  with Unicode LRI … PDI (U+2066 … U+2069) — `NumberFormatter.fraction(a, b)` for "a / b" and
+  `NumberFormatter.ltr(text)` for signed values such as "(+2)", "↓-1", "+1". Without it Arabic
+  showed "4 / 9" as "9 / 4" and "(+2)" as "(2+)". A translation that needs a fraction takes a single
+  `%s` (e.g. `ERLIK_SHADOW_VALUE` = "Erlik's Shadow: %s"); code supplies the isolated fraction.
 
 ## Alternatives Considered
 

@@ -38,7 +38,7 @@ func test_recruit_panel_enabled_selector_emits_chosen_count() -> void:
 	plus.pressed.emit()
 	assert_bool(plus.disabled).is_true()
 	assert_str((_node(panel, "RecruitCost") as Label).text).is_equal("Cost: 4 gold")
-	assert_str((_node(panel, "RecruitCap") as Label).text).is_equal("Raised: 0 / 2")
+	assert_str((_node(panel, "RecruitCap") as Label).text).is_equal("Raised: %s" % NumberFormatter.fraction(0, 2))
 	var emitted: Array[int] = [0]
 	panel.recruit_pressed.connect(func(_id: StringName, count: int) -> void: emitted[0] = count)
 	confirm.pressed.emit()
@@ -58,7 +58,7 @@ func test_recruit_panel_cap_reached_shows_cap() -> void:
 	var panel: RegionInfoPanel = _panel()
 	panel.show_recruit(2, 2, 0, 2, 0)
 	assert_bool((_node(panel, "RecruitConfirm") as Button).disabled).is_true()
-	assert_str((_node(panel, "RecruitHint") as Label).text).is_equal("Limit reached: 2 / 2")
+	assert_str((_node(panel, "RecruitHint") as Label).text).is_equal("Limit reached: %s" % NumberFormatter.fraction(2, 2))
 
 
 func test_recruit_panel_hidden_for_foreign_region_and_focus_falls_back() -> void:
@@ -68,5 +68,5 @@ func test_recruit_panel_hidden_for_foreign_region_and_focus_falls_back() -> void
 	panel.show_region(_region(RegionData.Owner.ENEMY))
 	assert_bool(_node(panel, "RecruitBox").visible).is_false()
 	panel.show_reinforcement(1)
-	assert_str((_node(panel, "ReinforcementValue") as Label).text).is_equal("+1 / turn")
+	assert_str((_node(panel, "ReinforcementValue") as Label).text).is_equal("%s / turn" % NumberFormatter.ltr("+1"))
 	assert_object(panel.get_focus_target()).is_null()

@@ -28,6 +28,7 @@ const BOON_CATALOG: BoonCatalog = preload("res://features/bozkurt/data/boon_cata
 @onready var _turn_label: Label = %TurnLabel
 @onready var _spirit_label: Label = %SpiritLabel
 @onready var _kok_bori_button: Button = %KokBoriButton
+@onready var _top_bar: Control = %TopBarPanel
 @onready var _objective_label: Label = %ObjectiveLabel
 @onready var _progress_label: Label = %ProgressLabel
 @onready var _shadow_label: Label = %ShadowLabel
@@ -209,12 +210,17 @@ func _render_hud(model: HudModel) -> void:
 			_chapter_label.text = tr(String(_scene.title_key))
 	_gold_label.text = "%s: %s" % [tr("GOLD"), NumberFormatter.format_int(model.gold)]
 	if ongoing:
-		_gold_label.text += " " + tr("INCOME_PER_TURN") % NumberFormatter.format_int(model.income_forecast)
+		_gold_label.text += " " + NumberFormatter.ltr(tr("INCOME_PER_TURN") % NumberFormatter.format_int(model.income_forecast))
 	_spirit_label.text = "%s: %s" % [tr("SPIRIT"), NumberFormatter.format_int(model.ruh)]
 	_render_objective(model)
 	_turn_label.text = "%s: %s" % [tr("TURN"), NumberFormatter.format_int(model.turn)]
 	_end_turn_button.disabled = not ongoing
 	_kok_bori_button.visible = model.boon_offer_available
+
+
+## Üst HUD çubuğunun yüksekliği (2 satır; dile göre font boyu değişir).
+func _top_bar_height() -> float:
+	return _top_bar.get_combined_minimum_size().y
 
 
 ## Kalıcı "Hedef" satırı + ilerleme + Erlik'in Gölgesi (scene-flow §10, spirit AC24); eşik
@@ -229,20 +235,15 @@ func _render_objective(model: HudModel) -> void:
 		else _objective_label.remove_theme_color_override(&"font_color")
 	var parts: PackedStringArray = []
 	if model.neutral_required > 0:
-		parts.append(tr("OBJECTIVE_TRIBES") % _fraction(model.neutral_conquered, model.neutral_required))
+		parts.append(tr("OBJECTIVE_TRIBES") % NumberFormatter.fraction(model.neutral_conquered, model.neutral_required))
 	if model.foci_total > 0:
-		parts.append(tr("OBJECTIVE_FOCI") % _fraction(model.foci_cleansed, model.foci_total))
+		parts.append(tr("OBJECTIVE_FOCI") % NumberFormatter.fraction(model.foci_cleansed, model.foci_total))
 	_progress_label.text = "  ".join(parts)
 	_progress_label.visible = not warning  # uyarı tam okunsun diye aynı satırda yer açılır
 	_shadow_label.visible = model.erlik_threshold > 0
-	_shadow_label.text = tr("ERLIK_SHADOW_VALUE") % [
-		NumberFormatter.format_int(model.erlik_power), NumberFormatter.format_int(model.erlik_threshold)]
+	_shadow_label.text = tr("ERLIK_SHADOW_VALUE") % NumberFormatter.fraction(model.erlik_power, model.erlik_threshold)
 	_shadow_label.add_theme_color_override(&"font_color", RegionInfoPanel.COLOR_LOSS if model.erlik_warning \
 		else RegionInfoPanel.COLOR_ERLIK_INFO)
-
-
-func _fraction(current: int, total: int) -> String:
-	return "%s / %s" % [NumberFormatter.format_int(current), NumberFormatter.format_int(total)]
 
 
 ## Her işlenmiş değişiklikten sonra tam yenileme (ADR-0011 karar 2): harita, HUD ve seçili
@@ -353,13 +354,17 @@ func _offer_hint(hint_id: StringName) -> void:
 	if _game_state.map_state == null or _game_state.map_state.game_result != MapState.GameResult.ONGOING:
 		return
 	_hint_bubble = HintBubble.new(hint_id)
-	_hint_bubble.layout_mode = 1
-	_hint_bubble.anchors_preset = 0
-	# Sol üst: üst çubuğun altında, boş şerit (alt-sol Bereket Vadisi'ni örterdi).
-	_hint_bubble.offset_left = 4.0
-	_hint_bubble.offset_top = 38.0
 	_hint_bubble.dismissed.connect(_on_hint_dismissed)
 	add_child(_hint_bubble)
+	# Sol üst tercih (alt-sol Bereket Vadisi'ni örter); işaret örtülürse sağ üst, sonra sol alt.
+	var size: Vector2 = _hint_bubble.get_combined_minimum_size()
+	var top: float = _top_bar_height() + 4.0
+	var bottom: float = self.size.y - 31.0 - size.y
+	var corners: Array[Vector2] = [Vector2(4.0, top), Vector2(self.size.x - 4.0 - size.x, top), Vector2(4.0, bottom)]
+	var rects: Array[Rect2] = []
+	for corner: Vector2 in corners:
+		rects.append(Rect2(corner, size))
+	_hint_bubble.position = corners[PanelPlacement.choose(rects, _campaign_map.objective_marker_rects())]
 
 
 func _on_hint_dismissed(hint_id: StringName) -> void:
@@ -440,7 +445,14 @@ func show_objective() -> void:
 		_map_def.win_condition.description_key if _map_def.win_condition != null else &"",
 		_flow_config.screen_input_guard_s)
 	panel.dismissed.connect(objective_dismissed.emit)
-	_modal_queue.push(panel)
+	# Önce alt-orta; işaret örtülürse üst-orta, ikisi de örterse en az örten (scene-flow §3.5).
+	_modal_queue.top_margin = _top_bar_height() + 4.0
+	_modal_queue.push(panel, ModalQueue.Placement.BOTTOM)
+	var options: Array[ModalQueue.Placement] = [ModalQueue.Placement.BOTTOM, ModalQueue.Placement.TOP]
+	var rects: Array[Rect2] = []
+	for option: ModalQueue.Placement in options:
+		rects.append(_modal_queue.rect_for(panel, option))
+	_modal_queue.place(panel, options[PanelPlacement.choose(rects, _campaign_map.objective_marker_rects())])
 
 
 ## T15: harita sırasında Ana Menü onayı (kayıt yazılmaz).

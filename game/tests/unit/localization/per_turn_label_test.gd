@@ -67,12 +67,12 @@ func test_corruption_rows_show_level_hold_and_income_penalty() -> void:
 	var panel: RegionInfoPanel = _panel()
 	panel.show_region(region, 8, 3, 1)
 	assert_bool((panel.find_child("CorruptionRow", true, false) as Control).visible).is_true()
-	assert_str((panel.find_child("CorruptionValue", true, false) as Label).text).is_equal("2 / 3")
+	assert_str((panel.find_child("CorruptionValue", true, false) as Label).text).is_equal(NumberFormatter.fraction(2, 3))
 	assert_str((panel.find_child("ErlikHoldValue", true, false) as Label).text).is_equal("8")
 	assert_str((panel.find_child("GoldLabel", true, false) as Label).text).is_equal("Gold: 1 / turn")
 	var penalty: Label = panel.find_child("GoldPenaltyLabel", true, false) as Label
 	assert_bool(penalty.visible).is_true()
-	assert_str(penalty.text).is_equal("↓-2")
+	assert_str(penalty.text).is_equal(NumberFormatter.ltr("↓-2"))
 
 
 func test_clean_region_hides_corruption_rows_and_penalty() -> void:

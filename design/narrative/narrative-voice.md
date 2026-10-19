@@ -210,7 +210,7 @@ karakter. Diğer diller bu sınırın ~%130'una kadar çıkabilir (de/fr/ru); F4
 | `DEFEAT_REASON_NO_REGIONS` | Yenilgi, `NO_REGIONS` | — | 64 | Our last land has fallen. No hearth of ours still burns. |
 | `DEFEAT_REASON_GENERIC` | Yenilgi, `NONE`/eşlemesiz | — | 64 | Here the song falls silent, for now. |
 | `DEFEAT_PROGRESS_KEPT` | Yenilgi güvence satırı | — | 64 | The Spirit and blessings from earlier chapters stay with you. |
-| `ERLIK_SHADOW_VALUE` | HUD göstergesi + yenilgi (`ERLIK`) | güç, eşik | 28 | Erlik's Shadow: %s / %s |
+| `ERLIK_SHADOW_VALUE` | HUD göstergesi + yenilgi (`ERLIK`) | "güç / eşik" (kod yalıtılmış kesir verir, C-69) | 28 | Erlik's Shadow: %s |
 | `ERLIK_SHADOW_WARNING` | HUD uyarısı, `erlik_power == eşik − 1` (C-41) | — | 48 | One more spread and the steppe falls to Erlik. |
 | `TURN_SUMMARY_HEADING` | TurnSummaryReport başlığı | — | 24 | As Night Fell |
 | `TURN_SUMMARY_SPREAD` | Yayılım temiz bölgeye (0 → 1) | bölge adı | 48 | Erlik's stain spread: %s |

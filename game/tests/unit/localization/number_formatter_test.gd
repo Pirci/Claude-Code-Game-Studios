@@ -49,3 +49,10 @@ func test_separator_glyphs_exist_in_ui_font() -> void:
 	var font: Font = load("res://assets/fonts/fusion_pixel_12px_latin.woff2") as Font
 	for separator: String in [",", ".", NBSP]:
 		assert_bool(font.has_char(separator.unicode_at(0))).override_failure_message("U+%04X" % separator.unicode_at(0)).is_true()
+
+
+# C-69: sayısal ifadeler LRI … PDI ile yalıtılır (Arapçada "4 / 9" ters dönmesin).
+func test_fraction_is_left_to_right_isolated() -> void:
+	TranslationServer.set_locale("en")
+	assert_str(NumberFormatter.fraction(4, 9)).is_equal("\u20664 / 9\u2069")
+	assert_str(NumberFormatter.ltr("(+2)")).is_equal("\u2066(+2)\u2069")

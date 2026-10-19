@@ -65,6 +65,15 @@ func set_objective_markers(region_ids: Array[StringName]) -> void:
 		(_region_nodes[id] as RegionNode).is_objective_marked = id in region_ids
 
 
+## İşaretli bölgelerin işaret alanları (harita koordinatı, 2px pay) — paneller bunları örtmez.
+func objective_marker_rects() -> Array[Rect2]:
+	var rects: Array[Rect2] = []
+	for node: RegionNode in _region_nodes.values():
+		if node.is_objective_marked:
+			rects.append(node.objective_mark_rect().grow(2.0))
+	return rects
+
+
 ## Testler için: bölge işaretli mi.
 func is_region_marked(region_id: StringName) -> bool:
 	var node: RegionNode = _region_nodes.get(region_id) as RegionNode

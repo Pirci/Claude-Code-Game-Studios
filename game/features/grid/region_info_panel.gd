@@ -129,14 +129,13 @@ func show_region(
 	_gold_label.text = "%s: %s" % [tr("GOLD"), tr("PER_TURN") % NumberFormatter.format_int(gold)]
 	# Kayıp gösterimi: ↓ + ASCII "-" (U+2212 Fusion'da yok — ADR-0009).
 	var penalty: int = data.gold_per_turn - gold
-	_gold_penalty_label.text = "↓-%s" % NumberFormatter.format_int(penalty)
+	_gold_penalty_label.text = NumberFormatter.ltr("↓-%s" % NumberFormatter.format_int(penalty))
 	_gold_penalty_label.visible = penalty > 0
 
 	var corrupted: bool = data.corruption_level >= 1
 	_corruption_row.visible = corrupted
 	_hold_row.visible = corrupted
-	_corruption_value.text = "%s / %s" % [
-		NumberFormatter.format_int(data.corruption_level), NumberFormatter.format_int(max_corruption)]
+	_corruption_value.text = NumberFormatter.fraction(data.corruption_level, max_corruption)
 	_hold_value.text = NumberFormatter.format_int(corruption_strength)
 
 	_send_button.visible = data.owner == RegionData.Owner.PLAYER and data.army_count > 1
@@ -168,7 +167,7 @@ func show_recruit(used: int, cap: int, max_count: int, cost: int, missing_gold: 
 
 ## Düşman bölgesinin tur sonu takviyesi (F6) — bilgi satırı.
 func show_reinforcement(per_turn: int) -> void:
-	_reinforcement_value.text = tr("PER_TURN") % ("+" + NumberFormatter.format_int(per_turn))
+	_reinforcement_value.text = tr("PER_TURN") % NumberFormatter.ltr("+" + NumberFormatter.format_int(per_turn))
 	_reinforcement_row.show()
 
 
@@ -253,7 +252,7 @@ func _update_recruit_selector() -> void:
 
 
 func _fraction(used: int, cap: int) -> String:
-	return "%s / %s" % [NumberFormatter.format_int(used), NumberFormatter.format_int(cap)]
+	return NumberFormatter.fraction(used, cap)
 
 
 func _on_recruit_step(delta: int) -> void:

@@ -35,12 +35,15 @@ const LABEL_HEIGHT: int = 16
 ## (merkezde etiketlerle çakışırdı). Kutunun alt boş satırları metinle arasında
 ## ~2px bırakır; 0 boşlukla tamga ile alt kontur arasında da 1px dolgu kalır.
 const TAMGA_GAP: int = 0
-## Hedef işareti (scene-flow §3.5): 9×9 gök mavisi / beyaz / altın ışık elması, bölge etiketinin
-## üstünde; sahiplik ve bozulma katmanını örtmez. Alfa 0/255, animasyonsuz (Hareketi Azalt ile aynı).
-const OBJECTIVE_MARK_RADIUS: int = 4
+## Hedef işareti (scene-flow §3.5/§9): `icon_objective_marker` 9×9, 2 kare / 1 fps, bölge etiketinin
+## üstünde; sahiplik ve bozulma katmanını örtmez. Hareketi Azalt → sabit 0. kare. Küçük ikonlar
+## kullanıldığı yerde preload edilir (bölge düğümü haritayla birlikte ağaçtan çıkar).
+const OBJECTIVE_MARK_FRAMES: Array[Texture2D] = [
+	preload("res://assets/art/ui/icons/icon_objective_marker_0.png"),
+	preload("res://assets/art/ui/icons/icon_objective_marker_1.png"),
+]
 const OBJECTIVE_MARK_OFFSET: int = 30
-const COLOR_OBJECTIVE_BLUE := Color("#47A3E8")
-const COLOR_OBJECTIVE_WHITE := Color("#D4EDFF")
+const OBJECTIVE_MARK_FPS: float = 1.0
 ## Erlik lekesi kare hızı (art bible §2/§4: 2–4 kare/sn, kesin geçiş).
 const STAIN_FPS: float = 3.0
 
@@ -73,6 +76,7 @@ var is_objective_marked: bool = false:
 		if is_objective_marked == value:
 			return
 		is_objective_marked = value
+		_update_stain_animation()
 		queue_redraw()
 ## Hareketi Azalt (art bible §7): leke animasyonu durur, sabit orta kare gösterilir.
 var reduce_motion: bool = false:
@@ -94,6 +98,7 @@ var _stain: CorruptionStain = null
 var _stain_textures: Array[ImageTexture] = []
 var _stain_frame: int = CorruptionStain.STATIC_FRAME
 var _stain_time: float = 0.0
+var _mark_frame: int = 0
 
 
 func _ready() -> void:
@@ -103,9 +108,12 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_stain_time += delta
-	var frame: int = int(_stain_time * STAIN_FPS) % CorruptionStain.FRAME_COUNT
-	if frame != _stain_frame:
+	var frame: int = int(_stain_time * STAIN_FPS) % CorruptionStain.FRAME_COUNT if not _stain_textures.is_empty() \
+		else CorruptionStain.STATIC_FRAME
+	var mark: int = int(_stain_time * OBJECTIVE_MARK_FPS) % OBJECTIVE_MARK_FRAMES.size() if is_objective_marked else 0
+	if frame != _stain_frame or mark != _mark_frame:
 		_stain_frame = frame
+		_mark_frame = mark
 		queue_redraw()
 
 
@@ -136,14 +144,22 @@ func _draw() -> void:
 
 
 func _draw_objective_mark() -> void:
+	var texture: Texture2D = OBJECTIVE_MARK_FRAMES[_mark_frame]
+	var size: Vector2i = Vector2i(texture.get_size())
 	var center: Vector2i = Vector2i(_anchor.round()) - Vector2i(0, OBJECTIVE_MARK_OFFSET)
-	for row: Rect2i in diamond_rows(center, OBJECTIVE_MARK_RADIUS):
-		draw_rect(Rect2(row), COLOR_SELECTION_MARK_EDGE)
-	for row: Rect2i in diamond_rows(center, OBJECTIVE_MARK_RADIUS - 1):
-		draw_rect(Rect2(row), COLOR_OBJECTIVE_BLUE)
-	for row: Rect2i in diamond_rows(center, OBJECTIVE_MARK_RADIUS - 3):
-		draw_rect(Rect2(row), COLOR_OBJECTIVE_WHITE)
-	draw_rect(Rect2(center.x, center.y, 1, 1), COLOR_HIGHLIGHT_OUTLINE)
+	draw_texture(texture, Vector2(center - size / 2))
+
+
+## İşaretin çizildiği alan (harita koordinatı).
+func objective_mark_rect() -> Rect2:
+	var size: Vector2 = OBJECTIVE_MARK_FRAMES[0].get_size()
+	var center: Vector2 = Vector2(Vector2i(_anchor.round()) - Vector2i(0, OBJECTIVE_MARK_OFFSET))
+	return Rect2((center - (size / 2.0).floor()), size)
+
+
+## Şu an çizilen hedef işareti karesi (testler; işaret yoksa -1).
+func get_objective_mark_frame() -> int:
+	return _mark_frame if is_objective_marked else -1
 
 
 func setup(data: RegionData) -> void:
@@ -284,11 +300,13 @@ func _set_corruption_level(level: int) -> void:
 	_update_stain_animation()
 
 
+## Leke ve hedef işareti kare animasyonu; Hareketi Azalt açıkken ikisi de sabit kare.
 func _update_stain_animation() -> void:
-	var animate: bool = not _stain_textures.is_empty() and not reduce_motion
+	var animate: bool = (not _stain_textures.is_empty() or is_objective_marked) and not reduce_motion
 	set_process(animate)
 	if not animate:
 		_stain_frame = CorruptionStain.STATIC_FRAME
+		_mark_frame = 0
 		queue_redraw()
 
 
