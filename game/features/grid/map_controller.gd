@@ -60,39 +60,53 @@ func preview_move(target_id: StringName) -> MoveOutcome:
 	return _move_resolver.resolve(_map_state, _map_state.selected_region_id, target_id)
 
 
+## Oyun bitince (`game_result` ONGOING değil) hamle reddedilir (region-map §3.7).
+## Hamlenin bütün sonuçları (sahiplik, ordu, aksiyon, seçim) işlendikten sonra sinyaller
+## yayılır; zafer kontrolü en sonda (S1-a).
 func attempt_move(target_id: StringName) -> bool:
+	if _map_state.game_result != MapState.GameResult.ONGOING:
+		return false
 	var from_id: StringName = _map_state.selected_region_id
 	if from_id == &"":
 		return false
 	var outcome: MoveOutcome = _move_resolver.resolve(_map_state, from_id, target_id)
 	if not outcome.is_valid():
 		return false
-	_commit(outcome)
-
+	_army_controller.apply_outcome(_map_state, outcome)
 	_map_state.actions_remaining -= 1
 	_map_state.selected_region_id = &""
+
+	_emit_move(outcome)
 	region_deselected.emit()
-
+	# Hamleden sonra yalnızca kazanma (oyuncu kendi hamlesiyle kaybedemez — §3.6 a).
 	if _win_condition.is_met(_map_state):
-		game_won.emit()
-
+		_finish(MapState.GameResult.WON)
 	return true
 
 
+## Tur sonu (region-map §3.4): (1) düşman AI → erken kayıp çıkışı → (2) Erlik yayılımı
+## (C-38) → (3) ekonomi → (4) tur artışı → (5) önce kaybetme, sonra kazanma; oyun
+## sürüyorsa `turn_ended` en sonda. Oyun bitmişse hiçbir adım çalışmaz.
 func end_turn() -> void:
+	if _map_state.game_result != MapState.GameResult.ONGOING:
+		return
 	_run_enemy_ai()
+	if _is_lost():
+		_finish(MapState.GameResult.LOST)
+		return
 
 	var income: int = _resource_controller.collect_turn_income(_map_state, _game_state)
 	income_collected.emit(income)
 
 	_map_state.current_turn += 1
 	_map_state.actions_remaining = _map_state.actions_per_turn
-	turn_ended.emit(_map_state.current_turn)
 
-	if _win_condition.is_met(_map_state):
-		game_won.emit()
-	elif _map_state.get_player_regions().size() == 0:
-		game_lost.emit()
+	if _is_lost():
+		_finish(MapState.GameResult.LOST)
+	elif _win_condition.is_met(_map_state):
+		_finish(MapState.GameResult.WON)
+	else:
+		turn_ended.emit(_map_state.current_turn)
 
 
 ## Düşman aksiyonları: karar → uygula döngüsü (ADR-0005). [EnemyAIController] yalnızca
@@ -116,13 +130,28 @@ func _apply_enemy_move(intent: EnemyAIController.MoveIntent) -> void:
 		push_warning("EnemyAIController geçersiz hamle önerdi: %s → %s (%s)" % [
 			intent.from_id, intent.to_id, outcome.invalid_reason])
 		return
-	_commit(outcome)
-
-
-## Sonucu uygular (ordu alanları [ArmyController]'da) ve sinyali yayar — oyuncu ve düşman
-## için aynı yol (ADR-0010).
-func _commit(outcome: MoveOutcome) -> void:
 	_army_controller.apply_outcome(_map_state, outcome)
+	_emit_move(outcome)
+
+
+## Kaybetme: oyuncunun bölgesi kalmadı (Erlik kaybı C-63 ile eklenir — region-map §3.6).
+func _is_lost() -> bool:
+	return _map_state.get_player_regions().is_empty()
+
+
+## Sonucu bir kez yazar ve sinyali bir kez yayar; sonrası kilitlidir (§3.7).
+func _finish(result: MapState.GameResult) -> void:
+	if _map_state.game_result != MapState.GameResult.ONGOING:
+		return
+	_map_state.game_result = result
+	if result == MapState.GameResult.WON:
+		game_won.emit()
+	else:
+		game_lost.emit()
+
+
+## Uygulanmış bir hamlenin sinyali — oyuncu ve düşman için aynı (ADR-0010).
+func _emit_move(outcome: MoveOutcome) -> void:
 	match outcome.branch:
 		MoveOutcome.Branch.COMBAT:
 			combat_occurred.emit(outcome.from_id, outcome.to_id, outcome.combat)

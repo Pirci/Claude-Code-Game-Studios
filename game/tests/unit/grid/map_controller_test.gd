@@ -9,9 +9,17 @@ func _region(id: StringName, owner: RegionData.Owner, army: int, adj: Array[Stri
 	var r: RegionData = RegionData.new()
 	r.region_id = id
 	r.owner = owner
+	r.initial_owner = owner
 	r.army_count = army
 	r.adjacent_regions = adj
 	r.gold_per_turn = gold
+	return r
+
+
+## Başlangıçta nötr olup şimdi oyuncunun olan bölge (fethedilmiş nötr, region-map §4).
+func _conquered(id: StringName, army: int) -> RegionData:
+	var r: RegionData = _region(id, RegionData.Owner.PLAYER, army, [] as Array[StringName])
+	r.initial_owner = RegionData.Owner.NEUTRAL
 	return r
 
 
@@ -138,9 +146,9 @@ func test_enemy_actions_limit_two() -> void:
 func test_game_won_emitted() -> void:
 	var m: MapState = _map([
 		_region(&"a", RegionData.Owner.PLAYER, 5, [] as Array[StringName]),
-		_region(&"b", RegionData.Owner.PLAYER, 1, [] as Array[StringName]),
-		_region(&"c", RegionData.Owner.PLAYER, 1, [] as Array[StringName]),
-		_region(&"d", RegionData.Owner.PLAYER, 1, [] as Array[StringName]),
+		_conquered(&"b", 1),
+		_conquered(&"c", 1),
+		_conquered(&"d", 1),
 	] as Array[RegionData])
 	var c: MapController = _controller(m, _win(3, true))
 	var won: Dictionary = {"v": false}
@@ -207,3 +215,73 @@ func test_draw_attack_empties_target_to_neutral() -> void:
 	assert_int(m.get_region(&"b").owner).is_equal(RegionData.Owner.NEUTRAL)
 	assert_int(m.get_region(&"b").army_count).is_equal(0)
 	assert_int(m.get_region(&"a").army_count).is_equal(1)
+
+
+# --- region-map AC7 / §3.7: tur ortası zafer bir kez, sonra oyun kilitli (C-51) ---
+func test_mid_turn_victory_locks_game() -> void:
+	var m: MapState = _map([
+		_region(&"a", RegionData.Owner.PLAYER, 5, [&"b"] as Array[StringName], 2),
+		_region(&"b", RegionData.Owner.NEUTRAL, 0, [&"a"] as Array[StringName]),
+		_region(&"e", RegionData.Owner.ENEMY, 0, [] as Array[StringName]),
+	] as Array[RegionData], 2)
+	m.get_region(&"e").owner = RegionData.Owner.NEUTRAL
+	var c: MapController = _controller(m, _win(1, true))
+	var wins: Array[int] = [0]
+	var incomes: Array[int] = [0]
+	c.game_won.connect(func() -> void: wins[0] += 1)
+	c.income_collected.connect(func(_amount: int) -> void: incomes[0] += 1)
+	c.select_region(&"a")
+	assert_bool(c.attempt_move(&"b")).is_true()
+	assert_int(wins[0]).is_equal(1)
+	assert_int(m.game_result).is_equal(MapState.GameResult.WON)
+	# Kilit: kalan aksiyon ve tur sonu çalışmaz, zafer tekrar yayılmaz.
+	c.select_region(&"b")
+	assert_bool(c.attempt_move(&"a")).is_false()
+	c.end_turn()
+	assert_int(m.current_turn).is_equal(1)
+	assert_int(incomes[0]).is_equal(0)
+	assert_int(wins[0]).is_equal(1)
+
+
+# --- region-map AC8 / §3.4 erken çıkış: AI son bölgeyi 1. adımda alırsa 2–4 çalışmaz (C-51) ---
+func test_enemy_taking_last_region_ends_game_before_economy() -> void:
+	var m: MapState = _map([
+		_region(&"e", RegionData.Owner.ENEMY, 9, [&"p"] as Array[StringName]),
+		_region(&"p", RegionData.Owner.PLAYER, 1, [&"e"] as Array[StringName], 3),
+	] as Array[RegionData])
+	var c: MapController = _controller(m, _win(99, true))
+	var events: Array[String] = []
+	c.game_lost.connect(func() -> void: events.append("lost"))
+	c.income_collected.connect(func(_amount: int) -> void: events.append("income"))
+	c.turn_ended.connect(func(_turn: int) -> void: events.append("turn"))
+	c.end_turn()
+	assert_array(events).contains_exactly(["lost"])
+	assert_int(m.current_turn).is_equal(1)
+	assert_int(m.game_result).is_equal(MapState.GameResult.LOST)
+	c.select_region(&"e")
+	assert_bool(c.attempt_move(&"p")).is_false()
+
+
+# --- region-map AC12: turn_ended kontrolden sonra ve yalnızca ONGOING iken (C-51) ---
+func test_turn_ended_follows_end_of_turn_check() -> void:
+	var m: MapState = _map([
+		_region(&"a", RegionData.Owner.PLAYER, 5, [] as Array[StringName], 2),
+	] as Array[RegionData])
+	var c: MapController = _controller(m, _win(99, true))
+	var seen: Array = []
+	c.turn_ended.connect(func(turn: int) -> void: seen.append([turn, m.current_turn, m.game_result, m.actions_remaining]))
+	c.end_turn()
+	assert_array(seen).contains_exactly([[2, 2, MapState.GameResult.ONGOING, m.actions_per_turn]])
+
+
+func test_end_of_turn_victory_emits_no_turn_ended() -> void:
+	var m: MapState = _map([
+		_region(&"a", RegionData.Owner.PLAYER, 5, [] as Array[StringName]),
+		_conquered(&"b", 1),
+	] as Array[RegionData])
+	var c: MapController = _controller(m, _win(1, true))
+	var events: Array[String] = []
+	c.game_won.connect(func() -> void: events.append("won"))
+	c.turn_ended.connect(func(_turn: int) -> void: events.append("turn"))
+	c.end_turn()
+	assert_array(events).contains_exactly(["won"])

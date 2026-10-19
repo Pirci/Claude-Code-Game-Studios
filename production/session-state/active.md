@@ -252,3 +252,8 @@
 - features/grid/corruption_stain.gd: CPU-built 4 frames per region (Bayer 4×4 flat PackedInt32Array; inset −3 = outline + 2px band; dashed edge 2/1; glint 1/16), RegionNode draws texture, 3 fps, reduce_motion → frame 2; CampaignMap passes reduce_motion. Evidence: production/qa/evidence/c38-corruption-stain-{levels,zoom}.png; map render 0 off-palette colours.
 - Engine quirk: `const X: Array[PackedInt32Array]` indexed with variables returns 0 (4.7.1) → documented in engine-reference current-best-practices.
 - Tests 181/181 (corruption_stain_test 9). Remaining C-38: purification branch + SpiritController/SpiritRules + spread application + M_c + info panel rows.
+
+## Session Extract — C-51 game_result kilidi (2026-10-19)
+- MapState.GameResult {ONGOING, WON, LOST} + game_result; RegionData.initial_owner (from RegionDefinition, unsaved). WinCondition: erlik_foci, conquered_neutral_count, foci_cleansed, is_met requires ≥1 player region.
+- MapController: attempt_move rejects when not ONGOING; apply → actions/selection → emit → win check → _finish(); end_turn: AI → early loss exit → income → turn++ → lose → win → else turn_ended. _is_lost() = no player regions (C-63 adds Erlik). GameContext HUD derived from game_result.
+- Tests 190/190. NEXT: C-56 (ADR-0007 save/load; deps C-17 ✓, C-51 ✓) or continue C-38.

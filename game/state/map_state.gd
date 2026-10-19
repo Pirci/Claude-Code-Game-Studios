@@ -3,7 +3,11 @@ extends RefCounted
 ## Haritanın tüm durumunu tutar. Mantık yok, sadece veri.
 
 
+enum GameResult { ONGOING, WON, LOST }
+
 var regions: Dictionary = {}  # StringName -> RegionData
+## Oyun sonucu; ONGOING dışına bir kez çıkar ve oyunu kilitler (region-map §3.7).
+var game_result: GameResult = GameResult.ONGOING
 var current_turn: int = 1
 var actions_remaining: int = 1
 var actions_per_turn: int = 1

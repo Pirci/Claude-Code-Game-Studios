@@ -19,6 +19,7 @@ func create_region_data() -> RegionData:
 	data.region_id = region_id
 	data.display_name_key = display_name_key
 	data.owner = owner
+	data.initial_owner = owner
 	data.army_count = starting_army
 	data.gold_per_turn = gold_per_turn
 	data.position = position

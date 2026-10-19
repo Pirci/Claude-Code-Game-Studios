@@ -122,11 +122,18 @@ func _connect_signals() -> void:
 	_map_controller.game_lost.connect(_on_game_lost)
 
 
+## HUD durumdan türetilir: oyun bitince başlık sonucu gösterir, Tur Bitir kapalı (§3.7).
 func _update_ui() -> void:
-	_chapter_label.text = tr("CHAPTER_1_TITLE")
+	match _game_state.map_state.game_result:
+		MapState.GameResult.WON:
+			_chapter_label.text = tr("VICTORY")
+		MapState.GameResult.LOST:
+			_chapter_label.text = tr("DEFEAT")
+		_:
+			_chapter_label.text = tr("CHAPTER_1_TITLE")
 	_gold_label.text = "%s: %s" % [tr("GOLD"), NumberFormatter.format_int(_game_state.gold)]
 	_turn_label.text = "%s: %s" % [tr("TURN"), NumberFormatter.format_int(_game_state.map_state.current_turn)]
-	_end_turn_button.disabled = false
+	_end_turn_button.disabled = _game_state.map_state.game_result != MapState.GameResult.ONGOING
 
 
 func _refresh_map() -> void:
@@ -208,13 +215,11 @@ func _on_army_moved(
 
 
 func _on_game_won() -> void:
-	_end_turn_button.disabled = true
-	_chapter_label.text = tr("VICTORY")
+	_refresh_map()
 
 
 func _on_game_lost() -> void:
-	_end_turn_button.disabled = true
-	_chapter_label.text = tr("DEFEAT")
+	_refresh_map()
 
 
 func _on_menu_pressed() -> void:

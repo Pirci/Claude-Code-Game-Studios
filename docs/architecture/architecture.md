@@ -419,8 +419,8 @@ Decisions made in this document that are not yet ADRs are listed in §7.
 | --- | --- | --- | --- |
 | QQ-01 | `MapController.bind_services` reaches 9+ arguments — group into a typed `GameServices` holder? | Medium | C-19 refactor (ADR-0003 note) |
 | QQ-02 | What does a boon's `requires` check ("system active") read — chapter flag, feature presence, content data? | Medium | ADR C-59 or C-39 story |
-| QQ-03 | `WinCondition` is a content `Resource` with logic (`is_met`) — keep (pure content rule) or move evaluation to `MapController`? | Low | C-51 |
-| QQ-04 | How does `WinCondition` read `initial_owner` (content) while evaluating `MapState`? | Medium | C-51 (pass `ChapterMapDefinition` or cache initial owners in MapState as content-derived, unsaved) |
+| QQ-03 | ~~`WinCondition` is a content `Resource` with logic~~ — **resolved C-51:** kept; checks are pure functions of `MapState` (`is_met`, `conquered_neutral_count`, `foci_cleansed`) | Low | C-51 ✅ |
+| QQ-04 | ~~How does `WinCondition` read `initial_owner`?~~ — **resolved C-51:** `RegionData.initial_owner`, copied from `RegionDefinition.owner` at map creation, content-derived and never saved (ADR-0007 rebuilds the map from content) | Medium | C-51 ✅ |
 | QQ-05 | Name/location of the economy config resource (resource §7) | Low | C-37 |
 | QQ-06 | `user://` folder follows `application/config/name` — set `use_custom_user_dir` before release? | Low | release checklist |
 | QQ-07 | Windows `DirAccess.rename` overwrite semantics | Low | C-56 test on Windows |

@@ -9,6 +9,9 @@ enum Owner { NEUTRAL, PLAYER, ENEMY }
 var region_id: StringName = &""
 var display_name_key: StringName = &""
 var owner: Owner = Owner.NEUTRAL
+## Bölüm başındaki sahip — içerikten ([RegionDefinition]) gelir, kaydedilmez (ADR-0007);
+## kazanmanın "başlangıçta nötr" sayımı için (region-map §4).
+var initial_owner: Owner = Owner.NEUTRAL
 var army_count: int = 0
 var gold_per_turn: int = 0
 var position: Vector2 = Vector2.ZERO

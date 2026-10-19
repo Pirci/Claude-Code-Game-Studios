@@ -80,7 +80,8 @@ sıfırlanır → **(5)** oyun sonu kontrolü: önce kaybetme (bölgesiz **veya*
   böylece kaybedilmiş ya da bitmiş bir durum asla kaydedilmez. Ardından oyuncu turu
   başlar (bekleyen Kök Böri sunumu — `spirit-system.md` §3.4). Zaferin kalıcılığı
   (`chapters_completed`, lütuf seçimleri → kayıt sırası) `scene-flow.md`'ye (C-35) aittir.
-  *Bugünkü kod `turn_ended`'ı kontrolden önce yayıyor → C-51.*
+  *Kod (C-51, 2026-10-19): `MapController.end_turn` bu sırayı ve `game_result` kilidini uygular
+  (Erlik yayılımı adımı C-38, Erlik kaybı C-63 ile eklenir).*
 
 > **Neden yayılım gelirden önce (C-29, 2026-10-18):** yayılan bozulmanın üretim
 > cezası (`M_c`) o turun gelirine hemen yansır — oyuncu çürümenin bedelini aynı
