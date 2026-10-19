@@ -94,7 +94,8 @@ Use a **persistent root context with swappable child contexts**.
     the whole game-context dependency chain resident from startup, which the project's
     forbidden pattern "Kalıcı node'lardan büyük sahne preload'u" rules out. If the game
     context's load time grows, switch to `ResourceLoader.load_threaded_request()` behind a
-    loading screen (amendment 2026-10-19, C-17; current code still preloads → C-57),
+    loading screen (amendment 2026-10-19, C-17; implemented in C-57 — `MENU_SCENE_PATH` /
+    `GAME_SCENE_PATH`),
   - instantiates exactly one context at a time via
     `_switch_to(context_name: StringName)`, calling `queue_free()` on the outgoing
     context and `instantiate()` on the incoming one,
@@ -164,8 +165,9 @@ signal quit_requested
   incoming one is added — `queue_free()` alone keeps it in the tree until frame end
   (godot-specialist advisory 2026-08-13, re-confirmed 2026-10-19).
 - Chapter content (`ChapterMapDefinition`) is loaded by `chapter_id` at game-context
-  start with `load()`, never `const preload`ed by a context (TR-map-002; C-57 fixes the
-  current `GameContext` preload of `chapter_1_map.tres`).
+  start with `load()`, never `const preload`ed by a context (TR-map-002; implemented in
+  C-57: `GameContext.CHAPTER_MAP_PATH_FORMAT % GameState.current_chapter`; the path
+  convention is finalised by the scene-flow ADR, C-62).
 
 ## Alternatives Considered
 

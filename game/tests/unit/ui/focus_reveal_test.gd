@@ -85,6 +85,14 @@ func test_root_context_accept_reveals_instead_of_pressing() -> void:
 	var started: Array[bool] = [false]
 	root_ctx.context_changed.connect(func(name: StringName) -> void: started[0] = started[0] or name == &"game")
 	var new_campaign: Control = root_ctx.find_child("NewCampaignButton", true, false) as Control
+	# Bas + bırak: buton bırakmada tetiklenir; ilk basış yalnızca odağı gösterir.
+	var release: InputEventAction = _action(&"ui_accept")
+	release.pressed = false
 	get_viewport().push_input(_action(&"ui_accept"))
+	get_viewport().push_input(release)
 	assert_bool(started[0]).is_false()
 	assert_bool(new_campaign.has_focus(true)).is_true()
+	# Odak artık görünür: ikinci Enter butona basar.
+	get_viewport().push_input(_action(&"ui_accept"))
+	get_viewport().push_input(release)
+	assert_bool(started[0]).is_true()

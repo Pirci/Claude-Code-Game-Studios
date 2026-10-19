@@ -18,7 +18,7 @@ History: 2026-08-13 — 24 TRs, 13 covered (54 %), 5 partial, 6 gaps.
 | TR-ID | GDD | Requirement (short) | ADR(s) | Status | Note |
 | --- | --- | --- | --- | --- | --- |
 | TR-map-001 | region-map | Per-region / per-map state; static vs mutable fields | 0004, 0007 | ✅ | Data-only state; 0007 saves mutable fields only |
-| TR-map-002 | region-map | ChapterMapDefinition per chapter, `load()` by `chapter_id` | 0001, 0002, 0007 | ⚠️ | Loading rule in 0001 guideline; chapter path convention / scene-flow ADR open (C-35) |
+| TR-map-002 | region-map | ChapterMapDefinition per chapter, `load()` by `chapter_id` | 0001, 0002, 0007 | ⚠️ | Loading rule in 0001, code C-57 (`chapter_%d_map.tres` by `current_chapter`); path convention / scene-flow ADR open (C-62) |
 | TR-map-003 | region-map | `end_turn` pipeline, early exit, `turn_ended` after check | 0003, 0005, 0007 | ✅ | Order is a GDD rule in MapController; code C-51 |
 | TR-map-004 | region-map | Clickable polygons; visual layer separate | 0002, 0004 | ⚠️ | View-refresh contract missing → Presentation ADR |
 | TR-map-005 | region-map | Enemy AI target selection, sequential, budget | 0005 | ✅ | decide → apply loop |

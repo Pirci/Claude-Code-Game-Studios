@@ -5,7 +5,10 @@ extends Control
 signal return_to_menu_requested
 
 
-const CHAPTER_1_MAP: ChapterMapDefinition = preload("res://features/grid/data/chapter_1_map.tres")
+## Bölüm haritası `chapter_id` ([member GameState.current_chapter]) ile bağlam başlarken
+## [code]load()[/code] edilir, preload edilmez (ADR-0001, TR-map-002). Yol kuralı C-62'de
+## (Scene flow & chapter loading ADR) kesinleşir.
+const CHAPTER_MAP_PATH_FORMAT: String = "res://features/grid/data/chapter_%d_map.tres"
 const COMBAT_CONFIG: CombatConfig = preload("res://features/combat/data/combat_config.tres")
 
 @onready var _background: ColorRect = %Background
@@ -51,7 +54,9 @@ func _ready() -> void:
 
 
 func _setup_controllers() -> void:
-	var map_def: ChapterMapDefinition = CHAPTER_1_MAP
+	var map_path: String = CHAPTER_MAP_PATH_FORMAT % _game_state.current_chapter
+	var map_def: ChapterMapDefinition = load(map_path) as ChapterMapDefinition
+	assert(map_def != null, "Bölüm haritası yüklenemedi: %s" % map_path)
 	_map_def = map_def
 	_game_state.map_state = map_def.create_map_state()
 	_game_state.gold = 100

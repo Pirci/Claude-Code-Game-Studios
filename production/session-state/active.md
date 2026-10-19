@@ -216,3 +216,8 @@
 - GameState: bozkurt_bonuses/get_total_bozkurt_bonus removed → boons: Array[StringName] + modifiers: Array[StatModifier]. Fixture: tests/unit/modifiers/fixtures/fixture_gok_kalkani_source.tres (ResourceSaver output).
 - run-tests.sh: grep guard for `.modifiers` outside features/modifiers|tests|addons (probe verified). Tests 157/157.
 - Consumers (F2 B_add/M_g, boon catalog, GameContext rebuild call) → C-39.
+
+## Session Extract — C-57 load() bağlamlar + bölüm haritası (2026-10-19)
+- RootContext: MENU_SCENE_PATH/GAME_SCENE_PATH + load() on transition; _switch_to: remove_child(old) then queue_free(). GameContext: CHAPTER_MAP_PATH_FORMAT "res://features/grid/data/chapter_%d_map.tres" % current_chapter, assert on null. COMBAT_CONFIG preload kept (tiny); MenuContext SETTINGS_SCENE preload kept (small, non-persistent owner).
+- Buttons fire on ui_accept RELEASE (ACTION_MODE_BUTTON_RELEASE) → tests send press+release; focus_reveal accept test strengthened (1st Enter reveals, 2nd presses).
+- Tests 161/161 (contexts/root_context_transition_test 4). Avoid `git stash` while the C-49 agent edits design/ (risk of losing its edits).
