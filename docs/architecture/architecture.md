@@ -8,7 +8,7 @@
 - **GDDs Covered:** `game-concept.md`, `systems-index.md`, `region-map-system.md`,
   `army-system.md`, `combat-system.md`, `resource-system.md`, `spirit-system.md`
   (cross-review 2026-10-19: CONCERNS, resolved in C-53)
-- **ADRs Referenced:** ADR-0001 … ADR-0008 (all **Accepted** 2026-10-19; ADR-0008 audio added by C-23 —
+- **ADRs Referenced:** ADR-0001 … ADR-0009 (all **Accepted** 2026-10-19; ADR-0008 audio added by C-23, ADR-0009 localization by C-61 —
   [architecture-review-2026-10-19.md](architecture-review-2026-10-19.md))
 - **Requirements baseline:** [tr-registry.yaml](tr-registry.yaml) v3 — 36 TRs; coverage in
   [architecture-traceability.md](architecture-traceability.md)
@@ -385,7 +385,7 @@ Decisions made in this document that are not yet ADRs are listed in §7.
    view-refresh contract, HUD/battle report/boon modal/preview/telegraph. Before C-41 / C-45.
 3. **Scene flow & chapter loading** (C-62, after `scene-flow.md` C-35) → TR-concept-007,
    TR-map-002; victory persistence order, chapter content path convention.
-4. **Localization & Pixel-Font Pipeline** (C-61) → TR-concept-006 (as built).
+4. ~~**Localization & Pixel-Font Pipeline** (C-61) → TR-concept-006 (as built).~~ — done: ADR-0009 (C-61).
 
 **Can defer to implementation:**
 - ~~Audio architecture~~ — done: ADR-0008 (C-23).

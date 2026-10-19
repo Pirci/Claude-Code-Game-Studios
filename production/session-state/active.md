@@ -221,3 +221,8 @@
 - RootContext: MENU_SCENE_PATH/GAME_SCENE_PATH + load() on transition; _switch_to: remove_child(old) then queue_free(). GameContext: CHAPTER_MAP_PATH_FORMAT "res://features/grid/data/chapter_%d_map.tres" % current_chapter, assert on null. COMBAT_CONFIG preload kept (tiny); MenuContext SETTINGS_SCENE preload kept (small, non-persistent owner).
 - Buttons fire on ui_accept RELEASE (ACTION_MODE_BUTTON_RELEASE) → tests send press+release; focus_reveal accept test strengthened (1st Enter reveals, 2nd presses).
 - Tests 161/161 (contexts/root_context_transition_test 4). Avoid `git stash` while the C-49 agent edits design/ (risk of losing its edits).
+
+## Session Extract — C-61 ADR-0009 localization (2026-10-19)
+- ADR-0009 Accepted (as-built + glyph-coverage rule). Finding: U+2212 −, ⚠, ✕, ✓, U+202F absent from all Fusion Pixel subsets (only Unifont) → not used in text; ASCII "-" + pixel icons. glyph_coverage_test.gd reads translations.csv (imported translations are OptimizedTranslation → no key list).
+- Indexes: architecture.md (ADR-0009), technical-preferences ADR log (+0009), traceability 24/36 covered, coding-standards localization bullets. Tests 163/163.
+- C-58 agent (godot-specialist) resumed after 20-turn limit; C-49 agent still running.

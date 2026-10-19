@@ -337,7 +337,7 @@ lineer karartma ve saf gri yasaktır. Bir asset içinde en fazla 2–3 rampa kul
 | **Krem/keçe** | Saflık, boş tuval, metin | Keçe ve yün dokuma — bozkır kültürünün doğal zemini. |
 | **Kahve/toprak** | Dayanıklılık, yapı, çizgi | Deri, keçe, ağaç — kilim ve outline'ın malzemesi. |
 
-**Kazanç/kayıp:** kazanç = yeşil + `↑` + "+X"; kayıp = açık kırmızı + `↓` + "−X".
+**Kazanç/kayıp:** kazanç = yeşil + `↑` + "+X"; kayıp = açık kırmızı + `↓` + "-X" (ASCII eksi, ADR-0009).
 Renk tek başına taşımaz.
 
 ### Sahiplik Renkleri (Harita)
@@ -444,7 +444,7 @@ uygulanmaz (harita etiketleri hariç — yukarıda).
 | --- | --- | --- |
 | Oyuncu (mavi) vs düşman (turuncu) | Düşük (en güvenli ikili) | Tamga + desen yine zorunlu |
 | Düşman (turuncu) vs nötr (keçe grisi) | Orta (value yakın: 1.3:1) | Nötr desensiz ve tamgasız; düşman desenli ve tamgalı |
-| Kazanç vs kayıp | Deuteranopi/protanopi | `↑`/`↓` ikonu + "+/−" rakam |
+| Kazanç vs kayıp | Deuteranopi/protanopi | `↑`/`↓` ikonu + "+/-" rakam |
 | Arındırılmış vs bozulmuş | Tritanopi | Tırtıklı leke kenarı + dithering + animasyon + ses |
 | Bozulma seviyesi 1 / 2 / 3 | Tüm tipler (aynı renk) | Dither yoğunluğu %25 / %50 / %75 (desen + value) + bilgi panelinde sayı |
 | Ülgen altını vs Kök Böri mavisi | Tritanopi | Kök Böri: kurt silüeti + titreyen parlama; altın: statik |
@@ -701,12 +701,13 @@ estetiğidir; dünyanın içinde olması gerekmez.
 - **Büyük harf:** büyük harfli metin çeviri dosyasında doğrudan büyük yazılır;
   programatik `to_upper()` kullanılmaz (Türkçe i→İ / ı→I, Almanca ß→SS tuzakları).
 - **Sayılar:** Arap rakamı (Roma rakamı yok). Kazanç `+123` + `↑` (yeşil), kayıp
-  `−45` + `↓` (açık kırmızı). Binlik ayırıcı dile göre çeviri key'inden gelir
+  `-45` + `↓` (açık kırmızı). Binlik ayırıcı dile göre çeviri key'inden gelir
   (tr/de `.`, en `,` …) — `TranslationServer.format_number()` gruplama yapmaz
   (Godot 4.7'de doğrulandı). Uygulama: `THOUSANDS_SEPARATOR` key'i +
   `NumberFormatter.format_int()`; fr/ru ayırıcısı kırılmaz boşluk U+00A0 (ince
-  boşluk U+202F Fusion Pixel Latin'de yok). Dikkat: kayıp işareti `−` (U+2212) da
-  Fusion Pixel Latin'de yok — kazanç/kayıp gösterimi uygulanırken glif kontrol edilmeli.
+  boşluk U+202F Fusion Pixel Latin'de yok). Kayıp işareti metinde ASCII `-` (U+2212
+  Fusion Pixel'de yok); `⚠` `✕` `✓` da Fusion'da yok → metin glifi değil **piksel ikon**
+  (ADR-0009; `glyph_coverage_test.gd` her çeviriyi native fontuna karşı denetler).
 
 ### İkonografi
 
@@ -798,8 +799,8 @@ palet dışı renk üretir).
   2. `Erlik direnci: 8` — arındırmak için gereken kuvvet `> 8` (spirit §3.2 `S`);
      aynı renk düzeni.
   Altın satırı bozulmuş bölgede **etkin** üretimi gösterir ve cezayı kayıp kuralıyla
-  işaretler: `Altın: 1 / tur  ↓−1` (açık kırmızı `#E87A7A`, `↓` + "−X"; Bölüm 4
-  kazanç/kayıp). Seviye 3'te `Altın: 0 / tur  ↓−2`. Temiz bölgede satırlar yoktur
+  işaretler: `Altın: 1 / tur  ↓-1` (açık kırmızı `#E87A7A`, `↓` + "-X"; Bölüm 4
+  kazanç/kayıp; eksi ASCII `-` — U+2212 Fusion'da yok, ADR-0009). Seviye 3'te `Altın: 0 / tur  ↓-2`. Temiz bölgede satırlar yoktur
   (panel küçük kalır). Panel yukarı doğru büyür (alt kenar sabit, HUD barın 4px
   üstü); iki satır ≈ +28px — 640×360'ta üst barla çakışmaz. Çeviri key'leri C-38'de:
   `CORRUPTION_LEVEL` (`"%s: %s / %s"` biçimine uygun etiket), `ERLIK_RESISTANCE`;

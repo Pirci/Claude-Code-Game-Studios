@@ -49,6 +49,8 @@
 - **Yeni metin eklerken**: Önce `translations.csv`'ye key + en sütununu ekle, sonra diğer dilleri doldur.
   Çeviri eksik kalabilir — `locale/fallback="en"` sayesinde İngilizce gösterilir.
 - **Desteklenen diller**: en, tr, de, fr, es, zh, ja, ko, ru, pt, ar (11 dil)
+- **Biçim ve harf çevirmenindir** (ADR-0009): sözcük sırası/birim placeholder'lı key ile çeviride (`PER_TURN` = `"%s / turn"`); oyuncuya görünen metinde `to_upper()`/`to_lower()`/`capitalize()` yok.
+- **Glif kapsamı** (ADR-0009): her çeviri kendi dilinin native pixel fontunda çizilebilmeli (`tests/unit/localization/glyph_coverage_test.gd`); Fusion'da olmayan semboller (`−` `⚠` `✕` `✓`) metinde kullanılmaz — eksi ASCII `-`, durum sembolleri piksel ikon.
 
 # Design Document Standards
 

@@ -1,15 +1,15 @@
 # Architecture Traceability Index
 
-- **Last Updated:** 2026-10-19 (`/architecture-review`, C-17 — [report](architecture-review-2026-10-19.md))
+- **Last Updated:** 2026-10-19 (C-61: TR-concept-006 → ADR-0009; base: `/architecture-review` C-17 — [report](architecture-review-2026-10-19.md))
 - **Engine:** Godot 4.7
 - **TR registry:** [tr-registry.yaml](tr-registry.yaml) (version 3, 36 requirements)
 
 ## Coverage Summary
 
 - **Total requirements:** 36
-- **Covered:** 23 (64 %)
+- **Covered:** 24 (67 %)
 - **Partial:** 9 (25 %)
-- **Gaps:** 4 (11 %)
+- **Gaps:** 3 (8 %)
 
 History: 2026-08-13 — 24 TRs, 13 covered (54 %), 5 partial, 6 gaps.
 
@@ -51,7 +51,7 @@ History: 2026-08-13 — 24 TRs, 13 covered (54 %), 5 partial, 6 gaps.
 | TR-concept-003 | concept | Data-driven, extensible resources | 0002 | ⚠️ | No resource-list abstraction; gold is a hard field |
 | TR-concept-004 | concept | Boons accumulate across scenes | 0001, 0006, 0007 | ✅ | |
 | TR-concept-005 | concept | Modular expansion | 0001, 0002 | ✅ | |
-| TR-concept-006 | concept | Localization, 11 languages | — | ❌ | ADR "Localization & Pixel-Font Pipeline" |
+| TR-concept-006 | concept | Localization, 11 languages | 0009 | ✅ | As built + glyph-coverage test (C-61) |
 | TR-concept-007 | concept | Scene-end sequence on victory | 0001, 0007 | ⚠️ | `scene-flow.md` (C-35) + its ADR |
 
 ## Known Gaps
@@ -61,7 +61,6 @@ History: 2026-08-13 — 24 TRs, 13 covered (54 %), 5 partial, 6 gaps.
 | TR-army-003 (+ TR-resource-006) | Move Resolution: pure Outcome + Apply | 1 — before C-38 / C-41 / C-45 |
 | TR-combat-003 (+ TR-map-004, TR-spirit-010 display) | Presentation Layer & Reports | 2 — before C-41 / C-45 |
 | TR-concept-007, TR-map-002 | Scene flow & chapter loading | 3 — after C-35 |
-| TR-concept-006 | Localization & Pixel-Font Pipeline | 4 |
 | TR-spirit-007 | (no ADR) art bible C-50 + shader spec | with C-50 / C-38 |
 
 ## Superseded Requirements
