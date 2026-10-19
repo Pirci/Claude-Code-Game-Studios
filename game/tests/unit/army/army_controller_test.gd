@@ -110,3 +110,46 @@ func test_enemy_combat_win_captures_for_enemy() -> void:
 	ArmyController.new().apply_combat_result(m, &"p", result, 5, RegionData.Owner.ENEMY)
 	assert_int(m.get_region(&"p").owner).is_equal(RegionData.Owner.ENEMY)
 	assert_int(m.get_region(&"p").army_count).is_equal(3)
+
+
+# --- army AC13 / W3: savaştan sonra boş kalan bölge sahipsiz olur (C-52) ---
+func test_one_on_one_draw_leaves_target_neutral_and_empty() -> void:
+	var target: RegionData = _region(&"e", RegionData.Owner.ENEMY, 1, [] as Array[StringName])
+	target.corruption_level = 2
+	var m: MapState = _map([target] as Array[RegionData])
+	var result: CombatResolver.CombatResult = CombatResolver.new().resolve(1, 1)
+	ArmyController.new().apply_combat_result(m, &"e", result, 1)
+	assert_int(target.owner).is_equal(RegionData.Owner.NEUTRAL)
+	assert_int(target.army_count).is_equal(0)
+	assert_int(target.corruption_level).is_equal(2)
+
+
+func test_draw_won_by_attacker_with_no_survivors_stays_neutral() -> void:
+	# draw_favors_defender = false, A = D = 1 → saldıran "kazanır" ama kimse kalmaz.
+	var config: CombatConfig = CombatConfig.new()
+	config.draw_favors_defender = false
+	var resolver: CombatResolver = CombatResolver.new()
+	resolver.bind_config(config)
+	var target: RegionData = _region(&"e", RegionData.Owner.ENEMY, 1, [] as Array[StringName])
+	var m: MapState = _map([target] as Array[RegionData])
+	ArmyController.new().apply_combat_result(m, &"e", resolver.resolve(1, 1), 1)
+	assert_int(target.owner).is_equal(RegionData.Owner.NEUTRAL)
+	assert_int(target.army_count).is_equal(0)
+
+
+func test_enemy_draw_on_player_region_leaves_it_neutral() -> void:
+	var target: RegionData = _region(&"p", RegionData.Owner.PLAYER, 1, [] as Array[StringName])
+	var m: MapState = _map([target] as Array[RegionData])
+	var result: CombatResolver.CombatResult = CombatResolver.new().resolve(1, 1)
+	ArmyController.new().apply_combat_result(m, &"p", result, 1, RegionData.Owner.ENEMY)
+	assert_int(target.owner).is_equal(RegionData.Owner.NEUTRAL)
+	assert_int(target.army_count).is_equal(0)
+
+
+func test_defender_with_survivors_keeps_region() -> void:
+	var target: RegionData = _region(&"e", RegionData.Owner.ENEMY, 4, [] as Array[StringName])
+	var m: MapState = _map([target] as Array[RegionData])
+	var result: CombatResolver.CombatResult = CombatResolver.new().resolve(4, 4)
+	ArmyController.new().apply_combat_result(m, &"e", result, 4)
+	assert_int(target.owner).is_equal(RegionData.Owner.ENEMY)
+	assert_int(target.army_count).is_equal(result.defender_remaining)

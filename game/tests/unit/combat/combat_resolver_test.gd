@@ -64,3 +64,17 @@ func test_null_config_uses_defaults() -> void:
 	var r: CombatResolver.CombatResult = resolver.resolve(5, 3)
 	assert_bool(r.attacker_won).is_true()
 	assert_int(r.attacker_remaining).is_equal(3)
+
+
+# --- combat AC9: draw_favors_defender = false (C-52) ---
+func test_draw_not_favoring_defender_matches_acceptance_values() -> void:
+	var config: CombatConfig = CombatConfig.new()
+	config.draw_favors_defender = false
+	var resolver: CombatResolver = CombatResolver.new()
+	resolver.bind_config(config)
+	var four: CombatResolver.CombatResult = resolver.resolve(4, 4)
+	assert_bool(four.attacker_won).is_true()
+	assert_int(four.attacker_remaining).is_equal(1)
+	var one: CombatResolver.CombatResult = resolver.resolve(1, 1)
+	assert_int(one.attacker_remaining).is_equal(0)
+	assert_int(one.defender_remaining).is_equal(0)

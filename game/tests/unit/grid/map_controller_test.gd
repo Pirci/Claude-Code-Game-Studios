@@ -193,3 +193,17 @@ func test_enemy_moves_emit_existing_signals() -> void:
 	assert_str(moved["to"]).is_equal("n")
 	assert_int(m.get_region(&"e").army_count).is_equal(1)
 	assert_int(m.get_region(&"n").army_count).is_equal(4)
+
+
+# --- army AC13 (uçtan uca): 1'e 1 beraberlik → hedef NEUTRAL, kaynak 1, kimse eklenmez (C-52) ---
+func test_draw_attack_empties_target_to_neutral() -> void:
+	var m: MapState = _map([
+		_region(&"a", RegionData.Owner.PLAYER, 2, [&"b"] as Array[StringName]),
+		_region(&"b", RegionData.Owner.ENEMY, 1, [&"a"] as Array[StringName]),
+	] as Array[RegionData])
+	var c: MapController = _controller(m, _win(99, true))
+	c.select_region(&"a")
+	assert_bool(c.attempt_move(&"b")).is_true()
+	assert_int(m.get_region(&"b").owner).is_equal(RegionData.Owner.NEUTRAL)
+	assert_int(m.get_region(&"b").army_count).is_equal(0)
+	assert_int(m.get_region(&"a").army_count).is_equal(1)

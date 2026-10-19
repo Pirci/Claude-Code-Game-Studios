@@ -21,7 +21,11 @@ class MoveIntent extends RefCounted:
 ## bölgelerdir; her düşman bölgesi tur başına en fazla bir kez hareket eder.
 ## Hamle yapabilecek bölge yoksa [code]null[/code] döner.
 func decide(map_state: MapState, acted: Array[StringName]) -> MoveIntent:
-	for region: RegionData in map_state.get_enemy_regions():
+	# Düşman bölgeleri `region_id` sırasıyla işlenir — kayıt sırasından bağımsız,
+	# deterministik (region-map-system.md AC6, W6).
+	var enemies: Array[RegionData] = map_state.get_enemy_regions()
+	enemies.sort_custom(_id_less)
+	for region: RegionData in enemies:
 		if region.region_id in acted:
 			continue
 		if region.army_count <= 1:
@@ -33,14 +37,19 @@ func decide(map_state: MapState, acted: Array[StringName]) -> MoveIntent:
 	return null
 
 
-## Düşman olmayan komşular arasında ordusu en düşük olan; eşitlikte komşuluk listesinde
-## ilk bulunan (bugünkü davranış — alfabetik eşitlik bozma C-52).
+## Düşman olmayan komşular arasında ordusu en düşük olan; eşitlikte `region_id`
+## alfabetik ilki (region-map-system.md AC6, W6).
 func _pick_target(map_state: MapState, region: RegionData) -> RegionData:
 	var best: RegionData = null
 	for adj_id: StringName in region.adjacent_regions:
 		var adj: RegionData = map_state.get_region(adj_id)
 		if adj == null or adj.owner == RegionData.Owner.ENEMY:
 			continue
-		if best == null or adj.army_count < best.army_count:
+		if best == null or adj.army_count < best.army_count \
+				or (adj.army_count == best.army_count and _id_less(adj, best)):
 			best = adj
 	return best
+
+
+static func _id_less(a: RegionData, b: RegionData) -> bool:
+	return String(a.region_id) < String(b.region_id)

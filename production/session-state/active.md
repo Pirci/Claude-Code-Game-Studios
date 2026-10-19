@@ -204,3 +204,9 @@
 - Art bible: §4 "Bozulma Seviyeleri" (Bayer 4×4 density 25/50/75 %, body #33173D, edge #1A1719 2-on/1-off, glint #522961, 2px clean ownership band), UI palette "Erlik bilgisi" #A86BC4 (4.79→4.7), colour-blind row, §7 info panel corruption rows, §8 shader `instance uniform int level`.
 - Mockups: production/qa/evidence/c50-corruption-levels-mockup{,-gray}.png. Tests 134/134.
 - NEXT: integrate C-49, then C-51.
+
+## Session Extract — C-52 boş bölge NEUTRAL + AI eşitlik bozma (2026-10-19)
+- C-51 skipped for now (waits on C-49 loss-condition decision); C-52 done first.
+- ArmyController.apply_combat_result: target army 0 after combat → owner NEUTRAL (corruption kept). EnemyAIController: enemies sorted by region_id; target tie → alphabetical region_id (`_id_less`).
+- Tests 141/141 (army +4, combat +1, AI +2 / −1 superseded "first adjacent", map +1). GDD AC annotations untouched (C-49 agent editing GDDs).
+- NEXT: integrate C-49 when the agent reports; then C-51.

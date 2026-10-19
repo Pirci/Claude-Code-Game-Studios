@@ -46,6 +46,10 @@ func apply_combat_result(
 		target.army_count = result.attacker_remaining
 	else:
 		target.army_count = result.defender_remaining
+	# Boş kalan bölge sahipsiz olur; sahipli bölge 0 orduyla kalmaz, bozulma korunur
+	# (army-system.md §3.3, W3). Kaybeden saldıranın hayatta kalanları dağılır.
+	if target.army_count == 0:
+		target.owner = RegionData.Owner.NEUTRAL
 
 
 func apply_peaceful_move(
