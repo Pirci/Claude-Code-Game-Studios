@@ -5,9 +5,9 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-19
-- **Son commit:** `21a9735` (C-21: koçboynuzu/kilim çerçeveler)
+- **Son commit:** `__H__` (C-22: harita zemini + çizgi paleti)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-22)
+- **Aktif görev:** — (yok; sıradaki: C-23)
 
 ---
 
@@ -90,6 +90,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 
 | Görev | Karar | Reddedilen alternatifler | Geri alma maliyeti |
 | --- | --- | --- | --- |
+| C-22 | Prolog zemini `#1A2614` (Bozkır Yeşili 2), çizgi `#436129` (Bozkır Yeşili 4); kural "çizgi = zemin rampasında iki ton açık" | Gri çizgi (Keçe Grisi 3); mevcut `#222A18` (palet dışı) | Düşük — bölüm verisinde iki renk |
 | C-21 | Koçboynuzu 5×5 biçimi: köşegen gövde + iki kıvrık kol (köşegen simetrik); Yeni Sefer butonu da birincil (bible "ana menü: birincil buton süslü") | Halka biçimli köşe; yalnızca Tur Bitir/Saldır | Düşük — üretici script'te tek sabit |
 | C-18 | `architecture.md` v1.0: 5 katman, modül sahiplik tabloları, 6 veri akışı, API sınırları, 5 ilke, 8 açık soru; TD öz-inceleme CONCERNS (koşullu onay); LP-FEASIBILITY lean modda atlandı | Bölüm bölüm kullanıcı onayı (gece modu: önerilen kabul) | Düşük — doküman |
 | C-17 | Mimari inceleme CONCERNS → düzeltmeler uygulandı ve 7 ADR **Accepted**. D1: context sahneleri geçişte `load()` (preload yasağına uyum); D2: yığın sınırının tek sahibi `ModifierSource.max_stacks` + `can_add()`; D3: `SpiritController` (`features/bozkurt/`) bozulma/Ruh/lütufların tek yazıcısı; D4: `SaveController`'ın sahibi RootContext, `MenuContext.continue_requested`; düşman AI kopya yerine karar→uygula döngüsü | D1-B teknik tercihlere istisna; D2-B BoonDefinition sahibi; D3-B çapraz-feature yazımlar; D4-B MenuContext SaveController sahibi; ADR'leri taze oturuma kadar Proposed bırakmak | Orta — ADR'ler Accepted; geri alma = değişiklik notu + yeniden inceleme |
@@ -125,7 +126,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-19 | [x] `278760f` | ADR-0005 uygulaması: `game/features/ai/` altında `EnemyAIController` + `ErlikSpreadController` (saf `decide()`), `MapController` intent'leri uygular; `_run_enemy_ai()` taşınır | ADR-0005 (K-02 sırasında keşfedildi) | C-17 | Davranış aynı kalır; mevcut testler yeşil + `decide()` için izole testler |
 | C-20 | [x] `5371770` | `tools/ci/run-tests.sh` varsayılan Godot yolu eskimiş (`~/Downloads/Applications`); Godot artık `/Applications/Godot.app` → yaygın konumları sırayla dene | C-01 sırasında keşfedildi (script `GODOT` olmadan çalışmıyor) | — | `GODOT` ayarlamadan `run-tests.sh` testleri çalıştırır |
 | C-21 | [x] `21a9735` | Birincil buton (Tur Bitir, Saldır) ve modal panel (ayarlar, savaş raporu) çerçeveleri: 5×5 koçboynuzu köşe + 2px kilim şevron bandı → üretici script + 9-slice `StyleBoxTexture`, `PrimaryButton` / `ModalPanel` tema varyasyonları; ayarlar ekranı modal panele alınır | Art bible §3, §7 (C-04 sırasında keşfedildi) | C-04 | Ekran görüntüsü + tema testi |
-| C-22 | [ ] | Harita zemini (`#222A18`) ve komşuluk çizgileri (%30 saydam gri — palet dışı ton üretir) palete bağlanır: opak çizgi rengi + bölüm zemin tonu (bible §4 "Yön Başına Sıcaklık"), data-driven | Art bible §4 (C-04 sırasında keşfedildi) | — | Ekran görüntüsü + piksel kontrolü |
+| C-22 | [x] `__H__` | Harita zemini (`#222A18`) ve komşuluk çizgileri (%30 saydam gri — palet dışı ton üretir) palete bağlanır: opak çizgi rengi + bölüm zemin tonu (bible §4 "Yön Başına Sıcaklık"), data-driven | Art bible §4 (C-04 sırasında keşfedildi) | — | Ekran görüntüsü + piksel kontrolü |
 | C-23 | [ ] | Bölge seçim "tık" sesi (bible: seçimin renk körlüğü yedeği) — ses altyapısı (`features/audio`, SFX bus) henüz yok; önce ses yönetimi tasarımı/ADR gerekir | Art bible §4 (C-05 sırasında keşfedildi) | — | Seçimde ses çalar; ses ayarı (SFX) ile ölçeklenir |
 | C-24 | [ ] | **Karar:** `.uid` dosyaları `game/.gitignore` ile yok sayılıyor (repoda 0 adet); Godot 4.4+ bunların commit'lenmesini öneriyor (UID referansları klonlar arasında tutarlı kalsın). Politikayı seç → gerekiyorsa ignore'dan çıkar + mevcutları ekle | C-06 sırasında keşfedildi | — | Karar kaydı + (seçilirse) tüm `.uid`'ler takipte |
 | C-25 | [ ] | **Karar + uygulama:** ekran açılışında başlangıç odağı yok (menü, ayarlar, oyun) → klavye kullanıcısı gezinmeye başlayamıyor. Fare kullanıcısına sürekli altın odak çerçevesi göstermeden çözüm seç (ör. ilk yön tuşunda odak ver / Godot 4.7 odak görünürlüğü ayarını araştır) | C-08 sırasında keşfedildi | — | Her ekranda ilk ok/Tab tuşu bir butona odaklanır; fareyle açılışta çerçeve yok |
@@ -214,3 +215,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-19 | C-18: `docs/architecture/architecture.md` v1.0 — katman haritası, modül sahipliği, veri akışları (hamle, tur sonu, kayıt/yükleme, başlatma, zafer), API sınırları, ADR denetimi, gerekli ADR'ler (C-59…C-62), ilkeler, açık sorular QQ-01…08; TD öz-inceleme CONCERNS *(gece modu)* | `bf6932f` |
 | 2026-10-19 | C-19: ADR-0005 uygulaması — `EnemyAIController.decide(map, acted)` + `ErlikSpreadController.decide(map, interval) -> SpreadDecision` (saf), `MapController` karar → uygula döngüsü (ele geçirilen bölge aynı tur hareket etmez), `ArmyController` `mover` parametresi; `RegionData.corruption_level`, `MapState.erlik_spread_interval/last_erlik_spread_turn` alanları; 104/104 test (24 yeni) | `278760f` |
 | 2026-10-19 | C-21: koçboynuzu köşe + kilim şevron bandı 9-slice çerçeveleri (`generate_ui_frames.gd`, 5 PNG), `PrimaryButton` / `ModalPanel` tema varyasyonları; Tur Bitir, Ordu Gönder, Yeni Sefer birincil; ayarlar ekranı modal panelde; 112/112 test (8 yeni), palet 0 ihlal; en/de ekran görüntüleri (Xvfb) *(gece modu)* | `21a9735` |
+| 2026-10-19 | C-22: harita zemini ve komşuluk çizgisi palete bağlandı ve data-driven (`ChapterMapDefinition.ground_color` / `adjacency_line_color`, opak); Prolog `#1A2614` / `#436129`; render piksel kontrolü: harita alanında palet dışı renk 0; 116/116 test *(gece modu)* | `__H__` |

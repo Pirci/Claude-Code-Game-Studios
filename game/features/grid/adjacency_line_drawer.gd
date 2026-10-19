@@ -3,9 +3,16 @@ extends Node2D
 ## Bölgeler arası bağlantı çizgilerini çizer.
 
 
-const LINE_COLOR := Color(0.8, 0.8, 0.8, 0.3)
+## Bölüm verisi renk vermezse kullanılan opak palet tonu (Bozkır Yeşili 4).
+const DEFAULT_LINE_COLOR := Color("#436129")
 ## Negatif genişlik = 1 piksellik ince primitive (pixel art; antialias yok).
 const LINE_WIDTH := -1.0
+
+## Opak palet rengi olmalı (ChapterMapDefinition.adjacency_line_color).
+var line_color: Color = DEFAULT_LINE_COLOR:
+	set(value):
+		line_color = value
+		queue_redraw()
 
 var _connections: Array[Vector2] = []
 
@@ -31,5 +38,5 @@ func build_connections(map_state: MapState) -> void:
 func _draw() -> void:
 	var i: int = 0
 	while i < _connections.size():
-		draw_line(_connections[i], _connections[i + 1], LINE_COLOR, LINE_WIDTH, false)
+		draw_line(_connections[i], _connections[i + 1], line_color, LINE_WIDTH, false)
 		i += 2

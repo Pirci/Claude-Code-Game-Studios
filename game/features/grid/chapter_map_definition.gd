@@ -12,6 +12,11 @@ extends Resource
 @export var player_tamga_id: StringName = &"oguz"
 ## Bölümün düşman kralı / yaratığının tamgası (Prolog: Erlik canavarı).
 @export var enemy_tamga_id: StringName = &""
+## Harita zemini ve komşuluk çizgisi (art bible §4 "Yön Başına Sıcaklık"): bölüm başına,
+## yalnızca global palet tonları. Çizgi opaktır — yarı saydam çizgi palet dışı ton üretir.
+## Kural: çizgi = zeminin rampasında iki ton açık.
+@export var ground_color: Color = Color("#1A2614")         # Bozkır Yeşili 2
+@export var adjacency_line_color: Color = Color("#436129") # Bozkır Yeşili 4
 @export var regions: Array[RegionDefinition] = []
 @export var win_condition: WinCondition = null
 

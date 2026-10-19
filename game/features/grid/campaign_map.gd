@@ -7,6 +7,7 @@ signal region_clicked(region_id: StringName)
 
 var _region_nodes: Dictionary = {}  # StringName -> RegionNode
 var _line_drawer: AdjacencyLineDrawer
+var _line_color: Color = AdjacencyLineDrawer.DEFAULT_LINE_COLOR
 var _tamgas: TamgaLibrary = TamgaLibrary.new()
 
 
@@ -14,6 +15,7 @@ func build_map(map_state: MapState) -> void:
 	_clear()
 
 	_line_drawer = AdjacencyLineDrawer.new()
+	_line_drawer.line_color = _line_color
 	add_child(_line_drawer)
 	_line_drawer.build_connections(map_state)
 
@@ -24,6 +26,13 @@ func build_map(map_state: MapState) -> void:
 		node.clicked.connect(_on_region_clicked)
 		add_child(node)
 		_region_nodes[region.region_id] = node
+
+
+## Bölümün komşuluk çizgisi rengi (ChapterMapDefinition.adjacency_line_color).
+func set_line_color(color: Color) -> void:
+	_line_color = color
+	if _line_drawer != null:
+		_line_drawer.line_color = color
 
 
 func refresh(map_state: MapState) -> void:

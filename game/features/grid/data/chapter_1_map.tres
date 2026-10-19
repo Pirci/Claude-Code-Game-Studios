@@ -84,5 +84,7 @@ actions_per_turn = 1
 enemy_actions_per_turn = 1
 player_tamga_id = &"oguz"
 enemy_tamga_id = &"erlik_beast"
+ground_color = Color(0.101961, 0.14902, 0.0784314, 1)
+adjacency_line_color = Color(0.262745, 0.380392, 0.160784, 1)
 regions = [SubResource("region_otuken"), SubResource("region_bati"), SubResource("region_dogu"), SubResource("region_altai"), SubResource("region_guney"), SubResource("region_sinir")]
 win_condition = SubResource("win_ch1")

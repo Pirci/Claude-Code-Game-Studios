@@ -373,6 +373,13 @@ Ton kaydırma yalnızca zemin `CanvasLayer`'ına uygulanır (Bölüm 2). Hex de�
 | **Kuzey (İtil/Ural)** | Buz Mavi-Beyazı + Keçe Grisi | `#D4E8FF` | Kış, soğuk, yüksek value |
 | **Güney (Sındu/Şam)** | Kum + Keçe Krem | `#F5E8CC` | Öğle, sıcak, orta kontrast |
 
+**Düz zemin rengi ve komşuluk çizgisi (C-22, 2026-10-19):** zemin dokusu gelene kadar
+her bölüm `ChapterMapDefinition.ground_color` (düz zemin) ve `adjacency_line_color`
+taşır — ikisi de **global paletten** ve **opak** (yarı saydam çizgi palet dışı ton üretir).
+Kural: çizgi = zemin rampasında iki ton açık. Prolog (ata yurdu bozkırı): zemin
+`#1A2614` (Bozkır Yeşili 2), çizgi `#436129` (Bozkır Yeşili 4). Perdelerin değerleri
+bölüm verisiyle (C-43…) bu tabloya göre seçilir.
+
 ### UI Paleti
 
 UI dünya paletinden türer; daha az ton, daha yüksek kontrast. Hedef WCAG AA:

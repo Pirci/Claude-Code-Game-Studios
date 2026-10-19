@@ -163,3 +163,8 @@
 - Applied: EndTurnButton, NewCampaignButton, RegionInfoPanel send button (PrimaryButton); settings screen wrapped in Frame (ModalPanel).
 - Tests 112/112 (ui_frames_theme_test 8). Screenshots via Xvfb: `xvfb-run -a -s "-screen 0 1920x1080x24" $G --path game --rendering-driver opengl3 --script scratchpad/shots/shot.gd -- <out> <locale>` (menu, settings, game_selected) — en/de checked visually.
 - NEXT: C-22 (map ground + adjacency line palette).
+
+## Session Extract — C-22 harita zemini + çizgi paleti (2026-10-19)
+- ChapterMapDefinition.ground_color (#1A2614) + adjacency_line_color (#436129, opaque); AdjacencyLineDrawer.line_color; CampaignMap.set_line_color; GameContext Background (%Background) from chapter. Rule in bible §4: line = ground ramp +2 tones.
+- Pixel check on Xvfb render: map area 0 off-palette colours. Tests 116/116 (map_palette_test 4).
+- NEXT: C-23 (selection click SFX — needs audio ADR/design first; likely decision task).

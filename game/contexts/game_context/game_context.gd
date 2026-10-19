@@ -8,6 +8,7 @@ signal return_to_menu_requested
 const CHAPTER_1_MAP: ChapterMapDefinition = preload("res://features/grid/data/chapter_1_map.tres")
 const COMBAT_CONFIG: CombatConfig = preload("res://features/combat/data/combat_config.tres")
 
+@onready var _background: ColorRect = %Background
 @onready var _chapter_label: Label = %ChapterLabel
 @onready var _gold_label: Label = %GoldLabel
 @onready var _turn_label: Label = %TurnLabel
@@ -16,6 +17,7 @@ const COMBAT_CONFIG: CombatConfig = preload("res://features/combat/data/combat_c
 
 var _game_state: GameState
 var _accessibility: AccessibilitySettings
+var _map_def: ChapterMapDefinition
 var _map_controller: MapController
 var _army_controller: ArmyController
 var _resource_controller: ResourceController
@@ -42,6 +44,7 @@ func _ready() -> void:
 
 func _setup_controllers() -> void:
 	var map_def: ChapterMapDefinition = CHAPTER_1_MAP
+	_map_def = map_def
 	_game_state.map_state = map_def.create_map_state()
 	_game_state.gold = 100
 
@@ -62,7 +65,9 @@ func _setup_controllers() -> void:
 
 
 func _setup_map_visuals() -> void:
+	_background.color = _map_def.ground_color
 	_campaign_map = CampaignMap.new()
+	_campaign_map.set_line_color(_map_def.adjacency_line_color)
 	add_child(_campaign_map)
 	move_child(_campaign_map, 1)
 	_campaign_map.build_map(_game_state.map_state)
