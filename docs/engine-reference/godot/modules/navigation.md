@@ -1,8 +1,18 @@
 # Godot Navigation — Quick Reference
 
-Last verified: 2026-02-12 | Engine: Godot 4.6
+Last verified: 2026-10-19 | Engine: Godot 4.7
 
 ## What Changed Since ~4.3 (LLM Cutoff)
+
+### 4.7 Changes (2026-06-18)
+Sources: migration guide (https://docs.godotengine.org/en/stable/tutorials/migrating/upgrading_to_godot_4.7.html), changelog (https://github.com/godotengine/godot/blob/master/CHANGELOG.md, "4.7 - 2026-06-18"), release notes (https://godotengine.org/releases/4.7/). "Verified" = checked on the Godot 4.7.1 stable binary.
+- **No navigation API breaks** in the 4.7 migration guide. Fixes: `NavigationServer3D.map_get_closest_point_normal()`
+  now returns a normalized vector; `GridMap` navmesh baking is faster with bake bounds.
+
+### 4.6 Changes (added 2026-10-19 from the official 4.6 migration guide)
+- **AStar disabled/solid start point**: `AStar2D.get_point_path()`, `AStar3D.get_point_path()`,
+  `AStarGrid2D.get_id_path()` and `AStarGrid2D.get_point_path()` now return an EMPTY path when `from_id` is a
+  disabled / solid point (was a path). Check `is_point_solid()` / `is_point_disabled()` before relying on a path from such a cell.
 
 ### 4.5 Changes
 - **Dedicated 2D navigation server**: No longer a proxy to 3D NavigationServer
@@ -99,3 +109,4 @@ nav_agent.navigation_layers = 1 | 2  # Ground + Flying
 - Using `NavigationRegion2D.avoidance_layers` (removed in 4.3)
 - Forgetting to bake navigation mesh after modifying geometry
 - Not setting `navigation_layers` (defaults to all layers)
+- Assuming `AStarGrid2D.get_id_path()` returns a path when the start cell is solid/disabled (empty since 4.6)

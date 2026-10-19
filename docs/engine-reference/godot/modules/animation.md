@@ -1,8 +1,20 @@
 # Godot Animation — Quick Reference
 
-Last verified: 2026-02-12 | Engine: Godot 4.6
+Last verified: 2026-10-19 | Engine: Godot 4.7
 
 ## What Changed Since ~4.3 (LLM Cutoff)
+
+### 4.7 Changes (2026-06-18)
+Sources: migration guide (https://docs.godotengine.org/en/stable/tutorials/migrating/upgrading_to_godot_4.7.html), changelog (https://github.com/godotengine/godot/blob/master/CHANGELOG.md, "4.7 - 2026-06-18"), release notes (https://godotengine.org/releases/4.7/). "Verified" = checked on the Godot 4.7.1 stable binary.
+- **`Tween.tween_await(signal: Signal) -> AwaitTweener`** (verified): pauses a tween sequence until a signal fires;
+  **`Tween.has_tweeners() -> bool`** (verified).
+- **SpriteFrames ping-pong**: `SpriteFrames.LoopMode` (`LOOP_NONE`, `LOOP_LINEAR`, `LOOP_PINGPONG` - verified) with
+  `set_animation_loop_mode()` / `get_animation_loop_mode()`; the old `set_animation_loop()` / `get_animation_loop()`
+  still exist on 4.7.1. Works with AnimatedSprite2D/3D.
+- `AnimationNodeBlendSpace1D/2D`: `SyncMode::CYCLIC`, optional `name` on `add_blend_point()`.
+- `Animation.length` type metadata float -> double (GDScript unaffected; C# binary/source break).
+- `LookAtModifier3D.relative` default `true` -> `false` (verified).
+- Animation editor: collapsible node groups with aggregate keys; many AnimationTree/Player optimizations.
 
 ### 4.6 Changes
 - **IK system fully restored**: Complete inverse kinematics for 3D skeletons
@@ -74,3 +86,4 @@ func _ready() -> void:
 - Using `bone_pose_updated` signal instead of `skeleton_updated` (renamed in 4.3)
 - Using old IK approach instead of SkeletonModifier3D system (restored in 4.6)
 - Not checking `is AnimationMixer` when type-checking animation nodes
+- Hand-rolling a "wait for signal" step inside a Tween chain (4.7: `Tween.tween_await()`)

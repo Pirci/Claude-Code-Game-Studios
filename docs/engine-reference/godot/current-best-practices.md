@@ -1,6 +1,6 @@
 # Godot — Current Best Practices
 
-Last verified: 2026-02-12 | Engine: Godot 4.6
+Last verified: 2026-10-19 | Engine: Godot 4.7
 
 Practices that are **new or changed** since the model's training data (~4.3).
 This supplements (not replaces) the agent's built-in knowledge.
@@ -26,6 +26,65 @@ This supplements (not replaces) the agent's built-in knowledge.
   ```
 
 - **Script backtracing**: Detailed call stacks available even in Release builds
+
+## GDScript (4.7)
+
+Sources: migration guide / changelog / release notes (see `breaking-changes.md`); "verified" = checked on the 4.7.1 binary.
+
+- **Overrides inherit the parent's return type**: write an explicit `return` (or type the override). Verified:
+  `func f(): pass` overriding `func f() -> int` is a parse error ("Not all code paths return a value").
+- **Packed-array element writes don't hit the property setter** (verified): `obj.packed[i] = x` calls no setter on `packed`.
+  If a setter must run (signals, dirty flags), assign the whole array: `obj.packed = new_array`.
+- **`ClassDB.class_exists()` instead of `type_exists()`** (deprecated in 4.7).
+- **`Tween.tween_await(signal)`** (verified) pauses a tween chain until a signal fires; useful for dialogue/cutscene sequencing.
+- **`sprintf` Java-style argument index** works: `"%2$s-%1$s" % ["a", "b"]` -> `b-a` (verified).
+- **`JSON.stringify({}, "\t")` yields `{}`** (verified); a UTF-8 BOM still breaks `JSON.parse()` (error 43, verified) but is skipped by `.tres` loading.
+- Typed-array behavior (project-verified on 4.7.1): typed arrays are invariant at runtime, `.filter()` on a typed array
+  stays typed, `Array[T](x)` does not compile (build the array and use `assign()`), typed `Dictionary` exports round-trip in `.tres`,
+  `ResourceSaver` writes typed custom-resource arrays as `Array[ExtResource("id")]([...])`.
+- `@abstract` (4.5+) is verified working: see the GDScript (4.5+) section above.
+- New warning `CONFUSABLE_TEMPORARY_MODIFICATION` (default WARN) - read it when it appears; trigger conditions not verified.
+- `ResourceLoader.load_threaded_request/get` deadlock and race fixes (changelog) - threaded loading is safer than on 4.6.
+
+## UI (4.7)
+
+- **Offset transform**: use `offset_transform_*` (position / scale / rotation / pivot) to animate Controls inside Containers;
+  it is visual-only by default (`offset_transform_visual_only`), so hover state does not flicker while an element moves.
+- **Focus API** (introduced in 4.6, re-verified 4.7.1): `grab_focus(hide_focus := false)`, `has_focus(ignore_hidden_focus := false)`;
+  project setting `gui/common/show_focus_state_on_pointer_event` = 0 Never / 1 Text Input Controls (default) / 2 Always.
+  Pattern for "focus for keyboard navigation without a ring after a mouse click": `grab_focus(true)`.
+- **Buttons fire `pressed` on `ui_accept` RELEASE** with the default `action_mode` (project-verified on 4.7.1) - tests that
+  simulate keyboard activation must send press AND release.
+- **PopupMenu** has an optional search bar (`search_bar_enabled`, `search_bar_min_item_count`, fuzzy search).
+- **RichTextLabel images**: pass `width_unit` / `height_unit` (`RichTextLabel.ImageUnit`); `[img height=1em]` scales with the font.
+- `Control.custom_maximum_size` complements `custom_minimum_size`.
+
+## Rendering / 2D (4.7)
+
+- **Stretch settings are explicit in the project file**: new-project defaults changed to `canvas_items` / `expand`, existing
+  projects are untouched (verified). Pixel-art projects keep `stretch/mode="viewport"` + `scale_mode="integer"` (+ `aspect="keep"`).
+- **Anti-aliased `draw_line()` / `draw_polyline()` are thinner** (no AA feather). Non-AA drawing (the default) is unchanged.
+- **Pixel fonts**: importer default `hinting` is now 3 ("Light (Except Pixel Fonts)"). Keep `hinting=0` and `subpixel_positioning=0`
+  pinned in the `.import` of pixel fonts; verify any re-import.
+- **HDR output** is opt-in (`display/window/hdr/request_hdr_output`, default false). Leave off for SDR pixel art.
+- `CollisionShape2D.one_way_collision_direction` replaces rotating shapes to get a non-"up" one-way platform.
+- `SpriteFrames.LoopMode.LOOP_PINGPONG` for ping-pong sprite animations (verified).
+
+## Audio (4.7)
+
+- `AudioStreamPlayer2D/3D.area_mask` now defaults to 0: re-enable layer 1 if you use `Area2D/3D.audio_bus_override`.
+- `AudioEffectSpectrumAnalyzer.tap_back_pos` was removed.
+
+## Input (4.7)
+
+- Compare `InputEvent.device` with `InputEvent.DEVICE_ID_KEYBOARD` / `DEVICE_ID_MOUSE`, never with `0`.
+- Optional `input_devices/joypads/ignore_joypad_on_unfocused_application` to drop gamepad input when the window is unfocused.
+
+## Editor Workflow (4.7)
+
+- New Asset Store replaces the Asset Library; export templates can be downloaded per platform / architecture;
+  2D scene painter (`B`), inline text-shader previews, MeshLibrary editor, collapsible animation tracks (release notes).
+- Headless import + test (project-verified on 4.7.1): `godot --headless --import` first, then GdUnit4 6.1.3 runs.
 
 ## Physics (4.6)
 
@@ -84,6 +143,8 @@ This supplements (not replaces) the agent's built-in knowledge.
 - **Dual-focus system**: Mouse/touch focus is now separate from keyboard/gamepad focus
   - Visual feedback differs depending on input method
   - Consider this when designing custom focus behavior
+  - API surface (4.6, GH-110250): `Control.grab_focus(hide_focus)`, `Control.has_focus(ignore_hidden_focus)`,
+    `LineEdit.edit(hide_focus)`; unchanged in 4.7 (verified)
 
 ## Editor Workflow (4.6)
 

@@ -1,8 +1,19 @@
 # Godot Physics — Quick Reference
 
-Last verified: 2026-02-12 | Engine: Godot 4.6
+Last verified: 2026-10-19 | Engine: Godot 4.7
 
 ## What Changed Since ~4.3 (LLM Cutoff)
+
+### 4.7 Changes (2026-06-18)
+Sources: migration guide (https://docs.godotengine.org/en/stable/tutorials/migrating/upgrading_to_godot_4.7.html), changelog (https://github.com/godotengine/godot/blob/master/CHANGELOG.md, "4.7 - 2026-06-18"), release notes (https://godotengine.org/releases/4.7/). "Verified" = checked on the Godot 4.7.1 stable binary.
+- **`CollisionShape2D.one_way_collision_direction`** (verified): one-way collision in any local direction
+  (was implicitly "local up"). `PhysicsServer2D.body_set_shape_as_one_way_collision()` gained an optional
+  `direction`; `PhysicsServer2DExtension._body_set_shape_as_one_way_collision` gained a required `direction`
+  (GDExtension break). 2D physics is otherwise unchanged.
+- **Jolt (3D only) behavior changes**: Jolt updated to 5.5.0; `WorldBoundaryShape3D.plane.d` sign is interpreted
+  the opposite way vs 4.6 (flip it); `SoftBody3D` default mass is now 1 kg total (was auto 1 kg per point) and
+  `linear_stiffness` is applied differently (re-tune stiffness/damping); `Area3D` now reports overlaps with `SoftBody3D`;
+  gravity application for dynamic bodies reworked; `ConeTwistJoint3D` uses cone-shaped limits.
 
 ### 4.6 Changes
 - **Jolt Physics is the DEFAULT 3D engine** for new projects
@@ -74,3 +85,4 @@ if result:
 - Assuming GodotPhysics3D is the default (Jolt since 4.6)
 - Using HingeJoint3D `damp` property without checking physics engine (Jolt ignores it)
 - Not testing collision edge cases when switching between physics engines
+- Rotating a `CollisionShape2D` or editing its polygon just to change the one-way direction (use `one_way_collision_direction`, 4.7)

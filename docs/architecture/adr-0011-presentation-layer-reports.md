@@ -36,7 +36,7 @@ queue that owns input and focus while open.
 |-------|-------|
 | **Engine** | Godot 4.7 |
 | **Domain** | UI / Presentation |
-| **Knowledge Risk** | MEDIUM — Control focus API changed in 4.7 (`grab_focus(hide_focus)`, `has_focus(ignore_hidden_focus)`), already verified and wrapped by `FocusReveal` (C-25) |
+| **Knowledge Risk** | MEDIUM — Control focus API changed in 4.6 (GH-110250: `grab_focus(hide_focus)`, `has_focus(ignore_hidden_focus)`), already verified and wrapped by `FocusReveal` (C-25) |
 | **References Consulted** | `docs/engine-reference/godot/modules/ui.md`, art bible §7 (panels, modal, focus), ADR-0009 (text) |
 | **Post-Cutoff APIs Used** | `Control.grab_focus(true)` / `has_focus(true)` via `FocusReveal` |
 | **Verification Required** | Modal input blocking with `physics_object_picking` map clicks (Area2D) — test in C-41 |

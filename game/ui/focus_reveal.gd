@@ -5,7 +5,7 @@ extends RefCounted
 ## klavyedeki ilk gezinme / onay tuşu odağı taşımadan veya butona basmadan yalnızca
 ## görünür yapar ([method reveal_on_navigation]). Fare tıklamaları odak çerçevesi
 ## göstermez — `gui/common/show_focus_state_on_pointer_event` varsayılanı "Text Input
-## Controls" (Godot 4.5+, 4.7.1'de doğrulandı).
+## Controls" (Godot 4.6+, GH-110250; 4.7.1'de doğrulandı).
 
 
 ## İlk basışta odağı görünür yapan eylemler. `ui_accept` da dahil: gizli odaklı

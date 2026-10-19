@@ -1,12 +1,19 @@
 # Godot Networking — Quick Reference
 
-Last verified: 2026-02-12 | Engine: Godot 4.6
+Last verified: 2026-10-19 | Engine: Godot 4.7
 
 ## What Changed Since ~4.3 (LLM Cutoff)
 
+### 4.7 Changes (2026-06-18)
+Sources: migration guide (https://docs.godotengine.org/en/stable/tutorials/migrating/upgrading_to_godot_4.7.html), changelog (https://github.com/godotengine/godot/blob/master/CHANGELOG.md, "4.7 - 2026-06-18"), release notes (https://godotengine.org/releases/4.7/). "Verified" = checked on the Godot 4.7.1 stable binary.
+- **No networking API breaks** in the 4.7 migration guide. Fixes only: ENet DTLS server peer leak, UDP server peer
+  connections, shortened IPv6 address parsing, HTTPRequest redirect status codes, incomplete downloads removed,
+  WebSocket send optimization (Web).
+
 ### 4.6 Changes
-- **Networking section in breaking changes**: See the official migration guide for
-  specifics at the 4.5→4.6 level
+- **Socket base classes** (official 4.6 migration guide; GDScript-compatible): `StreamPeerTCP.disconnect_from_host()`,
+  `get_status()`, `poll()` moved to base class `StreamPeerSocket`; `TCPServer.is_connection_available()`,
+  `is_listening()`, `stop()` moved to base class `SocketServer`.
 
 ### 4.5 Changes
 - **No major networking API breaks** — core multiplayer API remains stable

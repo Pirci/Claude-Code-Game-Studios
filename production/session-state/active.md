@@ -239,3 +239,6 @@
 - features/army/move_outcome.gd + move_resolver.gd (static validate() with REASON_*; resolve() COMBAT/PEACEFUL, W3 neutral, dispersed); ArmyController = can_move (delegates validate) + apply_outcome only (move_army/apply_combat_result/apply_peaceful_move removed); MapController.preview_move + _commit (shared by player/enemy); optional 8th bind_services arg move_resolver (GameContext injects).
 - Tests 171/171 (army tests migrated; move_resolver_test 7: preview no-mutation, preview == applied, reasons, enemy merge).
 - Remaining C-38: PURIFICATION branch (SpiritRules, SpiritController.apply_purification/apply_spread), spread application in end_turn, M_c penalty, corruption visuals (art bible C-50) + info panel rows + keys; Prolog data waits on C-49/C-36.
+
+## Session Extract — C-58 motor referansı 4.7 (2026-10-19)
+- godot-specialist updated docs/engine-reference/godot/* (12 files) from official 4.7 release notes, migration guide, CHANGELOG + 4.7.1 binary checks. Focus API (grab_focus(hide_focus)/has_focus(ignore_hidden_focus)/show_focus_state_on_pointer_event) is 4.6 (GH-110250). 4.7 font importer default hinting changed → font_import_settings_test.gd guards our flags.

@@ -1,11 +1,23 @@
 # Godot Audio — Quick Reference
 
-Last verified: 2026-02-12 | Engine: Godot 4.6
+Last verified: 2026-10-19 | Engine: Godot 4.7
 
 ## What Changed Since ~4.3 (LLM Cutoff)
 
+### 4.7 Changes (2026-06-18)
+Sources: migration guide (https://docs.godotengine.org/en/stable/tutorials/migrating/upgrading_to_godot_4.7.html), changelog (https://github.com/godotengine/godot/blob/master/CHANGELOG.md, "4.7 - 2026-06-18"), release notes (https://godotengine.org/releases/4.7/). "Verified" = checked on the Godot 4.7.1 stable binary.
+- **`area_mask` default changed 1 -> 0 (disabled)** on `AudioStreamPlayer2D` and `AudioStreamPlayer3D`
+  (verified = 0 on both; plain `AudioStreamPlayer` has no `area_mask`). This only matters if you use
+  `Area2D/Area3D.audio_bus_override`: such areas stop affecting players that relied on the old default - set the
+  player's `area_mask` back to layer 1. Other masks are unaffected. Disabled players also exit early (less overhead).
+- **`AudioEffectSpectrumAnalyzer.tap_back_pos` removed** (verified: `get_tap_back_pos` no longer exists);
+  analyzer jitter and Hann window fixed.
+- `AudioStreamInteractive.TRANSITION_TO_TIME_PREVIOUS_POSITION` is now bound; `AudioEffectFilter` cutoff slider is
+  exponential (editor); audio bus editor UI revamped; multi-viewport 3D volume calculation fixed.
+
 No major breaking changes to the audio API in 4.4–4.6. The core audio system
-remains stable. Key updates are workflow improvements:
+remains stable. 4.7 has two small breaks (area_mask default, spectrum analyzer property removal).
+Key updates are workflow improvements:
 
 ### 4.6 Changes
 - **No audio-specific breaking changes** in this release
@@ -77,3 +89,5 @@ func play_pooled(stream: AudioStream) -> void:
 - Creating new AudioStreamPlayer nodes at runtime instead of pooling
 - Not using audio buses for volume categories (Music, SFX, UI, Voice)
 - Using `_process()` for audio timing instead of signals (`finished`)
+- Relying on the old `area_mask = 1` default together with `audio_bus_override` (4.7 default is 0)
+- Reading `AudioEffectSpectrumAnalyzer.tap_back_pos` (removed in 4.7)

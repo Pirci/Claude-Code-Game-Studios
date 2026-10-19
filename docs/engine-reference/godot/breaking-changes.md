@@ -1,8 +1,62 @@
 # Godot — Breaking Changes
 
-Last verified: 2026-02-12
+Last verified: 2026-10-19 | Engine: Godot 4.7
 
 Changes between Godot versions, focused on post-LLM-cutoff changes (4.4+).
+
+## 4.6 → 4.7 (2026-06-18 — POST-CUTOFF, MEDIUM RISK)
+
+Sources: migration guide (https://docs.godotengine.org/en/stable/tutorials/migrating/upgrading_to_godot_4.7.html), changelog (https://github.com/godotengine/godot/blob/master/CHANGELOG.md, section "4.7 - 2026-06-18"),
+release notes (https://godotengine.org/releases/4.7/). "Verified" = checked on the Godot 4.7.1 stable binary (2026-10-19).
+The migration guide calls 4.6 → 4.7 "relatively safe" for most projects.
+
+### Breaking / behavior changes that can affect GDScript projects
+
+| Subsystem | Change | Details |
+|-----------|--------|---------|
+| GDScript | Overrides inherit the parent's typed return | A method that overrides one with a typed return (even if the override is untyped) now has that return type, so it needs an explicit `return`. Verified: `func f(): pass` overriding `func f() -> int` fails with "Not all code paths return a value". Fix: add `return null` (or a real value). |
+| GDScript | Packed-array element assignment no longer calls the whole-property setter | `obj.packed[i] = x` no longer triggers `set(v)` on the PackedArray property. Verified: a property with a setter saw 0 setter calls after `arr[1] = 9`. |
+| GDScript | `type_exists()` deprecated | Use `ClassDB.class_exists()` (verified present). Still works on 4.7.1. |
+| GDScript | New warning `CONFUSABLE_TEMPORARY_MODIFICATION` | Project setting `debug/gdscript/warnings/confusable_temporary_modification` exists, default 1 (WARN) - verified. What exactly triggers it is not verified. |
+| Input | Keyboard / mouse events get device IDs | `InputEvent.device` was `0`; now `InputEvent.DEVICE_ID_KEYBOARD` (16) / `DEVICE_ID_MOUSE` (32) - verified. Do not compare with `0`. |
+| Audio | `AudioStreamPlayer2D/3D.area_mask` default 1 → 0 | Only matters with `Area2D/3D.audio_bus_override` (set the player's mask back to layer 1). Verified = 0 on both; plain `AudioStreamPlayer` has no `area_mask`. |
+| Audio | `AudioEffectSpectrumAnalyzer.tap_back_pos` removed | Verified: `get_tap_back_pos` absent. |
+| Rendering | CanvasItem lines lose the AA feather | `draw_line` / `draw_polyline` with `antialiased=true` look thinner; widen if needed. Default `antialiased=false` unchanged. |
+| Rendering | Visual shader `LinearToSRGB` no longer clamps to [0, 1] | Mobile / Forward+ only. |
+| GUI | `RichTextLabel.add_image()` / `update_image()` | `width`/`height` are `float`; `width_in_percent`/`height_in_percent` bools replaced by `width_unit`/`height_unit` (`RichTextLabel.ImageUnit`: PIXEL / PERCENT / EM); `ImageUpdateMask.UPDATE_WIDTH_IN_PERCENT` → `UPDATE_WIDTH_UNIT`. Verified. |
+| GUI | `Control.accessibility_live` type | `DisplayServer.AccessibilityLiveMode` → `AccessibilityServer.AccessibilityLiveMode` (GDScript-compatible; C# break). |
+| GUI | `TreeItem.select()` adds `set_as_cursor`; `Font.find_variation()` adds `palette_index`, `custom_colors` | Optional parameters. |
+| Core | `Object.is_class()` takes `StringName` | Was `String`; GDScript-compatible. `ZIPPacker.start_file()` gains `permissions`, `modified_time`; `OptimizedTranslation.generate()` returns `bool` (was `void`). |
+| Core | `JSON.stringify()` prints empty `Dictionary` compactly | Verified: `JSON.stringify({}, "\t")` → `{}`. Only matters for string/golden-file comparisons, not for parse round-trips. |
+| Core | `.tres` loading skips a UTF-8 BOM | Verified: a `.tres` with a BOM loads. `JSON.parse()` still fails on a BOM (error 43, verified) - strip it yourself. |
+| Core | `ResourceLoader.load_threaded_*` fixes | Deadlocks, a request race, and resources never unloaded after `load_threaded_get` fixed (changelog). |
+| Physics 2D | `PhysicsServer2D.body_set_shape_as_one_way_collision()` adds optional `direction` | `PhysicsServer2DExtension` version has a required extra parameter (GDExtension break). New `CollisionShape2D.one_way_collision_direction` (verified). |
+| Physics 3D (Jolt) | Several behavior changes | `WorldBoundaryShape3D.plane.d` sign flipped; `SoftBody3D` default mass 1 kg total and different `linear_stiffness`; `Area3D` reports `SoftBody3D` overlaps; Jolt 5.5.0. 3D only. |
+| Animation | `Animation.length` metadata float → double; `AnimationNodeBlendSpace1D/2D.add_blend_point()` adds `name` | GDScript-compatible. |
+| Rendering API | `Image.save_exr()` / `save_exr_to_buffer()` add `color_image`, `max_linear_value`; `ImageTexture.get_format()` & `PortableCompressedTexture2D.get_format()` move to `Texture2D`; `RenderingServer.viewport_set_size()` adds `view_count`; `RenderingServer.particles_request_process_time()` renames `time` → `process_time`; `*Particles*.request_particles_process()` adds `process_time_residual` | Save_exr args and `Texture2D.get_format` verified. |
+| Editor / XR | `EditorSceneFormatImporter.IMPORT_*` constants move to enum `ImportFlags`; `EditorVCSInterface._commit` adds `amend`; `OpenXRExtensionWrapper._on_register_metadata` adds `interaction_profile_metadata` | Plugin / GDExtension authors only. |
+
+### Changed defaults
+
+| Subsystem | Old → New | Details |
+|-----------|-----------|---------|
+| Project template | Stretch mode / aspect `disabled` / `keep` → `canvas_items` / `expand` | NEWLY CREATED projects only. Verified: an existing `project.godot` with `stretch/mode="viewport"` and no aspect key still reads `aspect = keep` on 4.7.1. |
+| Import | `ResourceImporterDynamicFont.hinting` 1 → 3 | 3 = "Light (Except Pixel Fonts)" (class reference): hinting is auto-disabled for pixel-style fonts. Applies to new imports; `.import` files that pin `hinting=0` are unchanged. |
+| Core | `rendering/reflections/sky_reflections/roughness_layers` 7 → 8 | Verified = 8. |
+| Animation | `LookAtModifier3D.relative` true → false | Verified = false. |
+| GUI | `RichTextLabel.add_image()` unit params `false` → `0` | Follows from the enum change above. |
+
+### New in 4.7 (non-breaking, for awareness)
+
+| Area | Feature | Notes |
+|------|---------|-------|
+| UI | Control offset transform (`offset_transform_*`, `offset_transform_visual_only`) | Verified properties. Animate Container children without layout fights. |
+| UI | `Control.custom_maximum_size`, `translation_context`, `_get_cursor_shape()`; PopupMenu search bar; RichTextLabel `em` image units; TextureRect AtlasTexture tiling; accessibility landmark navigation; VirtualJoystick | Properties/classes verified except TextureRect tiling. |
+| Rendering | HDR output (`display/window/hdr/request_hdr_output`, default false - verified; `Window.hdr_output_requested`); `DrawableTexture2D`; `AreaLight3D`; `Viewport.SCALING_3D_MODE_NEAREST`; `GradientTexture2D.FILL_CONIC` | Classes / constants verified. |
+| Animation | `Tween.tween_await(signal)`, `Tween.has_tweeners()`; SpriteFrames `LOOP_PINGPONG` | Verified. |
+| Input | `input_devices/joypads/ignore_joypad_on_unfocused_application`; gamepad motion sensors | Setting verified. |
+| Editor | Asset Store replaces Asset Library; export template downloader per platform; 2D scene painter (`B`); inline text-shader previews; GDExtensions listed in Project Settings; MeshLibrary editor | Release notes only. |
+| Platform | Standalone Android export (GABE), Android XR / Steam Frame support, Wayland touch, Perfetto tracing | Release notes only. |
 
 ## 4.5 → 4.6 (Jan 2026 — POST-CUTOFF, HIGH RISK)
 
@@ -21,6 +75,14 @@ Changes between Godot versions, focused on post-LLM-cutoff changes (4.4+).
 | Localization | CSV plural form support | No longer requires Gettext for plurals. Context columns added. |
 | C# | Automatic string extraction | Translation strings auto-extracted from C# code. |
 | Plugins | New EditorDock class | Specialized container for plugin docks with layout control. |
+| UI | `Control.grab_focus(hide_focus := false)`, `has_focus(ignore_hidden_focus := false)`, `LineEdit.edit(hide_focus)` | Added in 4.6 (GH-110250 / GH-111117, official 4.6 migration guide); setting `gui/common/show_focus_state_on_pointer_event`. Re-verified on 4.7.1. |
+| Navigation | AStar returns an empty path from a disabled / solid start | `AStar2D/3D.get_point_path`, `AStarGrid2D.get_id_path/get_point_path` return `[]` when `from_id` is disabled/solid (official 4.6 migration guide). |
+| Core | TSCN format change | `load_steps` no longer written; unique node IDs are saved. Backward/forward compatible, but re-saving a 4.5 scene produces big diffs (Project > Tools > Upgrade Project Files). |
+| Rendering | Glow / volumetric fog defaults | Glow blend mode Soft Light → Screen, intensity 0.8 → 0.3; volumetric fog blending brighter (official 4.6 migration guide). |
+| Core | `FileAccess.get_as_text()` loses `skip_cr`; `Performance.add_custom_monitor()` gains `type` | Official 4.6 migration guide. |
+| Animation | `AnimationPlayer.current_animation` / `assigned_animation` / `autoplay` are `StringName` | GDScript-compatible; C# break (official 4.6 migration guide). |
+| Editor | `EditorFileDialog` members moved to `FileDialog` | Plugin authors (official 4.6 migration guide). |
+| Networking | `StreamPeerTCP` / `TCPServer` methods moved to `StreamPeerSocket` / `SocketServer` | GDScript-compatible (official 4.6 migration guide). |
 
 ## 4.4 → 4.5 (Late 2025 — POST-CUTOFF, HIGH RISK)
 
