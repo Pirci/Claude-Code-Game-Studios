@@ -1,66 +1,24 @@
 class_name ArmyController
 extends RefCounted
-## Ordu hareket doğrulama ve taşıma mantığı.
-## Kurallar hamle yapan taraf ([param mover]) için aynıdır (army-system.md §3.1, ADR-0005).
+## Ordu alanlarının (sahip, ordu sayısı) yazıcısı. Kurallar [MoveResolver]'dadır; burası
+## yalnızca bir [MoveOutcome]'u uygular (ADR-0010). Bozulma ve Ruh SpiritController'ındır.
 
 
-## Hareket geçerli mi? Oyuncu hamlesinde aksiyon bütçesi de kontrol edilir; düşmanın
-## bütçesini [MapController] tur sonu döngüsünde yönetir.
+## Hareket geçerli mi? Kurallar [method MoveResolver.validate] ile aynı (army-system §3.1).
 func can_move(
 	map_state: MapState,
 	from_id: StringName,
 	to_id: StringName,
 	mover: RegionData.Owner = RegionData.Owner.PLAYER,
 ) -> bool:
-	var from_region: RegionData = map_state.get_region(from_id)
-	if from_region == null:
-		return false
-	if from_region.owner != mover:
-		return false
-	if from_region.army_count <= 1:
-		return false
-	if to_id not in from_region.adjacent_regions:
-		return false
-	if mover == RegionData.Owner.PLAYER and map_state.actions_remaining <= 0:
-		return false
-	return true
+	return MoveResolver.validate(map_state, from_id, to_id, mover) == &""
 
 
-func move_army(map_state: MapState, from_id: StringName, to_id: StringName) -> int:
-	var from_region: RegionData = map_state.get_region(from_id)
-	var moving: int = from_region.army_count - 1
-	from_region.army_count = 1
-	return moving
-
-
-func apply_combat_result(
-	map_state: MapState,
-	target_id: StringName,
-	result: CombatResolver.CombatResult,
-	moving_army: int,
-	mover: RegionData.Owner = RegionData.Owner.PLAYER,
-) -> void:
-	var target: RegionData = map_state.get_region(target_id)
-	if result.attacker_won:
-		target.owner = mover
-		target.army_count = result.attacker_remaining
-	else:
-		target.army_count = result.defender_remaining
-	# Boş kalan bölge sahipsiz olur; sahipli bölge 0 orduyla kalmaz, bozulma korunur
-	# (army-system.md §3.3, W3). Kaybeden saldıranın hayatta kalanları dağılır.
-	if target.army_count == 0:
-		target.owner = RegionData.Owner.NEUTRAL
-
-
-func apply_peaceful_move(
-	map_state: MapState,
-	target_id: StringName,
-	moving_army: int,
-	mover: RegionData.Owner = RegionData.Owner.PLAYER,
-) -> void:
-	var target: RegionData = map_state.get_region(target_id)
-	if target.owner == mover:
-		target.army_count += moving_army
-	else:
-		target.owner = mover
-		target.army_count = moving_army
+## [param outcome]'daki kaynak ve hedef ordu/sahip değerlerini yazar; geçersizse dokunmaz.
+func apply_outcome(map_state: MapState, outcome: MoveOutcome) -> void:
+	if not outcome.is_valid():
+		return
+	map_state.get_region(outcome.from_id).army_count = outcome.source_army_after
+	var target: RegionData = map_state.get_region(outcome.to_id)
+	target.owner = outcome.target_owner_after
+	target.army_count = outcome.target_army_after

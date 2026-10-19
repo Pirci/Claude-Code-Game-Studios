@@ -234,3 +234,8 @@
 ## Session Extract — C-60 ADR-0011 presentation (2026-10-19)
 - ADR-0011 Accepted: passive views (feature-owned scenes; HUD in ui/hud/), GameContext sole presenter `_refresh_views()`, HudModel via pure HudPresenter (IncomeRules + ErlikSpreadController.decide + StatResolver interval), reports fed MoveOutcome, one TurnSummaryReport per enemy turn, ModalQueue (overlay CanvasLayer, backdrop blocks map, FocusReveal focus restore), preview + second click for failing purification, motion never gates input.
 - Traceability 30/36 covered; remaining gap TR-concept-007 (scene flow, C-62 after C-35).
+
+## Session Extract — C-38 adım 1: MoveResolver (2026-10-19)
+- features/army/move_outcome.gd + move_resolver.gd (static validate() with REASON_*; resolve() COMBAT/PEACEFUL, W3 neutral, dispersed); ArmyController = can_move (delegates validate) + apply_outcome only (move_army/apply_combat_result/apply_peaceful_move removed); MapController.preview_move + _commit (shared by player/enemy); optional 8th bind_services arg move_resolver (GameContext injects).
+- Tests 171/171 (army tests migrated; move_resolver_test 7: preview no-mutation, preview == applied, reasons, enemy merge).
+- Remaining C-38: PURIFICATION branch (SpiritRules, SpiritController.apply_purification/apply_spread), spread application in end_turn, M_c penalty, corruption visuals (art bible C-50) + info panel rows + keys; Prolog data waits on C-49/C-36.

@@ -65,6 +65,8 @@ func _setup_controllers() -> void:
 	_resource_controller = ResourceController.new()
 	_combat_resolver = CombatResolver.new()
 	_combat_resolver.bind_config(COMBAT_CONFIG)
+	var move_resolver: MoveResolver = MoveResolver.new()
+	move_resolver.bind_services(_combat_resolver)
 	_map_controller = MapController.new()
 	_map_controller.bind_services(
 		_game_state.map_state,
@@ -74,6 +76,7 @@ func _setup_controllers() -> void:
 		_combat_resolver,
 		map_def.win_condition,
 		EnemyAIController.new(),
+		move_resolver,
 	)
 
 

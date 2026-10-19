@@ -16,11 +16,13 @@ var _map_state: MapState
 var _game_state: GameState
 var _army_controller: ArmyController
 var _resource_controller: ResourceController
-var _combat_resolver: CombatResolver
 var _win_condition: WinCondition
 var _enemy_ai: EnemyAIController
+var _move_resolver: MoveResolver
 
 
+## [param move_resolver] verilmezse [param combat_resolver] ile kurulan bir tane kullanılır
+## (aynı savaş ayarı; testler ve eski çağrılar için).
 func bind_services(
 	map_state: MapState,
 	game_state: GameState,
@@ -29,14 +31,18 @@ func bind_services(
 	combat_resolver: CombatResolver,
 	win_condition: WinCondition,
 	enemy_ai: EnemyAIController,
+	move_resolver: MoveResolver = null,
 ) -> void:
 	_map_state = map_state
 	_game_state = game_state
 	_army_controller = army_controller
 	_resource_controller = resource_controller
-	_combat_resolver = combat_resolver
 	_win_condition = win_condition
 	_enemy_ai = enemy_ai
+	_move_resolver = move_resolver
+	if _move_resolver == null:
+		_move_resolver = MoveResolver.new()
+		_move_resolver.bind_services(combat_resolver)
 
 
 func select_region(region_id: StringName) -> void:
@@ -48,23 +54,20 @@ func select_region(region_id: StringName) -> void:
 	region_selected.emit(region_id)
 
 
+## Seçili bölgeden [param target_id]'ye hamlenin sonucu — durumu değiştirmez (ADR-0010).
+## Aynı durumda [method attempt_move]'un uygulayacağı sonuçla alan alan aynıdır.
+func preview_move(target_id: StringName) -> MoveOutcome:
+	return _move_resolver.resolve(_map_state, _map_state.selected_region_id, target_id)
+
+
 func attempt_move(target_id: StringName) -> bool:
 	var from_id: StringName = _map_state.selected_region_id
 	if from_id == &"":
 		return false
-	if not _army_controller.can_move(_map_state, from_id, target_id):
+	var outcome: MoveOutcome = _move_resolver.resolve(_map_state, from_id, target_id)
+	if not outcome.is_valid():
 		return false
-
-	var moving: int = _army_controller.move_army(_map_state, from_id, target_id)
-	var target: RegionData = _map_state.get_region(target_id)
-
-	if target.owner != RegionData.Owner.PLAYER and target.army_count > 0:
-		var result: CombatResolver.CombatResult = _combat_resolver.resolve(moving, target.army_count)
-		_army_controller.apply_combat_result(_map_state, target_id, result, moving)
-		combat_occurred.emit(from_id, target_id, result)
-	else:
-		_army_controller.apply_peaceful_move(_map_state, target_id, moving)
-		army_moved.emit(from_id, target_id, moving)
+	_commit(outcome)
 
 	_map_state.actions_remaining -= 1
 	_map_state.selected_region_id = &""
@@ -107,16 +110,21 @@ func _run_enemy_ai() -> void:
 
 
 func _apply_enemy_move(intent: EnemyAIController.MoveIntent) -> void:
-	var enemy: RegionData.Owner = RegionData.Owner.ENEMY
-	if not _army_controller.can_move(_map_state, intent.from_id, intent.to_id, enemy):
-		push_warning("EnemyAIController geçersiz hamle önerdi: %s → %s" % [intent.from_id, intent.to_id])
+	var outcome: MoveOutcome = _move_resolver.resolve(
+		_map_state, intent.from_id, intent.to_id, RegionData.Owner.ENEMY)
+	if not outcome.is_valid():
+		push_warning("EnemyAIController geçersiz hamle önerdi: %s → %s (%s)" % [
+			intent.from_id, intent.to_id, outcome.invalid_reason])
 		return
-	var moving: int = _army_controller.move_army(_map_state, intent.from_id, intent.to_id)
-	var target: RegionData = _map_state.get_region(intent.to_id)
-	if target.army_count > 0:
-		var result: CombatResolver.CombatResult = _combat_resolver.resolve(moving, target.army_count)
-		_army_controller.apply_combat_result(_map_state, intent.to_id, result, moving, enemy)
-		combat_occurred.emit(intent.from_id, intent.to_id, result)
-	else:
-		_army_controller.apply_peaceful_move(_map_state, intent.to_id, moving, enemy)
-		army_moved.emit(intent.from_id, intent.to_id, moving)
+	_commit(outcome)
+
+
+## Sonucu uygular (ordu alanları [ArmyController]'da) ve sinyali yayar — oyuncu ve düşman
+## için aynı yol (ADR-0010).
+func _commit(outcome: MoveOutcome) -> void:
+	_army_controller.apply_outcome(_map_state, outcome)
+	match outcome.branch:
+		MoveOutcome.Branch.COMBAT:
+			combat_occurred.emit(outcome.from_id, outcome.to_id, outcome.combat)
+		MoveOutcome.Branch.PEACEFUL:
+			army_moved.emit(outcome.from_id, outcome.to_id, outcome.moving)
