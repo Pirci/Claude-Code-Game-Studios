@@ -7,6 +7,10 @@ signal region_selected(region_id: StringName)
 signal region_deselected
 signal army_moved(from_id: StringName, to_id: StringName, army_count: int)
 signal combat_occurred(from_id: StringName, to_id: StringName, result: CombatResolver.CombatResult)
+## Arındırma hamlesi (başarılı ya da değil) uygulandı — rapor/HUD sonucu buradan okur.
+signal purification_resolved(outcome: MoveOutcome)
+## Tur sonu Erlik yayılımı bir bölgeyi bir seviye derinleştirdi.
+signal corruption_spread(region_id: StringName)
 signal turn_ended(new_turn: int)
 signal income_collected(amount: int)
 signal game_won
@@ -19,6 +23,9 @@ var _resource_controller: ResourceController
 var _win_condition: WinCondition
 var _enemy_ai: EnemyAIController
 var _move_resolver: MoveResolver
+var _spirit: SpiritController
+var _erlik_spread: ErlikSpreadController
+var _modifier_controller: ModifierController = null
 
 
 ## [param move_resolver] verilmezse [param combat_resolver] ile kurulan bir tane kullanılır
@@ -43,6 +50,23 @@ func bind_services(
 	if _move_resolver == null:
 		_move_resolver = MoveResolver.new()
 		_move_resolver.bind_services(combat_resolver)
+	_spirit = SpiritController.new()
+	_spirit.bind_services(game_state)
+	_erlik_spread = ErlikSpreadController.new()
+
+
+## Erlik katmanı servisleri (ADR-0005/0006, registry `spirit_state`). Çağrılmazsa varsayılan
+## kurallarla kurulanlar ve lütufsuz (boş) değiştirici listesi kullanılır.
+func bind_erlik_layer(
+	spirit: SpiritController,
+	erlik_spread: ErlikSpreadController,
+	modifier_controller: ModifierController = null,
+) -> void:
+	if spirit != null:
+		_spirit = spirit
+	if erlik_spread != null:
+		_erlik_spread = erlik_spread
+	_modifier_controller = modifier_controller
 
 
 func select_region(region_id: StringName) -> void:
@@ -57,7 +81,8 @@ func select_region(region_id: StringName) -> void:
 ## Seçili bölgeden [param target_id]'ye hamlenin sonucu — durumu değiştirmez (ADR-0010).
 ## Aynı durumda [method attempt_move]'un uygulayacağı sonuçla alan alan aynıdır.
 func preview_move(target_id: StringName) -> MoveOutcome:
-	return _move_resolver.resolve(_map_state, _map_state.selected_region_id, target_id)
+	return _move_resolver.resolve(_map_state, _map_state.selected_region_id, target_id,
+		RegionData.Owner.PLAYER, _modifiers())
 
 
 ## Oyun bitince (`game_result` ONGOING değil) hamle reddedilir (region-map §3.7).
@@ -69,10 +94,12 @@ func attempt_move(target_id: StringName) -> bool:
 	var from_id: StringName = _map_state.selected_region_id
 	if from_id == &"":
 		return false
-	var outcome: MoveOutcome = _move_resolver.resolve(_map_state, from_id, target_id)
+	var outcome: MoveOutcome = _move_resolver.resolve(_map_state, from_id, target_id,
+		RegionData.Owner.PLAYER, _modifiers())
 	if not outcome.is_valid():
 		return false
 	_army_controller.apply_outcome(_map_state, outcome)
+	_spirit.apply_purification(_map_state, outcome)
 	_map_state.actions_remaining -= 1
 	_map_state.selected_region_id = &""
 
@@ -85,7 +112,7 @@ func attempt_move(target_id: StringName) -> bool:
 
 
 ## Tur sonu (region-map §3.4): (1) düşman AI → erken kayıp çıkışı → (2) Erlik yayılımı
-## (C-38) → (3) ekonomi → (4) tur artışı → (5) önce kaybetme (bölgesiz ∨ Erlik), sonra kazanma; oyun
+## → (3) ekonomi → (4) tur artışı → (5) önce kaybetme (bölgesiz ∨ Erlik), sonra kazanma; oyun
 ## sürüyorsa `turn_ended` en sonda. Oyun bitmişse hiçbir adım çalışmaz.
 func end_turn() -> void:
 	if _map_state.game_result != MapState.GameResult.ONGOING:
@@ -95,6 +122,7 @@ func end_turn() -> void:
 	if _map_state.get_player_regions().is_empty():
 		_lose(MapState.LossReason.NO_REGIONS)
 		return
+	_run_erlik_spread()
 
 	var income: int = _resource_controller.collect_turn_income(_map_state, _game_state)
 	income_collected.emit(income)
@@ -136,6 +164,24 @@ func _apply_enemy_move(intent: EnemyAIController.MoveIntent) -> void:
 	_emit_move(outcome)
 
 
+## (2) Erlik yayılımı (spirit §3.6, §4.6): etkin aralık = bölüm tabanı + lütuflar
+## (`erlik_spread_interval` stat'ı, ADR-0006); karar saf, uygulama SpiritController'da.
+func _run_erlik_spread() -> void:
+	var interval: int = roundi(StatResolver.resolve(
+		ErlikSpreadController.STAT_SPREAD_INTERVAL, float(_map_state.erlik_spread_interval), _modifiers()))
+	var decision: ErlikSpreadController.SpreadDecision = _erlik_spread.decide(_map_state, interval)
+	_spirit.apply_spread(_map_state, decision)
+	if decision.is_spread_turn and decision.target_id != &"":
+		corruption_spread.emit(decision.target_id)
+
+
+## Lütuf etkileri — yalnızca saf kurallara aktarılır, burada okunmaz (ADR-0006).
+func _modifiers() -> Array[StatModifier]:
+	if _modifier_controller == null:
+		return [] as Array[StatModifier]
+	return _modifier_controller.get_modifiers()
+
+
 func _lose(reason: MapState.LossReason) -> void:
 	if _map_state.game_result != MapState.GameResult.ONGOING:
 		return
@@ -159,5 +205,7 @@ func _emit_move(outcome: MoveOutcome) -> void:
 	match outcome.branch:
 		MoveOutcome.Branch.COMBAT:
 			combat_occurred.emit(outcome.from_id, outcome.to_id, outcome.combat)
+		MoveOutcome.Branch.PURIFICATION:
+			purification_resolved.emit(outcome)
 		MoveOutcome.Branch.PEACEFUL:
 			army_moved.emit(outcome.from_id, outcome.to_id, outcome.moving)

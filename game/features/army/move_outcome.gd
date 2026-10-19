@@ -15,9 +15,14 @@ var from_id: StringName = &""
 var to_id: StringName = &""
 ## Taşınan kuvvet = kaynak ordusu − 1 (army-system §3.2).
 var moving: int = 0
-## COMBAT (ve ileride PURIFICATION) dalında savaş çözümü; PEACEFUL'da null.
+## COMBAT ve PURIFICATION dalında savaş çözümü (arındırmada `resolve(P, S)`); PEACEFUL'da null.
 var combat: CombatResolver.CombatResult = null
-## Haritada kalmayan saldıran birlikler (kaybedilen savaşta hayatta kalanlar).
+## PURIFICATION: arınma direnci `S` (spirit §4.1), başarı (`P > S`) ve kazanılan Ruh.
+var corruption_strength: int = 0
+var purified: bool = false
+var ruh_gain: int = 0
+## Haritada kalmayan saldıran birlikler (kaybedilen savaşta hayatta kalanlar; başarısız
+## arındırmada gelen kuvvetin tamamı).
 var dispersed: int = 0
 var source_army_after: int = 0
 var target_owner_after: RegionData.Owner = RegionData.Owner.NEUTRAL

@@ -20,6 +20,12 @@ func bind_services(game_state: GameState) -> void:
 	_game_state = game_state
 
 
+## Saf kurallara ([StatResolver] çağıran servisler) aktarılacak kayıt listesi. Tüketiciler
+## listeyi dolaşmaz; yalnızca resolver'a verir (ADR-0006).
+func get_modifiers() -> Array[StatModifier]:
+	return _game_state.modifiers
+
+
 ## Kaynak eklenebilir mi? Lütuf havuzu gibi uygunluk denetimleri [code]stacks[/code]
 ## okumak yerine bunu sorar.
 func can_add(source: ModifierSource) -> bool:

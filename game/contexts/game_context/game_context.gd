@@ -10,6 +10,7 @@ signal return_to_menu_requested
 ## (Scene flow & chapter loading ADR) kesinleşir.
 const CHAPTER_MAP_PATH_FORMAT: String = "res://features/grid/data/chapter_%d_map.tres"
 const COMBAT_CONFIG: CombatConfig = preload("res://features/combat/data/combat_config.tres")
+const SPIRIT_CONFIG: SpiritConfig = preload("res://features/bozkurt/data/spirit_config.tres")
 
 @onready var _background: ColorRect = %Background
 @onready var _chapter_label: Label = %ChapterLabel
@@ -26,6 +27,7 @@ var _map_controller: MapController
 var _army_controller: ArmyController
 var _resource_controller: ResourceController
 var _combat_resolver: CombatResolver
+var _spirit_rules: SpiritRules
 var _campaign_map: CampaignMap
 var _info_panel: RegionInfoPanel
 var _awaiting_target: bool = false
@@ -61,12 +63,20 @@ func _setup_controllers() -> void:
 	_game_state.map_state = map_def.create_map_state()
 	_game_state.gold = 100
 
+	_spirit_rules = SpiritRules.new()
+	_spirit_rules.bind_config(SPIRIT_CONFIG)
 	_army_controller = ArmyController.new()
 	_resource_controller = ResourceController.new()
+	_resource_controller.bind_services(_spirit_rules)
 	_combat_resolver = CombatResolver.new()
 	_combat_resolver.bind_config(COMBAT_CONFIG)
 	var move_resolver: MoveResolver = MoveResolver.new()
-	move_resolver.bind_services(_combat_resolver)
+	move_resolver.bind_services(_combat_resolver, _spirit_rules)
+	var spirit: SpiritController = SpiritController.new()
+	spirit.bind_services(_game_state, _spirit_rules)
+	# Lütuf kayıtları türetilmiş durumdur; seçimlerden yeniden kurma C-39 (ADR-0006).
+	var modifiers: ModifierController = ModifierController.new()
+	modifiers.bind_services(_game_state)
 	_map_controller = MapController.new()
 	_map_controller.bind_services(
 		_game_state.map_state,
@@ -78,6 +88,7 @@ func _setup_controllers() -> void:
 		EnemyAIController.new(),
 		move_resolver,
 	)
+	_map_controller.bind_erlik_layer(spirit, ErlikSpreadController.new(), modifiers)
 
 
 func _setup_map_visuals() -> void:
@@ -117,6 +128,7 @@ func _connect_signals() -> void:
 	_map_controller.turn_ended.connect(_on_turn_ended)
 	_map_controller.income_collected.connect(_on_income_collected)
 	_map_controller.combat_occurred.connect(_on_combat_occurred)
+	_map_controller.purification_resolved.connect(_on_purification_resolved)
 	_map_controller.army_moved.connect(_on_army_moved)
 	_map_controller.game_won.connect(_on_game_won)
 	_map_controller.game_lost.connect(_on_game_lost)
@@ -203,6 +215,10 @@ func _on_combat_occurred(
 	_to_id: StringName,
 	_result: CombatResolver.CombatResult,
 ) -> void:
+	_refresh_map()
+
+
+func _on_purification_resolved(_outcome: MoveOutcome) -> void:
 	_refresh_map()
 
 

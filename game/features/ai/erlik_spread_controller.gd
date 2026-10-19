@@ -6,6 +6,8 @@ extends RefCounted
 
 
 const MAX_CORRUPTION_LEVEL: int = 3
+## Etkin yayılım aralığı stat'ı (Gök Kalkanı FLAT +1; ADR-0006, spirit §4.6).
+const STAT_SPREAD_INTERVAL: StringName = &"erlik_spread_interval"
 
 
 ## [member is_spread_turn]: bu tur yayılım turu mu. [member target_id]: kuralın şu anki

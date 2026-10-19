@@ -266,3 +266,8 @@
 - Written by game-designer agent (hit API limit, resumed), independent opus review: 3 blocking fixed → APPROVED (warnings W1–W6: Devam after defeat source of truth, quit during boon picks, art bible slow pan, class names → C-62, AC33–35 advisory, index row done).
 - Cross edits applied by agent: region-map §6, spirit §3.4/§5/§6, resource §6, concept, ADR-0001/0007/0011 amendments (proposed for C-56/C-62), art bible §7.
 - Owner questions: fixed Perde order?; Devam after defeat; victory-pending save.
+
+## Session Extract — C-38 adım 3: arındırma + yayılım mantığı (2026-10-19 ~07:30)
+- features/bozkurt: SpiritConfig (+data/spirit_config.tres), SpiritRules (corruption_strength, ruh_gain via StatResolver &"ruh_gain", production_multiplier), SpiritController (apply_purification, apply_spread; signals ruh_changed, corruption_changed). GameState.ruh.
+- MoveResolver PURIFICATION branch (player only, P > S, Dal 1 loss, failure disperses all); MoveOutcome corruption_strength/purified/ruh_gain. MapController.bind_erlik_layer(spirit, spread, modifier_controller), _run_erlik_spread() step 2 (interval via StatResolver &"erlik_spread_interval"), signals purification_resolved/corruption_spread. ModifierController.get_modifiers(). ResourceController.forecast_income + M_c via IncomeRules.region_income. ChapterMapDefinition.erlik_spread_interval (3), RegionDefinition.starting_corruption.
+- Tests 209/209 (purification_spread_test 13). Remaining C-38: info panel corruption rows + keys; Prolog data is C-36.

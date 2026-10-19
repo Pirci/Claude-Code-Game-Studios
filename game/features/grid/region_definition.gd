@@ -12,6 +12,8 @@ extends Resource
 @export var position: Vector2 = Vector2.ZERO
 @export var polygon_points: PackedVector2Array = PackedVector2Array()
 @export var adjacent_region_ids: Array[StringName] = []
+## Başlangıç bozulma seviyesi 0–3 (spirit §3.1; Prolog: in 3, Doğu Obası 1 — C-49).
+@export_range(0, 3) var starting_corruption: int = 0
 
 
 func create_region_data() -> RegionData:
@@ -25,4 +27,5 @@ func create_region_data() -> RegionData:
 	data.position = position
 	data.polygon_points = polygon_points
 	data.adjacent_regions = adjacent_region_ids.duplicate()
+	data.corruption_level = starting_corruption
 	return data

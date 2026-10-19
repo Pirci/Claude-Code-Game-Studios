@@ -3,7 +3,7 @@ extends RefCounted
 ## Hamle çözümü — saf: haritayı yalnızca okur, durum yazmaz, sinyal yaymaz (ADR-0010).
 ## Önizleme, oyuncu hamlesi ve düşman hamlesi aynı [method resolve]'u kullanır; böylece
 ## önizleme sonuçla hiçbir zaman ayrışmaz. Varış dalları army-system.md §3.3 sırasıyla:
-## savaş → (arındırma, C-38) → barışçıl.
+## savaş → arındırma (yalnızca oyuncu) → barışçıl.
 
 
 const REASON_NO_SOURCE: StringName = &"no_source"
@@ -14,11 +14,14 @@ const REASON_NOT_ADJACENT: StringName = &"not_adjacent"
 const REASON_NO_ACTIONS: StringName = &"no_actions"
 
 var _combat: CombatResolver = CombatResolver.new()
+var _spirit: SpiritRules = SpiritRules.new()
 
 
-func bind_services(combat: CombatResolver) -> void:
+func bind_services(combat: CombatResolver, spirit_rules: SpiritRules = null) -> void:
 	if combat != null:
 		_combat = combat
+	if spirit_rules != null:
+		_spirit = spirit_rules
 
 
 ## Hamle kuralları ([param mover] için aynı, army-system §3.1); geçerliyse boş döner.
@@ -46,11 +49,13 @@ static func validate(
 
 
 ## [param from_id] → [param to_id] hamlesinin sonucu. Geçersizse `Branch.INVALID` ve neden.
+## [param modifiers] lütuf etkileri (ADR-0006; arındırma Ruh'u) — boş olabilir.
 func resolve(
 	map_state: MapState,
 	from_id: StringName,
 	to_id: StringName,
 	mover: RegionData.Owner = RegionData.Owner.PLAYER,
+	modifiers: Array[StatModifier] = [],
 ) -> MoveOutcome:
 	var outcome: MoveOutcome = MoveOutcome.new()
 	outcome.mover = mover
@@ -71,6 +76,11 @@ func resolve(
 		_resolve_combat(outcome, target)
 		return outcome
 
+	# 2. Arındırma: yalnızca oyuncu; yabancı garnizon yok ve hedef bozuk (spirit §3.2).
+	if mover == RegionData.Owner.PLAYER and target.corruption_level >= 1:
+		_resolve_purification(outcome, target, modifiers)
+		return outcome
+
 	# 3. Barışçıl: kendi bölgesine katılma ya da boş bölgeyi işgal.
 	outcome.branch = MoveOutcome.Branch.PEACEFUL
 	outcome.target_owner_after = mover
@@ -79,6 +89,28 @@ func resolve(
 	else:
 		outcome.target_army_after = outcome.moving
 	return outcome
+
+
+## Başarı yalnızca `P > S`; kayıp her zaman Dal 1 (`draw_favors_defender` etkisiz — C-53).
+## Başarısızlıkta gelen kuvvetin tamamı kaybolur; hedef değişmez (spirit §3.2).
+func _resolve_purification(outcome: MoveOutcome, target: RegionData, modifiers: Array[StatModifier]) -> void:
+	outcome.branch = MoveOutcome.Branch.PURIFICATION
+	outcome.corruption_strength = _spirit.corruption_strength(target.corruption_level)
+	outcome.target_owner_after = target.owner
+	outcome.target_army_after = target.army_count
+	if outcome.moving <= outcome.corruption_strength:
+		outcome.dispersed = outcome.moving
+		return
+	var result: CombatResolver.CombatResult = _combat.resolve(outcome.moving, outcome.corruption_strength)
+	outcome.combat = result
+	outcome.purified = true
+	outcome.ruh_gain = _spirit.ruh_gain(target.corruption_level, modifiers)
+	outcome.target_corruption_after = 0
+	outcome.target_owner_after = RegionData.Owner.PLAYER
+	if target.owner == RegionData.Owner.PLAYER:
+		outcome.target_army_after = target.army_count + result.attacker_remaining
+	else:
+		outcome.target_army_after = result.attacker_remaining
 
 
 func _resolve_combat(outcome: MoveOutcome, target: RegionData) -> void:
