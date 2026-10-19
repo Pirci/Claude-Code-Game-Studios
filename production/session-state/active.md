@@ -180,3 +180,10 @@
 - Decision (recommended): commit .uid files (Godot 4.4+). Removed `*.uid` from game/.gitignore; 272 .uid added (no orphans). Scenes reference scripts by path, so no existing reference breaks.
 - User note: on the Mac, if `git pull` complains about untracked .uid files, delete local *.uid (they were ignored before) and pull again; Godot adopts the committed UIDs.
 - NEXT: C-25 (initial keyboard focus decision + implementation).
+
+## Session Extract — C-25 başlangıç klavye odağı (2026-10-19)
+- `FocusReveal` (game/ui/focus_reveal.gd, RefCounted static): `focus_quietly(control)` → `grab_focus(true)` (hidden focus); `reveal_on_navigation(viewport, event)` → hidden focus + ui_up/down/left/right/focus_next/prev/accept press → `owner.grab_focus()` (visible), event consumed (no move, no press).
+- RootContext `_input` calls reveal; MenuContext (NewCampaign; Settings button after back), SettingsScreen (LanguageOption), GameContext (EndTurn) give quiet initial focus.
+- Godot 4.7.1: `grab_focus(hide_focus)`, `has_focus(ignore_hidden_focus)`; project setting `show_focus_state_on_pointer_event` left default.
+- Tests 131/131 (focus_reveal_test 8). Xvfb: no frame on open; first ↓ shows frame on New Campaign; second ↓ → Settings.
+- NEXT: C-26 (PER_TURN key, 11 languages, no to_lower/to_upper on player-visible text).

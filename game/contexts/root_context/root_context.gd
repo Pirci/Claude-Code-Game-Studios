@@ -35,6 +35,12 @@ func _ready() -> void:
 	_switch_to(&"menu")
 
 
+## İlk klavye gezinme/onay tuşu gizli odağı görünür yapar (C-25, [FocusReveal]).
+func _input(event: InputEvent) -> void:
+	if FocusReveal.reveal_on_navigation(get_viewport(), event):
+		get_viewport().set_input_as_handled()
+
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED and _locale_fonts:
 		_locale_fonts.apply(TranslationServer.get_locale())

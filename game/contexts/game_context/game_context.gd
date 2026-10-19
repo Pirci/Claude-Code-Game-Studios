@@ -47,6 +47,7 @@ func _ready() -> void:
 	_setup_map_visuals()
 	_connect_signals()
 	_update_ui()
+	FocusReveal.focus_quietly(_end_turn_button)
 
 
 func _setup_controllers() -> void:

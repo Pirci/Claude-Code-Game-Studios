@@ -26,6 +26,7 @@ func _ready() -> void:
 	_new_campaign_button.pressed.connect(_on_new_campaign_pressed)
 	_settings_button.pressed.connect(_on_settings_pressed)
 	_quit_button.pressed.connect(_on_quit_pressed)
+	FocusReveal.focus_quietly(_new_campaign_button)
 
 
 func _on_new_campaign_pressed() -> void:
@@ -45,6 +46,7 @@ func _on_settings_back() -> void:
 		_settings_screen.queue_free()
 		_settings_screen = null
 	_main_panel.visible = true
+	FocusReveal.focus_quietly(_settings_button)
 
 
 func _on_quit_pressed() -> void:

@@ -57,6 +57,7 @@ func _ready() -> void:
 	_reduce_motion_check.toggled.connect(_on_reduce_motion_toggled)
 	_region_names_check.toggled.connect(_on_region_names_toggled)
 	_back_button.pressed.connect(_on_back_pressed)
+	FocusReveal.focus_quietly(_language_option)
 
 
 func _setup_language_options() -> void:

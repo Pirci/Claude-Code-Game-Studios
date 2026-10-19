@@ -5,9 +5,9 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-19
-- **Son commit:** `061ada8` (C-24: .uid dosyaları takipte)
+- **Son commit:** `__H__` (C-25: sessiz başlangıç odağı)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-25)
+- **Aktif görev:** — (yok; sıradaki: C-26)
 
 ---
 
@@ -90,6 +90,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 
 | Görev | Karar | Reddedilen alternatifler | Geri alma maliyeti |
 | --- | --- | --- | --- |
+| C-25 | Her ekranda birincil kontrol **gizli** odak alır (`grab_focus(true)`: Yeni Sefer, Dil seçimi, Tur Bitir; ayarlardan dönünce Ayarlar); ilk yön/Tab/onay tuşu odağı **taşımadan ve basmadan** görünür yapar (`FocusReveal`, RootContext `_input`); `gui/common/show_focus_state_on_pointer_event` varsayılanda (Text Input Controls) | Açılışta görünür odak (fare kullanıcısına sürekli çerçeve); odak yok + ilk tuşta ver (ekstra durum takibi); ilk Enter'ın doğrudan basması | Düşük — tek yardımcı sınıf + 4 satır çağrı |
 | C-24 | `.uid` dosyaları commit edilir (Godot 4.4+ önerisi); 272 dosya (45 oyun + 227 gdUnit4) bu container'daki Godot 4.7.1 ile üretildi | Yok sayılmaya devam | Düşük — `.gitignore` satırı; ⚠️ kullanıcı Mac'te pull ederken git yerel `.uid`'lerden şikâyet ederse: yerel `*.uid`'leri silip tekrar pull |
 | C-23 | Ses mimarisi ADR-0008: RootContext'in kalıcı `AudioController`'ı (bind_services ile enjekte), `Master → Music/SFX` bus düzeni, `SfxLibrary` (typed dictionary); yer tutucu "tık" sentezlendi (deterministik); ses yalnızca seçimde (seçim kaldırmada yok) | Autoload ses; bağlam başına oyuncular; sinyal hub'ı; hazır ücretsiz SFX indirme (lisans takibi) | Düşük — ADR + küçük modül |
 | C-22 | Prolog zemini `#1A2614` (Bozkır Yeşili 2), çizgi `#436129` (Bozkır Yeşili 4); kural "çizgi = zemin rampasında iki ton açık" | Gri çizgi (Keçe Grisi 3); mevcut `#222A18` (palet dışı) | Düşük — bölüm verisinde iki renk |
@@ -131,7 +132,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-22 | [x] `ffbf2b5` | Harita zemini (`#222A18`) ve komşuluk çizgileri (%30 saydam gri — palet dışı ton üretir) palete bağlanır: opak çizgi rengi + bölüm zemin tonu (bible §4 "Yön Başına Sıcaklık"), data-driven | Art bible §4 (C-04 sırasında keşfedildi) | — | Ekran görüntüsü + piksel kontrolü |
 | C-23 | [x] `85eeea3` | Bölge seçim "tık" sesi (bible: seçimin renk körlüğü yedeği) — ses altyapısı (`features/audio`, SFX bus) henüz yok; önce ses yönetimi tasarımı/ADR gerekir | Art bible §4 (C-05 sırasında keşfedildi) | — | Seçimde ses çalar; ses ayarı (SFX) ile ölçeklenir |
 | C-24 | [x] `061ada8` | **Karar:** `.uid` dosyaları `game/.gitignore` ile yok sayılıyor (repoda 0 adet); Godot 4.4+ bunların commit'lenmesini öneriyor (UID referansları klonlar arasında tutarlı kalsın). Politikayı seç → gerekiyorsa ignore'dan çıkar + mevcutları ekle | C-06 sırasında keşfedildi | — | Karar kaydı + (seçilirse) tüm `.uid`'ler takipte |
-| C-25 | [ ] | **Karar + uygulama:** ekran açılışında başlangıç odağı yok (menü, ayarlar, oyun) → klavye kullanıcısı gezinmeye başlayamıyor. Fare kullanıcısına sürekli altın odak çerçevesi göstermeden çözüm seç (ör. ilk yön tuşunda odak ver / Godot 4.7 odak görünürlüğü ayarını araştır) | C-08 sırasında keşfedildi | — | Her ekranda ilk ok/Tab tuşu bir butona odaklanır; fareyle açılışta çerçeve yok |
+| C-25 | [x] `__H__` | **Karar + uygulama:** ekran açılışında başlangıç odağı yok (menü, ayarlar, oyun) → klavye kullanıcısı gezinmeye başlayamıyor. Fare kullanıcısına sürekli altın odak çerçevesi göstermeden çözüm seç (ör. ilk yön tuşunda odak ver / Godot 4.7 odak görünürlüğü ayarını araştır) | C-08 sırasında keşfedildi | — | Her ekranda ilk ok/Tab tuşu bir butona odaklanır; fareyle açılışta çerçeve yok |
 | C-26 | [ ] | Bilgi panelinde `tr("TURN").to_lower()` → Almancada "2 / runde" (isimler büyük harf olmalı); bible programatik büyük/küçük harf dönüşümünü yasaklıyor. `PER_TURN` gibi ayrı çeviri key'i (11 dil) + kodda başka `to_lower()/to_upper()` kalmadığını doğrula | C-09 sırasında keşfedildi | — | grep `to_lower\|to_upper` oyuncuya görünen metinde yok; de ekran görüntüsü |
 | C-27 | [ ] | Gerçek CI hattı yok: `.github/workflows/` boş (yalnızca şablonlar). Coding standards "her push/PR'da testler çalışır, kırmızıysa merge yok" diyor → GitHub Actions: headless Godot 4.7 + `tools/ci/run-tests.sh` (testler + palet) | C-10 sırasında keşfedildi | — | Push'ta workflow yeşil; bilerek kırılan testte kırmızı |
 | C-28 | [x] `1468973` | **Karar + GDD:** ordu üretimi (maliyet, formül, sahibi) — `resource-system.md` yazılır veya `army-system.md`'ye eklenir; kartopu/bakım (D1, D2) burada değerlendirilir | `design/gdd/gdd-cross-review-2026-10-08.md` B1 | C-13 | GDD'de üretim formülü + ayar aralığı; Prolog kazanılabilirliği hesapla gösterilir |
@@ -220,3 +221,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-19 | C-22: harita zemini ve komşuluk çizgisi palete bağlandı ve data-driven (`ChapterMapDefinition.ground_color` / `adjacency_line_color`, opak); Prolog `#1A2614` / `#436129`; render piksel kontrolü: harita alanında palet dışı renk 0; 116/116 test *(gece modu)* | `ffbf2b5` |
 | 2026-10-19 | C-23: bölge seçim "tık"ı + ses altyapısı — ADR-0008 (Accepted), `default_bus_layout.tres` (Music/SFX → Master; ayar kaydırıcıları artık çalışıyor), `AudioController` (havuz 4, SFX bus), `SfxLibrary` + `sfx_ui_region_select.wav` (sentez yer tutucu); 123/123 test (7 yeni); Xvfb çalıştırması hatasız *(gece modu)* | `85eeea3` |
 | 2026-10-19 | C-24: `.uid` politikası — commit edilir (`game/.gitignore`'dan `*.uid` kaldırıldı, 272 `.uid` eklendi, yetim yok); teknik tercihlere "Version Control Notes" *(gece modu: önerilen seçenek)* | `061ada8` |
+| 2026-10-19 | C-25: sessiz başlangıç klavye odağı — `FocusReveal` (`game/ui/focus_reveal.gd`), menü/ayarlar/oyun ekranlarında gizli odak, ilk gezinme tuşu görünür yapar (taşımaz, Enter basmaz); 131/131 test (8 yeni); Xvfb: açılışta çerçeve yok, ilk ↓ çerçeveyi Yeni Sefer'de gösterir, ikinci ↓ Ayarlar'a geçer *(gece modu: önerilen seçenek)* | `__H__` |
