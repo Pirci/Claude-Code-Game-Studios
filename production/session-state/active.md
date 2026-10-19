@@ -144,3 +144,9 @@
 - Report: docs/architecture/architecture-review-2026-10-19.md
 - Decisions (recommended, night mode): D1 load() on transition; D2 ModifierSource.max_stacks sole owner; D3 SpiritController sole writer of spirit state (features/bozkurt/); D4 RootContext owns SaveController + continue_requested; AI decide→apply loop.
 - All 7 ADRs → Accepted. New tasks C-57…C-62. NEXT: C-18 /create-architecture.
+
+## Session Extract — C-18 /create-architecture (2026-10-19, gece modu)
+- Written: docs/architecture/architecture.md v1.0 (layers, module ownership, data flows incl. end_turn + save/load + init order + victory, API boundaries, ADR audit all ✅, principles, QQ-01…08).
+- TD self-review (TD-ARCHITECTURE): CONCERNS = approved with conditions (4 TR gaps → ADRs C-59…C-62). LP-FEASIBILITY skipped (lean).
+- Required ADRs next: C-59 Move Resolution (before C-38/C-41), C-60 Presentation, C-62 Scene flow (after C-35), C-61 Localization.
+- NEXT: C-19 (ADR-0005 implementation, code — Godot 4.7.1 in scratchpad for tests).

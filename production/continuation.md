@@ -5,9 +5,9 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-19
-- **Son commit:** `815e07c` (C-17: mimari inceleme, ADR'ler Accepted)
+- **Son commit:** `__H__` (C-18: ana mimari doküman)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-18 `/create-architecture`)
+- **Aktif görev:** — (yok; sıradaki: C-19 ADR-0005 uygulaması)
 
 ---
 
@@ -90,6 +90,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 
 | Görev | Karar | Reddedilen alternatifler | Geri alma maliyeti |
 | --- | --- | --- | --- |
+| C-18 | `architecture.md` v1.0: 5 katman, modül sahiplik tabloları, 6 veri akışı, API sınırları, 5 ilke, 8 açık soru; TD öz-inceleme CONCERNS (koşullu onay); LP-FEASIBILITY lean modda atlandı | Bölüm bölüm kullanıcı onayı (gece modu: önerilen kabul) | Düşük — doküman |
 | C-17 | Mimari inceleme CONCERNS → düzeltmeler uygulandı ve 7 ADR **Accepted**. D1: context sahneleri geçişte `load()` (preload yasağına uyum); D2: yığın sınırının tek sahibi `ModifierSource.max_stacks` + `can_add()`; D3: `SpiritController` (`features/bozkurt/`) bozulma/Ruh/lütufların tek yazıcısı; D4: `SaveController`'ın sahibi RootContext, `MenuContext.continue_requested`; düşman AI kopya yerine karar→uygula döngüsü | D1-B teknik tercihlere istisna; D2-B BoonDefinition sahibi; D3-B çapraz-feature yazımlar; D4-B MenuContext SaveController sahibi; ADR'leri taze oturuma kadar Proposed bırakmak | Orta — ADR'ler Accepted; geri alma = değişiklik notu + yeniden inceleme |
 | C-53 | W-C: aynı tur ikinci lütuf seçimi HUD'dan serbest, otomatik modal tur başı en fazla 1 (seçenek c); W-F: "seçimi sakla, etkiyi türet" — `boons` tek doğruluk kaynağı, modifikatörler yüklemede yeniden kurulur, `ModifierSource.max_stacks`; W-D: `turn_ended` kontrolden sonra ve yalnızca ONGOING iken, zafer kalıcılığı scene-flow'da; W-E: `SpreadDecision`; arındırma `draw_favors_defender`'dan bağımsız; başarısız arındırma hamle önizlemesiyle ikinci onay ister (N7) | W-C (a) geçici bayrak / (b) HUD yalnız gösterileni açar; W-F modifikatörleri kaydet + `n`'i stack'lerden say; arındırmayı knob'a bağlı bırak; önizlemesiz | Orta — ADR-0006/0007 kalıcılık modeli değişti (henüz kod yok, Proposed) |
 | C-34 | Rapor yazıldı (CONCERNS, 0 engelleyici); GDD'ler "Needs Revision" yapılmadı (uyarılar engelleyici değil) → indekste Designed; uyarılar C-53'e, tasarım uyarıları C-49 / C-44 / C-54'e; C-17'ye C-53 bağımlılığı, C-39'a C-55 bağımlılığı eklendi | Raporu yazmama; işaretli GDD'leri "Needs Revision" yapma; uyarıları C-17 içinde çözme | Düşük — kuyruk düzeni |
@@ -119,7 +120,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-15 | [x] `62de438` | ADR: Additive Modifier / Stat Pipeline (`/architecture-decision`) | Arch. review 2026-08-13 | — | ADR dosyası |
 | C-16 | [x] `bf4f2ff` | ADR: Save/Load Persistence (`/architecture-decision`) | Arch. review 2026-08-13 | — | ADR dosyası |
 | C-17 | [x] `815e07c` | `/architecture-review` yeniden → ADR'leri Accepted yap | Arch. review | C-15, C-16, K-02, C-34, C-53 | Rapor + ADR durumları |
-| C-18 | [ ] | `/create-architecture` | Technical Setup | C-17 | Mimari doküman |
+| C-18 | [x] `__H__` | `/create-architecture` | Technical Setup | C-17 | Mimari doküman |
 | C-19 | [ ] | ADR-0005 uygulaması: `game/features/ai/` altında `EnemyAIController` + `ErlikSpreadController` (saf `decide()`), `MapController` intent'leri uygular; `_run_enemy_ai()` taşınır | ADR-0005 (K-02 sırasında keşfedildi) | C-17 | Davranış aynı kalır; mevcut testler yeşil + `decide()` için izole testler |
 | C-20 | [x] `5371770` | `tools/ci/run-tests.sh` varsayılan Godot yolu eskimiş (`~/Downloads/Applications`); Godot artık `/Applications/Godot.app` → yaygın konumları sırayla dene | C-01 sırasında keşfedildi (script `GODOT` olmadan çalışmıyor) | — | `GODOT` ayarlamadan `run-tests.sh` testleri çalıştırır |
 | C-21 | [ ] | Birincil buton (Tur Bitir, Saldır) ve modal panel (ayarlar, savaş raporu) çerçeveleri: 5×5 koçboynuzu köşe + 2px kilim şevron bandı → üretici script + 9-slice `StyleBoxTexture`, `PrimaryButton` / `ModalPanel` tema varyasyonları; ayarlar ekranı modal panele alınır | Art bible §3, §7 (C-04 sırasında keşfedildi) | C-04 | Ekran görüntüsü + tema testi |
@@ -209,3 +210,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-19 | C-34: `/review-all-gdds` yeniden → **CONCERNS** (0 engelleyici; 9 tutarlılık + 12 tasarım uyarısı); rapor `gdd-cross-review-2026-10-19.md`; indeks Designed; yeni görevler C-53 (düzeltmeler, C-17'yi bloklar), C-54 (anlatı sesi), C-55/C-56 (ADR-0006/0007 uygulaması); C-49 kapsamı genişledi *(gece modu: önerilen seçenek)* | `f661227` |
 | 2026-10-19 | C-53: çapraz inceleme düzeltmeleri — resource §4/AC15 "eskimiş" işaretleri + aralıklar; spirit aynı tur lütuf kuralı, `P_eff`, işleme sırası (S1-a), hamle önizlemesi + yayılım göstergesi gereksinimleri (N7), `boons` tek kaynak; region-map veri modeli sahipliği (W-G), `turn_ended`/erken çıkış (W-D, S2-b), kilitte lütuf seçimi (S1-c); army 'barışçıl' nitelemeleri + yerinde üretim (N11c); combat arındırma ↔ knob ayrımı; konsept kademe tablosu (W-H); ADR-0005/0006/0007 değişiklik notları; registry +4 sabit, TR-spirit-005 revised; C-39/C-44/C-51/C-36 kriterleri güncellendi *(gece modu: önerilen seçenek)* | `62f8b96` |
 | 2026-10-19 | C-17: `/architecture-review` → CONCERNS (36 TR: 23 ✅ / 9 ⚠️ / 4 ❌); bağımsız technical-director + godot-specialist (4.7.1 deneyleri); 4 metin çakışması (B1–B4) + W1–W11 düzeltildi; 7 ADR **Accepted**; TR registry v3 (+11 TR, `resource` slug'ı, 15 revizyon); mimari registry (`spirit_state`, Continue, AI imzası); yeni görevler C-57…C-62 *(gece modu: önerilen seçenekler D1–D4)* | `815e07c` |
+| 2026-10-19 | C-18: `docs/architecture/architecture.md` v1.0 — katman haritası, modül sahipliği, veri akışları (hamle, tur sonu, kayıt/yükleme, başlatma, zafer), API sınırları, ADR denetimi, gerekli ADR'ler (C-59…C-62), ilkeler, açık sorular QQ-01…08; TD öz-inceleme CONCERNS *(gece modu)* | `__H__` |
