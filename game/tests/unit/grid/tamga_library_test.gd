@@ -2,7 +2,7 @@ extends GdUnitTestSuite
 ## TamgaLibrary + tamga verisi — art bible §5/§7 (7×7 glif + 1px outline = 9×9).
 
 
-const ALL_TAMGAS: Array[StringName] = [&"oguz", &"curcet", &"urum", &"kil_barak", &"kuzey", &"guney", &"erlik_beast"]
+const ALL_TAMGAS: Array[StringName] = [&"oguz", &"curcet", &"urum", &"kil_barak", &"kuzey", &"guney"]
 const ICON_SIZE := Vector2i(9, 9)
 const CHAPTER_1: String = "res://features/grid/data/chapter_1_map.tres"
 
@@ -26,16 +26,17 @@ func test_empty_id_has_no_texture() -> void:
 func test_owner_tamga_lookup() -> void:
 	var state: MapState = MapState.new()
 	state.player_tamga_id = &"oguz"
-	state.enemy_tamga_id = &"erlik_beast"
+	state.enemy_tamga_id = &"curcet"
 	assert_str(String(state.get_owner_tamga_id(RegionData.Owner.PLAYER))).is_equal("oguz")
-	assert_str(String(state.get_owner_tamga_id(RegionData.Owner.ENEMY))).is_equal("erlik_beast")
+	assert_str(String(state.get_owner_tamga_id(RegionData.Owner.ENEMY))).is_equal("curcet")
 	assert_str(String(state.get_owner_tamga_id(RegionData.Owner.NEUTRAL))).is_empty()
 
 
-func test_prolog_map_uses_oguz_and_erlik_beast() -> void:
+func test_prolog_map_uses_oguz_and_no_enemy_tamga() -> void:
+	# C-36: Prolog'da siyasi düşman yok; canavar nötr bozuk bölge (tamgasız).
 	var state: MapState = (load(CHAPTER_1) as ChapterMapDefinition).create_map_state()
 	assert_str(String(state.player_tamga_id)).is_equal("oguz")
-	assert_str(String(state.enemy_tamga_id)).is_equal("erlik_beast")
+	assert_str(String(state.enemy_tamga_id)).is_empty()
 
 
 func test_conquest_switches_region_tamga_to_player() -> void:
@@ -43,11 +44,11 @@ func test_conquest_switches_region_tamga_to_player() -> void:
 	var map: CampaignMap = auto_free(CampaignMap.new()) as CampaignMap
 	add_child(map)
 	map.build_map(state)
-	var enemy: RegionData = state.get_enemy_regions()[0]
-	assert_str(_tamga_path(map, enemy.region_id)).is_equal(TamgaLibrary.texture_path(&"erlik_beast"))
-	enemy.owner = RegionData.Owner.PLAYER
+	var neutral: RegionData = state.get_region(&"altai")
+	assert_str(_tamga_path(map, neutral.region_id)).is_empty()
+	neutral.owner = RegionData.Owner.PLAYER
 	map.refresh(state)
-	assert_str(_tamga_path(map, enemy.region_id)).is_equal(TamgaLibrary.texture_path(&"oguz"))
+	assert_str(_tamga_path(map, neutral.region_id)).is_equal(TamgaLibrary.texture_path(&"oguz"))
 
 
 func _tamga_path(map: CampaignMap, region_id: StringName) -> String:

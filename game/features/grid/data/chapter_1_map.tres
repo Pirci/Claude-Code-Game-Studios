@@ -31,11 +31,12 @@ script = ExtResource("2_region")
 region_id = &"dogu_bozkir"
 display_name_key = &"REGION_DOGU_BOZKIR"
 owner = 0
-starting_army = 3
+starting_army = 0
 gold_per_turn = 1
 position = Vector2(448, 150)
 polygon_points = PackedVector2Array(405, 123, 491, 123, 491, 177, 405, 177)
 adjacent_region_ids = Array[StringName]([&"otuken", &"sinir_bolge"])
+starting_corruption = 1
 
 [sub_resource type="Resource" id="region_altai"]
 script = ExtResource("2_region")
@@ -63,17 +64,20 @@ adjacent_region_ids = Array[StringName]([&"otuken", &"bati_bozkir", &"sinir_bolg
 script = ExtResource("2_region")
 region_id = &"sinir_bolge"
 display_name_key = &"REGION_SINIR_BOLGE"
-owner = 2
-starting_army = 6
+owner = 0
+starting_army = 0
 gold_per_turn = 1
 position = Vector2(395, 233)
 polygon_points = PackedVector2Array(335, 207, 455, 207, 455, 260, 335, 260)
 adjacent_region_ids = Array[StringName]([&"dogu_bozkir", &"guney_vadi"])
+starting_corruption = 3
 
 [sub_resource type="Resource" id="win_ch1"]
 script = ExtResource("3_win")
 required_neutral_conquests = 3
 must_defeat_all_enemies = true
+erlik_foci = Array[StringName]([&"sinir_bolge"])
+erlik_loss_threshold = 9
 description_key = &"WIN_CONDITION_CH1"
 
 [resource]
@@ -83,7 +87,9 @@ chapter_name_key = &"CHAPTER_1_TITLE"
 actions_per_turn = 1
 enemy_actions_per_turn = 1
 player_tamga_id = &"oguz"
-enemy_tamga_id = &"erlik_beast"
+enemy_tamga_id = &""
+starting_gold = 6
+erlik_spread_interval = 3
 ground_color = Color(0.101961, 0.14902, 0.0784314, 1)
 adjacency_line_color = Color(0.262745, 0.380392, 0.160784, 1)
 regions = [SubResource("region_otuken"), SubResource("region_bati"), SubResource("region_dogu"), SubResource("region_altai"), SubResource("region_guney"), SubResource("region_sinir")]

@@ -272,7 +272,7 @@ işlem sırası = düşman bölgeleri region_id artan; bütçe enemy_actions_per
 | `erlik_loss_threshold` | WinCondition | Erlik kaybı eşiği (`erlik_power`, spirit §4.7); 0 = kapalı. **Prolog 9** (C-49) — güvenli aralık: başlangıç `erlik_power` + 3 … 3 × bölge sayısı. 8 → ihmal kaybı T12 (sert), 10 → T18 (baskı zayıf). Değişirse `resource-system.md` §4 tablosu yeniden üretilir |
 | Bölge `army_count` / `gold_per_turn` | `.tres` | Denge |
 | `enemy_actions_per_turn` | ChapterMapDefinition / MapState | Düşmanın tur başına toplam aksiyonu (data-driven; MVP: 1) |
-| `player_tamga_id` / `enemy_tamga_id` | ChapterMapDefinition → MapState | Sahiplik tamgası (`icon_tamga_<id>.png`, art bible §5/§7). Prolog: `oguz` / `erlik_beast` *(C-29: canavar artık nötr olduğundan `enemy_tamga_id` Prolog'da kullanılmaz; Erlik görseli tamga değil bozulma katmanıdır — C-36'da veri temizlenir)*. Bölgenin tamgası sahibinden türetilir → fetihte değişir; nötr tamgasız |
+| `player_tamga_id` / `enemy_tamga_id` | ChapterMapDefinition → MapState | Sahiplik tamgası (`icon_tamga_<id>.png`, art bible §5/§7). Prolog: `oguz` / boş *(C-36: canavar nötr bir bozuk bölge; Erlik görseli tamga değil bozulma katmanıdır — `erlik_beast` tamgası kaldırıldı)*. Bölgenin tamgası sahibinden türetilir → fetihte değişir; nötr tamgasız |
 
 ---
 

@@ -17,6 +17,8 @@ extends Resource
 ## Kural: çizgi = zeminin rampasında iki ton açık.
 @export var ground_color: Color = Color("#1A2614")         # Bozkır Yeşili 2
 @export var adjacency_line_color: Color = Color("#436129") # Bozkır Yeşili 4
+## Sahne başı altın (resource-system §4; Prolog 6). Altın sahneler arası taşınmaz.
+@export var starting_gold: int = 0
 ## Erlik yayılımının bölüm taban aralığı (tur; spirit §4.6 — Prolog 3, C-49).
 @export var erlik_spread_interval: int = 3
 @export var regions: Array[RegionDefinition] = []

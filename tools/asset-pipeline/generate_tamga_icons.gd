@@ -70,15 +70,6 @@ const TAMGAS: Dictionary = {
 		"...#...",
 		"...#...",
 	],
-	"erlik_beast": [  # Tek boynuz — Prolog'un Erlik canavarı (2026-10-08 kararı)
-		".....#.",
-		"....##.",
-		"...##..",
-		"..##...",
-		".###...",
-		"#####..",
-		".###...",
-	],
 }
 
 

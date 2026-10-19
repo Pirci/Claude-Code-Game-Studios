@@ -288,3 +288,6 @@
 
 ## Session Extract — C-65 ayar kalıcılığı (2026-10-19 ~08:05)
 - SettingsSnapshot/SettingsSerializer (features/save), SaveController.SETTINGS_SLOT + save/load_settings; settings_changed chain SettingsScreen → MenuContext → RootContext._on_settings_changed; RootContext._apply_settings before locale fonts. SaveSerializer.as_int now public. Tests 239/239.
+
+## Session Extract — C-36 Prolog verisi (2026-10-19 ~08:15)
+- chapter_1_map.tres: sinir_bolge NEUTRAL/0/L3, dogu_bozkir 0/L1, win erlik_foci [sinir_bolge] + threshold 9, enemy_tamga_id "", starting_gold 6, interval 3. ChapterMapDefinition.starting_gold; GameContext uses it. erlik_beast tamga removed (icon, generator, art bible §5, region-map §7, tamga tests). prolog_data_test (4). Tests 243/243.

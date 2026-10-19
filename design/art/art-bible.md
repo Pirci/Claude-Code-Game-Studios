@@ -535,9 +535,10 @@ nötr/dünya rampalarından seçilir; **mor ve Erlik kömürü kullanılmaz**.
 
 (Güneş diski Gün Han'ın sembolüdür — düşmana verilmez.)
 
-**Prolog canavarı** (Erlik'in ilk yaratığı, tek boynuzlu) bir kral değildir; tamgası
-**tek boynuz** işaretidir (`tamga_id = erlik_beast`, 2026-10-08 kararı). Kral
-tamgalarından ayrı durur, "kabile" değil "Erlik yaratığı" okunur.
+**Prolog canavarı** (Erlik'in ilk yaratığı, tek boynuzlu) bir kral değildir ve **tamgası
+yoktur** (C-36, 2026-10-19): C-29 ile in nötr bir bozuk bölgedir (sahibi yok → tamga yok);
+canavarı haritada bozulma lekesi (seviye 3, Bölüm 4) ve ileride canavar sprite'ı gösterir.
+Eski tek boynuz tamgası (`erlik_beast`, 2026-10-08) kaldırıldı.
 
 ### Erlik'in Ruhları (Körmös)
 

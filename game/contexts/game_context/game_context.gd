@@ -69,7 +69,7 @@ func _setup_controllers() -> void:
 	var loaded: MapState = _game_state.map_state
 	if loaded == null or loaded.chapter_id != map_def.chapter_id:
 		_game_state.map_state = map_def.create_map_state()
-		_game_state.gold = 100
+		_game_state.gold = map_def.starting_gold
 
 	_spirit_rules = SpiritRules.new()
 	_spirit_rules.bind_config(SPIRIT_CONFIG)

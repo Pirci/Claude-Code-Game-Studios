@@ -60,13 +60,13 @@ func test_prolog_map_loads_six_regions() -> void:
 	var m: MapState = def.create_map_state()
 	assert_int(m.regions.size()).is_equal(6)
 	assert_int(m.get_region(&"otuken").owner).is_equal(RegionData.Owner.PLAYER)
-	assert_int(m.get_region(&"sinir_bolge").owner).is_equal(RegionData.Owner.ENEMY)
-	# 4 nötr bölge
+	# C-36 (C-49 modeli): Canavarın İni nötr bir Erlik odağı; Prolog'da düşman yok → 5 nötr.
+	assert_int(m.get_region(&"sinir_bolge").owner).is_equal(RegionData.Owner.NEUTRAL)
 	var neutral_count: int = 0
 	for r: RegionData in m.regions.values():
 		if r.owner == RegionData.Owner.NEUTRAL:
 			neutral_count += 1
-	assert_int(neutral_count).is_equal(4)
+	assert_int(neutral_count).is_equal(5)
 
 
 # --- Kabul kriteri 2: seçim toggle ---
