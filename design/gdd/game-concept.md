@@ -156,6 +156,8 @@ Bir sahne = 10-18 tur. Sahne başında Kök Böri belirir + destan intro (metin 
 tam ekran 640×360 pixel art illüstrasyon — art bible §7). Hedef net: "bu yönü fethet + Erlik odağını temizle".
 Sahne sonunda destan epilog + bekleyen ruh lütfu + sonraki yön açılır. Lütuf eşiği
 sahne içinde aşılırsa Kök Böri bir sonraki tur başında da belirir (`spirit-system.md` §3.4).
+> Kesin sahne açılış/kapanış sırası (hedef işareti, sonuç kartı → zorunlu lütuf seçimleri → kayıt →
+> epilog → sefer haritası; yenilgi akışı): [scene-flow.md](scene-flow.md).
 
 ### Uzun Vadeli İlerleme (Kampanya — 4-6 saat)
 6 sahne (Prolog + 4 yön + Final). Mekanikler Prolog + ilk yönde öğretilir,
@@ -425,6 +427,7 @@ tatmin edici buluyor."
 - [x] Art bible yazıldı — pixel art + kozmik mitolojik katman ([art-bible.md](../art/art-bible.md), 2026-10-07)
 - [x] Konsepti sistemlere ayır (`/map-systems`) — [systems-index.md](systems-index.md)
 - [x] İmza sistem GDD'si: Kök Böri / Ruh Sistemi — [spirit-system.md](spirit-system.md) (2026-07-14; C-29…C-33 revizyonları)
+- [x] Sahne akışı GDD'si — [scene-flow.md](scene-flow.md) (C-35; sunum: intro/outro, Kök Böri genesis, Kağan ilanı, bölüm açılışı)
 - [ ] Katmanlı düşman GDD'si (`/design-system enemy-layers`)
 - [ ] Mevcut Prolog haritasını destana uyarla (Ötüken → Oğuz ata yurdu)
 - [ ] Prototip: çift katmanlı düşman hipotezini test et (`/prototype`)

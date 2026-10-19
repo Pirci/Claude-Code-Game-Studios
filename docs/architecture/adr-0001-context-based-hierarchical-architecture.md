@@ -167,7 +167,9 @@ signal quit_requested
 - Chapter content (`ChapterMapDefinition`) is loaded by `chapter_id` at game-context
   start with `load()`, never `const preload`ed by a context (TR-map-002; implemented in
   C-57: `GameContext.CHAPTER_MAP_PATH_FORMAT % GameState.current_chapter`; the path
-  convention is finalised by the scene-flow ADR, C-62).
+  convention is finalised by the scene-flow ADR, C-62). *Proposed (C-35, `scene-flow.md` §3.10):* the
+  path comes from data — `SceneDefinition.map_path` inside `CampaignDefinition` (loaded by `chapter_id`,
+  `load()`), replacing the format constant; decided in C-62.
 
 ## Alternatives Considered
 

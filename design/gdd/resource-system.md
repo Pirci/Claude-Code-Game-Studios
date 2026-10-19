@@ -355,6 +355,7 @@ hazine 6. *Alternatif:* aynı 6'lık kuvvet Doğu Obası'na → arındırma 6 > 
 | Kök Böri / Ruh (`spirit-system.md`) | Yumuşak | Bereket (`B_add`) bu sistemin gelir formülünden (F2) geçer. Sürü Kutsaması kilitli: sürü formülü tanımlanınca (§3.1, Açık Soru 3) bağlanır. |
 | HUD / Bilgi paneli | Sert | Altın, tahmini gelir, Ordu Topla kontrolü (§10). |
 | Kayıt / Yükleme (ADR-0007) | Sert | Tur sonu otomatik kayıt: `gold` saklanır; bölge üretim sayaçları 4. adımda sıfırlandığı için kayıt anında hep 0'dır (yüklemede 0 başlatılır); tur ortası kayıt yok. |
+| Sahne Akışı (`scene-flow.md`, C-35) | Sert | Her sahne başında `gold = starting_gold` kurar (R8), sahne sonunda (COMMIT) altın 0'lanır, taşınmaz; Yeniden Dene aynı `starting_gold` ile sıfırdan başlar (AC16). |
 | Katmanlı Düşman (`enemy-layers.md`, yazılmadı) | Gelecek | Düşman takviyesini devralacak (geçici sözleşme). |
 
 ### Diğer GDD'lerde gereken karşı güncellemeler

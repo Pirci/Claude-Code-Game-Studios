@@ -8,6 +8,18 @@ Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-revi
 > `boons` (choices); `modifiers` are derived on load (ADR-0006 amended) and not saved.
 > Autosave listens to `turn_ended`, which is emitted only after the end check and only while
 > `ONGOING`; victory persistence is owned by `scene-flow.md` (C-35).
+>
+> **Amendment 2026-10-19 (C-35, *proposed for C-56 / C-62* — status stays Accepted):** `design/gdd/scene-flow.md`
+> §3.4 asks for: (1) a **scene-entry save S2** written once when the Kök Böri objective panel is dismissed
+> (turn 1, before any action) into the `campaign` slot **and** a `scene_entry` slot (same document format;
+> the `slot` id already exists) — it holds the carry-over snapshot (`ruh`, `boons`, `chapters_completed`) so
+> "Retry scene" works even after Continue; overwritten at every scene entry; (2) **scene-complete save S3** =
+> after the last mandatory boon pick, before the outro: `chapters_completed ∪ {c}`, `current_chapter =
+> min(c+1, K)` (the next scene; stays `c` when `c == K`), `map: null`, `gold: 0`; (3) load validation:
+> `chapters_completed` must be a prefix `{1…m}`, `m ≤ K` (else `CORRUPT`), and a new `LoadResult.Code.CONTENT_MISSING`
+> when the save references a scene beyond the build's campaign length K (Continue disabled, file untouched);
+> (4) defeat and "leave scene" write nothing. Open: whether the snapshot is a second slot (recommended) or a
+> schema field — decided in the scene-flow ADR (C-62).
 
 ## Date
 

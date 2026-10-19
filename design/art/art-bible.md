@@ -777,6 +777,10 @@ palet dışı renk üretir).
 - **Konsey:** altı portre (~24×32), adı ve bonus satırı; törensel.
 - **İntro/epilog:** tam ekran 640×360 illüstrasyon, altta koyu panelde 12px krem
   metin, yavaş tam piksel kaydırma.
+- **Sahne akışı ekranları (C-35):** sefer haritası (bölüm seçimi), zafer sonuç kartı, yenilgi
+  ekranı, Kök Böri hedef işareti paneli ("İlahi" panel stili) ve haritada hedef işareti ikonu
+  (`icon_objective_marker`, 9×9) için görsel kurallar `design/gdd/scene-flow.md` §9–§10'da
+  derlenmiştir; yerleşim spec'leri C-45 (`/ux-design`), varlıklar `/asset-spec`.
 
 ### Harita Okunabilirliği (UX kuralları)
 

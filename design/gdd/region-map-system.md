@@ -250,6 +250,13 @@ işlem sırası = düşman bölgeleri region_id artan; bütçe enemy_actions_per
   bozuk bölgede seviye + direnç gösterir.
 - **Kök Böri / Kozmik katman**: düşman AI'nin yanına Erlik yayılım AI'si eklenecek
   (ADR-0005, `ErlikSpreadController`).
+- **Sahne Akışı** (`scene-flow.md`, C-35) — `game_won` / `game_lost` ve `game_result`
+  kilidinin tüketicisi: zaferde sonuç kartı → zorunlu lütuf seçimleri → kayıt → outro, yenilgide
+  yenilgi ekranı (§3.7 sonrası akış orada). Sahne başında haritayı `create_map_state()` +
+  `starting_gold` ile kurar; Kök Böri hedef işareti `WinCondition.erlik_foci` ve
+  `description_key`'den okunur (scene-flow §3.5). Kayıp ekranı metni için `game_lost` ile birlikte
+  okunabilir bir **kayıp sebebi** (`loss_reason`: `ERLIK` = Erlik kaybı, `NO_REGIONS` = bölgesiz
+  kalma) gerekir — üretimi C-63.
 
 ---
 

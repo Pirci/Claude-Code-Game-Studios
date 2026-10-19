@@ -114,7 +114,9 @@ geçmeliyim" baskısı hisseder; arındırdıkça "kutsandım" tatmini yaşar.
      sunum.
   2. **Sahne zaferle bittiğinde** (outro'dan önce — `scene-flow.md`, C-35): bekleyen
      sunumlar **sırayla** gösterilir ve **seçim zorunludur**; koşul sağlandığı sürece
-     (Ruh bir sonraki eşiğin altına inene ya da havuz boşalana kadar) devam eder.
+     (Ruh bir sonraki eşiğin altına inene ya da havuz boşalana kadar) devam eder; dizi,
+     patolojik Ruh değerlerine (hata ayarı, debug) karşı en çok `VICTORY_PICK_CAP` (8)
+     seçimle sınırlıdır, kalan sunum türetilmiş olarak bekler (`scene-flow.md` F2).
   Arındırma hamlesinin hemen ardından tur ortasında kendiliğinden açılmaz — hamle
   akışı kesilmez (dikkat bütçesi, çapraz inceleme D6).
 - **Erteleme:** Oyuncu tur başı modalını "Ertele" ile kapatabilir. Sunum §4.5
@@ -123,7 +125,9 @@ geçmeliyim" baskısı hisseder; arındırdıkça "kutsandım" tatmini yaşar.
   seçilmezse her yeni tur başında yeniden gösterilir. Sunum **açıldığı anda yeniden
   hesaplanır** — uygun havuz değişmişse (M2'de bir `requires` kilidi açılırsa) 3'lü de
   değişebilir. Sahne sonundaki sunum ertelenemez. Kaybedilen sahnede sunum gösterilmez
-  (Ruh korunur; kampanya kaybının akışı C-35).
+  (Ruh harcanmaz; yenilgi akışı `scene-flow.md` §3.7: "Sahneyi Yeniden Dene" sahne girişi
+  durumuna döner — önceki sahnelerden taşınan Ruh/lütuflar korunur, kaybedilen denemede
+  kazanılan Ruh ve seçilen lütuflar geri alınır; kasıtlı yenilgiyle Ruh çiftçiliğini önler).
 - **Seçim:** uygun havuzdan **3 lütuf** gösterilir, oyuncu **1** seçer; maliyeti
   Ruh'tan düşülür, seçilmeyen 2'si kaybolur. Seçimden sonra koşul hâlâ sağlanıyorsa:
   **otomatik modal** bir sonraki tur başında açılır (sahne sonundaysa hemen), ama
@@ -442,7 +446,9 @@ aynı yol T20). Uyarı eşiği: `erlik_power = eşik − 1` (Prolog 8 — ihmal 
 - **Final sahnesi**: Erlik yayılımı hızlanabilir (senaryo override) — bu sistem
   interval'i sahne başına ayarlanabilir olmalı.
 - **Sahne geçişi**: Lütuflar taşınır; sahneye özel bozulma durumu sıfırlanır
-  (yeni harita = yeni bozulma).
+  (yeni harita = yeni bozulma). Yeni sahnenin 1. turunda sunum kendiliğinden açılmaz
+  (şafak kuralı `end_turn` sonrasını kapsar); taşınan Ruh eşiği karşılıyorsa HUD düğmesi
+  hemen açar, otomatik modal 2. tur başında gelir (`scene-flow.md` §3.2).
 
 ---
 
@@ -468,6 +474,11 @@ aynı yol T20). Uyarı eşiği: `erlik_power = eşik − 1` (Prolog 8 — ihmal 
   `MapState.last_erlik_spread_turn` (§3.6).
 - **Kayıt / Yükleme** (ADR-0007) — `ruh` + `boons` kaydedilir; bekleyen sunum ve lütuf
   modifikatörleri türetilir (§3.4).
+- **Sahne Akışı** (`scene-flow.md`, C-35) — sahne zaferinde zorunlu lütuf dizisini sahneler
+  (`k = min(maliyetle sığan, havuz, VICTORY_PICK_CAP)`, F2), sunum durumunu ve `pick_boon`'u
+  kullanır; yenilgide sunum göstermez ve sahne girişi `ruh`/`boons` durumuna döner; Kök Böri'nin
+  sahne açılışındaki "genesis" görünüşü ve hedef işareti orada tanımlıdır (lütuf sunumundan ayrıdır).
+  `ruh`/`boons` sahneler arası taşınır, kayıt noktaları orada (S1–S3).
 - **Konsey (Altı Oğul)** (`council-system.md`) — konsey bonusları lütuflarla
   aynı toplamsal modifikatör hattını paylaşmalı (çift sayım önlenmeli).
 - **Katmanlı Düşman** (`enemy-layers.md`) — yalnızca *siyasi* krallar; Erlik

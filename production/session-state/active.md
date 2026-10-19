@@ -261,3 +261,8 @@
 ## Session Extract — C-63 Erlik kaybı (2026-10-19, ~07:15 UTC; session resumed after rate-limit pause 01:47→07:06)
 - WinCondition.erlik_loss_threshold + static erlik_power() + loss_reason(); MapState.LossReason {NONE, NO_REGIONS, ERLIK} + loss_reason; MapController._lose(reason). Tests 196/196.
 - C-35 agent resumed (scene-flow.md written, 892 lines) to apply cross-doc edits + report. When done: systems-index row, design review, scene-flow §3.7 wording → reason from MapState.loss_reason.
+
+## Session Extract — C-35 scene-flow.md (2026-10-19 ~07:25)
+- Written by game-designer agent (hit API limit, resumed), independent opus review: 3 blocking fixed → APPROVED (warnings W1–W6: Devam after defeat source of truth, quit during boon picks, art bible slow pan, class names → C-62, AC33–35 advisory, index row done).
+- Cross edits applied by agent: region-map §6, spirit §3.4/§5/§6, resource §6, concept, ADR-0001/0007/0011 amendments (proposed for C-56/C-62), art bible §7.
+- Owner questions: fixed Perde order?; Devam after defeat; victory-pending save.

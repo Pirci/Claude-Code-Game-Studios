@@ -28,7 +28,7 @@ Foundation → Core → Feature → Presentation → Polish
 | **Mevsim / Çevre Etkisi** | Feature | `season-system.md` | Yazılmadı | 3 | Kaynak |
 | **Kahraman Birimleri** | Feature | `hero-units.md` | Yazılmadı | 3 | Ordu, Savaş (Yiğit Ruhu lütfu kilidi) |
 | **Miras / Bölünme** (final) | Feature | `legacy-division.md` | Yazılmadı | 4 | Konsey |
-| **Sahne Akışı & İlerleme** | Presentation | `scene-flow.md` | Yazılmadı (C-35) | 4 | Harita (oyun sonu §3.7), Ruh (sahne sonu sunumu) |
+| **Sahne Akışı & İlerleme** | Presentation | [scene-flow.md](scene-flow.md) | Designed (C-35; `/design-review` APPROVED 2026-10-19 — 6 uyarı) | 4 | Harita (oyun sonu §3.7), Ruh (sahne sonu sunumu), Kaynak (sahne başı altın), Kayıt (ADR-0007) |
 | **Erişilebilirlik ayarları** (renk körlüğü, bölge adları, hareketi azalt) | Presentation | art bible §7 + kod (C-07); ayrı GDD yok | Belgelenmiş (kod) | — | Harita |
 | **Yerelleştirme** (11 dil, `LocaleFontController`) | Presentation | coding standards + kod; ayrı GDD yok | Belgelenmiş (kod) | — | — |
 | **Tamga ikonları** (sahiplik işareti) | Presentation | art bible §5/§7 + region-map §7 | Belgelenmiş (kod, C-06) | — | Harita |

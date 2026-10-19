@@ -107,6 +107,12 @@ handling or HUD model exist.
    player-move report (right after the move) → at end of turn: `TurnSummaryReport` → dawn boon
    offer (≤ 1 automatic per turn start; HUD button may open it any time). Scene victory: the
    mandatory boon sequence then the outro (scene-flow, C-35/C-62).
+   *Amendment 2026-10-19 (C-35, proposed; `design/gdd/scene-flow.md` §3.6–3.7, §10):* scene victory
+   order is **result card (`VICTORY_BEAT`) → mandatory `BoonOfferModal(mandatory = true)` sequence (no
+   defer, Esc inert) → outro**; scene defeat shows the **defeat screen** (reason text from
+   `loss_reason`) through the same queue; all of them honour a `screen_input_guard_s` input guard.
+   `HudModel` gains a persistent objective line: `objective_key` (= `WinCondition.description_key`),
+   `neutral_progress`, `foci_progress` (+ objective marker set `V`).
 6. **Preview and confirmation.** On hover with a source selected, `GameContext` asks
    `MapController.preview_move(to)` (ADR-0010) and shows the outcome in a small preview view;
    a failing purification needs a second click on the same target (state kept in `GameContext`
