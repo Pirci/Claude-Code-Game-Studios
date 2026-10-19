@@ -2,7 +2,7 @@
 
 *Oyun: ULUS: Blood of the Sky Wolf*
 *Oluşturulma: 2026-07-14*
-*Durum: Designed (kod henüz yok — uygulama C-38 / C-39 / C-55 / C-63; çapraz inceleme 2026-10-19 CONCERNS → C-53; Prolog dengesi C-49)*
+*Durum: Designed (M1 kodu: arındırma/bozulma C-38, değiştirici hattı C-55, Erlik kaybı C-63, Kök Böri lütuf çekirdeği C-39 — `BoonCatalog`/`BoonRules`/`SpiritController.pick_boon`, şafak + HUD + zafer sunumu; sahne geçişi AC6 C-40; çapraz inceleme 2026-10-19 CONCERNS → C-53; Prolog dengesi C-49)*
 *Katman: Feature (imza sistem)*
 
 ---

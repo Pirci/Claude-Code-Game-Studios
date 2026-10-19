@@ -10,3 +10,8 @@ extends Resource
 @export var max_corruption_level: int = 3
 ## Bozulma seviyesine göre üretim çarpanı `M_c` (§4.3; indeks = seviye).
 @export var corruption_production_multipliers: PackedFloat32Array = [1.0, 0.75, 0.5, 0.0]
+## Lütuf maliyeti `boon_cost(n) = base_boon_cost + n × boon_cost_step` (§4.4; güvenli 10–60 / 5–40).
+@export var base_boon_cost: int = 30
+@export var boon_cost_step: int = 20
+## Sahne sonu zorunlu seçim dizisinin üst sınırı `VICTORY_PICK_CAP` (§3.4, scene-flow F2).
+@export var victory_pick_cap: int = 8

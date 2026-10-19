@@ -1,0 +1,151 @@
+[gd_resource type="Resource" script_class="BoonCatalog" load_steps=25 format=3]
+
+[ext_resource type="Script" path="res://features/bozkurt/boon_catalog.gd" id="1_cat"]
+[ext_resource type="Script" path="res://features/bozkurt/boon_definition.gd" id="2_def"]
+[ext_resource type="Script" path="res://features/modifiers/modifier_source.gd" id="3_src"]
+[ext_resource type="Script" path="res://features/modifiers/modifier_effect.gd" id="4_eff"]
+
+[sub_resource type="Resource" id="eff_arinma_ustaligi"]
+script = ExtResource("4_eff")
+stat_id = &"ruh_gain"
+kind = 1
+value = 0.2
+
+[sub_resource type="Resource" id="src_arinma_ustaligi"]
+script = ExtResource("3_src")
+source_id = &"boon:arinma_ustaligi"
+max_stacks = 0
+effects = Array[ExtResource("4_eff")]([SubResource("eff_arinma_ustaligi")])
+
+[sub_resource type="Resource" id="boon_arinma_ustaligi"]
+script = ExtResource("2_def")
+boon_id = &"arinma_ustaligi"
+name_key = "BOON_ARINMA_USTALIGI"
+description_key = "BOON_ARINMA_USTALIGI_DESC"
+requires = &""
+modifier_source = SubResource("src_arinma_ustaligi")
+
+[sub_resource type="Resource" id="eff_bereket"]
+script = ExtResource("4_eff")
+stat_id = &"gold_income"
+kind = 0
+value = 1.0
+
+[sub_resource type="Resource" id="src_bereket"]
+script = ExtResource("3_src")
+source_id = &"boon:bereket"
+max_stacks = 0
+effects = Array[ExtResource("4_eff")]([SubResource("eff_bereket")])
+
+[sub_resource type="Resource" id="boon_bereket"]
+script = ExtResource("2_def")
+boon_id = &"bereket"
+name_key = "BOON_BEREKET"
+description_key = "BOON_BEREKET_DESC"
+requires = &""
+modifier_source = SubResource("src_bereket")
+
+[sub_resource type="Resource" id="eff_demir_post"]
+script = ExtResource("4_eff")
+stat_id = &"army_defense"
+kind = 0
+value = 1.0
+
+[sub_resource type="Resource" id="src_demir_post"]
+script = ExtResource("3_src")
+source_id = &"boon:demir_post"
+max_stacks = 0
+effects = Array[ExtResource("4_eff")]([SubResource("eff_demir_post")])
+
+[sub_resource type="Resource" id="boon_demir_post"]
+script = ExtResource("2_def")
+boon_id = &"demir_post"
+name_key = "BOON_DEMIR_POST"
+description_key = "BOON_DEMIR_POST_DESC"
+requires = &"effective_power"
+modifier_source = SubResource("src_demir_post")
+
+[sub_resource type="Resource" id="eff_gok_kalkani"]
+script = ExtResource("4_eff")
+stat_id = &"erlik_spread_interval"
+kind = 0
+value = 1.0
+
+[sub_resource type="Resource" id="src_gok_kalkani"]
+script = ExtResource("3_src")
+source_id = &"boon:gok_kalkani"
+max_stacks = 3
+effects = Array[ExtResource("4_eff")]([SubResource("eff_gok_kalkani")])
+
+[sub_resource type="Resource" id="boon_gok_kalkani"]
+script = ExtResource("2_def")
+boon_id = &"gok_kalkani"
+name_key = "BOON_GOK_KALKANI"
+description_key = "BOON_GOK_KALKANI_DESC"
+requires = &""
+modifier_source = SubResource("src_gok_kalkani")
+
+[sub_resource type="Resource" id="eff_kurt_gucu"]
+script = ExtResource("4_eff")
+stat_id = &"army_attack"
+kind = 0
+value = 1.0
+
+[sub_resource type="Resource" id="src_kurt_gucu"]
+script = ExtResource("3_src")
+source_id = &"boon:kurt_gucu"
+max_stacks = 0
+effects = Array[ExtResource("4_eff")]([SubResource("eff_kurt_gucu")])
+
+[sub_resource type="Resource" id="boon_kurt_gucu"]
+script = ExtResource("2_def")
+boon_id = &"kurt_gucu"
+name_key = "BOON_KURT_GUCU"
+description_key = "BOON_KURT_GUCU_DESC"
+requires = &"effective_power"
+modifier_source = SubResource("src_kurt_gucu")
+
+[sub_resource type="Resource" id="eff_suru_kutsamasi"]
+script = ExtResource("4_eff")
+stat_id = &"herd_income"
+kind = 1
+value = 0.1
+
+[sub_resource type="Resource" id="src_suru_kutsamasi"]
+script = ExtResource("3_src")
+source_id = &"boon:suru_kutsamasi"
+max_stacks = 0
+effects = Array[ExtResource("4_eff")]([SubResource("eff_suru_kutsamasi")])
+
+[sub_resource type="Resource" id="boon_suru_kutsamasi"]
+script = ExtResource("2_def")
+boon_id = &"suru_kutsamasi"
+name_key = "BOON_SURU_KUTSAMASI"
+description_key = "BOON_SURU_KUTSAMASI_DESC"
+requires = &"herd"
+modifier_source = SubResource("src_suru_kutsamasi")
+
+[sub_resource type="Resource" id="eff_yigit_ruhu"]
+script = ExtResource("4_eff")
+stat_id = &"hero_strength"
+kind = 1
+value = 0.1
+
+[sub_resource type="Resource" id="src_yigit_ruhu"]
+script = ExtResource("3_src")
+source_id = &"boon:yigit_ruhu"
+max_stacks = 0
+effects = Array[ExtResource("4_eff")]([SubResource("eff_yigit_ruhu")])
+
+[sub_resource type="Resource" id="boon_yigit_ruhu"]
+script = ExtResource("2_def")
+boon_id = &"yigit_ruhu"
+name_key = "BOON_YIGIT_RUHU"
+description_key = "BOON_YIGIT_RUHU_DESC"
+requires = &"heroes"
+modifier_source = SubResource("src_yigit_ruhu")
+
+[resource]
+script = ExtResource("1_cat")
+boons = Array[ExtResource("2_def")]([SubResource("boon_arinma_ustaligi"), SubResource("boon_bereket"), SubResource("boon_demir_post"), SubResource("boon_gok_kalkani"), SubResource("boon_kurt_gucu"), SubResource("boon_suru_kutsamasi"), SubResource("boon_yigit_ruhu")])
+active_systems = Array[StringName]([])

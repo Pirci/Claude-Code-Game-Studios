@@ -47,6 +47,11 @@ layout_mode = 2
 text = "GOLD"
 horizontal_alignment = 1
 
+[node name="SpiritLabel" type="Label" parent="TopBarPanel/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "SPIRIT"
+
 [node name="TurnLabel" type="Label" parent="TopBarPanel/TopBar"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -76,6 +81,13 @@ text = "MAIN_MENU"
 [node name="Spacer" type="Control" parent="BottomBarPanel/BottomBar"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="KokBoriButton" type="Button" parent="BottomBarPanel/BottomBar"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+text = "KOK_BORI"
 
 [node name="EndTurnButton" type="Button" parent="BottomBarPanel/BottomBar"]
 unique_name_in_owner = true

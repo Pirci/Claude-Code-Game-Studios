@@ -296,3 +296,8 @@
 - C-54 (narrative-director ajanı): design/narrative/narrative-voice.md + 45 key × 11 dil; zh Erlik 埃尔利克 birleşti; scene-flow Q8 kapandı; K-03 ana dil incelemesi. Commit 5cf8145.
 - C-37: EconomyConfig(.tres), IncomeRules F1/F2/F3/F7, ResourceController (recruit_cap, remaining_cap, max_recruit, recruit, reinforce_enemies, pay_upkeep, reset_recruit_counters), RegionData.recruited_this_turn, MapController.recruit/forecast_income/army_recruited; RegionInfoPanel Ordu Topla (RecruitBox/RecruitMinus/RecruitPlus/RecruitConfirm/RecruitCost/RecruitCap/RecruitHint) + ReinforcementRow; GameContext _refresh_map re-shows selected region; HUD "Gold: X (+Y)". 8 key. Tests 259/259. New task C-66 (resource §9 feedback/SFX).
 - NEXT: C-39 (Kök Böri çekirdeği).
+
+## Session Extract — C-39 Kök Böri lütuf çekirdeği (2026-10-19 ~08:05 UTC)
+- features/bozkurt: BoonDefinition, BoonCatalog (+data/boon_catalog.tres), BoonRules (static), SpiritConfig base_boon_cost/boon_cost_step/victory_pick_cap, SpiritRules.boon_cost/is_offer_pending/victory_pick_cap, SpiritController bind_boons/rebuild_boon_modifiers/next_boon_cost/is_offer_pending/current_offer/pick_boon + boon_picked signal.
+- UI: ui/modal_queue.gd (ModalQueue: push/is_open/current/drained), features/bozkurt/ui/boon_offer_modal.gd + boon_card.gd, theme DivinePanel; ui/hud/hud_model.gd + hud_presenter.gd; game_context.tscn SpiritLabel + KokBoriButton; GameContext _refresh_views/_render_hud/_push_boon_offer/_on_boon_picked/_on_kok_bori_pressed, dawn offer in _on_turn_ended, mandatory chain in _on_game_won.
+- Tests 277/277 (boon_offer_test, boon_flow_test, hud_presenter_test). New task C-67. NEXT: C-40 scene flow code (ADR-0012).

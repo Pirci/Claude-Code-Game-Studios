@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=40 format=3]
+[gd_resource type="Theme" load_steps=41 format=3]
 
 [ext_resource type="Font" path="res://assets/fonts/default_font.tres" id="1_font"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/theme/slider_grabber.png" id="grabber"]
@@ -159,6 +159,19 @@ border_width_bottom = 1
 border_color = Color(0.541176, 0.427451, 0.309804, 1)
 anti_aliasing = false
 
+[sub_resource type="StyleBoxFlat" id="divine_panel"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.0392157, 0.0509804, 0.109804, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.929412, 0.780392, 0.419608, 1)
+anti_aliasing = false
+
 [sub_resource type="StyleBoxTexture" id="primary_normal"]
 content_margin_left = 6.0
 content_margin_top = 2.0
@@ -275,6 +288,8 @@ HudBarBottom/base_type = &"PanelContainer"
 HudBarBottom/styles/panel = SubResource("hud_bar_bottom")
 HudPanel/base_type = &"PanelContainer"
 HudPanel/styles/panel = SubResource("hud_panel")
+DivinePanel/base_type = &"PanelContainer"
+DivinePanel/styles/panel = SubResource("divine_panel")
 ModalPanel/base_type = &"PanelContainer"
 ModalPanel/styles/panel = SubResource("modal_panel")
 PrimaryButton/base_type = &"Button"

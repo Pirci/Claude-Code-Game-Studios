@@ -223,7 +223,35 @@ satırıyla, kazananınki `*_STANDING` ile gösterilir. **PurificationReport:** 
 ve sahnenin ritüel anahtarları doluysa §5.2, değilse `PURIFY_*`.
 
 **Yazılmayanlar:** `CHAPTER_1_TEASER` ve `end_pages` metni Perde 1 adlandırmasına (Cürcet Kağan'ın ÇJK/Arapça
-adı) bağlı → C-43. Lütuf kartı metinleri → C-39 (bu rehberin §3 ve §6.5'ine uyar).
+adı) bağlı → C-43. Lütuf kartı metinleri → C-39 ✅ (aşağıda "C-39 lütuf anahtarları").
+
+### C-39 lütuf anahtarları
+
+Kök Böri'nin lütuf sunumu (§3, dördüncü an) ve HUD düğmesi. Lütuf = *blessing*, Ruh = *Spirit* (§6.5).
+Açıklama (`_DESC`) satırı bütçesi ≈ 48 karakter; yüzde işareti `%%` olarak yazılır, çeviri `%s` ile `%%`
+sırasını kendi yazımına göre kurar (tr `%%%s`; de/fr/es/ru `%s %%`).
+
+| Anahtar | Yer | Yer tutucu | en |
+| ---- | ---- | ---- | ---- |
+| `SPIRIT` | HUD etiketi ("Spirit: 45") | — | Spirit |
+| `KOK_BORI` | HUD düğmesi (lütuf sunumunu açar) | — | Kök Böri |
+| `BOON_OFFER_LINE` | Lütuf sunumu, Kök Böri sözü (kutsal ses, 2. tekil) | — | Take one blessing, Oğuz. The others return to the sky. |
+| `BOON_COST` | Lütuf kartı bedel satırı | sayı | Cost: %s Spirit |
+| `BOON_DEFER` | Sunumu sonraki tura erteleyen düğme | — | Later |
+| `BOON_ARINMA_USTALIGI` | Lütuf adı | — | Mastery of Cleansing |
+| `BOON_ARINMA_USTALIGI_DESC` | Lütuf kartı açıklaması | sayı + `%%` | Each cleansing brings %s%% more Spirit. |
+| `BOON_BEREKET` | Lütuf adı | — | Abundance |
+| `BOON_BEREKET_DESC` | Lütuf kartı açıklaması | sayı | Turn income +%s gold. |
+| `BOON_GOK_KALKANI` | Lütuf adı | — | Sky Shield |
+| `BOON_GOK_KALKANI_DESC` | Lütuf kartı açıklaması | sayı | Erlik spreads more slowly: +%s turn between spreads. |
+| `BOON_KURT_GUCU` | Lütuf adı | — | Wolf's Might |
+| `BOON_KURT_GUCU_DESC` | Lütuf kartı açıklaması | sayı | Our attacking and cleansing hosts gain +%s strength. |
+| `BOON_DEMIR_POST` | Lütuf adı | — | Iron Hide |
+| `BOON_DEMIR_POST_DESC` | Lütuf kartı açıklaması | sayı | Our defending lands gain +%s strength. |
+| `BOON_SURU_KUTSAMASI` | Lütuf adı | — | Blessing of the Herd |
+| `BOON_SURU_KUTSAMASI_DESC` | Lütuf kartı açıklaması | sayı + `%%` | Herd income +%s%%. |
+| `BOON_YIGIT_RUHU` | Lütuf adı | — | Spirit of the Brave |
+| `BOON_YIGIT_RUHU_DESC` | Lütuf kartı açıklaması | sayı + `%%` | Hero strength +%s%%. |
 
 ## 9. Karar Günlüğü (C-54, gece modu — önerilen seçenek uygulandı)
 

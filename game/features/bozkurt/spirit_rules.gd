@@ -35,3 +35,17 @@ func production_multiplier(level: int) -> float:
 
 func max_corruption_level() -> int:
 	return _config.max_corruption_level
+
+
+## Lütuf maliyeti (§4.4) — [param picked_count] daha önce seçilen lütuf sayısı `n`.
+func boon_cost(picked_count: int) -> int:
+	return BoonRules.boon_cost(picked_count, _config)
+
+
+func is_offer_pending(ruh: int, picked_count: int, pool_size: int) -> bool:
+	return BoonRules.is_offer_pending(ruh, picked_count, pool_size, _config)
+
+
+## Sahne sonu zorunlu seçim dizisinin üst sınırı (§3.4).
+func victory_pick_cap() -> int:
+	return _config.victory_pick_cap

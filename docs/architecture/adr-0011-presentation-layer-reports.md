@@ -224,6 +224,14 @@ their tasks: `HudModel`/`HudPresenter` + `Hud` (C-37), corruption rows + `Purifi
 `MovePreview`, spread telegraph (C-41 / C-45). Rename `_refresh_map()` → `_refresh_views()`
 when the HUD is added.
 
+*Implementation note (C-39, 2026-10-19):* `HudModel` + pure `HudPresenter.build(game_state,
+resources, spirit, modifiers)` landed with C-39 (C-37 shipped the forecast directly); the HUD
+labels/buttons still live in `game_context.tscn` and `GameContext._render_hud(model)` draws them —
+extracting a standalone `Hud` view is left to C-41. `ModalQueue` lives in `ui/modal_queue.gd`
+(overlay `CanvasLayer` 10). `BoonOfferModal.show_offer(boons: Array[BoonDefinition], ruh, cost,
+mandatory)` takes the content definitions (name/description keys) instead of bare ids; it emits
+`boon_picked` / `deferred` and then `closed`. `_refresh_map()` is now `_refresh_views()`.
+
 ## Validation Criteria
 - [ ] `HudPresenter.build` returns the F2 income and the same spread target as
       `ErlikSpreadController.decide` for a fixture map (unit test).
