@@ -230,3 +230,7 @@
 ## Session Extract — C-59 ADR-0010 move resolution (2026-10-19)
 - ADR-0010 Accepted: MoveOutcome (features/army, data incl. target_*_after, dispersed, ruh_gain), MoveResolver.resolve(map, from, to, mover, modifiers) read-only with INVALID+reason, branch order COMBAT → PURIFICATION (player only) → PEACEFUL; apply via ArmyController.apply_outcome + SpiritController.apply_purification; MapController.preview_move; CombatResolver.resolve_effective (M2); IncomeRules.turn_income (F2) with EconomyConfig (C-37).
 - Traceability 27/36 covered. Implementation = first step of C-38.
+
+## Session Extract — C-60 ADR-0011 presentation (2026-10-19)
+- ADR-0011 Accepted: passive views (feature-owned scenes; HUD in ui/hud/), GameContext sole presenter `_refresh_views()`, HudModel via pure HudPresenter (IncomeRules + ErlikSpreadController.decide + StatResolver interval), reports fed MoveOutcome, one TurnSummaryReport per enemy turn, ModalQueue (overlay CanvasLayer, backdrop blocks map, FocusReveal focus restore), preview + second click for failing purification, motion never gates input.
+- Traceability 30/36 covered; remaining gap TR-concept-007 (scene flow, C-62 after C-35).

@@ -8,7 +8,7 @@
 - **GDDs Covered:** `game-concept.md`, `systems-index.md`, `region-map-system.md`,
   `army-system.md`, `combat-system.md`, `resource-system.md`, `spirit-system.md`
   (cross-review 2026-10-19: CONCERNS, resolved in C-53)
-- **ADRs Referenced:** ADR-0001 … ADR-0010 (all **Accepted** 2026-10-19; ADR-0008 audio added by C-23, ADR-0009 localization by C-61, ADR-0010 move resolution by C-59 —
+- **ADRs Referenced:** ADR-0001 … ADR-0011 (all **Accepted** 2026-10-19; ADR-0008 audio added by C-23, ADR-0009 localization by C-61, ADR-0010 move resolution by C-59, ADR-0011 presentation by C-60 —
   [architecture-review-2026-10-19.md](architecture-review-2026-10-19.md))
 - **Requirements baseline:** [tr-registry.yaml](tr-registry.yaml) v3 — 36 TRs; coverage in
   [architecture-traceability.md](architecture-traceability.md)
@@ -382,7 +382,7 @@ Decisions made in this document that are not yet ADRs are listed in §7.
    `SpiritController.apply_purification` call point. Before C-38 / C-41 / C-45.
 
 **Should have before the relevant system is built:**
-2. **Presentation Layer & Reports** (C-60) → TR-combat-003, TR-map-004, TR-spirit-010 display;
+2. ~~**Presentation Layer & Reports** (C-60)~~ — done: **ADR-0011** → TR-combat-003, TR-map-004, TR-spirit-010 display;
    view-refresh contract, HUD/battle report/boon modal/preview/telegraph. Before C-41 / C-45.
 3. **Scene flow & chapter loading** (C-62, after `scene-flow.md` C-35) → TR-concept-007,
    TR-map-002; victory persistence order, chapter content path convention.
