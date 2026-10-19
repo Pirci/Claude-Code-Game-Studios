@@ -192,3 +192,9 @@
 - translations.csv: `PER_TURN` = "%s / turn" (tr tur, de Runde, fr tour, es/pt turno, zh 回合, ja ターン, ko 턴, ru ход, ar دور). RegionInfoPanel: `tr("PER_TURN") % format_int(gold)`; GoldLabel named for tests.
 - grep: no to_lower/to_upper/capitalize in game code. Tests 134/134 (per_turn_label_test 3). de: "Gold: 2 / Runde"; ar renders "ذهب: 2 / دور".
 - NEXT: C-27 (GitHub Actions CI, headless Godot 4.7 + run-tests.sh).
+
+## Session Extract — C-27 GitHub Actions CI (2026-10-19)
+- `.github/workflows/tests.yml`: push(main)/PR/workflow_dispatch; ubuntu-24.04; Godot 4.7.1 zip from GitHub release, SHA512 pinned (4ccdab7a…2de9), cached in ~/godot; runs `tools/ci/run-tests.sh`; uploads game/reports on failure.
+- Local proof: fresh clone (no .godot) → 134/134 + palette, exit 0; intentional failing test → run-tests.sh exit 100.
+- coding-standards.md CI line updated to run-tests.sh / tests.yml.
+- NEXT: C-49 (Prolog Erlik impact + loss condition decision).

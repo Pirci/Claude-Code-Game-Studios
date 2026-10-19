@@ -1,0 +1,61 @@
+# ULUS — otomatik test kapısı (coding standards: her push/PR'da testler, kırmızıysa merge yok).
+# Headless Godot ile tools/ci/run-tests.sh çalışır: GDUnit4 birim testleri + palet doğrulayıcı.
+# Godot sürümü docs/engine-reference/godot/VERSION.md ile aynı tutulur; sürüm değişince
+# GODOT_SHA512'yi resmi SHA512-SUMS.txt'den güncelle.
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  GODOT_VERSION: "4.7.1"
+  # https://github.com/godotengine/godot/releases/download/4.7.1-stable/SHA512-SUMS.txt
+  GODOT_SHA512: "4ccdab7a48eeccbe8819a2fc1f6262f8d72065d98601bcb3743fcbd7ebd39f373758a788ee3293a05ec5b2c48538266c437404312e372225cd2df273945a2de9"
+
+jobs:
+  tests:
+    name: GDUnit4 + palette (headless Godot)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache Godot
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-${{ env.GODOT_VERSION }}-linux-x86_64-${{ env.GODOT_SHA512 }}
+
+      - name: Download Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          zip_name="Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          curl -fsSL --retry 3 -o "$RUNNER_TEMP/$zip_name" \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/$zip_name"
+          echo "${GODOT_SHA512}  $RUNNER_TEMP/$zip_name" | sha512sum -c -
+          mkdir -p ~/godot
+          unzip -q "$RUNNER_TEMP/$zip_name" -d ~/godot
+          chmod +x ~/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64
+
+      - name: Run tests
+        run: GODOT="$HOME/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64" tools/ci/run-tests.sh
+
+      - name: Upload GDUnit4 reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gdunit4-reports
+          path: game/reports/
+          if-no-files-found: ignore

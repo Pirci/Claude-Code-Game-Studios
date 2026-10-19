@@ -5,9 +5,9 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-19
-- **Son commit:** `9883e76` (C-26: PER_TURN çeviri key'i)
+- **Son commit:** `__H__` (C-27: GitHub Actions test kapısı)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-27)
+- **Aktif görev:** — (yok; sıradaki: C-49)
 
 ---
 
@@ -134,7 +134,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-24 | [x] `061ada8` | **Karar:** `.uid` dosyaları `game/.gitignore` ile yok sayılıyor (repoda 0 adet); Godot 4.4+ bunların commit'lenmesini öneriyor (UID referansları klonlar arasında tutarlı kalsın). Politikayı seç → gerekiyorsa ignore'dan çıkar + mevcutları ekle | C-06 sırasında keşfedildi | — | Karar kaydı + (seçilirse) tüm `.uid`'ler takipte |
 | C-25 | [x] `2e016f3` | **Karar + uygulama:** ekran açılışında başlangıç odağı yok (menü, ayarlar, oyun) → klavye kullanıcısı gezinmeye başlayamıyor. Fare kullanıcısına sürekli altın odak çerçevesi göstermeden çözüm seç (ör. ilk yön tuşunda odak ver / Godot 4.7 odak görünürlüğü ayarını araştır) | C-08 sırasında keşfedildi | — | Her ekranda ilk ok/Tab tuşu bir butona odaklanır; fareyle açılışta çerçeve yok |
 | C-26 | [x] `9883e76` | Bilgi panelinde `tr("TURN").to_lower()` → Almancada "2 / runde" (isimler büyük harf olmalı); bible programatik büyük/küçük harf dönüşümünü yasaklıyor. `PER_TURN` gibi ayrı çeviri key'i (11 dil) + kodda başka `to_lower()/to_upper()` kalmadığını doğrula | C-09 sırasında keşfedildi | — | grep `to_lower\|to_upper` oyuncuya görünen metinde yok; de ekran görüntüsü |
-| C-27 | [ ] | Gerçek CI hattı yok: `.github/workflows/` boş (yalnızca şablonlar). Coding standards "her push/PR'da testler çalışır, kırmızıysa merge yok" diyor → GitHub Actions: headless Godot 4.7 + `tools/ci/run-tests.sh` (testler + palet) | C-10 sırasında keşfedildi | — | Push'ta workflow yeşil; bilerek kırılan testte kırmızı |
+| C-27 | [x] `__H__` | Gerçek CI hattı yok: `.github/workflows/` boş (yalnızca şablonlar). Coding standards "her push/PR'da testler çalışır, kırmızıysa merge yok" diyor → GitHub Actions: headless Godot 4.7 + `tools/ci/run-tests.sh` (testler + palet) | C-10 sırasında keşfedildi | — | Push'ta workflow yeşil; bilerek kırılan testte kırmızı |
 | C-28 | [x] `1468973` | **Karar + GDD:** ordu üretimi (maliyet, formül, sahibi) — `resource-system.md` yazılır veya `army-system.md`'ye eklenir; kartopu/bakım (D1, D2) burada değerlendirilir | `design/gdd/gdd-cross-review-2026-10-08.md` B1 | C-13 | GDD'de üretim formülü + ayar aralığı; Prolog kazanılabilirliği hesapla gösterilir |
 | C-29 | [x] `e0eae22` | **Karar + GDD:** Erlik modeli (bozulma katmanı mı, sahip türü mü — Prolog canavarı dahil), yayılım/bozulmanın sahibi GDD (spirit / corruption-purification / enemy-layers) ve tur sonundaki yeri → region-map §3.4 + AC4 + TR-map-003 güncellenir; Prolog'da Erlik baskısı (D3) | `design/gdd/gdd-cross-review-2026-10-08.md` B2, B4 | C-13 | Tek sahip GDD; tur sonu sırası tüm GDD/TR/ADR'de aynı |
 | C-30 | [x] `f8e3737` | **GDD:** arındırma eylemi (varış dalı mı ayrı eylem mi, aksiyon maliyeti, birliklerin yerleşmesi, sahipli+bozuk hedef) + fetihte bozulmanın akıbeti | `design/gdd/gdd-cross-review-2026-10-08.md` B3, B5 | C-29 | army §3.3 / spirit §3.2 tanımlı, kabul kriterli |
@@ -223,3 +223,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-19 | C-24: `.uid` politikası — commit edilir (`game/.gitignore`'dan `*.uid` kaldırıldı, 272 `.uid` eklendi, yetim yok); teknik tercihlere "Version Control Notes" *(gece modu: önerilen seçenek)* | `061ada8` |
 | 2026-10-19 | C-25: sessiz başlangıç klavye odağı — `FocusReveal` (`game/ui/focus_reveal.gd`), menü/ayarlar/oyun ekranlarında gizli odak, ilk gezinme tuşu görünür yapar (taşımaz, Enter basmaz); 131/131 test (8 yeni); Xvfb: açılışta çerçeve yok, ilk ↓ çerçeveyi Yeni Sefer'de gösterir, ikinci ↓ Ayarlar'a geçer *(gece modu: önerilen seçenek)* | `2e016f3` |
 | 2026-10-19 | C-26: bölge panelinde `/ tur` birimi ayrı çeviri key'i `PER_TURN` (`%s / …`, 11 dil; Almanca "Runde" büyük harf), `to_lower()` kaldırıldı; oyun kodunda `to_lower/to_upper/capitalize` yok; 134/134 test (3 yeni); de/ar ekran görüntüleri (Xvfb) | `9883e76` |
+| 2026-10-19 | C-27: GitHub Actions test kapısı `.github/workflows/tests.yml` — push(main)/PR/elle; headless Godot 4.7.1 (SHA512 doğrulamalı indirme + cache) → `tools/ci/run-tests.sh` (134 test + palet); başarısızlıkta GDUnit4 raporu artefakt. Yerel kanıt: temiz klonda exit 0; bilerek kırılan testte `run-tests.sh` exit 100 | `__H__` |
