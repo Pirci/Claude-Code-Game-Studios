@@ -20,5 +20,8 @@ func apply_outcome(map_state: MapState, outcome: MoveOutcome) -> void:
 		return
 	map_state.get_region(outcome.from_id).army_count = outcome.source_army_after
 	var target: RegionData = map_state.get_region(outcome.to_id)
+	# Sahip değişince üretim sayacı yeni sahipte 0'dan başlar (resource §3.2, AC19).
+	if target.owner != outcome.target_owner_after:
+		target.recruited_this_turn = 0
 	target.owner = outcome.target_owner_after
 	target.army_count = outcome.target_army_after

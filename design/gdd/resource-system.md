@@ -2,7 +2,7 @@
 
 *Oyun: ULUS: Blood of the Sky Wolf*
 *Oluşturulma: 2026-10-08*
-*Durum: Designed (inceleme bekliyor — `/design-review` taze oturumda); §4 Prolog doğrulaması C-49 ile güncel (2026-10-19)*
+*Durum: Designed (inceleme bekliyor — `/design-review` taze oturumda); §4 Prolog doğrulaması C-49 ile güncel (2026-10-19); uygulama C-37 (2026-10-19 — `EconomyConfig`, `IncomeRules`, `ResourceController`, bilgi paneli Ordu Topla + HUD tahmini; §9 geri bildirimleri C-66)*
 *Creative Director Review (CD-GDD-ALIGN): atlandı — lean mod*
 *Katman: Core*
 *Uyguladığı sütun: Epik Ama Erişilebilir · İki Katmanlı Tehdit*

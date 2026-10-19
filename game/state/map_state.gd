@@ -16,6 +16,8 @@ var current_turn: int = 1
 var actions_remaining: int = 1
 var actions_per_turn: int = 1
 var enemy_actions_per_turn: int = 1
+## Ekonomi adımında düşman bölgesi başına takviye (resource F6) — bölüm içeriğinden.
+var enemy_reinforcement_per_turn: int = 1
 var selected_region_id: StringName = &""
 var chapter_id: int = 1
 ## Sahip → tamga (art bible §5/§7). Fetihte bölgenin tamgası yeni sahibinkine geçer.

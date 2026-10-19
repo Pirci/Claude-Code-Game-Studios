@@ -93,3 +93,11 @@ TURN_SUMMARY_SPREAD,Erlik's stain spread: %s,Erlik'in lekesi yayıldı: %s,Erlik
 TURN_SUMMARY_DEEPENED,Erlik's stain deepened: %s,Erlik'in lekesi derinleşti: %s,Erliks Fleck vertiefte sich: %s,La tache d'Erlik s'est aggravée : %s,La mancha de Erlik se hizo más honda: %s,埃尔利克的污迹加深了：%s,エルリクの染みが深まった：%s,에를리크의 얼룩이 깊어졌다: %s,Пятно Эрлика стало глубже: %s,A mancha de Erlik se aprofundou: %s,تعمقت بقعة إرليك: %s
 TURN_SUMMARY_QUIET,The night passed quietly.,Gece sessiz geçti.,Die Nacht verging ruhig.,La nuit fut calme.,La noche pasó en calma.,这一夜平静地过去了。,夜は静かに過ぎた。,밤은 조용히 지나갔다.,Ночь прошла спокойно.,A noite passou em silêncio.,مر الليل بهدوء.
 THOUSANDS_SEPARATOR,",",.,., ,.,",",",",",", ,.,","
+RECRUIT,Raise Army,Ordu Topla,Truppen ausheben,Lever des troupes,Reclutar tropas,征召军队,兵を集める,군대 모집,Набор войск,Recrutar tropas,حشد الجيش
+RECRUIT_CONFIRM,Raise,Topla,Ausheben,Lever,Reclutar,征召,徴兵,모집,Набрать,Recrutar,احشد
+RECRUIT_COST,Cost: %s gold,Bedel: %s altın,Kosten: %s Gold,Coût : %s or,Coste: %s de oro,花费：%s 金币,費用：%s ゴールド,비용: %s 골드,Цена: %s золота,Custo: %s de ouro,الكلفة: %s ذهب
+RECRUIT_CAP,Raised: %s,Toplanan: %s,Ausgehoben: %s,Levés : %s,Reclutados: %s,已征召：%s,徴兵済み：%s,모집됨: %s,Набрано: %s,Recrutados: %s,المحشود: %s
+RECRUIT_NOT_ENOUGH_GOLD,Need %s more gold,%s altın daha gerek,Es fehlen %s Gold,Il manque %s or,Faltan %s de oro,还差 %s 金币,あと %s ゴールド必要,골드 %s 부족,Не хватает %s золота,Faltam %s de ouro,ينقص %s ذهب
+RECRUIT_CAP_REACHED,Limit reached: %s,Sınıra ulaşıldı: %s,Grenze erreicht: %s,Limite atteinte : %s,Límite alcanzado: %s,已达上限：%s,上限に達した：%s,한도 도달: %s,Предел достигнут: %s,Limite atingido: %s,بلغ الحد: %s
+INCOME_PER_TURN,(+%s),(+%s),(+%s),(+%s),(+%s),(+%s),(+%s),(+%s),(+%s),(+%s),(+%s)
+ENEMY_REINFORCEMENT,Reinforce,Takviye,Nachschub,Renfort,Refuerzo,增援,増援,증원,Подкрепление,Reforço,تعزيز

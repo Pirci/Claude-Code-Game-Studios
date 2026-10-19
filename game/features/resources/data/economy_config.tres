@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="EconomyConfig" format=3]
+
+[ext_resource type="Script" path="res://features/resources/economy_config.gd" id="1_econ"]
+
+[resource]
+script = ExtResource("1_econ")
+recruit_cost = 2
+recruit_min_cap = 1
+income_floor = 0
+upkeep_per_army = 0
+upkeep_free_armies = 10
+max_income_multiplier = 2.0

@@ -4,6 +4,7 @@ extends PanelContainer
 
 
 signal send_army_pressed(from_id: StringName)
+signal recruit_pressed(region_id: StringName, count: int)
 
 ## UI paleti (art bible §4): Erlik bilgisi değeri ve kayıp (↓-X) rengi.
 const COLOR_ERLIK_INFO := Color("#A86BC4")
@@ -12,6 +13,8 @@ const COLOR_LOSS := Color("#E87A7A")
 const ROW_SEPARATION: int = 4
 
 var _region_id: StringName = &""
+## Seçici değeri yalnızca başka bölgeye geçince 1'e döner (aynı bölge yenilenince korunur).
+var _shown_region_id: StringName = &""
 
 var _name_label: Label
 var _owner_label: Label
@@ -23,6 +26,19 @@ var _corruption_value: Label
 var _hold_row: HBoxContainer
 var _hold_value: Label
 var _send_button: Button
+var _recruit_box: VBoxContainer
+var _recruit_minus: Button
+var _recruit_count_label: Label
+var _recruit_plus: Button
+var _recruit_confirm: Button
+var _recruit_cost_label: Label
+var _recruit_cap_label: Label
+var _recruit_hint_label: Label
+var _reinforcement_row: HBoxContainer
+var _reinforcement_value: Label
+var _recruit_count: int = 1
+var _recruit_max: int = 0
+var _recruit_cost: int = 0
 
 
 func _ready() -> void:
@@ -74,6 +90,14 @@ func _ready() -> void:
 	_send_button.pressed.connect(_on_send_pressed)
 	vbox.add_child(_send_button)
 
+	_build_recruit_section(vbox)
+
+	# Düşman bölgesi: tur başına takviye bilgisi (resource-system §10).
+	_reinforcement_row = _row(vbox)
+	_reinforcement_row.name = "ReinforcementRow"
+	_name_cell(_reinforcement_row, "ENEMY_REINFORCEMENT")
+	_reinforcement_value = _value_label(_reinforcement_row, "ReinforcementValue", COLOR_LOSS)
+
 	hide()
 
 
@@ -116,20 +140,130 @@ func show_region(
 	_hold_value.text = NumberFormatter.format_int(corruption_strength)
 
 	_send_button.visible = data.owner == RegionData.Owner.PLAYER and data.army_count > 1
+	if data.region_id != _shown_region_id:
+		_recruit_count = 1
+	_shown_region_id = data.region_id
+	_recruit_box.hide()
+	_reinforcement_row.hide()
 	show()
 
 
-## Klavye/gamepad odak zincirine bağlanacak buton (Ordu Gönder) — görünür değilse null.
-## Panel kardeşlerini bilmez; zinciri ebeveyn kurar.
+## Ordu Topla bölümü (resource-system §10, AC17): [param used] / [param cap] bu turun sayacı,
+## [param max_count] seçicinin üst sınırı (0 → pasif), [param missing_gold] tek birlik için
+## eksik altın. Değerler [ResourceController]'dan; panel yalnızca gösterir (ADR-0011).
+func show_recruit(used: int, cap: int, max_count: int, cost: int, missing_gold: int) -> void:
+	_recruit_max = max_count
+	_recruit_cost = cost
+	_recruit_count = clampi(_recruit_count, 1, maxi(1, max_count))
+	_recruit_cap_label.text = tr("RECRUIT_CAP") % _fraction(used, cap)
+	var blocked: bool = max_count < 1
+	_recruit_hint_label.visible = blocked
+	if used >= cap:
+		_recruit_hint_label.text = tr("RECRUIT_CAP_REACHED") % _fraction(used, cap)
+	else:
+		_recruit_hint_label.text = tr("RECRUIT_NOT_ENOUGH_GOLD") % NumberFormatter.format_int(missing_gold)
+	_recruit_box.show()
+	_update_recruit_selector()
+
+
+## Düşman bölgesinin tur sonu takviyesi (F6) — bilgi satırı.
+func show_reinforcement(per_turn: int) -> void:
+	_reinforcement_value.text = tr("PER_TURN") % ("+" + NumberFormatter.format_int(per_turn))
+	_reinforcement_row.show()
+
+
+## Klavye odak zincirine bağlanacak en alttaki kontrol (Ordu Topla onayı, yoksa Ordu
+## Gönder) — görünür değilse null. Panel kardeşlerini bilmez; zinciri ebeveyn kurar.
 func get_focus_target() -> Control:
-	if visible and _send_button.visible:
+	if not visible:
+		return null
+	if _recruit_box.visible:
+		return _recruit_confirm
+	if _send_button.visible:
 		return _send_button
 	return null
 
 
 func hide_panel() -> void:
 	_region_id = &""
+	_shown_region_id = &""
 	hide()
+
+
+func _build_recruit_section(parent: VBoxContainer) -> void:
+	_recruit_box = VBoxContainer.new()
+	_recruit_box.name = "RecruitBox"
+	_recruit_box.add_theme_constant_override(&"separation", 2)
+	parent.add_child(_recruit_box)
+
+	var header: Label = Label.new()
+	header.text = tr("RECRUIT")
+	_recruit_box.add_child(header)
+
+	# −/+ seçici ve onay: [-] k [+] [Topla]. Eksi ASCII "-" (U+2212 Fusion'da yok — ADR-0009).
+	var selector: HBoxContainer = _row(_recruit_box)
+	selector.name = "RecruitSelector"
+	_recruit_minus = _small_button(selector, "RecruitMinus", "-")
+	_recruit_minus.pressed.connect(_on_recruit_step.bind(-1))
+	_recruit_count_label = Label.new()
+	_recruit_count_label.name = "RecruitCount"
+	_recruit_count_label.custom_minimum_size = Vector2(12, 0)
+	_recruit_count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	selector.add_child(_recruit_count_label)
+	_recruit_plus = _small_button(selector, "RecruitPlus", "+")
+	_recruit_plus.pressed.connect(_on_recruit_step.bind(1))
+	_recruit_confirm = Button.new()
+	_recruit_confirm.name = "RecruitConfirm"
+	_recruit_confirm.text = tr("RECRUIT_CONFIRM")
+	_recruit_confirm.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_recruit_confirm.pressed.connect(_on_recruit_confirm)
+	selector.add_child(_recruit_confirm)
+
+	_recruit_cost_label = Label.new()
+	_recruit_cost_label.name = "RecruitCost"
+	_recruit_box.add_child(_recruit_cost_label)
+	_recruit_cap_label = Label.new()
+	_recruit_cap_label.name = "RecruitCap"
+	_recruit_box.add_child(_recruit_cap_label)
+	# İpucu uzun dillerde sarar (panel 136px sabit — §10 Yerleşim).
+	_recruit_hint_label = Label.new()
+	_recruit_hint_label.name = "RecruitHint"
+	_recruit_hint_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_recruit_hint_label.add_theme_color_override(&"font_color", COLOR_LOSS)
+	_recruit_box.add_child(_recruit_hint_label)
+	_recruit_box.hide()
+
+
+func _small_button(row: HBoxContainer, node_name: String, text: String) -> Button:
+	var button: Button = Button.new()
+	button.name = node_name
+	button.text = text
+	button.custom_minimum_size = Vector2(14, 0)
+	row.add_child(button)
+	return button
+
+
+func _update_recruit_selector() -> void:
+	var blocked: bool = _recruit_max < 1
+	_recruit_count_label.text = NumberFormatter.format_int(_recruit_count)
+	_recruit_minus.disabled = blocked or _recruit_count <= 1
+	_recruit_plus.disabled = blocked or _recruit_count >= _recruit_max
+	_recruit_confirm.disabled = blocked
+	_recruit_cost_label.text = tr("RECRUIT_COST") % NumberFormatter.format_int(_recruit_count * _recruit_cost)
+
+
+func _fraction(used: int, cap: int) -> String:
+	return "%s / %s" % [NumberFormatter.format_int(used), NumberFormatter.format_int(cap)]
+
+
+func _on_recruit_step(delta: int) -> void:
+	_recruit_count = clampi(_recruit_count + delta, 1, maxi(1, _recruit_max))
+	_update_recruit_selector()
+
+
+func _on_recruit_confirm() -> void:
+	if _recruit_max >= 1:
+		recruit_pressed.emit(_region_id, _recruit_count)
 
 
 func _row(parent: Control) -> HBoxContainer:

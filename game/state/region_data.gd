@@ -20,3 +20,6 @@ var adjacent_regions: Array[StringName] = []
 ## Erlik bozulma seviyesi 0 (temiz) – 3 (ağır); sahiplikten bağımsız (spirit-system.md §3.1).
 ## Tek yazıcı: SpiritController (C-38).
 var corruption_level: int = 0
+## Bu oyuncu turunda bu bölgede üretilen birlik (resource §3.1 R5); tur başında ve sahip
+## değişince 0. Kaydedilmez (tur sonunda hep 0 — ADR-0007).
+var recruited_this_turn: int = 0

@@ -13,6 +13,8 @@ signal purification_resolved(outcome: MoveOutcome)
 signal corruption_spread(region_id: StringName)
 signal turn_ended(new_turn: int)
 signal income_collected(amount: int)
+## Oyuncu bir bölgede birlik üretti (aksiyon harcamaz — resource R4).
+signal army_recruited(region_id: StringName, count: int)
 signal game_won
 signal game_lost
 
@@ -111,6 +113,21 @@ func attempt_move(target_id: StringName) -> bool:
 	return true
 
 
+## Ordu Topla (resource §3.1 R4): oyun bitince reddedilir (§3.7 kilidi); aksiyon harcamaz.
+func recruit(region_id: StringName, count: int) -> bool:
+	if _map_state.game_result != MapState.GameResult.ONGOING:
+		return false
+	if not _resource_controller.recruit(_map_state, _game_state, region_id, count):
+		return false
+	army_recruited.emit(region_id, count)
+	return true
+
+
+## Bu turun gelir tahmini — ekonomi adımıyla aynı hesap (HUD, TR-resource-006).
+func forecast_income() -> int:
+	return _resource_controller.forecast_income(_map_state, _modifiers())
+
+
 ## Tur sonu (region-map §3.4): (1) düşman AI → erken kayıp çıkışı → (2) Erlik yayılımı
 ## → (3) ekonomi → (4) tur artışı → (5) önce kaybetme (bölgesiz ∨ Erlik), sonra kazanma; oyun
 ## sürüyorsa `turn_ended` en sonda. Oyun bitmişse hiçbir adım çalışmaz.
@@ -124,11 +141,16 @@ func end_turn() -> void:
 		return
 	_run_erlik_spread()
 
-	var income: int = _resource_controller.collect_turn_income(_map_state, _game_state)
+	# (3) Ekonomi: oyuncu geliri (F2) → düşman takviyesi (F6) → bakım (F7).
+	var income: int = _resource_controller.collect_turn_income(_map_state, _game_state, _modifiers())
+	_resource_controller.reinforce_enemies(_map_state)
+	_resource_controller.pay_upkeep(_map_state, _game_state)
 	income_collected.emit(income)
 
+	# (4) Yeni tur: sayaçlar.
 	_map_state.current_turn += 1
 	_map_state.actions_remaining = _map_state.actions_per_turn
+	_resource_controller.reset_recruit_counters(_map_state)
 
 	var loss: MapState.LossReason = _win_condition.loss_reason(_map_state)
 	if loss != MapState.LossReason.NONE:

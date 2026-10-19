@@ -17,6 +17,8 @@ extends Resource
 ## Kural: çizgi = zeminin rampasında iki ton açık.
 @export var ground_color: Color = Color("#1A2614")         # Bozkır Yeşili 2
 @export var adjacency_line_color: Color = Color("#436129") # Bozkır Yeşili 4
+## Düşman bölgesi başına tur takviyesi (resource F6; Prolog'da düşman yok → boşta).
+@export var enemy_reinforcement_per_turn: int = 1
 ## Sahne başı altın (resource-system §4; Prolog 6). Altın sahneler arası taşınmaz.
 @export var starting_gold: int = 0
 ## Erlik yayılımının bölüm taban aralığı (tur; spirit §4.6 — Prolog 3, C-49).
@@ -31,6 +33,7 @@ func create_map_state() -> MapState:
 	state.actions_per_turn = actions_per_turn
 	state.actions_remaining = actions_per_turn
 	state.enemy_actions_per_turn = enemy_actions_per_turn
+	state.enemy_reinforcement_per_turn = enemy_reinforcement_per_turn
 	state.player_tamga_id = player_tamga_id
 	state.enemy_tamga_id = enemy_tamga_id
 	state.erlik_spread_interval = erlik_spread_interval

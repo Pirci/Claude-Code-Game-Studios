@@ -194,6 +194,7 @@ func test_enemy_moves_emit_existing_signals() -> void:
 		_region(&"n", RegionData.Owner.NEUTRAL, 0, [&"e"] as Array[StringName]),
 		_region(&"p", RegionData.Owner.PLAYER, 3, [] as Array[StringName]),
 	] as Array[RegionData])
+	m.enemy_reinforcement_per_turn = 0  # yalnız AI hamlesi ölçülür (takviye: recruitment_economy_test)
 	var c: MapController = _controller(m, _win(99, false))
 	var moved: Dictionary = {"to": &""}
 	c.army_moved.connect(func(_from: StringName, to: StringName, _n: int) -> void: moved["to"] = to)

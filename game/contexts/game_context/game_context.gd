@@ -11,6 +11,7 @@ signal return_to_menu_requested
 const CHAPTER_MAP_PATH_FORMAT: String = "res://features/grid/data/chapter_%d_map.tres"
 const COMBAT_CONFIG: CombatConfig = preload("res://features/combat/data/combat_config.tres")
 const SPIRIT_CONFIG: SpiritConfig = preload("res://features/bozkurt/data/spirit_config.tres")
+const ECONOMY_CONFIG: EconomyConfig = preload("res://features/resources/data/economy_config.tres")
 
 @onready var _background: ColorRect = %Background
 @onready var _chapter_label: Label = %ChapterLabel
@@ -75,7 +76,7 @@ func _setup_controllers() -> void:
 	_spirit_rules.bind_config(SPIRIT_CONFIG)
 	_army_controller = ArmyController.new()
 	_resource_controller = ResourceController.new()
-	_resource_controller.bind_services(_spirit_rules)
+	_resource_controller.bind_services(_spirit_rules, ECONOMY_CONFIG)
 	_combat_resolver = CombatResolver.new()
 	_combat_resolver.bind_config(COMBAT_CONFIG)
 	var move_resolver: MoveResolver = MoveResolver.new()
@@ -131,6 +132,7 @@ func _connect_signals() -> void:
 	_menu_button.pressed.connect(_on_menu_pressed)
 	_campaign_map.region_clicked.connect(_on_region_clicked)
 	_info_panel.send_army_pressed.connect(_on_send_army_pressed)
+	_info_panel.recruit_pressed.connect(_on_recruit_pressed)
 	_map_controller.region_selected.connect(_on_controller_region_selected)
 	_map_controller.region_deselected.connect(_on_controller_region_deselected)
 	_map_controller.turn_ended.connect(_on_turn_ended)
@@ -143,7 +145,10 @@ func _connect_signals() -> void:
 
 
 ## HUD durumdan türetilir: oyun bitince başlık sonucu gösterir, Tur Bitir kapalı (§3.7).
+## Altın yanında oyun sürerken bu turun gelir tahmini (+Y) — ekonomi adımıyla aynı F2
+## hesabı (resource-system §10, AC17).
 func _update_ui() -> void:
+	var ongoing: bool = _game_state.map_state.game_result == MapState.GameResult.ONGOING
 	match _game_state.map_state.game_result:
 		MapState.GameResult.WON:
 			_chapter_label.text = tr("VICTORY")
@@ -152,12 +157,19 @@ func _update_ui() -> void:
 		_:
 			_chapter_label.text = tr("CHAPTER_1_TITLE")
 	_gold_label.text = "%s: %s" % [tr("GOLD"), NumberFormatter.format_int(_game_state.gold)]
+	if ongoing:
+		_gold_label.text += " " + tr("INCOME_PER_TURN") % NumberFormatter.format_int(_map_controller.forecast_income())
 	_turn_label.text = "%s: %s" % [tr("TURN"), NumberFormatter.format_int(_game_state.map_state.current_turn)]
-	_end_turn_button.disabled = _game_state.map_state.game_result != MapState.GameResult.ONGOING
+	_end_turn_button.disabled = not ongoing
 
 
+## Seçili bölge varsa bilgi paneli de güncel durumla yeniden doldurulur (üretim sayaçları,
+## altın, sahiplik her değişiklikten sonra — ADR-0011 tek sunucu).
 func _refresh_map() -> void:
 	_campaign_map.refresh(_game_state.map_state)
+	var selected: RegionData = _game_state.map_state.get_region(_game_state.map_state.selected_region_id)
+	if selected != null:
+		_show_region_info(selected)
 	_update_ui()
 	_update_focus_chain()
 
@@ -192,9 +204,6 @@ func _on_controller_region_selected(region_id: StringName) -> void:
 	if _audio:
 		_audio.play_sfx(AudioController.SFX_REGION_SELECT)
 	_campaign_map.set_selected(region_id)
-	var data: RegionData = _game_state.map_state.get_region(region_id)
-	if data:
-		_show_region_info(data)
 	_refresh_map()
 
 
@@ -208,6 +217,26 @@ func _show_region_info(data: RegionData) -> void:
 		_spirit_rules.max_corruption_level(),
 		IncomeRules.region_income(data, _spirit_rules.production_multiplier(level)),
 	)
+	match data.owner:
+		RegionData.Owner.PLAYER:
+			if _game_state.map_state.game_result == MapState.GameResult.ONGOING:
+				var cost: int = _resource_controller.recruit_cost()
+				_info_panel.show_recruit(
+					data.recruited_this_turn,
+					_resource_controller.recruit_cap(data),
+					_resource_controller.max_recruit(_game_state, data),
+					cost,
+					maxi(0, cost - _game_state.gold),
+				)
+		RegionData.Owner.ENEMY:
+			if _game_state.map_state.enemy_reinforcement_per_turn > 0:
+				_info_panel.show_reinforcement(_game_state.map_state.enemy_reinforcement_per_turn)
+
+
+## Ordu Topla aksiyon harcamaz (resource R4); sonuç panel ve HUD yenilenince görünür.
+func _on_recruit_pressed(region_id: StringName, count: int) -> void:
+	if _map_controller.recruit(region_id, count):
+		_refresh_map()
 
 
 func _on_controller_region_deselected() -> void:

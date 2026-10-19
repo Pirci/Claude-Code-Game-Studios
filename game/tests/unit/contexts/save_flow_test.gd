@@ -40,7 +40,8 @@ func test_continue_opens_the_saved_turn() -> void:
 	var turn_label: Label = game.find_child("TurnLabel", true, false) as Label
 	var gold_label: Label = game.find_child("GoldLabel", true, false) as Label
 	assert_str(turn_label.text).ends_with("4")
-	assert_str(gold_label.text).ends_with("9")
+	# HUD: "Altın: 9 (+Y)" — Y bu turun gelir tahmini (resource §10).
+	assert_str(gold_label.text).starts_with("%s: 9 " % tr("GOLD"))
 
 
 func test_continue_is_disabled_without_a_save() -> void:

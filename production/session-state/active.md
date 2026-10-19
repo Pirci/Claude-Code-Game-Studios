@@ -291,3 +291,8 @@
 
 ## Session Extract — C-36 Prolog verisi (2026-10-19 ~08:15)
 - chapter_1_map.tres: sinir_bolge NEUTRAL/0/L3, dogu_bozkir 0/L1, win erlik_foci [sinir_bolge] + threshold 9, enemy_tamga_id "", starting_gold 6, interval 3. ChapterMapDefinition.starting_gold; GameContext uses it. erlik_beast tamga removed (icon, generator, art bible §5, region-map §7, tamga tests). prolog_data_test (4). Tests 243/243.
+
+## Session Extract — C-54 + C-37 (2026-10-19 ~08:00 UTC)
+- C-54 (narrative-director ajanı): design/narrative/narrative-voice.md + 45 key × 11 dil; zh Erlik 埃尔利克 birleşti; scene-flow Q8 kapandı; K-03 ana dil incelemesi. Commit 5cf8145.
+- C-37: EconomyConfig(.tres), IncomeRules F1/F2/F3/F7, ResourceController (recruit_cap, remaining_cap, max_recruit, recruit, reinforce_enemies, pay_upkeep, reset_recruit_counters), RegionData.recruited_this_turn, MapController.recruit/forecast_income/army_recruited; RegionInfoPanel Ordu Topla (RecruitBox/RecruitMinus/RecruitPlus/RecruitConfirm/RecruitCost/RecruitCap/RecruitHint) + ReinforcementRow; GameContext _refresh_map re-shows selected region; HUD "Gold: X (+Y)". 8 key. Tests 259/259. New task C-66 (resource §9 feedback/SFX).
+- NEXT: C-39 (Kök Böri çekirdeği).
