@@ -157,3 +157,9 @@
 - State fields: RegionData.corruption_level, MapState.erlik_spread_interval (4), last_erlik_spread_turn (0). Spread NOT wired into end_turn yet (C-38 with SpiritController).
 - Tests: 104/104 (new: tests/unit/ai/* 18, army mover 4, map parity 2). Godot 4.7.1 Linux (scratchpad).
 - NEXT: C-21 (koçboynuzu/kilim 9-slice frames — UI, needs screenshots).
+
+## Session Extract — C-21 UI çerçeveleri (2026-10-19)
+- tools/asset-pipeline/generate_ui_frames.gd → frame_primary_{normal,hover,pressed,disabled}.png (16×16), frame_modal.png (18×18); 9-slice margin 5; theme PrimaryButton / ModalPanel (StyleBoxTexture, modal TILE).
+- Applied: EndTurnButton, NewCampaignButton, RegionInfoPanel send button (PrimaryButton); settings screen wrapped in Frame (ModalPanel).
+- Tests 112/112 (ui_frames_theme_test 8). Screenshots via Xvfb: `xvfb-run -a -s "-screen 0 1920x1080x24" $G --path game --rendering-driver opengl3 --script scratchpad/shots/shot.gd -- <out> <locale>` (menu, settings, game_selected) — en/de checked visually.
+- NEXT: C-22 (map ground + adjacency line palette).

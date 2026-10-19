@@ -685,6 +685,15 @@ estetiğidir; dünyanın içinde olması gerekmez.
 9-slice çerçeve: kenar = 2px kilim şevron bandı, köşe = 5×5 koçboynuzu (birincil)
 veya düz (ikincil/HUD), merkez = düz dolgu, 1px kenarlık `#8A6D4F`.
 
+**Uygulama (C-21, 2026-10-19):** `tools/asset-pipeline/generate_ui_frames.gd` →
+`assets/art/ui/theme/frame_primary_{normal,hover,pressed,disabled}.png` (16×16) ve
+`frame_modal.png` (18×18), 9-slice payı 5px. Koçboynuzu 5×5: köşeden çıkan köşegen gövde
+iki yana kıvrılır (köşegen simetrik); şevron 2 satır, periyot 4 (`▀▄` basamaklı zikzak,
+`#B8945D` / `#3A2817`). Tema varyasyonları: `PrimaryButton` (Tur Bitir, Ordu Gönder, Yeni
+Sefer) ve `ModalPanel` (ayarlar; savaş raporu geldiğinde o da) — `StyleBoxTexture`, şevron
+kenarı `TILE`. Renkler: normal kenarlık `#8A6D4F` + süs `#B8945D`; hover/basılı `#EDC76B`;
+devre dışı `#5C4229`.
+
 | Panel | Zemin | Kenarlık | Köşe | Kullanım |
 | --- | --- | --- | --- | --- |
 | **HUD** | `#1C150D` ~%70 opak | 1px `#8A6D4F` | Yok | Üst/alt bar, bölge bilgi paneli |

@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=30 format=3]
+[gd_resource type="Theme" load_steps=40 format=3]
 
 [ext_resource type="Font" path="res://assets/fonts/default_font.tres" id="1_font"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/theme/slider_grabber.png" id="grabber"]
@@ -15,6 +15,11 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/theme/dropdown_arrow.png" id="arrow"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/theme/radio_checked.png" id="radio_on"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/theme/radio_unchecked.png" id="radio_off"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/frame_primary_normal.png" id="frame_pn"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/frame_primary_hover.png" id="frame_ph"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/frame_primary_pressed.png" id="frame_pp"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/frame_primary_disabled.png" id="frame_pd"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/frame_modal.png" id="frame_modal"]
 
 [sub_resource type="StyleBoxFlat" id="btn_normal"]
 content_margin_left = 6.0
@@ -154,6 +159,63 @@ border_width_bottom = 1
 border_color = Color(0.541176, 0.427451, 0.309804, 1)
 anti_aliasing = false
 
+[sub_resource type="StyleBoxTexture" id="primary_normal"]
+content_margin_left = 6.0
+content_margin_top = 2.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+texture = ExtResource("frame_pn")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id="primary_hover"]
+content_margin_left = 6.0
+content_margin_top = 2.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+texture = ExtResource("frame_ph")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id="primary_pressed"]
+content_margin_left = 6.0
+content_margin_top = 3.0
+content_margin_right = 6.0
+content_margin_bottom = 1.0
+texture = ExtResource("frame_pp")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id="primary_disabled"]
+content_margin_left = 6.0
+content_margin_top = 2.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+texture = ExtResource("frame_pd")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id="modal_panel"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+texture = ExtResource("frame_modal")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
 [resource]
 default_font = ExtResource("1_font")
 default_font_size = 12
@@ -213,6 +275,14 @@ HudBarBottom/base_type = &"PanelContainer"
 HudBarBottom/styles/panel = SubResource("hud_bar_bottom")
 HudPanel/base_type = &"PanelContainer"
 HudPanel/styles/panel = SubResource("hud_panel")
+ModalPanel/base_type = &"PanelContainer"
+ModalPanel/styles/panel = SubResource("modal_panel")
+PrimaryButton/base_type = &"Button"
+PrimaryButton/styles/disabled = SubResource("primary_disabled")
+PrimaryButton/styles/hover = SubResource("primary_hover")
+PrimaryButton/styles/hover_pressed = SubResource("primary_pressed")
+PrimaryButton/styles/normal = SubResource("primary_normal")
+PrimaryButton/styles/pressed = SubResource("primary_pressed")
 Label/colors/font_color = Color(0.94902, 0.901961, 0.780392, 1)
 Button/colors/font_color = Color(0.94902, 0.901961, 0.780392, 1)
 Button/colors/font_focus_color = Color(0.94902, 0.901961, 0.780392, 1)

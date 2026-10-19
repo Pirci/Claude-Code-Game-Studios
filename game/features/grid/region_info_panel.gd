@@ -44,6 +44,7 @@ func _ready() -> void:
 	vbox.add_child(_gold_label)
 
 	_send_button = Button.new()
+	_send_button.theme_type_variation = &"PrimaryButton"  # birincil aksiyon (art bible §7)
 	_send_button.text = tr("SEND_ARMY")
 	_send_button.pressed.connect(_on_send_pressed)
 	vbox.add_child(_send_button)
