@@ -2,7 +2,7 @@
 
 *Oyun: ULUS: Blood of the Sky Wolf*
 *Oluşturulma: 2026-10-08*
-*Durum: Designed (inceleme bekliyor — `/design-review` taze oturumda)*
+*Durum: Designed (inceleme bekliyor — `/design-review` taze oturumda); §4 Prolog doğrulaması C-49 ile güncel (2026-10-19)*
 *Creative Director Review (CD-GDD-ALIGN): atlandı — lean mod*
 *Katman: Core*
 *Uyguladığı sütun: Epik Ama Erişilebilir · İki Katmanlı Tehdit*
@@ -133,7 +133,9 @@ Biriktirmek de gerçek bir seçenek olmalı.
 ## 4. Formulas
 
 Değerler 2026-10-08'de systems-designer + economy-designer önerileri ve kuralları
-birebir uygulayan bir Prolog simülasyonuyla seçildi (aday A — aşağıdaki doğrulama).
+birebir uygulayan bir Prolog simülasyonuyla seçildi (aday A). C-29 sonrası modelle
+(nötr canavar, düşmansız Prolog) **C-49**'da (2026-10-19) yeniden doğrulandı; bu GDD'nin
+değerleri değişmedi (aşağıdaki doğrulama).
 
 ### F1 — Bölgenin efektif geliri
 
@@ -207,14 +209,16 @@ sınırına takılmadan üç birliklik bir başlangıç demek.
 
 ### F6 — Düşman takviyesi
 
-Ekonomi adımında her düşman bölgesi `i` için: `army_i += E_r`. **Prolog'da E_r = 1.**
+Ekonomi adımında her düşman bölgesi `i` için: `army_i += E_r`. **Prolog'da E_r = 1,
+ama boştadır:** Prolog'da `ENEMY` bölgesi yoktur (C-49 kararı — siyasi katman nötr boy
+garnizonlarıdır; takviye ilk kez Perde 1'de çalışır).
 
 | Değişken | Sembol | Tip | Aralık | Açıklama |
 | --- | --- | --- | --- | --- |
 | Takviye | `E_r` | int | 0–3 | `enemy_reinforcement_per_turn` (bölüm verisi) |
 
-**Örnek (eski model — C-49'a dek eskimiş):** 1. turun sonunda düşmanın inde 1 + 1 = 2, yeni aldığı Doğu Obası'nda
-3 + 1 = 4 ordu olur.
+**Örnek (genel, Prolog dışı):** orduları 1 ve 3 olan iki düşman bölgesi, `E_r = 1` ile
+ekonomi adımından sonra 2 ve 4 ordu olur (AC10).
 
 ### F7 — Bakım gideri (MVP'de etkisiz)
 
@@ -226,35 +230,61 @@ Ekonomi adımında her düşman bölgesi `i` için: `army_i += E_r`. **Prolog'da
 | Ücretsiz eşik | `A_free` | int | 0–30 | Bakım ödenmeyen ordu miktarı; varsayılan 10 |
 | Birlik başı bakım | `U` | int | 0–2 | **MVP 0** |
 
-### Prolog doğrulaması
+### Prolog doğrulaması (C-49, 2026-10-19)
 
-> ⚠️ **ESKİMİŞ — C-49'a dek (C-53 işareti, 2026-10-19):** Bu tablo, 1. tur örneği ve F6
-> örneği Canavarın İni'nin **düşman** (6 ordu, takviyeli) olduğu C-29 öncesi modelle
-> hesaplandı. C-29 sonrası Prolog'da düşman bölgesi yok; in **nötr + seviye 3** (direnç 12 →
-> komşu kaynakta ≥ 14 ordu, `army-system.md` §4). C-34 elle simülasyonu: en hızlı zafer ≈ 6.
-> tur (T4 recruit + T6 arındırma); pasif oyuncu için kayıp yolu yok. Yeni değerler ve
-> doğrulama **C-49** (`/balance-check`).
+Model: C-29 sonrası Erlik katmanı + C-49 kararları — Canavarın İni **nötr, garnizon 0,
+seviye 3** (tek `erlik_foci`); Doğu Obası **öğretici bozulma** (nötr, garnizon 0, seviye 1);
+Prolog'da `ENEMY` bölgesi yok (F6 boşta); `ERLIK_SPREAD_INTERVAL = 3`; kayıp = **Erlik'in
+Gölgesi** `erlik_power ≥ 9` (`region-map-system.md` §3.6, `spirit-system.md` §4.7). Yöntem:
+kuralları birebir uygulayan elle simülasyon (her satır iki kez hesaplandı) + bağımsız tekrar
+betiği `tools/balance/prolog_sim.py` (2026-10-19: 12/12 eşleşme); referans
+çizgilerinin tur tur tabloları, kurallar ve bütçe kanıtı
+[`design/balance/prolog-balance-2026-10-19.md`](../balance/prolog-balance-2026-10-19.md)'de.
+Otomatik tekrar (gerçek controller'larla) C-64.
 
-Yukarıdaki değerlerle, kuralları birebir uygulayan simülasyon (eski model):
+**Prolog verisi** (C-36 bu değerlerle yazılır; bir değer değişirse tablo yeniden üretilir):
 
-| Durum | Sonuç |
-| --- | --- |
-| Kusursuz oyun | 4. turda zafer (tur başına 1 aksiyonla mümkün olan en kısa süre) |
-| İlk 2 / 4 / 6 tur boşa | 5. / 11. / 16. turda zafer |
-| İlk 8+ tur boşa | 18 turda kazanılamıyor |
-| Tamamen pasif | Oyuncu hayatta kalıyor, ama 18. turda 4 bölge düşmanda ve her birinde 18–19 ordu var. Kazanma yolu kalmıyor. |
-| Üretim olmadan (2026-10-08 kodu) | Kazanılamıyor (çapraz inceleme B1 doğrulandı) |
+| Bölge (`region_id`) | Sahip | Garnizon | `gold_per_turn` | Bozulma | Komşular |
+| --- | --- | --- | --- | --- | --- |
+| Oğuz Otağı (`otuken`) | Oyuncu | 5 | 2 | 0 | Batı, Doğu, Kutlu Dağ, Bereket |
+| Batı Obası (`bati_bozkir`) | Nötr | 3 | 1 | 0 | Otağ, Kutlu Dağ, Bereket |
+| Doğu Obası (`dogu_bozkir`) | Nötr | **0** | 1 | **1** (öğretici) | Otağ, İn |
+| Kutlu Dağ (`altai`) | Nötr | 2 | 2 | 0 | Otağ, Batı |
+| Bereket Vadisi (`guney_vadi`) | Nötr | 0 | 3 | 0 | Otağ, Batı, İn |
+| Canavarın İni (`sinir_bolge`) | Nötr | **0** | 1 | **3** (odak) | Doğu, Bereket |
 
-Karşılaştırılan adaylar: takviye yalnız ine (oyuncu 10 tur boşa harcasa bile
-kazanıyor — baskı zayıf); başlangıç 4 altın (tolerans 4 tura iniyor); tavan
-`ceil(G_eff / 2)` + tüm bölgelere takviye (4 tur boşa → kaybedilen — öğretici
-için sert). Gelir tabanı Prolog'da hiç devreye girmedi (Otağ her zaman ≥ 2 verir).
+Başlangıç: 6 altın, Ruh 0, `erlik_power = 4`; tam fetih geliri 10. Zafer: 4 nötrden 3'ü
+(Doğu Obası arındırılınca sayılır) + inin arındırılması.
 
-**1. tur örneği (eski model — C-49'a dek eskimiş):** Oyuncu 6 altınla başlıyor. Otağ'da 2 birlik üretiyor (−4 altın),
-6 orduyla boş Bereket Vadisi'ne yürüyor. Düşman AI inden en zayıf komşusu Doğu
-Obası'na saldırıyor: 5'e 3, düşman kazanıyor ve bölgede 3 ordusu kalıyor. Ekonomi
-adımında oyuncunun geliri 2 + 3 = 5, hazinesi 7 altın oluyor. Takviyeyle düşmanın
-inde 2, Doğu Obası'nda 4 ordu oluyor.
+| Çizgi | Sonuç | Ruh / lütuf | Not |
+| --- | --- | --- | --- |
+| **A — en hızlı** | **T5 zafer** (tur ortası) | 30 → 1 lütuf (zaferde) | T1 2 üret + Kutlu Dağ (6 > 2); T2 Bereket; T3 Batı (4 > 3); T4 Batı → Bereket birleştir; T5 Bereket 14 → in (13 > 12). T4 zafer imkânsız (aksiyon + konum bütçesi, rapor §4) |
+| E1 — öğretici bölge önce | T7 zafer | 50 → 1 lütuf, 20 Ruh taşınır | T1 Doğu Obası (6 > 4, +10); T3 yayılımıyla bozulan Bereket T5'te arındırılır (+10) |
+| **E3 — Erlik'le ilgilenen** | T8 zafer | 30 → **sahne ortası lütuf (T7)**; in +30/36 | Doğu Obası T3'te L2 olur, T5'te 9 > 8 (+20); T6'da yeniden L1, T7'de arındırılır (+10) |
+| **C — fethet, Erlik'i yok say** | **T15 sonunda kayıp** | 0 | T1–T3 = A, sonra yalnızca üretim; `erlik_power` 5 / 6 / 7 / 8 / 9 (T3 / 6 / 9 / 12 / 15) |
+| P(w) — ilk w tur yalnızca Otağ'da üretim | w = 0 / 3 / 6 / 8 / 9 / 12 → T5 / T8 / T11 / T13 / T14 / T17 zafer | 30–50 → 1 lütuf | Büyük Otağ yığını bozulmuş Bereket'i arındırıp sayacı geri iter |
+| P(13) | Uyarıyı (8/9) yok sayarsa **T15 kayıp**; önce arındırırsa T19 zafer | 60 → 1 lütuf | Sütun 3'ün zorladığı karar |
+| Tamamen pasif | **T15 sonunda kayıp** | 0 | Zombi oyun yok |
+| Üretim olmadan (2026-10-08 kodu) | Kazanılamıyor (çapraz inceleme B1) | — | Değişmedi |
+
+**Değerlendirme:** en hızlı zafer T5 (C-34 tahmini ≈ T6; eski düşmanlı modelde T4). Hata
+toleransı eski modelden (≤ 6 boş tur) bilinçli olarak geniştir (≤ 12 boş tur): Prolog
+öğreticidir, siyasi baskı Perde 1'de başlar; Prolog baskısı Erlik'in Gölgesi'dir — hiç
+arındırmayan oyuncu T15'te kaybeder, uyarı (8/9) T12'de görünür. Tipik oyun 8–12 tur,
+konseptteki 10–18 tur penceresinin içinde. Referans çizgilerinde en büyük ordu 23 (P(13));
+yalnızca üreten "C" çizgisinde 42 (UI 3 hane — §5). Tur geliri hiçbir referans çizgisinde
+2'nin altına düşmedi (bozulmuş Otağ bile 1 verir) → `I_floor = 0` Prolog'da yeterli.
+
+Eski model (C-28, düşman inli): kusursuz T4; 2 / 4 / 6 boş tur → T5 / T11 / T16; 8+ boş tur
+→ 18 turda kazanılamıyor. Karşılaştırılan eski adaylar (takviye yalnız ine, başlangıç 4
+altın, `ceil(G_eff / 2)` tavan) git geçmişinde.
+
+**1. tur örneği (C-49):** Oyuncu 6 altınla başlıyor. Otağ'da 2 birlik üretiyor (−4 altın),
+6 orduyla Kutlu Dağ'ın 2'lik garnizonuna saldırıyor: 6 > 2, kayıp `ceil(2 × 0.5) = 1`,
+Kutlu Dağ 5 orduyla oyuncunun. Tur sonu: düşman yok, yayılım yok (1 < 3), gelir 2 + 2 = 4 →
+hazine 6. *Alternatif:* aynı 6'lık kuvvet Doğu Obası'na → arındırma 6 > 4, +10 Ruh, Doğu'da
+`6 − 2 = 4` kalır (gelir 3). Üretmeden 4'le girilirse 4 ≤ 4 → başarısız, 4 birlik kaybolur
+(hamle önizlemesi uyarır — `spirit-system.md` §3.2).
 
 ---
 
@@ -286,9 +316,12 @@ inde 2, Doğu Obası'nda 4 ordu oluyor.
   sabittir.
 - **Bakım gideri altını aşarsa** (yalnızca `U > 0` olduğunda): Mevcut altın
   ödenir ve hazine 0 olur. Kalan borç silinir; birlik dağıtılmaz, borç birikmez.
-- **Üst sınırlar:** Altında ve orduda üst sınır yoktur; (eski model) Prolog
-  simülasyonunda en büyük ordu 19 oldu. UI 3 haneye kadar gösterir; daha büyük değerler tasarım
-  dışıdır ve ayar hatası sayılır.
+- **Üst sınırlar:** Altında ve orduda üst sınır yoktur; C-49 Prolog referans çizgilerinde
+  en büyük ordu 23, zafere gitmeden yalnızca üreten çizgide (T15 Erlik kaybına kadar) 42
+  oldu (§4). UI 3 haneye kadar gösterir; daha büyük değerler tasarım dışıdır ve ayar hatası
+  sayılır.
+- **Düşmansız bölüm (Prolog):** `ENEMY` bölgesi yokken F6 hiçbir şey eklemez;
+  `enemy_reinforcement_per_turn` değeri durumu değiştirmez (C-49).
 - **Sahne sonu:** Harcanmamış altın silinir (§3.1 R8). Sonraki sahne kendi
   `starting_gold` değeriyle açılır.
 - **Düşman turunda üretim:** Mümkün değildir. Üretim yalnızca oyuncunun turunda
@@ -362,8 +395,8 @@ kararıdır (→ ADR / uygulama).
 
 | Ayar | Prolog | Güvenli aralık | Çok düşükse | Çok yüksekse | Etkileşim |
 | --- | --- | --- | --- | --- | --- |
-| `starting_gold` | 6 | 0–20 | 4 → oyuncunun boşa harcayabileceği tur sayısı 4'e iner; 0 → ilk tur pasif | Erken turların geliri değersizleşir | Düşman takviyesiyle birlikte affediciliği belirler (§4 doğrulaması) |
-| `enemy_reinforcement_per_turn` | 1 | 0–3 | 0 → baskı yok, pasif oyun cezasız | 2+ → birkaç tur boşa harcanınca kazanılamaz (kontrol edilmeli) | Yayılım hızıyla birlikte düşman baskısını belirler |
+| `starting_gold` | 6 | 0–20 | T1 üretimi küçülür, en hızlı zafer T5'ten geç kalır (C-64 ile ölçülmeli); < 2 → T1'de üretim yok, Doğu Obası T1'de arındırılamaz (4 ≤ 4); 0 → ilk tur üretimsiz | Erken turların geliri değersizleşir | Erlik eşiği ve yayılım aralığıyla birlikte affediciliği belirler (§4 doğrulaması) |
+| `enemy_reinforcement_per_turn` | 1 (**boşta** — Prolog'da `ENEMY` yok, C-49) | 0–3 | 0 → siyasi baskı yok | 2+ → birkaç tur boşa harcanınca kazanılamaz (kontrol edilmeli) | Düşmanlı bölümlerde (Perde 1+) yayılım hızıyla birlikte baskıyı belirler |
 
 ### Başka sistemlerin sahip olduğu değerler (burada tekrar tanımlanmaz)
 
@@ -373,9 +406,11 @@ kararıdır (→ ADR / uygulama).
 | `CORRUPTION_PRODUCTION_MULTIPLIERS` | `spirit-system.md` | Bozulma çarpanı `M_c` |
 | `B_add`, `M_g` (lütuflar) | `spirit-system.md` | Tur geliri (F2) |
 
-**Kritik etkileşim:** Başlangıç altını ve düşman takviyesi birlikte oyuncunun ne
-kadar hata tolere edebileceğini belirler. Birini değiştirirken §4'teki doğrulama
-tablosu yeniden üretilmelidir.
+**Kritik etkileşim:** Başlangıç altını, düşman takviyesi (düşmanlı bölümlerde) ve Erlik
+tarafı (`ERLIK_SPREAD_INTERVAL`, `erlik_loss_threshold`, başlangıç bozulması —
+`spirit-system.md` §7, `region-map-system.md` §7) birlikte oyuncunun ne kadar hata tolere
+edebileceğini belirler. Birini değiştirirken §4'teki doğrulama tablosu yeniden üretilmelidir
+(C-64 aracı).
 
 ---
 
@@ -444,12 +479,18 @@ Test tipi her grubun başında; birim ve entegrasyon testleri BLOCKING.
 
 ### Sistem / simülasyon (ADVISORY)
 
-- **AC15:** ⚠️ *ESKİMİŞ — C-49 yeniden yazar (eski modelde düşman inine göre; C-29 sonrası
-  ilk madde 4. turda sağlanamaz, ikinci madde düşmansız Prolog'da desteklenmez).*
-  - **GIVEN** GDD değerleriyle Prolog, **WHEN** kusursuz bir hamle dizisi oynanır,
-    **THEN** 4. turda zafer mümkündür.
-  - **WHEN** oyuncu 8 tur yalnızca Otağ'da üretir, **THEN** 18. turdan önce zafer
-    mümkün değildir.
+- **AC15** (C-49 — §4 verisi ve [balance raporu](../balance/prolog-balance-2026-10-19.md)
+  referans çizgileri; otomatik tekrar C-64):
+  - **GIVEN** §4 Prolog verisi, **WHEN** A çizgisi oynanır, **THEN** `game_won` 5. turun
+    hamlesinde gelir, Ruh = 30 ve sahne sonu sunumu bekler; hiçbir hamle dizisi 4. turda
+    zafer üretmez (C-64 arama).
+  - **WHEN** C çizgisi oynanır (T1–T3 = A, sonra yalnızca üretim, hiç arındırma yok),
+    **THEN** `erlik_power` T3/T6/T9/T12/T15 sonlarında 5/6/7/8/9 olur ve 15. turun
+    `end_turn`'ünde `game_lost` bir kez tetiklenir.
+  - **WHEN** oyuncu ilk 8 tur yalnızca Otağ'da üretir ve sonra rapordaki P(8) çizgisini
+    oynar, **THEN** zafer 13. turda gelir ve `erlik_power` hiçbir tur sonunda 8'i aşmaz.
+  - **WHEN** E3 çizgisi oynanır, **THEN** 7. turda (inden önce) Ruh ≥ 30 olur ve lütuf
+    sunumu sahne ortasında bekler.
 - **AC16:** **GIVEN** 1. sahne harcanmamış altınla bitiyor, **WHEN** 2. sahne başlar,
   **THEN** `gold`, 2. sahnenin `starting_gold` değerine eşit olur.
 
@@ -515,9 +556,9 @@ Tamamı art bible'a bağlıdır.
 | # | Soru | Sahibi | Hedef |
 | --- | --- | --- | --- |
 | 1 | ~~Bereket lütfu düz bonus mu (+1 altın/tur), yüzde mi (%10)?~~ **Çözüldü (C-31, 2026-10-18):** düz +1 altın/tur, yığın başına (`B_add`). | Kullanıcı / game-designer | C-31 ✅ |
-| 2 | Prolog simülasyonu (§4) repoya alınsın mı (ör. `tools/balance/`), AC15 otomatik testle mi kontrol edilsin? | Kullanıcı | Uygulama görevi |
+| 2 | Prolog simülasyonu (§4) repoya alınsın mı (ör. `tools/balance/`), AC15 otomatik testle mi kontrol edilsin? *(C-49 önerisi: evet — gerçek controller'larla deterministik oynatıcı, görev C-64; kullanıcı onayı bekliyor)* | Kullanıcı | C-64 |
 | 3 | Sürü ne zaman etkinleşir ve neyi besler/tüketir? Konsept "nüfus ve ordu büyümesi" diyor. | game-designer | Perde 1 tasarımı |
 | 4 | Katmanlı Düşman GDD'si takviyeyi devraldığında düşman ekonomisi simetrik mi olacak? | game-designer | `enemy-layers.md` |
 | 5 | Toparlanma mekanizması ve bakım gideri (çapraz inceleme D1/D2): `I_floor` ve `U` açılsın mı? | Kullanıcı | İlk Prolog playtesti |
 | 6 | ~~Sahne ortası kayıtta altın ve üretim sayaçları nasıl saklanacak?~~ **Çözüldü (ADR-0007, 2026-10-18):** yalnızca tur sonu otomatik kayıt; altın ve üretim sayaçları tur sonunda oturmuş haliyle JSON'a yazılır, tur ortası kayıt yok. | technical-director | C-16 ✅ |
-| 7 | Kusursuz oyunla 4 turda zafer öğretici için fazla hızlı mı? Hedef: tipik oyuncu 10–18 tur. *(Eski model; C-29 sonrası en hızlı ≈ 6. tur — C-49 yeniden değerlendirir.)* | Kullanıcı | C-49 / ilk Prolog playtesti |
+| 7 | ~~Kusursuz oyunla 4 turda zafer öğretici için fazla hızlı mı?~~ **C-49 (2026-10-19):** en hızlı T5, Erlik'le ilgilenen oyun T7–T8, tipik 8–12 tur; ihmal T15'te kaybettirir. Kalan soru playtestte: tipik ilk oyuncu gerçekten 10–18 turda mı bitiriyor? | Kullanıcı | C-42 playtesti |

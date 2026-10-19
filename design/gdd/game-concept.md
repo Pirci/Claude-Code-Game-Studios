@@ -243,8 +243,9 @@ kırmızısı vurgu — §4).
 - **Lider**: Genç Oğuz
 - **Hedef**: Boyları birleştir + ilk canavarı yen → Kağan ilan et
 - **Öğretilen Mekanikler**: Bölge fethi, kaynak toplama, ordu üretimi, temel savaş, ilk arındırma
-- **Siyasi Düşman**: Dağınık/başıboş boylar
-- **Doğaüstü Katman**: İlk Erlik canavarı — arındırmanın tanıtımı
+- **Siyasi Düşman**: Dağınık/başıboş boylar (nötr garnizonlar — Prolog'da düşman AI yok; kral AI'ı Perde 1'de başlar, C-49)
+- **Doğaüstü Katman**: İlk Erlik canavarı — arındırmanın tanıtımı; canavarın Doğu Obası'na düşen ilk izi kolay ilk arındırmadır (öğretici bozulma, C-49)
+- **Kayıp**: Erlik'in Gölgesi (haritadaki toplam bozulma) eşiğe ulaşırsa — hiç arındırmayan oyuncu ≈ 15. turda kaybeder (`spirit-system.md` §3.7, C-49)
 - **Kök Böri Bağı**: İlk kez belirir — "genesis" sahnesi
 - **Harita**: Oğuz'un ata yurdu (6 bölge) — *mevcut Ötüken haritası buraya uyarlanır*
 - **Duygu Tonu**: Kader, doğuş, uyanış

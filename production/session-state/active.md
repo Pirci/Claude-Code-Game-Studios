@@ -242,3 +242,8 @@
 
 ## Session Extract — C-58 motor referansı 4.7 (2026-10-19)
 - godot-specialist updated docs/engine-reference/godot/* (12 files) from official 4.7 release notes, migration guide, CHANGELOG + 4.7.1 binary checks. Focus API (grab_focus(hide_focus)/has_focus(ignore_hidden_focus)/show_focus_state_on_pointer_event) is 4.6 (GH-110250). 4.7 font importer default hinting changed → font_import_settings_test.gd guards our flags.
+
+## Session Extract — C-49 Prolog Erlik dengesi (2026-10-19)
+- Agent decisions (recommended): Erlik loss erlik_power = Σ corruption ≥ 9 (end_turn step 5), no ENEMY in Prolog, tutorial L1 at dogu_bozkir (garrison 0), lair garrison 0 + data AC (region-map AC14), interval 3 kept. Fastest win T5, neglect loss T15, mid-scene boon T7 (E3).
+- tools/balance/prolog_sim.py replays 12/12 lines (executed). New tasks C-63 (Erlik loss code; deps C-51, C-38), C-64 (balance replay on real controllers). C-36, C-42 now depend on C-63.
+- spirit §3.1 / AC10 now point to art bible "Bozulma Seviyeleri" (C-50).

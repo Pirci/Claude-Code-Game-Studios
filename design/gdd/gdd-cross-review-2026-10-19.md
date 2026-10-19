@@ -384,3 +384,17 @@ N10 to a narrative task.
 | N5, N6, N8 | → C-44 (balance) / Perde 1 design | — |
 | N10 | → C-54 | continuation |
 | N12 | = W-A + C-35 | — |
+
+## Resolution log (C-49, 2026-10-19)
+
+Balance report: [`design/balance/prolog-balance-2026-10-19.md`](../balance/prolog-balance-2026-10-19.md).
+
+| Item | Status | Where |
+| --- | --- | --- |
+| W-A | ✅ resource §4 rewritten with C-49 numbers (fastest T5, neglect loss T15, waste tolerance), F6 example generic, §5 max army, AC15 rewritten, Q7 answered | resource-system.md |
+| W-B / N2 | ✅ Erlik loss: `erlik_power = Σ corruption_level ≥ erlik_loss_threshold` (Prolog 9) at `end_turn` step 5; no political ENEMY in the Prolog (deliberate) | region-map §3.6/§4/§7/AC13, spirit §3.7/§4.7/AC22 |
+| N1 / N3 | ✅ teaching tile Doğu Obası L1 garrison 0 (P ≥ 5, +10 Ruh) before the L3 beast; mid-scene boon reachable ~T7 for engaged play | spirit §3.2/§3.8, resource §4 |
+| N4 | ◑ Prolog: neglect now costs (meter); steering = healthy mastery; Ruh stalling has no M1 consequence → **C-44** | spirit §5 |
+| N9 | ◑ deferred to **C-44** (campaign-scale rule); emergent Prolog link noted | spirit §5 |
+| S1-e | ✅ lair garrison 0 decided + data AC | spirit §3.2, region-map AC14 |
+| D3 | ✅ interval 3 verified (2 too harsh, 4 too slow) | spirit §3.7/§7 |

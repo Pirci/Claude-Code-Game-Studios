@@ -2,7 +2,7 @@
 
 *Oyun: ULUS: Blood of the Sky Wolf*
 *Oluşturulma: 2026-07-14*
-*Durum: Designed (kod henüz yok — uygulama C-38 / C-39 / C-55; çapraz inceleme 2026-10-19 CONCERNS → C-53)*
+*Durum: Designed (kod henüz yok — uygulama C-38 / C-39 / C-55 / C-63; çapraz inceleme 2026-10-19 CONCERNS → C-53; Prolog dengesi C-49)*
 *Katman: Feature (imza sistem)*
 
 ---
@@ -37,8 +37,8 @@ geçmeliyim" baskısı hisseder; arındırdıkça "kutsandım" tatmini yaşar.
   - Görsel: art bible §4 "Sahiplik Renkleri" → Erlik bozgunu katmanı (yalnızca
     Erlik Moru + Erlik Kömürü, dithering'li leke; sahiplik rengini gizlemez,
     üstüne biner). Yeşil arındırılmış toprağın rengidir. Seviye bilgi panelinde
-    sayıyla gösterilir (§3.2, C-30); haritadaki seviye görseli (dither yoğunluğu /
-    leke boyutu) art bible'da henüz tanımsız → **C-50** (C-38'den önce).
+    sayıyla gösterilir (§3.2, C-30); haritadaki seviye görseli art bible §4 "Bozulma
+    Seviyeleri"nde (C-50): dither yoğunluğu %25 / %50 / %75, 2px temiz sahiplik bandı.
   - Ceza: o bölgenin `gold_per_turn` ve `herd_per_turn` üretimi seviyeye göre
     çarpanla düşer: seviye 1 → ×0.75, seviye 2 → ×0.5, **seviye 3 → ×0 (üretim
     durur)** (`CORRUPTION_PRODUCTION_MULTIPLIERS`, §4.3).
@@ -86,12 +86,18 @@ geçmeliyim" baskısı hisseder; arındırdıkça "kutsandım" tatmini yaşar.
   arındırma / barışçıl), kayıp, kalan ve — arındırmada — başarı/başarısızlık ile Ruh.
   Başarısız olacak bir arındırma (kuvvetin tamamı kaybolur) onaysız yapılamaz:
   önizleme uyarı verir, ikinci tık onaylar. Spec: UX görevleri (C-41 / C-45).
-- **Prolog canavarı:** Canavarın İni (seviye 3) `S = 12` → en az 13'lük kuvvet
-  (kaynakta ≥ 14 ordu) gerekir; başarı 30 Ruh verir = ilk lütuf eşiği
-  (`BASE_BOON_COST`). Önerilen garnizon 0 (canavar = bozulma direncinin kendisi);
-  kesin veri ve kazanılabilirlik hesabı **C-49**'da; lütuf sunum zamanı §3.4. İnin
-  garnizonu 0'dan büyük verilirse son hamle savaşa döner (arındırma ve zafer o hamlede
-  olmaz) — C-36 verisinde garnizon 0 bir veri kabul kriteriyle korunur.
+- **Prolog canavarı (C-49 kararı):** Canavarın İni (seviye 3, **garnizon 0**) `S = 12` →
+  en az 13'lük kuvvet (kaynakta ≥ 14 ordu) gerekir; başarı 30 Ruh verir = ilk lütuf eşiği
+  (`BASE_BOON_COST`). Garnizon 0 bilinçlidir — canavar bozulma direncinin kendisidir;
+  garnizonlu in son hamleyi savaşa çevirirdi (arındırma ve zafer o hamlede olmaz, iki
+  yığın + iki aksiyon gerekir — S1-e). Veri kabul kriteri: `region-map-system.md` AC14.
+  Lütuf sunum zamanı §3.4.
+- **Öğretici bozulma (C-49, çapraz inceleme N1/N3):** Doğu Obası (inin ve Otağ'ın komşusu)
+  **seviye 1, garnizon 0** başlar: ilk arındırma `P ≥ 5` (Otağ'da 2 üretip 6'yla), +10 Ruh,
+  bölge oyuncunun olur ve nötr fetih sayılır. Arındırılmazsa en az ordulu aday olduğu için
+  T3'te seviye 2, T6'da seviye 3 olur (eşik 5 → 9 → 13, ödül 10 → 20 → 30) — Erlik'in
+  derinleşmesini canavardan önce gösterir. Prolog sayıları: `resource-system.md` §4,
+  [balance raporu](../balance/prolog-balance-2026-10-19.md).
 
 ### 3.3 Ruh Kaynağı
 - Ruh, `GameState` içinde tutulan kalıcı bir kaynaktır (altın/sürüden ayrı).
@@ -193,27 +199,45 @@ yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı.
   ve başlangıçta `corruption_level = 3` olan bir bölgedir; **fetihle değil
   arındırmayla** yenilir (§3.2) ve ilk Ruh'u verir. Canavar siyasi bir aktör değildir:
   düşman AI'ya katılmaz, kendiliğinden hareket etmez.
-- **Prolog baskısı (D3):** Canavarın İni seviye 3'te başlar (üretimi durur, arındırması
-  öğretici hedeftir); `ERLIK_SPREAD_INTERVAL` Prolog sahnesinde **3** tura iner
-  (sahne override, bkz. Edge Cases "Final sahnesi" ile aynı mekanizma). Kesin değerler
-  `/balance-check` ile doğrulanacak (C-49).
+- **Prolog baskısı (D3 → C-49):** Canavarın İni seviye 3'te, Doğu Obası seviye 1'de başlar
+  (§3.2); `ERLIK_SPREAD_INTERVAL` Prolog sahnesinde **3** tura iner (sahne override, bkz.
+  Edge Cases "Final sahnesi" ile aynı mekanizma). C-49 doğrulaması: 3 korunur — 2'de
+  hiç arındırmayan oyuncu T10'da kaybeder ve öğretici bölge T2'de olgunlaşır (sert); 4'te
+  ihmal kaybı T20'ye kayar (10–18 turluk sahne penceresinin dışında, zombi oyun geri döner).
+- **Erlik'in Gölgesi ve Erlik kaybı (C-49, çapraz inceleme N2 / W-B):** Erlik'in haritadaki
+  toplam gücü `erlik_power = Σ corruption_level` (§4.7). Bölümün
+  `WinCondition.erlik_loss_threshold`'u (> 0 ise) bu değere ulaşınca sahne **kaybedilir**
+  (`region-map-system.md` §3.6; **Prolog eşiği 9**, başlangıç 4). Her yayılım +1, her
+  başarılı arındırma −(arındırılan seviye): ihmal Erlik'i büyütür, arındırma geri iter
+  (Sütun 3: "biri ihmal edilirse diğeri güçlenir"). Bozulma yalnızca tur sonu 2. adımda
+  arttığından Erlik kaybı yalnızca `end_turn` 5. adımında oluşur. HUD değeri `erlik_power /
+  eşik` olarak ve eşiğe 1 kala uyarıyla gösterir (gereksinim; spec C-41 / C-45).
+- **Prolog'da siyasi düşman yok (C-49):** siyasi katman nötr boy garnizonlarıdır (konsept
+  "dağınık boylar"); düşman AI ve takviye (`resource-system.md` F6) Prolog'da bilinçli
+  olarak boştadır, ilk kez Perde 1'de çalışır (C-43). Prolog'un kayıp yolu Erlik'tir.
 - **Zafer kapsamı (D4) — ✅ C-32:** zafer = siyasi koşul + nötr genişleme + bölümün
   `erlik_foci` listesindeki odakların arındırılması (`region-map-system.md` §3.6);
   odak dışı bozulma zaferi engellemez. Prolog: 3 nötr (odak hariç) + Canavarın İni.
 - **Arındırmanın yeri ve fetihte bozulma (B3/B5):** ✅ C-30 — §3.2 (varışın 2. dalı;
   fetih bozulmayı korur). Lütuf zamanlaması: ✅ C-31 — §3.4.
 
-> **Etki uyarısı:** Canavarın İni nötr olduğundan Prolog'da `ENEMY` bölgesi kalmaz →
-> düşman AI ve düşman takviyesi (`resource-system.md` F6) Prolog'da boşta kalır,
-> `game_lost` (oyuncunun bölgesi kalmaz) tetiklenemez ve Prolog'un denge hesabı
-> (resource-system §4 "Prolog doğrulaması" eski modelle hesaplandı — C-53'te "eskimiş"
-> işaretlendi) yeniden doğrulanmalıdır. Takip: **C-49**.
+> **C-49 çözümü (2026-10-19):** Canavar nötr olduğundan Prolog'da `ENEMY` bölgesi kalmaz;
+> bu bilinçli olarak korunur (yukarıda). `game_lost` artık Erlik eşiğiyle tetiklenebilir;
+> Prolog denge hesabı C-29 sonrası modelle yeniden yapıldı (`resource-system.md` §4).
+> Çapraz inceleme N4 (yayılım yönlendirme / olgunlaştırma) ve N9 (fetih Erlik'i büyütmüyor)
+> Prolog için kural değişikliği olmadan kapatıldı, kampanya ölçeğindeki karar C-44'e
+> devredildi (§5 "Ruh çiftçiliği", "Yayılımı yönlendirme").
 
 ### 3.8 MVP Alt Kümesi (C-31)
 - **M1 — Prolog Demo** (C-38, C-39): `corruption_level`, arındırma (§3.2), Ruh kazanımı
   + HUD göstergesi, Kök Böri sunum akışı (tur başı / sahne sonu / erteleme) ve
   **M1 uygun havuzu = Arınma Ustalığı, Bereket, Gök Kalkanı** (gerektirdiği sistem
-  M1'de olmayan lütuflar havuza girmez). Etkiler ADR-0006 hattıyla uygulanır.
+  M1'de olmayan lütuflar havuza girmez). Etkiler ADR-0006 hattıyla uygulanır. C-49 ile M1'e
+  eklenenler: Erlik'in Gölgesi (`erlik_power`, §4.7) + Erlik kaybı (§3.7, kod C-63) + HUD
+  göstergesi, Doğu Obası öğretici bozulması (veri C-36). Erlik'le ilgilenen oyuncu ilk
+  lütfu sahne ortasında (~T7) alabilir; üç M1 lütfunun etkisi sahne içinde görünür
+  (Bereket gelirde, Gök Kalkanı yayılım sayacında / Erlik'in Gölgesi hızında, Arınma
+  Ustalığı canavarın Ruh'unda 30 → 36).
 - **M2 — Vertical Slice** (C-44, C-47): savaş etkin gücü (`combat-system.md` §4 "Etkin güç") ile
   Kurt Gücü + Demir Post, sahneler arası taşıma (AC6), lütuf dengesi (C-44 kapsamında
   `/balance-check` — C-53 ile C-44 bitti kriterine eklendi).
@@ -236,6 +260,7 @@ Değişkenler ve varsayılan (tuning) değerleri:
 | `ERLIK_SPREAD_INTERVAL` | Yayılma periyodu (tur; sahne override'ı — Prolog 3) | 4 | 2–8 |
 | `GOK_KALKANI_INTERVAL_BONUS` | Gök Kalkanı yığını başına aralık artışı (tur) | 1 | 1–2 |
 | `GOK_KALKANI_MAX_STACKS` | Gök Kalkanı yığılma sınırı | 3 | 1–5 |
+| `erlik_loss_threshold` | Erlik kaybı eşiği (§4.7); bölüm verisi `WinCondition`, sahibi `region-map-system.md` §3.6 | 0 (kapalı); Prolog 9 | 0 veya başlangıç `erlik_power` + 3 … 3 × bölge sayısı |
 
 ### 4.1 Arınma direnci
 ```
@@ -281,7 +306,9 @@ boon_cost(n) = BASE_BOON_COST + n × BOON_COST_STEP
 Birikimli maliyet: `k` lütuf için `30k + 10k(k−1)` → 1: 30, 3: 150, 5: 350, 7: 630, 8: 800.
 
 **Eğri hedefi (D5, C-31):** doğrusal eğri korunur. Hedef sahne başına ~1 lütuf
-(Prolog'da tipik 1: canavar 30 Ruh), finalde **6–8 lütuf** — 6 sahnede toplam
+(Prolog'da tipik 1 — C-49: hızlı oyuncuda zaferde canavarın 30 Ruh'uyla, Erlik'le ilgilenen
+oyuncuda sahne ortasında ~T7; teorik tavan 2 lütuf = 80 Ruh, ancak ≥ 13 turluk titiz oyunla),
+finalde **6–8 lütuf** — 6 sahnede toplam
 ~600–800 Ruh arzı. Çapraz incelemedeki "18 lütuf = 3 600 Ruh" hedefi geçersizdir;
 katalogda 5 uygun lütuf olduğundan 6–8 yığın, "finalde tümü aktif" vaadini karşılar.
 Arz tahmini Perde 1 verisiyle M2'de doğrulanır (C-44 `/balance-check`).
@@ -323,6 +350,28 @@ ifadesidir, tüketici `stacks`'i doğrudan okumaz — `I_eff = resolve(&"erlik_s
 taban)`.
 Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
 
+### 4.7 Erlik'in Gölgesi ve Erlik kaybı (C-49)
+```
+erlik_power = Σ_{r ∈ regions} r.corruption_level              # 0 … 3 × bölge sayısı (Prolog 0–18)
+erlik_lost  = erlik_loss_threshold > 0  ∧  erlik_power ≥ erlik_loss_threshold
+```
+| Değişken | Tip | Aralık | Kaynak |
+| ---- | ---- | ---- | ---- |
+| `corruption_level` | int | 0–3 | Bölge durumu (§3.1) |
+| `erlik_power` | int | 0–18 (Prolog) | Türetilir, saklanmaz (kayıttaki `corruption_level`'lardan yeniden hesaplanır) |
+| `erlik_loss_threshold` | int | 0 (kapalı) veya ≥ başlangıç + 3 | `WinCondition` (bölüm verisi) — Prolog 9 |
+
+Değişim kuralı: her yayılım (aday bulunduysa) **+1**; her başarılı arındırma
+**−L** (arındırma öncesi seviye); fetih ve üretim değiştirmez. Değerlendirme yalnızca
+`end_turn` 5. adımında (`region-map-system.md` §3.4/§3.6).
+
+**Örnek (Prolog):** başlangıç 3 (in) + 1 (Doğu Obası) = 4. Hiç arındırmayan oyuncu
+T3 / T6 / T9 / T12 / T15 yayılımlarıyla 5 / 6 / 7 / 8 / 9 → **15. turun sonunda kayıp**.
+Arındırmasız kayıp, son yayılımdan itibaren `(eşik − erlik_power) × I_eff` tur sonradır
+(her yayılımda aday varsa); seviye `L` bir bölgeyi arındırmak
+kaybı `L × I_eff` tur erteler (Doğu Obası L1 → +3 tur; Gök Kalkanı 1 yığınla `I_eff = 4` →
+aynı yol T20). Uyarı eşiği: `erlik_power = eşik − 1` (Prolog 8 — ihmal eden oyuncuda T12).
+
 ---
 
 ## 5. Edge Cases
@@ -358,8 +407,31 @@ Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
   arındırılınca yine Ruh verir — Erlik'i geri püskürtmek bilinçli olarak
   ödüllendirilir. Risk: oyuncu kaynak bölgeyi (seviye 3) bilerek bırakıp komşusunu
   her yayılımda tekrar arındırabilir (≈ her interval'de 10 Ruh; bedeli 2 ordu +
-  1 aksiyon). Artan lütuf maliyeti (§4.4) ve sahne zaman baskısı bunu sınırlar;
-  C-49 `/balance-check`'inde izlenir, gerekirse "tekrar arındırma çarpanı" knob'u eklenir.
+  1 aksiyon). Artan lütuf maliyeti (§4.4) ve sahne zaman baskısı bunu sınırlar.
+  **C-49 değerlendirmesi:** Prolog'da zaferi geciktirip her yayılımı arındıran oyuncu
+  ≈ 10 Ruh / 3 tur kazanır ve Erlik'in Gölgesi düşük kaldığı için kaybetmez → sınırsız
+  bekleme ile ek lütuf mümkündür. **M1'de sonuçsuzdur** (demoda lütufların taşınacağı
+  sonraki sahne yok; 2. lütuf için ~12 ek tur). Lütuflar Perde 1'e taşındığı anda (M2)
+  sınırlanmalıdır → **C-44** karar verir (seçenekler: "tekrar arındırma çarpanı" knob'u +
+  sahne içi bölge başına arındırma sayacı, sahne Ruh tavanı, sahne tur sınırı).
+- **Yayılımı yönlendirme (N4, C-49):** en az ordulu aday kuralı yüzünden oyuncu değersiz,
+  garnizonu 1 bir bölgeyi "paratoner" yapabilir. Erlik'in Gölgesi her yayılımda yine +1
+  olduğundan bu ihmalin bedelini kaldırmaz; hangi bölgenin acı çekeceğini seçmek
+  deterministik ve göstergede görünür olduğu için **sağlıklı ustalık** sayılır. Prolog'da
+  Doğu Obası (garnizon 0) bu rolü kendiliğinden üstlenir: o boşken Otağ aday olsa da
+  hedeflenmez. Hedef kuralının değişmesi (değerli bölgeyi seçmek, yinelenen tohum) C-44.
+- **Fetih Erlik'i büyütmüyor (N9, C-49):** Prolog'da yayılım yalnızca saate bağlıdır; tek
+  dolaylı bağ, fethedilen bölgelerin garnizon 1'le kalıp bozulmaya komşuysa yayılım hedefi
+  olmasıdır. Konseptin "imparatorluk büyüdükçe Erlik'in gölgesi uzar" mekaniği (aralığın
+  ya da yayılım sayısının toprakla ölçeklenmesi) kampanya ölçeğinde C-44'te tasarlanır —
+  öğreticiye 7. bağlı kural eklenmez (dikkat bütçesi, N7).
+- **Öğretici bölge arındırılmazsa** (C-49): Doğu Obası T3'te L2, T6'da L3 olur; L3'te aday
+  değildir, yayılım komşulara (Otağ, Bereket) geçer. Her olgunlaşma Erlik'in Gölgesi'ni
+  +1 artırır.
+- **Erlik'in Gölgesi eşiği aşılırken başka koşullar:** zafer yalnızca hamleyle (tur
+  ortası), Erlik kaybı yalnızca tur sonunda oluşur → aynı anda gerçekleşemez. Tüm bozulma
+  arındırılırsa `erlik_power = 0` ve yayılım adayı kalmaz → Erlik kaybı imkânsızlaşır.
+  Kaybedilen sahnede bekleyen lütuf sunumu gösterilmez, Ruh korunur (§3.4).
 - **Bozuk bölgeyi düşman alırsa**: bozulma kalır; düşman takviyesi etkilenmez
   (düşmanın hazinesi yok, `resource-system.md` F6).
 - **Seviye 0 bölgeyi arındırma denemesi**: Geçersiz aksiyon — arındırma yalnızca
@@ -377,7 +449,9 @@ Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
 ## 6. Dependencies
 
 - **Bölge Fethi / Harita** (`region-map-system.md`, kod: `region_data.gd`,
-  `map_state.gd`) — `RegionData`'ya `corruption_level` alanı eklenmeli.
+  `map_state.gd`) — `RegionData`'ya `corruption_level` alanı eklenmeli. Erlik kaybı (C-49):
+  bu sistem `erlik_power`'ı (§4.7) tanımlar; eşik (`WinCondition.erlik_loss_threshold`) ve
+  kontrol noktası (`end_turn` 5. adım) region-map §3.6'ya aittir.
 - **Ordu Sistemi** (`army-system.md` §3.3) — arındırma, varış çözümünün 2. dalıdır;
   dal seçimi ve kuvvetin yerleşmesi orada, arındırma kuralları ve Ruh burada.
 - **Savaş Çözümü** (`combat-system.md`, kod: `combat_resolver.gd`) — arındırma
@@ -412,7 +486,9 @@ Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
 | `CORR_STR_PER_LEVEL` | Arındırma zorluğu | 2–8 | Yüksek = daha çok ordu gerekir |
 | `CORRUPTION_PRODUCTION_MULTIPLIERS` | Bozulmanın ekonomik baskısı | azalan dizi; son eleman 0–0.25 | Son eleman >0 → seviye 3 bölgeler üretmeye devam eder; ara değerler çok düşükse küçük obalar seviye 1–2'de 0'a iner |
 | `BASE_BOON_COST` / `BOON_COST_STEP` | Lütuf sıklığı | 10–60 / 5–40 | Düşük = sık lütuf |
-| `ERLIK_SPREAD_INTERVAL` | Zaman baskısı | 2–8 tur | Düşük = agresif Erlik |
+| `ERLIK_SPREAD_INTERVAL` | Zaman baskısı | 2–8 tur | Düşük = agresif Erlik. Prolog 3 (C-49 doğrulandı: 2 → ihmal kaybı T10, 4 → T20) |
+| `erlik_loss_threshold` (sahibi region-map §7) | Erlik ihmalinin kayıp sınırı | 0 (kapalı) veya başlangıç `erlik_power` + 3 ve üstü; Prolog 9 | Düşük = sert (Prolog 8 → ihmal kaybı T12, 12 boş turluk pasif oyuncu kaybeder); yüksek = baskı hissedilmez (10 → T18, 18 turluk pencerenin sınırı) |
+| Başlangıç bozulması (bölüm verisi, `RegionDefinition`) | Öğretici / ilk baskı | Prolog: in 3, Doğu Obası 1 | Öğretici bölge L2 olursa T3'te L3'e olgunlaşır (öğretici olmaktan çıkar); kaldırılırsa sahne ortası lütuf ~T9+'a kayar |
 | Lütuf etki değerleri | Build gücü | Kurt Gücü / Demir Post +1–2 güç; Bereket +1–2 altın; Arınma Ustalığı %10–%30; Gök Kalkanı +1–2 tur | Denge kritik — çok yüksek zorluğu bozar; küçük tam sayılarda yüzde yerine düz değer (§3.5) |
 | `GOK_KALKANI_MAX_STACKS` | Erlik baskısının alt sınırı | 1–5 (varsayılan 3) | Yüksek = Erlik etkisizleşebilir |
 | `GOK_KALKANI_INTERVAL_BONUS` | Yığın başına aralık artışı | 1–2 tur (varsayılan 1) | — |
@@ -437,14 +513,15 @@ Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
 8. Erlik, `ERLIK_SPREAD_INTERVAL` turda bir, kurala göre (en düşük ordulu komşu)
    **deterministik** yayılır; yayılım `end_turn`'ün 2. adımında (AI'dan sonra, gelirden
    önce) çalışır ve o turun geliri yayılan bozulmayı yansıtır. *(Test)*
-8b. Prolog verisinde Canavarın İni `NEUTRAL` + `corruption_level 3` yüklenir; `ENEMY`
-   sahip yalnızca siyasi krallar içindir. *(Test — veri C-36/C-49 ile gelir)*
+8b. Prolog verisinde Canavarın İni `NEUTRAL` + `corruption_level 3` + ordu 0, Doğu Obası
+   `NEUTRAL` + `corruption_level 1` + ordu 0 yüklenir; Prolog'da `ENEMY` bölgesi yoktur
+   (`ENEMY` yalnızca siyasi krallar içindir). *(Test — veri C-36; `region-map-system.md` AC14)*
 9. Gök Kalkanı: Prolog aralığı 3 iken 1 yığın → `I_eff = 4`, 3 yığın → 6; 3 yığından
    sonra uygun havuzda yer almaz; hiçbir yığın sayısında bölme/sıfıra bölme yoktur.
    Aralık sahne ortasında uzarsa bir sonraki yayılım `last_erlik_spread_turn`'den
    itibaren sayılır. *(Test)*
 10. Bozulmuş bölge görsel olarak temiz bölgeden ayırt edilebilir; seviye 1–3 art
-    bible'daki bozulma katmanı kuralıyla (dither yoğunluğu / leke — C-50) ayırt edilir,
+    bible §4 "Bozulma Seviyeleri" kuralıyla (dither yoğunluğu %25/50/75 — C-50) ayırt edilir,
     sahiplik rengi gizlenmez. *(Görsel — screenshot + lead onayı, ADVISORY)*
 11. Seviye 2, garnizonsuz bozuk bölgeye P=9 → arındırma başarılı: `corruption_level 0`,
     bölge oyuncunun, army 5, Ruh +20; P=8 → kuvvet kaybolur, bölge ve bozulma aynı
@@ -472,3 +549,15 @@ Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
 21. Hedef üzerine gelince hamle önizlemesi dalı, kaybı, kalanı ve (arındırmada)
     başarı/Ruh'u gösterir; başarısız olacak arındırma ikinci onay ister. Yayılım
     göstergesi kalan tur ve olası hedefi gösterir. *(UI — walkthrough, ADVISORY; C-41/C-45)*
+22. `erlik_power` tüm bölgelerin `corruption_level` toplamıdır: Prolog başlangıcında **4**;
+    yayılım +1, seviye 2 bölgenin arındırılması −2. **GIVEN** `erlik_loss_threshold = 9` ve
+    `erlik_power = 8`, **WHEN** `end_turn`'ün yayılımı bir bölgeyi bozar, **THEN** aynı
+    `end_turn`'ün 5. adımında `game_result = LOST`, `game_lost` bir kez yayılır,
+    `turn_ended` yayılmaz. Eşik 0 iken aynı durum oyunu sürdürür; oyuncu hamlesi hiçbir
+    zaman Erlik kaybı üretmez. *(Test — BLOCKING, kod C-63)*
+23. Prolog T1: Otağ'dan (5) Doğu Obası'na 4'lük hamle → arındırma başarısız (4 ≤ 4), 4 birlik
+    kaybolur, Doğu L1 kalır; Otağ'da 2 üretip 6'yla → başarılı, Doğu oyuncunun (ordu 4),
+    Ruh +10, `erlik_power` 4 → 3. *(Test — C-38 + C-36 verisi)*
+24. HUD Erlik'in Gölgesi'ni `erlik_power / eşik` olarak gösterir; `erlik_power = eşik − 1`
+    iken uyarı durumu ve yayılım göstergesiyle birlikte "bir sonraki yayılımda kayıp" bilgisi
+    görünür. *(UI — walkthrough, ADVISORY; C-41/C-45)*

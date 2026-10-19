@@ -2,7 +2,7 @@
 
 *Oyun: ULUS: Blood of the Sky Wolf*
 *Oluşturulma: 2026-07-14*
-*Durum: Belgelenmiş (kod mevcut — `game/features/grid/`, `game/state/`) + planlı bölümler (§3.4 yayılım adımı, §3.6–3.7 oyun sonu: C-38, C-51)*
+*Durum: Belgelenmiş (kod mevcut — `game/features/grid/`, `game/state/`) + planlı bölümler (§3.4 yayılım adımı, §3.6–3.7 oyun sonu: C-38, C-51; Erlik kaybı C-49 → kod C-63)*
 *Katman: Core*
 
 > Mevcut kodu belgeler. Harita bir **bölge grafiğidir** (tile-grid değil):
@@ -47,9 +47,10 @@ tutar (ADR-0004). *planlı* = kodda henüz yok.
   (`RegionDefinition`: yukarıdaki statik alanlar + başlangıç `owner`/`army_count` +
   *planlı* başlangıç `corruption_level` = `initial_owner` kaynağı), `actions_per_turn`,
   `enemy_actions_per_turn`, `player_tamga_id`/`enemy_tamga_id`, `starting_gold` ve
-  `enemy_reinforcement_per_turn` (resource §7), `win_condition` (§3.6, `erlik_foci`
-  dahil), *planlı* `erlik_spread_interval` (spirit — Prolog 3) ve lütuf havuzu
-  override'ı (spirit §7, MVP'de yok).
+  `enemy_reinforcement_per_turn` (resource §7), `win_condition` (§3.6, `erlik_foci` ve
+  *planlı* `erlik_loss_threshold` dahil — C-49), *planlı* `erlik_spread_interval` (spirit —
+  Prolog 3) ve lütuf havuzu override'ı (spirit §7, MVP'de yok). `erlik_power` hiçbir yerde
+  saklanmaz; bölgelerin `corruption_level`'larından türetilir (spirit §4.7).
 
 ### 3.2 Bölge Seçimi (`select_region`)
 - Boş alandan farklı bir bölgeye tıklama → o bölge seçilir (bilgi paneli açılır).
@@ -67,7 +68,9 @@ Oyun `ONGOING` değilse hiçbir adım çalışmaz (§3.7). Sıra: **(1)** düşm
 yalnızca yayılım turunda, aksi halde atlanır) → **(3)** ekonomi adımı: oyuncu
 geliri + düşman takviyesi + bakım (`resource-system.md` §3.1) → **(4)**
 `current_turn+=1`, `actions_remaining = actions_per_turn`, bölge üretim sayaçları
-sıfırlanır → **(5)** oyun sonu kontrolü: önce kaybetme, sonra kazanma (§3.6–3.7).
+sıfırlanır → **(5)** oyun sonu kontrolü: önce kaybetme (bölgesiz **veya** Erlik eşiği —
+§3.6), sonra kazanma (§3.6–3.7). Erlik kaybı 2. adımda oluşsa da 5. adımda değerlendirilir
+(3–4. adımlar çalışır; `turn_ended` yayılmaz — aşağıda).
 
 - **Erken çıkış (C-53, S2-b):** 1. adımdan sonra oyuncunun hiç bölgesi kalmamışsa sonuç
   hemen `LOST` olur; 2–4. adımlar çalışmaz (ölü oyunda olay yayılmaz).
@@ -115,13 +118,20 @@ sinyal yaymaz. `MapController.end_turn()` intent'leri `ArmyController`/`CombatRe
      arındırılmış (`corruption_level == 0`). Odak dışındaki bozulma zaferi engellemez —
      hedef "bu yönü fethet + Erlik odağını temizle"dir (konsept), bütün bozulmayı
      silmek değil. Liste boşsa koşul kendiliğinden sağlanır.
-- **Kaybetme**: oyuncunun hiç bölgesi kalmazsa.
-- **Öncelik:** İkisi aynı anda sağlanamaz (kazanma en az bir oyuncu bölgesi ister).
+- **Kaybetme** (C-49 ile genişledi) — ikisinden biri yeterli:
+  1. **Siyasi:** oyuncunun hiç bölgesi kalmazsa.
+  2. **Erlik kaybı (C-49):** `erlik_loss_threshold > 0` **ve** `erlik_power ≥
+     erlik_loss_threshold` (`erlik_power = Σ corruption_level`, `spirit-system.md` §4.7).
+     Eşik bölüm verisidir (`WinCondition`); **Prolog 9** (başlangıç `erlik_power` 4); 0 =
+     kapalı. Prolog'da `ENEMY` olmadığından (spirit §3.7) Prolog'un tek gerçekçi kayıp yolu
+     budur: hiç arındırmayan oyuncu 15. turun sonunda kaybeder (`resource-system.md` §4).
+- **Öncelik:** İkisi aynı anda sağlanamaz: kazanma en az bir oyuncu bölgesi ister ve tur
+  sonunda zafer oluşmaz (Erlik eşiği yalnızca yayılımla aşılır, yayılım zafer üretemez).
   Savunmacı kural: bir kontrol noktasında önce kaybetme, sonra kazanma değerlendirilir.
 - **Kontrol noktaları:** (a) her geçerli oyuncu hamlesinden sonra yalnızca kazanma
-  (oyuncu kendi hamlesiyle son bölgesini kaybedemez — kaynakta garnizon kalır);
-  (b) `end_turn` 5. adımında kaybetme → kazanma (gelecekte tur sonunda sahiplik
-  değiştiren sistemler için; bugün tur sonu kazanma üretemez).
+  (oyuncu kendi hamlesiyle son bölgesini kaybedemez — kaynakta garnizon kalır; hamle
+  `erlik_power`'ı yalnızca düşürebilir); (b) `end_turn` 5. adımında kaybetme (siyasi,
+  Erlik) → kazanma.
 
 ### 3.7 Oyun Sonu (C-32)
 - Oyun sonucu state'te tutulur: `MapState.game_result` ∈ {`ONGOING`, `WON`, `LOST`}
@@ -162,7 +172,19 @@ yazılmaz (ADR-0007). Eski formül `oyuncu_bölge_sayısı − 1` başlangıç b
 kaybedilince eksik, ele geçirilen düşman bölgelerini ve odağı nötr fethi gibi sayıyordu.
 **Örnek (Prolog, C-36 verisiyle):** 4 nötr + Canavarın İni (odak) + Otağ. Oyuncu 3 nötrü
 alıp ini arındırınca `conquered_neutral_count = 3 ≥ 3`, odak temiz, düşman yok → zafer;
-yalnızca 3 nötr alınmış ve in bozuksa zafer yok.
+yalnızca 3 nötr alınmış ve in bozuksa zafer yok. Doğu Obası (öğretici bozulma, C-49)
+arındırmayla yerleşilince `N`'nin üyesi olarak sayılır.
+
+### Kaybetme kontrolü (C-49)
+```
+erlik_power = Σ r.corruption_level                     # spirit §4.7, türetilir
+siyasi_kayıp = (oyuncu_bölgesi == 0)
+erlik_kaybı  = erlik_loss_threshold > 0  AND  erlik_power ≥ erlik_loss_threshold
+kaybetti     = siyasi_kayıp OR erlik_kaybı            # yalnızca end_turn 5. adımı (+ 1. adım erken çıkışı: siyasi)
+```
+**Örnek (Prolog, eşik 9):** başlangıç 4; oyuncu hiç arındırmazsa yayılımlar T3/T6/T9/T12/T15
+sonlarında 5/6/7/8/9 → T15'in 5. adımında `LOST`. Oyuncu T13'te seviye 2 bir bölgeyi
+arındırırsa 8 → 6 olur ve T15 sonunda 7'de kalır.
 
 ### Düşman AI hedef seçimi
 ```
@@ -196,7 +218,18 @@ işlem sırası = düşman bölgeleri region_id artan; bütçe enemy_actions_per
   engelleyen "hayalet" bölge kalmaz.
 - **Prolog kazanma kriteri**: `required_neutral_conquests = 3` + Canavarın İni
   **arındırılmalı** (C-29: canavar siyasi düşman değil, bozulmuş nötr bölgedir —
-  `spirit-system.md` §3.7). Kural C-32'de tanımlandı; kod C-51, veri C-36 / C-49.
+  `spirit-system.md` §3.7). Kural C-32'de tanımlandı; kod C-51, veri C-36. C-49: Prolog'da
+  `ENEMY` yoktur (bilinçli) → siyasi koşul kendiliğinden sağlanır; inin garnizonu 0'dır,
+  böylece son hamle her zaman arındırmadır ve zafer o hamlede gelir (garnizonlu odak
+  hamleyi savaşa çevirir — AC14 bunu veriyle engeller).
+- **Erlik kaybı** (C-49): eşik yalnızca tur sonunda aşılabildiğinden tur ortasında zaferle
+  çakışmaz; 2. adımda aşılırsa 3–4. adımlar (gelir, tur artışı) yine çalışır, 5. adımda
+  `game_lost` bir kez yayılır, `turn_ended` ve otomatik kayıt olmaz (W-D kuralı).
+  Başlangıçta `erlik_power ≥ eşik` bir veri hatasıdır (AC14). Eşik 0 → Erlik kaybı yok.
+  Kayıp ekranının metni ve tekrar dene akışı `scene-flow.md`'ye (C-35) aittir.
+- **Erlik kaybı, odak arındırılmışken:** mümkündür (diğer bozuk bölgeler eşiği doldurabilir)
+  ama Prolog'da odak arındırılınca genellikle zafer de gelir; gelmezse (3 nötr eksik)
+  oyuncu nötrleri alana kadar Erlik saati işlemeye devam eder.
 
 ---
 
@@ -226,8 +259,9 @@ işlem sırası = düşman bölgeleri region_id artan; bütçe enemy_actions_per
 | `actions_per_turn` | ChapterMapDefinition | MVP: 1 |
 | Bölge sayısı / layout | `.tres` (veri-güdümlü) | Prolog: 6 |
 | `required_neutral_conquests` | WinCondition | Prolog: 3 |
-| `must_defeat_all_enemies` | WinCondition | Prolog: true (C-29 sonrası Prolog'da düşman yok → koşul kendiliğinden sağlanır; C-49) |
-| `erlik_foci` | WinCondition | Arındırılması zorunlu Erlik odakları (region_id listesi). Prolog: [Canavarın İni] (C-36) |
+| `must_defeat_all_enemies` | WinCondition | Prolog: true (C-49 kararı: Prolog'da `ENEMY` yok, siyasi katman nötr boylar → koşul kendiliğinden sağlanır) |
+| `erlik_foci` | WinCondition | Arındırılması zorunlu Erlik odakları (region_id listesi). Prolog: [`sinir_bolge`] (C-36), garnizon 0 (AC14) |
+| `erlik_loss_threshold` | WinCondition | Erlik kaybı eşiği (`erlik_power`, spirit §4.7); 0 = kapalı. **Prolog 9** (C-49) — güvenli aralık: başlangıç `erlik_power` + 3 … 3 × bölge sayısı. 8 → ihmal kaybı T12 (sert), 10 → T18 (baskı zayıf). Değişirse `resource-system.md` §4 tablosu yeniden üretilir |
 | Bölge `army_count` / `gold_per_turn` | `.tres` | Denge |
 | `enemy_actions_per_turn` | ChapterMapDefinition / MapState | Düşmanın tur başına toplam aksiyonu (data-driven; MVP: 1) |
 | `player_tamga_id` / `enemy_tamga_id` | ChapterMapDefinition → MapState | Sahiplik tamgası (`icon_tamga_<id>.png`, art bible §5/§7). Prolog: `oguz` / `erlik_beast` *(C-29: canavar artık nötr olduğundan `enemy_tamga_id` Prolog'da kullanılmaz; Erlik görseli tamga değil bozulma katmanıdır — C-36'da veri temizlenir)*. Bölgenin tamgası sahibinden türetilir → fetihte değişir; nötr tamgasız |
@@ -237,9 +271,10 @@ işlem sırası = düşman bölgeleri region_id artan; bütçe enemy_actions_per
 ## 8. Acceptance Criteria
 
 1. Prolog haritası 6 bölgeyle yüklenir; sahiplikler doğru (Oğuz Otağı=oyuncu,
-   Canavarın İni=nötr + `corruption_level 3`, diğer 4 nötr). *(Test — veri
-   güncellemesi C-36/C-49 ile gelir; o zamana dek mevcut `chapter_1_map.tres`
-   eski modelde: Canavarın İni=düşman.)*
+   Canavarın İni=nötr + `corruption_level 3` + ordu 0, Doğu Obası=nötr + `corruption_level 1`
+   + ordu 0, Batı Obası 3 / Kutlu Dağ 2 / Bereket Vadisi 0 nötr). *(Test — veri C-36,
+   değerler `resource-system.md` §4; o zamana dek mevcut `chapter_1_map.tres` eski modelde:
+   Canavarın İni=düşman, 6 ordu.)*
 2. Seçili bölgeye tekrar tıklama seçimi kaldırır. *(Test)*
 3. Geçerli hareket `actions_remaining`'i 1 azaltır. *(Test)*
 4. `end_turn` sırası: AI → Erlik yayılımı → gelir → tur artışı → kontrol. *(Test)*
@@ -263,3 +298,16 @@ işlem sırası = düşman bölgeleri region_id artan; bütçe enemy_actions_per
     kayıt yalnızca bu sinyalle ve `ONGOING` iken çalışır. *(Test — kod C-51 / C-56)*
 11. Odak bölge bozukken diğer koşullar sağlansa da zafer yok; odak arındırılınca o
     hamlenin sonunda zafer. *(Test — bozulma C-38 ile gelir)*
+13. **Erlik kaybı (C-49):** `erlik_loss_threshold = 9`, `erlik_power = 8`, oyuncunun bölgeleri
+    var; `end_turn`'ün yayılımı bir bölgeyi bozunca 5. adımda `game_result = LOST` olur,
+    `game_lost` bir kez yayılır, `turn_ended` yayılmaz, sonra `attempt_move` `false` ve
+    `end_turn` no-op. Aynı durumda eşik 0 → oyun sürer. `erlik_power = 9` olan bir duruma
+    oyuncu hamlesiyle (arındırma) gelinemez; hamle sonrası kontrol kayıp üretmez.
+    *(Test — kod C-63)*
+14. **Prolog veri kabul kriteri (C-49, S1-e):** `chapter_1_map.tres` yüklenince —
+    `erlik_foci == [sinir_bolge]`; her odak `NEUTRAL`, başlangıç ordusu **0**, başlangıç
+    `corruption_level ≥ 1` (in: 3); `dogu_bozkir` `NEUTRAL`, ordu 0, `corruption_level 1`;
+    hiçbir bölge `ENEMY` değil; `erlik_loss_threshold = 9` ve başlangıç `erlik_power` (4) <
+    eşik; `erlik_spread_interval = 3`; `starting_gold = 6`; `required_neutral_conquests = 3`.
+    Genel kural (her bölüm): `erlik_loss_threshold > 0` ise başlangıç `erlik_power` < eşik.
+    *(Veri testi — C-36)*

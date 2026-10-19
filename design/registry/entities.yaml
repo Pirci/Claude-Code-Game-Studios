@@ -170,6 +170,22 @@ formulas:
     added: 2026-10-18
     revised: ""
 
+  - name: erlik_power
+    status: active
+    source: design/gdd/spirit-system.md
+    referenced_by:
+      - design/gdd/spirit-system.md       # §4.7, §3.7 Erlik'in Gölgesi
+      - design/gdd/region-map-system.md   # §3.6 Erlik kaybı, §4 kaybetme kontrolü
+      - design/gdd/resource-system.md     # §4 Prolog doğrulaması
+    variables:
+      - corruption_level
+      - erlik_loss_threshold
+    output_range: [0, 18]   # Prolog: 6 bölge × 3
+    expression: "sum(corruption_level over all regions); lost iff erlik_loss_threshold > 0 and erlik_power >= erlik_loss_threshold (end_turn step 5 only)"
+    notes: "C-49. Türetilir, saklanmaz. Yayılım +1, arındırma -L. Prolog başlangıcı 4 (in 3 + Doğu Obası 1)."
+    added: 2026-10-19
+    revised: ""
+
 # Example:
 #
 # formulas:
@@ -232,8 +248,9 @@ constants:
       - design/gdd/region-map-system.md   # ekonomi adımı, ChapterMapDefinition
     value: 1
     unit: army per enemy region per turn
+    notes: "C-49: Prolog'da ENEMY bölgesi yok → değer boşta (durumu değiştirmez); düşmanlı bölümlerde etkin."
     added: 2026-10-08
-    revised: ""
+    revised: 2026-10-19
 
   - name: prod_penalty_per_level
     status: deprecated   # 2026-10-08: replaced by corruption_production_multipliers (K1)
@@ -334,9 +351,9 @@ constants:
       - design/gdd/army-system.md     # AC8 (Ruh +20)
     value: 10
     unit: Ruh per corruption level purified
-    notes: "Gizli bağ: Canavarın İni (seviye 3) = 30 Ruh = base_boon_cost. Biri değişirse 'canavar ilk lütfu öder' tasarımı bozulur."
+    notes: "Gizli bağ: Canavarın İni (seviye 3) = 30 Ruh = base_boon_cost. Biri değişirse 'canavar ilk lütfu öder' tasarımı bozulur. C-49: Doğu Obası öğretici bozulması (+10) ve yayılım arındırmalarıyla ilk lütuf sahne ortasında da (~T7) gelebilir; o zaman canavarın 30'u ikinci lütfa (50) yetmez ve Perde 1'e taşınır."
     added: 2026-10-19
-    revised: ""
+    revised: 2026-10-19
 
   - name: base_boon_cost
     status: active
@@ -357,6 +374,20 @@ constants:
       - design/gdd/region-map-system.md  # §3.1 ChapterMapDefinition sahne override'ı
     value: 4
     unit: turns between spreads (default; Prolog scene override 3; + Gök Kalkanı stacks, max 3)
+    notes: "C-49: Prolog 3 doğrulandı (2 → ihmal kaybı T10, 4 → T20; design/balance/prolog-balance-2026-10-19.md)."
+    added: 2026-10-19
+    revised: 2026-10-19
+
+  - name: erlik_loss_threshold_ch1
+    status: active
+    source: design/gdd/region-map-system.md
+    referenced_by:
+      - design/gdd/region-map-system.md   # §3.6 Erlik kaybı, §7 WinCondition, AC13/AC14
+      - design/gdd/spirit-system.md       # §3.7, §4.7, §7
+      - design/gdd/resource-system.md     # §4 Prolog doğrulaması
+    value: 9
+    unit: erlik_power (sum of corruption levels) at which the Prolog is lost; 0 = disabled
+    notes: "C-49. Prolog başlangıç erlik_power 4 → hiç arındırmayan oyuncu T15 sonunda kaybeder. Değişirse resource-system §4 tablosu yeniden üretilir."
     added: 2026-10-19
     revised: ""
 
