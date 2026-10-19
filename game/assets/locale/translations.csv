@@ -9,6 +9,8 @@ MAIN_MENU,Main Menu,Ana Menü,Hauptmenü,Menu Principal,Menú Principal,主菜�
 GOLD,Gold,Altın,Gold,Or,Oro,金币,ゴールド,골드,Золото,Ouro,ذهب
 TURN,Turn,Tur,Runde,Tour,Turno,回合,ターン,턴,Ход,Turno,دور
 PER_TURN,%s / turn,%s / tur,%s / Runde,%s / tour,%s / turno,%s / 回合,%s / ターン,%s / 턴,%s / ход,%s / turno,%s / دور
+CORRUPTION,Corruption,Bozulma,Verderbnis,Corruption,Corrupción,腐化,腐敗,타락,Скверна,Corrupção,الفساد
+ERLIK_HOLD,Erlik's hold,Erlik direnci,Erliks Griff,Emprise d'Erlik,Dominio de Erlik,厄尔里克之力,エルリクの力,에를리크의 힘,Власть Эрлика,Domínio de Erlik,قبضة إرليك
 END_TURN,End Turn,Turu Bitir,Runde beenden,Fin du tour,Finalizar turno,结束回合,ターン終了,턴 종료,Конец хода,Finalizar turno,إنهاء الدور
 CHAPTER_1_TITLE,Prologue: The Birth — Uniting the Tribes,Prolog: Doğuş — Boyların Birleşmesi,Prolog: Die Geburt — Vereinigung der Stämme,Prologue : La Naissance — L'Unification des Tribus,Prólogo: El Nacimiento — La Unificación de las Tribus,序章：诞生 — 部落的统一,序章：誕生 — 部族の統一,서장: 탄생 — 부족의 통일,Пролог: Рождение — Объединение племён,Prólogo: O Nascimento — A Unificação das Tribos,المقدمة: الميلاد — توحيد القبائل
 MAP_PLACEHOLDER,[ Map Goes Here ],[ Harita Buraya Gelecek ],[ Karte kommt hierhin ],[ La carte va ici ],[ El mapa va aquí ],[ 地图将在此处 ],[ マップはここに ],[ 맵이 여기에 표시됩니다 ],[ Карта будет здесь ],[ Mapa vem aqui ],[ الخريطة ستكون هنا ]

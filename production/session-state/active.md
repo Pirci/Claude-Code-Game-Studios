@@ -271,3 +271,7 @@
 - features/bozkurt: SpiritConfig (+data/spirit_config.tres), SpiritRules (corruption_strength, ruh_gain via StatResolver &"ruh_gain", production_multiplier), SpiritController (apply_purification, apply_spread; signals ruh_changed, corruption_changed). GameState.ruh.
 - MoveResolver PURIFICATION branch (player only, P > S, Dal 1 loss, failure disperses all); MoveOutcome corruption_strength/purified/ruh_gain. MapController.bind_erlik_layer(spirit, spread, modifier_controller), _run_erlik_spread() step 2 (interval via StatResolver &"erlik_spread_interval"), signals purification_resolved/corruption_spread. ModifierController.get_modifiers(). ResourceController.forecast_income + M_c via IncomeRules.region_income. ChapterMapDefinition.erlik_spread_interval (3), RegionDefinition.starting_corruption.
 - Tests 209/209 (purification_spread_test 13). Remaining C-38: info panel corruption rows + keys; Prolog data is C-36.
+
+## Session Extract — C-38 kapandı (2026-10-19 ~07:35)
+- Info panel rows (CORRUPTION, ERLIK_HOLD keys ×11; ↓-X penalty in #E87A7A; values #A86BC4); GameContext._show_region_info computes S/max/effective gold. Beast test S=12. Tests 212/212. Evidence production/qa/evidence/c38-info-panel-corruption-en-de-ar.png.
+- NEXT: C-56 (save/load; consider ADR-0007 C-35 amendment S2 scene_entry as proposed).

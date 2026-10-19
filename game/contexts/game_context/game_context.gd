@@ -186,8 +186,20 @@ func _on_controller_region_selected(region_id: StringName) -> void:
 	_campaign_map.set_selected(region_id)
 	var data: RegionData = _game_state.map_state.get_region(region_id)
 	if data:
-		_info_panel.show_region(data)
+		_show_region_info(data)
 	_refresh_map()
+
+
+## Bilgi paneline bölge + Erlik bilgisi (direnç, seviye sınırı, cezalı gelir) — değerler
+## oyunun saf kurallarından (SpiritRules, IncomeRules); panel yalnızca gösterir (ADR-0011).
+func _show_region_info(data: RegionData) -> void:
+	var level: int = data.corruption_level
+	_info_panel.show_region(
+		data,
+		_spirit_rules.corruption_strength(level),
+		_spirit_rules.max_corruption_level(),
+		IncomeRules.region_income(data, _spirit_rules.production_multiplier(level)),
+	)
 
 
 func _on_controller_region_deselected() -> void:

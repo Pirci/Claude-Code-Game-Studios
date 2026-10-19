@@ -232,3 +232,24 @@ func test_spirit_controller_caps_level_and_moves_counter_without_target() -> voi
 	on_lair.target_id = &"lair"
 	spirit.apply_spread(m, on_lair)
 	assert_int(m.get_region(&"lair").corruption_level).is_equal(3)
+
+
+# --- spirit §3.2 Prolog canavarı: seviye 3, garnizon 0, S = 12 → 13 başarı, 12 başarısız ---
+func test_beast_lair_needs_thirteen_and_pays_thirty_ruh() -> void:
+	var fail: MoveOutcome = MoveResolver.new().resolve(_purify_map(13, 3), &"otag", &"dogu")
+	assert_int(fail.corruption_strength).is_equal(12)
+	assert_bool(fail.purified).is_false()
+	var m: MapState = _purify_map(14, 3)
+	var state: GameState = GameState.new()
+	var win: WinCondition = WinCondition.new()
+	win.must_defeat_all_enemies = true
+	win.erlik_foci.assign([&"dogu"])
+	var c: MapController = _controller(m, state, win)
+	var won: Array[int] = [0]
+	c.game_won.connect(func() -> void: won[0] += 1)
+	c.select_region(&"otag")
+	c.attempt_move(&"dogu")
+	assert_int(m.get_region(&"dogu").corruption_level).is_equal(0)
+	assert_int(state.ruh).is_equal(30)
+	# Odak temizlenince aynı hamlenin sonunda zafer; Ruh zaferden önce hazinede (S1-a).
+	assert_int(won[0]).is_equal(1)
