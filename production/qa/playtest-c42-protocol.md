@@ -42,7 +42,7 @@ Windows `%APPDATA%\Godot\app_userdata\ULUS\`
 
 ## Oturum bilgisi
 - **Tarih:**
-- **Build:** C-42 export (commit: ______)
+- **Build:** C-42 export (commit: 99d686e)
 - **Süre:**
 - **Platform / donanım:** macOS __ / Windows __ · ekran çözünürlüğü:
 - **Dil:**
