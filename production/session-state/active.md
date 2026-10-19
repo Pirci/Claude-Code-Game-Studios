@@ -120,3 +120,12 @@
 - Bilgi notları: indeks (tarih, bağımlılık sütunu, Oyun Durumu/erişilebilirlik/yerelleştirme/tamga satırları), konsept (tarih, sonraki adımlar), MapState alan listesi, AC9 renk körlüğü, `scene_id = chapter_id` (Prolog 1 → M1 sunumu Bereket, Gök Kalkanı, Arınma Ustalığı), yayılım aday kümesi formal + `last_erlik_spread_turn` güncelleme kuralı.
 - TR-map-005, TR-army-001 revised. Kod düzeltmesi C-52 açıldı (W3 + W6).
 - NEXT: C-34 `/review-all-gdds` yeniden (taze bağlamda daha iyi; gece modunda bu oturumda çalıştırılacak).
+
+## Session Extract — /review-all-gdds 2026-10-19 (C-34)
+- Verdict: CONCERNS
+- GDDs reviewed: 5 system GDDs + concept + index (parallel reviewers: systems-designer = consistency, game-designer = holism + 3 scenarios)
+- Flagged for revision: resource, spirit, region-map, army, game-concept, ADR-0005/0006/0007 (all Warning; index NOT set to Needs Revision → Designed)
+- Blocking issues: None (B1–B7 hold; B6/W12/D3 partly)
+- Recommended next: C-17 is next in queue but now depends on C-53 (fix W-A…W-I, S1-a, N7/N11c + ADR amendments) → do C-53 first
+- Report: design/gdd/gdd-cross-review-2026-10-19.md
+- Also: Godot 4.7.1 Linux downloaded to scratchpad/godot (session-only); `GODOT=<that> tools/ci/run-tests.sh` → 80/80 pass, palette 0 violations.

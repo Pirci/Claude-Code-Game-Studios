@@ -1,7 +1,7 @@
 # Sistem GDD İndeksi — ULUS: Blood of the Sky Wolf
 
 *Türkçe alt-başlık: Gökkurt'un Kanı*
-*Son Güncelleme: 2026-10-18* — son çapraz inceleme: [gdd-cross-review-2026-10-08.md](gdd-cross-review-2026-10-08.md) (FAIL; engelleyiciler C-28…C-33 ile kapatıldı, yeniden inceleme C-34)
+*Son Güncelleme: 2026-10-19* — son çapraz inceleme: [gdd-cross-review-2026-10-19.md](gdd-cross-review-2026-10-19.md) (**CONCERNS**, 0 engelleyici; uyarılar C-53 / C-49). Önceki: [2026-10-08](gdd-cross-review-2026-10-08.md) (FAIL)
 
 Bu indeks tüm sistem GDD'lerini ve durumlarını takip eder. Yeni bir GDD
 eklendiğinde buraya bir satır eklenmeli. Kaynak konsept: [game-concept.md](game-concept.md).
@@ -16,11 +16,11 @@ Foundation → Core → Feature → Presentation → Polish
 | ---- | ---- | ---- | ---- | ---- | ---- |
 | **Oyun Konsepti** | Foundation | [game-concept.md](game-concept.md) | Taslak (revize edildi) | — | — |
 | **Oyun Durumu** (yalnızca veri: `GameState`, `MapState`, `RegionData` — ADR-0004) | Foundation | kod: `game/state/` (ayrı GDD yok; alanlar ilgili GDD'lerde) | Belgelenmiş (kod) | — | — |
-| **Bölge Fethi / Harita** | Core | [region-map-system.md](region-map-system.md) | Revised — yeniden inceleme bekliyor (C-34) | 1 | Ordu, Savaş, Kaynak, Ruh |
+| **Bölge Fethi / Harita** | Core | [region-map-system.md](region-map-system.md) | Designed | 1 | Ordu, Savaş, Kaynak, Ruh |
 | **Kaynak Yönetimi** (altın + ordu üretimi; sürü arayüzü) | Core | [resource-system.md](resource-system.md) | Designed | 1 | Harita, Ordu, Ruh |
-| **Ordu & Birim Sistemi** | Core | [army-system.md](army-system.md) | Revised — yeniden inceleme bekliyor (C-34) | 1 | Savaş, Harita, Kaynak, Ruh |
-| **Savaş Çözümü** (otomatik + rapor) | Core | [combat-system.md](combat-system.md) | Revised — yeniden inceleme bekliyor (C-34) | 1 | Ordu, Harita, Ruh |
-| **Kök Böri / Ruh Sistemi** (imza) | Feature | [spirit-system.md](spirit-system.md) | Revised — yeniden inceleme bekliyor (C-34) | 2 | Harita, Ordu, Savaş, Kaynak, Oyun Durumu |
+| **Ordu & Birim Sistemi** | Core | [army-system.md](army-system.md) | Designed | 1 | Savaş, Harita, Kaynak, Ruh |
+| **Savaş Çözümü** (otomatik + rapor) | Core | [combat-system.md](combat-system.md) | Designed | 1 | Ordu, Harita, Ruh |
+| **Kök Böri / Ruh Sistemi** (imza) | Feature | [spirit-system.md](spirit-system.md) | Designed | 2 | Harita, Ordu, Savaş, Kaynak, Oyun Durumu |
 | **Katmanlı Düşman** (siyasi krallar; Erlik burada değil — C-29) | Feature | `enemy-layers.md` | Yazılmadı | 2 | Harita, Ordu, Kaynak |
 | **Erlik Bozgunu & Arındırma** (MVP'de `spirit-system.md` §3.1–3.2, §3.6–3.7 kapsar; ayrı GDD planlı değil — C-29) | Feature | [spirit-system.md](spirit-system.md) | Designed (spirit içinde) | 2 | Ruh |
 | **Konsey (Altı Oğul)** | Feature | `council-system.md` | Yazılmadı | 3 | Ruh (ADR-0006 hattı) |

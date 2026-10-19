@@ -1,5 +1,7 @@
 # Cross-GDD Review Report
 
+> **Superseded 2026-10-19** by [gdd-cross-review-2026-10-19.md](gdd-cross-review-2026-10-19.md) (CONCERNS). Kept as history; resolution markers below were added by C-28…C-33.
+
 - **Date:** 2026-10-08
 - **Skill:** `/review-all-gdds` (full — consistency + design theory + scenario walkthrough)
 - **GDDs Reviewed:** 4 system GDDs + concept + systems index
