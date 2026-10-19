@@ -80,3 +80,33 @@ func test_apply_combat_result_loss_keeps_owner() -> void:
 	ArmyController.new().apply_combat_result(m, &"b", result, 3)
 	assert_int(dst.owner).is_equal(RegionData.Owner.ENEMY)
 	assert_int(dst.army_count).is_equal(result.defender_remaining)
+
+
+# --- Sahip-bağımsız kurallar (army-system.md §3.1, C-19 / ADR-0005) ---
+func test_enemy_mover_can_move_from_enemy_region_without_player_actions() -> void:
+	var src: RegionData = _region(&"e", RegionData.Owner.ENEMY, 3, [&"p"] as Array[StringName])
+	var dst: RegionData = _region(&"p", RegionData.Owner.PLAYER, 1, [&"e"] as Array[StringName])
+	var m: MapState = _map([src, dst] as Array[RegionData], 0)
+	assert_bool(ArmyController.new().can_move(m, &"e", &"p", RegionData.Owner.ENEMY)).is_true()
+
+
+func test_enemy_mover_cannot_move_player_region() -> void:
+	var src: RegionData = _region(&"p", RegionData.Owner.PLAYER, 3, [&"e"] as Array[StringName])
+	var dst: RegionData = _region(&"e", RegionData.Owner.ENEMY, 1, [&"p"] as Array[StringName])
+	var m: MapState = _map([src, dst] as Array[RegionData])
+	assert_bool(ArmyController.new().can_move(m, &"p", &"e", RegionData.Owner.ENEMY)).is_false()
+
+
+func test_enemy_peaceful_move_takes_region_for_enemy() -> void:
+	var m: MapState = _map([_region(&"n", RegionData.Owner.NEUTRAL, 0, [] as Array[StringName])] as Array[RegionData])
+	ArmyController.new().apply_peaceful_move(m, &"n", 4, RegionData.Owner.ENEMY)
+	assert_int(m.get_region(&"n").owner).is_equal(RegionData.Owner.ENEMY)
+	assert_int(m.get_region(&"n").army_count).is_equal(4)
+
+
+func test_enemy_combat_win_captures_for_enemy() -> void:
+	var m: MapState = _map([_region(&"p", RegionData.Owner.PLAYER, 3, [] as Array[StringName])] as Array[RegionData])
+	var result: CombatResolver.CombatResult = CombatResolver.new().resolve(5, 3)
+	ArmyController.new().apply_combat_result(m, &"p", result, 5, RegionData.Owner.ENEMY)
+	assert_int(m.get_region(&"p").owner).is_equal(RegionData.Owner.ENEMY)
+	assert_int(m.get_region(&"p").army_count).is_equal(3)

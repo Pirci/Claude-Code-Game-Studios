@@ -229,3 +229,6 @@ class SpreadDecision extends RefCounted:
 - Depends on ADR-0001, ADR-0003, ADR-0004.
 - Enables spirit-system (Erlik spread) implementation.
 - Documents/refactors code in `game/features/grid/map_controller.gd`.
+- **Implemented (C-19, 2026-10-19):** `game/features/ai/enemy_ai_controller.gd`,
+  `game/features/ai/erlik_spread_controller.gd` (+ `game/tests/unit/ai/`); MapController
+  decide → apply loop; spread service wired into `end_turn` by C-38 (needs SpiritController).

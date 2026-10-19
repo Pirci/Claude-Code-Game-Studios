@@ -14,3 +14,6 @@ var gold_per_turn: int = 0
 var position: Vector2 = Vector2.ZERO
 var polygon_points: PackedVector2Array = PackedVector2Array()
 var adjacent_regions: Array[StringName] = []
+## Erlik bozulma seviyesi 0 (temiz) – 3 (ağır); sahiplikten bağımsız (spirit-system.md §3.1).
+## Tek yazıcı: SpiritController (C-38).
+var corruption_level: int = 0

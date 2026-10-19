@@ -13,6 +13,10 @@ var chapter_id: int = 1
 ## Sahip → tamga (art bible §5/§7). Fetihte bölgenin tamgası yeni sahibinkine geçer.
 var player_tamga_id: StringName = &""
 var enemy_tamga_id: StringName = &""
+## Erlik yayılımının taban aralığı (tur) — bölüm içeriğinden gelir (spirit-system.md §4).
+var erlik_spread_interval: int = 4
+## Son yayılım turunun numarası; sahne başında 0 (spirit-system.md §3.6).
+var last_erlik_spread_turn: int = 0
 
 
 func get_region(region_id: StringName) -> RegionData:

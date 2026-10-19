@@ -39,9 +39,9 @@ Hareket geçerlidir ancak ve ancak:
 - Hamle yapan tarafın aksiyon bütçesi > 0 (oyuncu: `map_state.actions_remaining`;
   düşman: tur başına `enemy_actions_per_turn`, `region-map-system.md` §3.5).
 
-> **Bugünkü kod:** `ArmyController.can_move` yalnızca oyuncu için yazılıdır
-> (`owner == PLAYER`); düşman AI aynı kuralları `MapController._run_enemy_ai()`
-> içinde satır içi tekrarlar. ADR-0005 uygulaması (C-19) iki yolu bu tek kurala bağlar.
+> **Kod (C-19, 2026-10-19):** `ArmyController.can_move(map, from, to, mover)` ve
+> `apply_*` fonksiyonları `mover` alır; düşman hamleleri de bu yoldan uygulanır
+> (`MapController._apply_enemy_move`). Boş kalan bölgenin nötrleşmesi: C-52.
 
 ### 3.2 Ordu Taşıma (`move_army`)
 - Taşınan kuvvet = `army_count − 1`.

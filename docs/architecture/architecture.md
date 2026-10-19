@@ -305,7 +305,7 @@ func SaveController.load_campaign() -> LoadResult                        # code 
 signal SaveController.save_failed(reason: StringName)
 
 # ── Core ───────────────────────────────────────────────────────────────────
-# MapController ✔ (latch/early exit/turn_ended order ◻ C-51; AI services ◻ C-19)
+# MapController ✔ (latch/early exit/turn_ended order ◻ C-51; AI services ✔ C-19)
 func select_region(region_id: StringName) -> void
 func attempt_move(target_id: StringName) -> bool      # false if not ONGOING / invalid
 func end_turn() -> void                               # no-op unless ONGOING
@@ -313,7 +313,7 @@ signal turn_ended(new_turn: int)                      # only after the end check
 signal game_won
 signal game_lost
 
-# ArmyController ✔ (mover param ◻ C-19/C-52)
+# ArmyController ✔ (mover param ✔ C-19; emptied region → NEUTRAL ◻ C-52)
 func can_move(map_state: MapState, from_id: StringName, to_id: StringName, mover: RegionData.Owner) -> bool
 func move_army(map_state: MapState, from_id: StringName, to_id: StringName) -> int
 
@@ -326,7 +326,7 @@ func recruit(map_state: MapState, game_state: GameState, region_id: StringName, 
 func forecast_income(map_state: MapState, game_state: GameState) -> int   # same pure F2 as the step
 
 # ── Feature ────────────────────────────────────────────────────────────────
-# AI ◻ C-19 / C-38 (ADR-0005)
+# AI ✔ C-19 (ADR-0005); spread wired into end_turn ◻ C-38
 func EnemyAIController.decide(map_state: MapState, acted: Array[StringName]) -> EnemyAIController.MoveIntent
 func ErlikSpreadController.decide(map_state: MapState, effective_interval: int) -> ErlikSpreadController.SpreadDecision
 

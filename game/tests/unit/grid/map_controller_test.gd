@@ -34,6 +34,7 @@ func _controller(m: MapState, win: WinCondition) -> MapController:
 		ResourceController.new(),
 		CombatResolver.new(),
 		win,
+		EnemyAIController.new(),
 	)
 	return c
 
@@ -159,3 +160,36 @@ func test_game_lost_emitted() -> void:
 	c.game_lost.connect(func() -> void: lost["v"] = true)
 	c.end_turn()
 	assert_bool(lost["v"]).is_true()
+
+
+# --- ADR-0005 karar → uygula döngüsü: davranış korunur (C-19) ---
+func test_region_conquered_by_enemy_does_not_act_same_turn() -> void:
+	# e1 p1'i alır; bütçe 2 olsa da p1 (yeni düşman bölgesi) bu tur hareket etmez,
+	# ikinci aksiyon e2'nindir — eski satır içi AI'ın anlık görüntü davranışı.
+	var m: MapState = _map([
+		_region(&"e1", RegionData.Owner.ENEMY, 9, [&"p1"] as Array[StringName]),
+		_region(&"p1", RegionData.Owner.PLAYER, 1, [&"e1", &"p3"] as Array[StringName]),
+		_region(&"e2", RegionData.Owner.ENEMY, 5, [&"p2"] as Array[StringName]),
+		_region(&"p2", RegionData.Owner.PLAYER, 1, [&"e2"] as Array[StringName]),
+		_region(&"p3", RegionData.Owner.PLAYER, 1, [&"p1"] as Array[StringName]),
+	] as Array[RegionData], 1, 2)
+	var c: MapController = _controller(m, _win(99, true))
+	c.end_turn()
+	assert_int(m.get_region(&"p1").owner).is_equal(RegionData.Owner.ENEMY)
+	assert_int(m.get_region(&"p2").owner).is_equal(RegionData.Owner.ENEMY)
+	assert_int(m.get_region(&"p3").owner).is_equal(RegionData.Owner.PLAYER)
+
+
+func test_enemy_moves_emit_existing_signals() -> void:
+	var m: MapState = _map([
+		_region(&"e", RegionData.Owner.ENEMY, 5, [&"n"] as Array[StringName]),
+		_region(&"n", RegionData.Owner.NEUTRAL, 0, [&"e"] as Array[StringName]),
+		_region(&"p", RegionData.Owner.PLAYER, 3, [] as Array[StringName]),
+	] as Array[RegionData])
+	var c: MapController = _controller(m, _win(99, false))
+	var moved: Dictionary = {"to": &""}
+	c.army_moved.connect(func(_from: StringName, to: StringName, _n: int) -> void: moved["to"] = to)
+	c.end_turn()
+	assert_str(moved["to"]).is_equal("n")
+	assert_int(m.get_region(&"e").army_count).is_equal(1)
+	assert_int(m.get_region(&"n").army_count).is_equal(4)

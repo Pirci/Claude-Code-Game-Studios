@@ -18,6 +18,7 @@ var _army_controller: ArmyController
 var _resource_controller: ResourceController
 var _combat_resolver: CombatResolver
 var _win_condition: WinCondition
+var _enemy_ai: EnemyAIController
 
 
 func bind_services(
@@ -27,6 +28,7 @@ func bind_services(
 	resource_controller: ResourceController,
 	combat_resolver: CombatResolver,
 	win_condition: WinCondition,
+	enemy_ai: EnemyAIController,
 ) -> void:
 	_map_state = map_state
 	_game_state = game_state
@@ -34,6 +36,7 @@ func bind_services(
 	_resource_controller = resource_controller
 	_combat_resolver = combat_resolver
 	_win_condition = win_condition
+	_enemy_ai = enemy_ai
 
 
 func select_region(region_id: StringName) -> void:
@@ -89,36 +92,31 @@ func end_turn() -> void:
 		game_lost.emit()
 
 
+## Düşman aksiyonları: karar → uygula döngüsü (ADR-0005). [EnemyAIController] yalnızca
+## karar verir; mutasyon ve sinyaller burada, oyuncuyla aynı [ArmyController] kurallarıyla.
 func _run_enemy_ai() -> void:
-	var actions_allowed: int = _map_state.enemy_actions_per_turn
-	var actions_done: int = 0
-	var enemy_regions: Array[RegionData] = _map_state.get_enemy_regions()
-	for region: RegionData in enemy_regions:
-		if actions_done >= actions_allowed:
-			break
-		if region.army_count <= 1:
-			continue
-		var best_target: RegionData = null
-		for adj_id: StringName in region.adjacent_regions:
-			var adj: RegionData = _map_state.get_region(adj_id)
-			if adj == null or adj.owner == RegionData.Owner.ENEMY:
-				continue
-			if best_target == null or adj.army_count < best_target.army_count:
-				best_target = adj
-		if best_target == null:
-			continue
-		var moving: int = region.army_count - 1
-		region.army_count = 1
-		if best_target.army_count > 0:
-			var result: CombatResolver.CombatResult = _combat_resolver.resolve(moving, best_target.army_count)
-			if result.attacker_won:
-				best_target.owner = RegionData.Owner.ENEMY
-				best_target.army_count = result.attacker_remaining
-			else:
-				best_target.army_count = result.defender_remaining
-			combat_occurred.emit(region.region_id, best_target.region_id, result)
-		else:
-			best_target.owner = RegionData.Owner.ENEMY
-			best_target.army_count = moving
-			army_moved.emit(region.region_id, best_target.region_id, moving)
-		actions_done += 1
+	var acted: Array[StringName] = []
+	for _i: int in _map_state.enemy_actions_per_turn:
+		var intent: EnemyAIController.MoveIntent = _enemy_ai.decide(_map_state, acted)
+		if intent == null:
+			return
+		_apply_enemy_move(intent)
+		# Bu tur ele geçirilen bölge de aynı tur tekrar hareket etmez.
+		acted.append(intent.from_id)
+		acted.append(intent.to_id)
+
+
+func _apply_enemy_move(intent: EnemyAIController.MoveIntent) -> void:
+	var enemy: RegionData.Owner = RegionData.Owner.ENEMY
+	if not _army_controller.can_move(_map_state, intent.from_id, intent.to_id, enemy):
+		push_warning("EnemyAIController geçersiz hamle önerdi: %s → %s" % [intent.from_id, intent.to_id])
+		return
+	var moving: int = _army_controller.move_army(_map_state, intent.from_id, intent.to_id)
+	var target: RegionData = _map_state.get_region(intent.to_id)
+	if target.army_count > 0:
+		var result: CombatResolver.CombatResult = _combat_resolver.resolve(moving, target.army_count)
+		_army_controller.apply_combat_result(_map_state, intent.to_id, result, moving, enemy)
+		combat_occurred.emit(intent.from_id, intent.to_id, result)
+	else:
+		_army_controller.apply_peaceful_move(_map_state, intent.to_id, moving, enemy)
+		army_moved.emit(intent.from_id, intent.to_id, moving)

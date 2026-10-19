@@ -57,6 +57,7 @@ func _setup_controllers() -> void:
 		_resource_controller,
 		_combat_resolver,
 		map_def.win_condition,
+		EnemyAIController.new(),
 	)
 
 

@@ -85,9 +85,9 @@ sıfırlanır → **(5)** oyun sonu kontrolü: önce kaybetme, sonra kazanma (§
 > Erlik yayılımının **sahibi `spirit-system.md`**'dir; bu sistem yalnızca sırayı tutar.
 
 ### 3.5 Düşman AI
-> **Durum (C-33, W5):** Aşağıdaki kurallar bugünkü kodda `MapController._run_enemy_ai()`
-> içinde satır içi çalışır. `EnemyAIController.decide()` ayrımı **planlıdır**
-> (ADR-0005, Proposed; uygulama C-19) — kurallar aynı kalır, yalnızca yeri değişir.
+> **Durum (C-19, 2026-10-19):** Kurallar `game/features/ai/enemy_ai_controller.gd`
+> (`EnemyAIController.decide(map_state, acted)`) içinde; `MapController` karar → uygula
+> döngüsüyle uygular (ADR-0005, Accepted). Alfabetik eşitlik bozma ve işlem sırası C-52.
 
 Hedef mimaride düşman AI saf bir karar servisidir (bkz. [ADR-0005](../../docs/architecture/adr-0005-ai-architecture.md)):
 `EnemyAIController.decide(map_state) -> Array[MoveIntent]` yalnızca `MapState`'i

@@ -150,3 +150,10 @@
 - TD self-review (TD-ARCHITECTURE): CONCERNS = approved with conditions (4 TR gaps → ADRs C-59…C-62). LP-FEASIBILITY skipped (lean).
 - Required ADRs next: C-59 Move Resolution (before C-38/C-41), C-60 Presentation, C-62 Scene flow (after C-35), C-61 Localization.
 - NEXT: C-19 (ADR-0005 implementation, code — Godot 4.7.1 in scratchpad for tests).
+
+## Session Extract — C-19 ADR-0005 uygulaması (2026-10-19)
+- game/features/ai/enemy_ai_controller.gd (MoveIntent, decide(map, acted)), erlik_spread_controller.gd (SpreadDecision, decide(map, interval), counter-based, alphabetical tie-break, target every call).
+- MapController: decide → apply loop; conquered targets added to `acted` (preserves old snapshot behaviour); enemy moves via ArmyController.can_move/apply_* with mover=ENEMY.
+- State fields: RegionData.corruption_level, MapState.erlik_spread_interval (4), last_erlik_spread_turn (0). Spread NOT wired into end_turn yet (C-38 with SpiritController).
+- Tests: 104/104 (new: tests/unit/ai/* 18, army mover 4, map parity 2). Godot 4.7.1 Linux (scratchpad).
+- NEXT: C-21 (koçboynuzu/kilim 9-slice frames — UI, needs screenshots).
