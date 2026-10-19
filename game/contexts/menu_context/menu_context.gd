@@ -5,6 +5,8 @@ extends Control
 signal new_campaign_requested
 ## "Devam Et": RootContext kaydı yükler (ADR-0007, C-17 D4).
 signal continue_requested
+## Ayarlar ekranında bir ayar değişti — RootContext kalıcı kaydeder (C-65).
+signal settings_changed
 signal quit_requested
 
 
@@ -63,6 +65,7 @@ func _on_settings_pressed() -> void:
 	_settings_screen = SETTINGS_SCENE.instantiate() as SettingsScreen
 	_settings_screen.bind_services(_accessibility)
 	_settings_screen.back_requested.connect(_on_settings_back)
+	_settings_screen.settings_changed.connect(settings_changed.emit)
 	add_child(_settings_screen)
 
 

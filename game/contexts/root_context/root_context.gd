@@ -38,6 +38,8 @@ func _ready() -> void:
 	# Kampanya kaydı (ADR-0007): RootContext sahiplenir, GameContext'e enjekte eder (C-17 D4).
 	_save = SaveController.new()
 	_save.bind_services(save_store if save_store != null else FileSaveStore.new(), _create_map_state)
+	# Kayıtlı ayarlar UI kurulmadan önce uygulanır (dil fontu dahil) — ADR-0007, C-65.
+	_apply_settings(_save.load_settings())
 
 	_locale_fonts = LocaleFontController.new(ThemeDB.get_project_theme())
 	if arabic_font:
@@ -70,6 +72,7 @@ func _switch_to(context_name: StringName) -> void:
 			menu.bind_services(_accessibility, _save.has_campaign())
 			menu.new_campaign_requested.connect(_on_new_campaign)
 			menu.continue_requested.connect(_on_continue)
+			menu.settings_changed.connect(_on_settings_changed)
 			menu.quit_requested.connect(_on_quit)
 			_current_context = menu
 
@@ -98,6 +101,40 @@ func _on_continue() -> void:
 		return
 	_game_state = result.state
 	_switch_to(&"game")
+
+
+func _on_settings_changed() -> void:
+	_save.save_settings(_capture_settings())
+
+
+## Şu anki ayarların anlık görüntüsü (erişilebilirlik, dil, tam ekran, bus sesleri).
+func _capture_settings() -> SettingsSnapshot:
+	var snapshot: SettingsSnapshot = SettingsSnapshot.new()
+	snapshot.color_blind_mode = _accessibility.color_blind_mode
+	snapshot.reduce_motion = _accessibility.reduce_motion
+	snapshot.show_region_names = _accessibility.show_region_names
+	snapshot.fullscreen = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
+	var language: String = TranslationServer.standardize_locale(TranslationServer.get_locale()).get_slice("_", 0)
+	snapshot.locale = language if language in SettingsSerializer.SUPPORTED_LOCALES else "en"
+	snapshot.master_volume = AudioController.get_bus_linear(&"Master")
+	snapshot.music_volume = AudioController.get_bus_linear(AudioController.MUSIC_BUS)
+	snapshot.sfx_volume = AudioController.get_bus_linear(AudioController.SFX_BUS)
+	return snapshot
+
+
+## Kayıtlı ayarları uygular; null (yok/bozuk) → varsayılanlar kalır.
+func _apply_settings(snapshot: SettingsSnapshot) -> void:
+	if snapshot == null:
+		return
+	_accessibility.color_blind_mode = snapshot.color_blind_mode
+	_accessibility.reduce_motion = snapshot.reduce_motion
+	_accessibility.show_region_names = snapshot.show_region_names
+	TranslationServer.set_locale(snapshot.locale)
+	AudioController.set_bus_linear(&"Master", snapshot.master_volume)
+	AudioController.set_bus_linear(AudioController.MUSIC_BUS, snapshot.music_volume)
+	AudioController.set_bus_linear(AudioController.SFX_BUS, snapshot.sfx_volume)
+	if snapshot.fullscreen:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 
 
 ## Kayıt yüklemesi için içerikten taze bölüm haritası (ADR-0007 map_factory); yoksa null.

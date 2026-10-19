@@ -26,7 +26,9 @@ Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-revi
 > `.tmp`) so `SaveController` can validate each candidate and fall back — the store stays content-agnostic;
 > (2) `LoadResult.Code.CONTENT_MISSING` (C-35 amendment) is returned when `map_factory(chapter_id)` yields no
 > content. `chapters_completed` prefix validation is in; S2/S3 slots wait for the scene flow (C-40/C-62).
-> Settings persistence (step 4) is split into task C-65. A newer-version save is never overwritten
+> Settings persistence (step 4) — done in C-65: `SettingsSnapshot` + pure `SettingsSerializer` (own `schema_version`),
+> slot `settings` of the same store (`user://saves/settings.json`, not `user://settings.json`), written on every
+> settings change, applied by `RootContext` before any UI; invalid or newer file → defaults. A newer-version save is never overwritten
 > (`save_failed(&"newer_save_present")`).
 
 ## Date

@@ -7,6 +7,8 @@ extends RefCounted
 signal save_failed(reason: StringName)
 
 const CAMPAIGN_SLOT: StringName = &"campaign"
+## Ayarlar ayrı belge (`settings.json`), kendi şema sürümü (C-65).
+const SETTINGS_SLOT: StringName = &"settings"
 
 var _store: SaveStore = null
 var _map_factory: Callable = Callable()
@@ -52,6 +54,27 @@ func load_campaign() -> LoadResult:
 		if first_error == null:
 			first_error = result
 	return first_error if first_error != null else LoadResult.error(LoadResult.Code.MISSING, "kayıt yok")
+
+
+## Ayarlar değişince yazılır (ADR-0007). Başarıda true.
+func save_settings(snapshot: SettingsSnapshot) -> bool:
+	if _store == null or snapshot == null:
+		return false
+	if not _store.write(SETTINGS_SLOT, SettingsSerializer.to_text(snapshot)):
+		save_failed.emit(&"settings_write_failed")
+		return false
+	return true
+
+
+## İlk geçerli ayar belgesi (asıl → .bak → .tmp); yoksa null → varsayılanlar.
+func load_settings() -> SettingsSnapshot:
+	if _store == null:
+		return null
+	for text: String in _store.read_candidates(SETTINGS_SLOT):
+		var snapshot: SettingsSnapshot = SettingsSerializer.from_text(text)
+		if snapshot != null:
+			return snapshot
+	return null
 
 
 ## "Devam Et" yalnızca yüklenebilir bir kayıt varken etkin.

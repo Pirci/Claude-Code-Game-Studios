@@ -285,3 +285,6 @@
 ## Session Extract — C-62 ADR-0012 (2026-10-19 ~08:00)
 - ADR-0012 Accepted: pure SceneFlow (State enum incl. KOK_BORI_MARK_PAGES/PANEL, FlowStep actions), RootContext executes; NarrativeContext + ChapterSelectContext; modals in GameContext; CampaignDefinition/SceneDefinition.map_path replaces CHAPTER_MAP_PATH_FORMAT (C-40); S2 campaign + scene_entry slot; S3 at COMMIT. Traceability 34/36, gaps 0.
 - C-54 agent (narrative-director) resumed after turn limit.
+
+## Session Extract — C-65 ayar kalıcılığı (2026-10-19 ~08:05)
+- SettingsSnapshot/SettingsSerializer (features/save), SaveController.SETTINGS_SLOT + save/load_settings; settings_changed chain SettingsScreen → MenuContext → RootContext._on_settings_changed; RootContext._apply_settings before locale fonts. SaveSerializer.as_int now public. Tests 239/239.

@@ -57,7 +57,7 @@ static func from_text(text: String, map_factory: Callable) -> LoadResult:
 ## Toplam doğrulama: herhangi bir yapısal hata → hata kodu, `state = null` (kısmi uygulama yok).
 ## [param map_factory]: `(chapter_id: int) -> MapState` (içerikten taze harita; yoksa null).
 static func from_dict(data: Dictionary, map_factory: Callable) -> LoadResult:
-	var version: Variant = _as_int(data.get("schema_version"), 1, MAX_TURN)
+	var version: Variant = as_int(data.get("schema_version"), 1, MAX_TURN)
 	if version == null:
 		return LoadResult.error(LoadResult.Code.CORRUPT, "schema_version geçersiz")
 	if int(version) > SCHEMA_VERSION:
@@ -94,9 +94,9 @@ static func _map_to_dict(map_state: MapState) -> Variant:
 
 static func _game_from_dict(game: Dictionary, map_factory: Callable) -> LoadResult:
 	var state: GameState = GameState.new()
-	var chapter: Variant = _as_int(game.get("current_chapter"), 1, MAX_CHAPTER)
-	var gold: Variant = _as_int(game.get("gold"), 0, MAX_GOLD)
-	var ruh: Variant = _as_int(game.get("ruh"), 0, MAX_RUH)
+	var chapter: Variant = as_int(game.get("current_chapter"), 1, MAX_CHAPTER)
+	var gold: Variant = as_int(game.get("gold"), 0, MAX_GOLD)
+	var ruh: Variant = as_int(game.get("ruh"), 0, MAX_RUH)
 	if chapter == null or gold == null or ruh == null:
 		return LoadResult.error(LoadResult.Code.CORRUPT, "current_chapter / gold / ruh geçersiz")
 	state.current_chapter = int(chapter)
@@ -117,7 +117,7 @@ static func _game_from_dict(game: Dictionary, map_factory: Callable) -> LoadResu
 	var expected: int = 1
 	for item: Variant in completed as Array:
 		# Doğrusal kampanya: tamamlananlar {1…m} öneki olmalı (scene-flow F1, ADR-0007 C-35 eki).
-		var value: Variant = _as_int(item, 1, MAX_CHAPTER)
+		var value: Variant = as_int(item, 1, MAX_CHAPTER)
 		if value == null or int(value) != expected:
 			return LoadResult.error(LoadResult.Code.CORRUPT, "chapters_completed önek değil")
 		state.chapters_completed.append(int(value))
@@ -132,13 +132,13 @@ static func _game_from_dict(game: Dictionary, map_factory: Callable) -> LoadResu
 
 
 static func _attach_map(state: GameState, map: Dictionary, map_factory: Callable) -> LoadResult:
-	var chapter_id: Variant = _as_int(map.get("chapter_id"), 1, MAX_CHAPTER)
+	var chapter_id: Variant = as_int(map.get("chapter_id"), 1, MAX_CHAPTER)
 	if chapter_id == null or int(chapter_id) != state.current_chapter:
 		return LoadResult.error(LoadResult.Code.CORRUPT, "map.chapter_id current_chapter ile uyuşmuyor")
-	var turn: Variant = _as_int(map.get("current_turn"), 1, MAX_TURN)
+	var turn: Variant = as_int(map.get("current_turn"), 1, MAX_TURN)
 	if turn == null:
 		return LoadResult.error(LoadResult.Code.CORRUPT, "current_turn geçersiz")
-	var last_spread: Variant = _as_int(map.get("last_erlik_spread_turn"), 0, int(turn))
+	var last_spread: Variant = as_int(map.get("last_erlik_spread_turn"), 0, int(turn))
 	if last_spread == null:
 		return LoadResult.error(LoadResult.Code.CORRUPT, "last_erlik_spread_turn geçersiz")
 	if not map_factory.is_valid():
@@ -155,9 +155,9 @@ static func _attach_map(state: GameState, map: Dictionary, map_factory: Callable
 		var saved: Variant = (regions as Dictionary)[key]
 		if region == null or typeof(saved) != TYPE_DICTIONARY:
 			return LoadResult.error(LoadResult.Code.CORRUPT, "bilinmeyen bölge: %s" % key)
-		var owner: Variant = _as_int((saved as Dictionary).get("owner"), 0, OWNER_MAX)
-		var army: Variant = _as_int((saved as Dictionary).get("army_count"), 0, MAX_ARMY)
-		var corruption: Variant = _as_int((saved as Dictionary).get("corruption_level"), 0, MAX_CORRUPTION)
+		var owner: Variant = as_int((saved as Dictionary).get("owner"), 0, OWNER_MAX)
+		var army: Variant = as_int((saved as Dictionary).get("army_count"), 0, MAX_ARMY)
+		var corruption: Variant = as_int((saved as Dictionary).get("corruption_level"), 0, MAX_CORRUPTION)
 		if owner == null or army == null or corruption == null:
 			return LoadResult.error(LoadResult.Code.CORRUPT, "bölge alanı geçersiz: %s" % key)
 		# Sahipli bölge 0 orduyla kalmaz (army §3.3, W3).
@@ -175,7 +175,7 @@ static func _attach_map(state: GameState, map: Dictionary, map_factory: Callable
 
 
 ## JSON sayısı → int: sonlu, tam ve aralıkta olmalı; değilse null (`int(INF)` = INT64_MIN).
-static func _as_int(value: Variant, min_value: int, max_value: int) -> Variant:
+static func as_int(value: Variant, min_value: int, max_value: int) -> Variant:
 	if typeof(value) != TYPE_FLOAT and typeof(value) != TYPE_INT:
 		return null
 	var number: float = float(value)

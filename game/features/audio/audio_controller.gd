@@ -19,6 +19,20 @@ var _pool: Array[AudioStreamPlayer] = []
 var _next_player: int = 0
 
 
+## Bus sesi doğrusal 0–1 (ayarlar ekranı ve ayar kalıcılığı aynı ölçeği kullanır).
+static func get_bus_linear(bus_name: StringName) -> float:
+	var bus_index: int = AudioServer.get_bus_index(bus_name)
+	if bus_index < 0:
+		return 1.0
+	return db_to_linear(AudioServer.get_bus_volume_db(bus_index))
+
+
+static func set_bus_linear(bus_name: StringName, linear_value: float) -> void:
+	var bus_index: int = AudioServer.get_bus_index(bus_name)
+	if bus_index >= 0:
+		AudioServer.set_bus_volume_db(bus_index, linear_to_db(linear_value))
+
+
 func bind_services(library: SfxLibrary) -> void:
 	_library = library
 

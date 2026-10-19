@@ -3,6 +3,8 @@ extends Control
 
 
 signal back_requested
+## Herhangi bir ayar değişti — ebeveyn kalıcı kaydeder (C-65, ADR-0007).
+signal settings_changed
 
 
 const LOCALES: Array[Dictionary] = [
@@ -83,17 +85,17 @@ func _setup_audio_sliders() -> void:
 	_master_slider.min_value = 0.0
 	_master_slider.max_value = 1.0
 	_master_slider.step = 0.05
-	_master_slider.value = _get_bus_volume("Master")
+	_master_slider.value = AudioController.get_bus_linear(&"Master")
 
 	_music_slider.min_value = 0.0
 	_music_slider.max_value = 1.0
 	_music_slider.step = 0.05
-	_music_slider.value = _get_bus_volume("Music")
+	_music_slider.value = AudioController.get_bus_linear(AudioController.MUSIC_BUS)
 
 	_sfx_slider.min_value = 0.0
 	_sfx_slider.max_value = 1.0
 	_sfx_slider.step = 0.05
-	_sfx_slider.value = _get_bus_volume("SFX")
+	_sfx_slider.value = AudioController.get_bus_linear(AudioController.SFX_BUS)
 
 
 func _setup_fullscreen() -> void:
@@ -112,34 +114,25 @@ func _setup_accessibility() -> void:
 	_region_names_check.button_pressed = _accessibility.show_region_names
 
 
-func _get_bus_volume(bus_name: String) -> float:
-	var bus_index: int = AudioServer.get_bus_index(bus_name)
-	if bus_index < 0:
-		return 1.0
-	return db_to_linear(AudioServer.get_bus_volume_db(bus_index))
-
-
-func _set_bus_volume(bus_name: String, linear_value: float) -> void:
-	var bus_index: int = AudioServer.get_bus_index(bus_name)
-	if bus_index >= 0:
-		AudioServer.set_bus_volume_db(bus_index, linear_to_db(linear_value))
-
-
 func _on_language_selected(index: int) -> void:
 	var locale_code: String = LOCALES[index]["code"] as String
 	TranslationServer.set_locale(locale_code)
+	settings_changed.emit()
 
 
 func _on_master_changed(value: float) -> void:
-	_set_bus_volume("Master", value)
+	AudioController.set_bus_linear(&"Master", value)
+	settings_changed.emit()
 
 
 func _on_music_changed(value: float) -> void:
-	_set_bus_volume("Music", value)
+	AudioController.set_bus_linear(AudioController.MUSIC_BUS, value)
+	settings_changed.emit()
 
 
 func _on_sfx_changed(value: float) -> void:
-	_set_bus_volume("SFX", value)
+	AudioController.set_bus_linear(AudioController.SFX_BUS, value)
+	settings_changed.emit()
 
 
 func _on_fullscreen_toggled(enabled: bool) -> void:
@@ -147,18 +140,22 @@ func _on_fullscreen_toggled(enabled: bool) -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	settings_changed.emit()
 
 
 func _on_color_blind_toggled(enabled: bool) -> void:
 	_accessibility.color_blind_mode = enabled
+	settings_changed.emit()
 
 
 func _on_reduce_motion_toggled(enabled: bool) -> void:
 	_accessibility.reduce_motion = enabled
+	settings_changed.emit()
 
 
 func _on_region_names_toggled(enabled: bool) -> void:
 	_accessibility.show_region_names = enabled
+	settings_changed.emit()
 
 
 func _on_back_pressed() -> void:
