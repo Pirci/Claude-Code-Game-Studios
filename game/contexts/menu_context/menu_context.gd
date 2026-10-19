@@ -3,6 +3,8 @@ extends Control
 
 
 signal new_campaign_requested
+## Kayıt varken Yeni Sefer onaylandı (scene-flow T2 → T1).
+signal new_campaign_confirmed
 ## "Devam Et": RootContext kaydı yükler (ADR-0007, C-17 D4).
 signal continue_requested
 ## Ayarlar ekranında bir ayar değişti — RootContext kalıcı kaydeder (C-65).
@@ -21,6 +23,7 @@ const SETTINGS_SCENE: PackedScene = preload("res://ui/screens/settings_screen.ts
 var _settings_screen: SettingsScreen = null
 var _accessibility: AccessibilitySettings = null
 var _can_continue: bool = false
+var _modal_queue: ModalQueue = null
 
 
 ## Ayarlar ekranına aktarılacak erişilebilirlik tercihleri; [param can_continue] yüklenebilir
@@ -35,7 +38,20 @@ func _ready() -> void:
 	_new_campaign_button.pressed.connect(_on_new_campaign_pressed)
 	_settings_button.pressed.connect(_on_settings_pressed)
 	_quit_button.pressed.connect(_on_quit_pressed)
+	var overlay: CanvasLayer = CanvasLayer.new()
+	overlay.layer = 10
+	add_child(overlay)
+	_modal_queue = ModalQueue.new()
+	_modal_queue.name = "ModalQueue"
+	overlay.add_child(_modal_queue)
 	_apply_continue_state()
+
+
+## T2: kayıt varken Yeni Sefer onayı; Hayır kayda dokunmaz (scene-flow AC21).
+func show_confirm_new_campaign() -> void:
+	var dialog: ConfirmDialog = ConfirmDialog.new("CONFIRM_NEW_CAMPAIGN")
+	dialog.confirmed.connect(new_campaign_confirmed.emit)
+	_modal_queue.push(dialog)
 
 
 ## Yükleme başarısız olunca RootContext Devam Et'i kapatır.

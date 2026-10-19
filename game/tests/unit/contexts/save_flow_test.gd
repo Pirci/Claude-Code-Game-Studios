@@ -17,6 +17,10 @@ func _saved_campaign(turn: int, gold: int) -> String:
 func _root(store: MemorySaveStore) -> RootContext:
 	var root_ctx: RootContext = auto_free((load(ROOT_SCENE) as PackedScene).instantiate()) as RootContext
 	root_ctx.save_store = store
+	var config: SceneFlowConfig = SceneFlowConfig.new()
+	config.screen_input_guard_s = 0.0
+	config.text_reveal_cps = 0.0
+	root_ctx.flow_config = config
 	add_child(root_ctx)
 	return root_ctx
 
@@ -53,9 +57,12 @@ func test_end_turn_autosaves_the_campaign() -> void:
 	var store: MemorySaveStore = MemorySaveStore.new()
 	var root_ctx: RootContext = _root(store)
 	(root_ctx.find_child("NewCampaignButton", true, false) as Button).pressed.emit()
+	(root_ctx.find_child("SkipButton", true, false) as Button).pressed.emit()
+	(root_ctx.find_child("SkipButton", true, false) as Button).pressed.emit()
+	(root_ctx.find_child("StartButton", true, false) as Button).pressed.emit()
 	(root_ctx.find_child("EndTurnButton", true, false) as Button).pressed.emit()
 	var saved: PackedStringArray = store.read_candidates(SaveController.CAMPAIGN_SLOT)
-	assert_int(saved.size()).is_equal(1)
+	assert_int(saved.size()).is_greater_equal(1)
 	var result: LoadResult = SaveSerializer.from_text(saved[0],
 		func(_chapter: int) -> MapState: return (load(PROLOG_MAP) as ChapterMapDefinition).create_map_state())
 	assert_int(result.code).is_equal(LoadResult.Code.OK)

@@ -301,3 +301,7 @@
 - features/bozkurt: BoonDefinition, BoonCatalog (+data/boon_catalog.tres), BoonRules (static), SpiritConfig base_boon_cost/boon_cost_step/victory_pick_cap, SpiritRules.boon_cost/is_offer_pending/victory_pick_cap, SpiritController bind_boons/rebuild_boon_modifiers/next_boon_cost/is_offer_pending/current_offer/pick_boon + boon_picked signal.
 - UI: ui/modal_queue.gd (ModalQueue: push/is_open/current/drained), features/bozkurt/ui/boon_offer_modal.gd + boon_card.gd, theme DivinePanel; ui/hud/hud_model.gd + hud_presenter.gd; game_context.tscn SpiritLabel + KokBoriButton; GameContext _refresh_views/_render_hud/_push_boon_offer/_on_boon_picked/_on_kok_bori_pressed, dawn offer in _on_turn_ended, mandatory chain in _on_game_won.
 - Tests 277/277 (boon_offer_test, boon_flow_test, hud_presenter_test). New task C-67. NEXT: C-40 scene flow code (ADR-0012).
+
+## Session Extract — C-40 sahne akışı (2026-10-19 ~13:30 UTC)
+- Kullanıcı geldi: otomatik devam KAPALI, kararlar sorulacak, sayaç yok.
+- C-40 bitti: features/campaign (SceneFlow, CampaignRules, Campaign/Scene/NarrativePage, SceneFlowConfig, ui/objective_panel, victory_card, defeat_screen), contexts/narrative_context, contexts/chapter_select_context, ui/confirm_dialog + input_guard; RootContext flow executor; GameContext up-signals + modals; SaveController scene_entry/save_completed; run-tests.sh fade guard. Tests 300/300. Yeni görev C-68.

@@ -76,11 +76,13 @@ func test_pick_from_hud_keeps_button_for_next_offer() -> void:
 	assert_bool(_queue(game).is_open()).is_true()
 
 
-# AC16: zaferde sunum zorunlu (Sonra yok), seçimden sonra eşik sağlanıyorsa ikincisi hemen gelir.
+# spirit AC16 / scene-flow T16–T17: zaferde sunum zorunlu (Sonra yok), seçimden sonra eşik sağlanıyorsa ikincisi hemen gelir.
 func test_victory_offers_are_mandatory_and_chain() -> void:
 	var game: GameContext = _game(80)
 	_state(game).map_state.game_result = MapState.GameResult.WON
-	game.call("_on_game_won")
+	var finished: Array[bool] = [false]
+	game.boon_picks_finished.connect(func() -> void: finished[0] = true)
+	game.start_boon_picks()
 	var modal: Control = _queue(game).current()
 	assert_bool((modal.find_child("DeferButton", true, false) as Button).visible).is_false()
 	_press(_card(game, 0))
@@ -89,6 +91,8 @@ func test_victory_offers_are_mandatory_and_chain() -> void:
 	_press(_card(game, 0))
 	assert_bool(_queue(game).is_open()).is_false()
 	assert_int(_state(game).boons.size()).is_equal(2)
+	await await_idle_frame()
+	assert_bool(finished[0]).is_true()
 	assert_bool(_kok_bori(game).visible).is_false()
 
 

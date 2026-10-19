@@ -2,13 +2,20 @@ class_name GameContext
 extends Control
 
 
-signal return_to_menu_requested
+## Sahne akışına yukarı sinyaller (ADR-0012 karar 3) — geçişi RootContext'in SceneFlow'u verir.
+signal menu_requested
+signal leave_confirmed
+signal objective_dismissed
+signal scene_won
+signal scene_lost
+signal victory_acknowledged
+signal boon_picks_finished
+signal retry_requested
 
 
-## Bölüm haritası `chapter_id` ([member GameState.current_chapter]) ile bağlam başlarken
-## [code]load()[/code] edilir, preload edilmez (ADR-0001, TR-map-002). Yol kuralı C-62'de
-## (Scene flow & chapter loading ADR) kesinleşir.
-const CHAPTER_MAP_PATH_FORMAT: String = "res://features/grid/data/chapter_%d_map.tres"
+## Kampanya içeriği: sahne verilmezse buradan `current_chapter` sahnesi bulunur. Bölüm
+## haritası sahnenin `map_path`'inden bağlam başlarken `load()` edilir (ADR-0001, ADR-0012).
+const CAMPAIGN_PATH: String = "res://features/campaign/data/campaign.tres"
 const COMBAT_CONFIG: CombatConfig = preload("res://features/combat/data/combat_config.tres")
 const SPIRIT_CONFIG: SpiritConfig = preload("res://features/bozkurt/data/spirit_config.tres")
 const ECONOMY_CONFIG: EconomyConfig = preload("res://features/resources/data/economy_config.tres")
@@ -28,6 +35,8 @@ var _game_state: GameState
 var _accessibility: AccessibilitySettings
 var _audio: AudioController = null
 var _save: SaveController = null
+var _scene: SceneDefinition = null
+var _flow_config: SceneFlowConfig = SceneFlowConfig.new()
 var _map_def: ChapterMapDefinition
 var _map_controller: MapController
 var _army_controller: ArmyController
@@ -46,17 +55,23 @@ var _send_from_id: StringName = &""
 
 
 ## [param audio] isteğe bağlıdır (null → sessiz; testler ve sessiz başlatma için).
-## [param save] verilirse her tur sonunda kampanya otomatik kaydedilir (ADR-0007).
+## [param save] verilirse her tur sonunda kampanya otomatik kaydedilir (ADR-0007, S1).
+## [param scene] verilmezse kampanyadan `current_chapter` sahnesi kullanılır.
 func bind_services(
 	game_state: GameState,
 	accessibility: AccessibilitySettings,
 	audio: AudioController = null,
 	save: SaveController = null,
+	scene: SceneDefinition = null,
+	flow_config: SceneFlowConfig = null,
 ) -> void:
 	_game_state = game_state
 	_accessibility = accessibility
 	_audio = audio
 	_save = save
+	_scene = scene
+	if flow_config != null:
+		_flow_config = flow_config
 
 
 func _ready() -> void:
@@ -70,12 +85,14 @@ func _ready() -> void:
 
 
 func _setup_controllers() -> void:
-	var map_path: String = CHAPTER_MAP_PATH_FORMAT % _game_state.current_chapter
-	var map_def: ChapterMapDefinition = load(map_path) as ChapterMapDefinition
-	assert(map_def != null, "Bölüm haritası yüklenemedi: %s" % map_path)
+	if _scene == null:
+		_scene = (load(CAMPAIGN_PATH) as CampaignDefinition).scene(_game_state.current_chapter)
+	assert(_scene != null, "Sahne tanımı yok: %d" % _game_state.current_chapter)
+	var map_def: ChapterMapDefinition = _scene.load_map_definition()
+	assert(map_def != null, "Bölüm haritası yüklenemedi: %s" % _scene.map_path)
 	_map_def = map_def
-	# Yüklenen kayıt bu bölümün haritasını taşıyorsa onunla devam edilir (ADR-0007);
-	# yoksa bölüm içerikten başlar.
+	# Harita normalde sahne akışında kurulur (ADR-0012 T11/T22) ya da kayıttan gelir;
+	# yoksa (testler, eski çağrılar) bölüm içerikten başlar.
 	var loaded: MapState = _game_state.map_state
 	if loaded == null or loaded.chapter_id != map_def.chapter_id:
 		_game_state.map_state = map_def.create_map_state()
@@ -176,7 +193,7 @@ func _render_hud(model: HudModel) -> void:
 		MapState.GameResult.LOST:
 			_chapter_label.text = tr("DEFEAT")
 		_:
-			_chapter_label.text = tr("CHAPTER_1_TITLE")
+			_chapter_label.text = tr(String(_scene.title_key))
 	_gold_label.text = "%s: %s" % [tr("GOLD"), NumberFormatter.format_int(model.gold)]
 	if ongoing:
 		_gold_label.text += " " + tr("INCOME_PER_TURN") % NumberFormatter.format_int(model.income_forecast)
@@ -310,16 +327,73 @@ func _on_army_moved(
 	_refresh_views()
 
 
-## Zafer: bekleyen sunumlar outro'dan önce sırayla ve zorunlu (spirit §3.4, ADR-0011 C-35
-## ek kararı); outro bağlantısı C-40'ta (ModalQueue.drained).
+## Zafer/yenilgi sahne akışına bildirilir (T13/T14); sonuç kartı ve yenilgi ekranını
+## RootContext ister ([method show_victory] / [method show_defeat]).
 func _on_game_won() -> void:
 	_refresh_views()
-	_victory_picks = 0
-	_push_boon_offer(true)
+	scene_won.emit()
 
 
 func _on_game_lost() -> void:
 	_refresh_views()
+	scene_lost.emit()
+
+
+# --- Sahne akışı modalları (ADR-0012 karar 3; RootContext çağırır) ---
+
+## `KOK_BORI_MARK` B: Kök Böri sözü + kazanma koşulundan hedef metni; [Başla] → S2.
+func show_objective() -> void:
+	var panel: ObjectivePanel = ObjectivePanel.new(_scene.kok_bori_line_key,
+		_map_def.win_condition.description_key if _map_def.win_condition != null else &"",
+		_flow_config.screen_input_guard_s)
+	panel.dismissed.connect(objective_dismissed.emit)
+	_modal_queue.push(panel)
+
+
+## T15: harita sırasında Ana Menü onayı (kayıt yazılmaz).
+func show_leave_confirm() -> void:
+	var dialog: ConfirmDialog = ConfirmDialog.new("CONFIRM_LEAVE_SCENE")
+	dialog.confirmed.connect(leave_confirmed.emit)
+	_modal_queue.push(dialog)
+
+
+## `VICTORY_BEAT` sonuç kartı: tur, tutulan bölge / toplam, sahnede kazanılan Ruh (F3).
+func show_victory(ruh_gained: int) -> void:
+	var map_state: MapState = _game_state.map_state
+	var card: VictoryCard = VictoryCard.new(map_state.current_turn, map_state.get_player_regions().size(),
+		map_state.regions.size(), ruh_gained, _flow_config.screen_input_guard_s)
+	card.acknowledged.connect(victory_acknowledged.emit)
+	_modal_queue.push(card)
+
+
+## `BOON_PICKS` (T16/T17): zorunlu lütuf zinciri; bitince `boon_picks_finished`.
+func start_boon_picks() -> void:
+	_victory_picks = 0
+	if not _push_boon_offer(true):
+		boon_picks_finished.emit.call_deferred()
+
+
+## Sahne sonunda zorunlu seçim bekliyor mu (F2 `k > 0`)?
+func has_pending_offer() -> bool:
+	return _spirit.is_offer_pending()
+
+
+## "Devam Et" yüklemesi tur başı sayılır (scene-flow §3.4): bekleyen sunum bir kez açılır.
+func offer_pending_boon() -> void:
+	_push_boon_offer(false)
+
+
+## `DEFEAT`: neden metni, Erlik kaybında `erlik_power / eşik`; [Yeniden Dene] / [Ana Menü].
+func show_defeat() -> void:
+	var map_state: MapState = _game_state.map_state
+	var win: WinCondition = _map_def.win_condition
+	var erlik: bool = map_state.loss_reason == MapState.LossReason.ERLIK and win != null
+	var screen: DefeatScreen = DefeatScreen.new(CampaignRules.defeat_text_key(_scene, map_state.loss_reason),
+		WinCondition.erlik_power(map_state) if erlik else 0, win.erlik_loss_threshold if erlik else 0,
+		_flow_config.screen_input_guard_s)
+	screen.retry_requested.connect(retry_requested.emit)
+	screen.menu_requested.connect(menu_requested.emit)
+	_modal_queue.push(screen)
 
 
 ## HUD Kök Böri düğmesi: oyuncu kendi turunda bekleyen sunumu istediği an açar.
@@ -330,18 +404,20 @@ func _on_kok_bori_pressed() -> void:
 
 ## Sunum bekliyorsa (ve başka modal yoksa) lütuf modalını sıraya koyar. [param mandatory]
 ## sahne sonu dizisidir: ertelenemez, `victory_pick_cap` ile sınırlıdır.
-func _push_boon_offer(mandatory: bool) -> void:
+## Sıraya girdiyse true.
+func _push_boon_offer(mandatory: bool) -> bool:
 	if _modal_queue.is_open() and not mandatory:
-		return
+		return false
 	if mandatory and _victory_picks >= _spirit_rules.victory_pick_cap():
-		return
+		return false
 	var offer: Array[BoonDefinition] = _spirit.current_offer(_game_state.map_state.chapter_id)
 	if offer.is_empty():
-		return
+		return false
 	var modal: BoonOfferModal = BoonOfferModal.new()
 	modal.show_offer(offer, _game_state.ruh, _spirit.next_boon_cost(), mandatory)
 	modal.boon_picked.connect(_on_boon_picked.bind(mandatory))
 	_modal_queue.push(modal)
+	return true
 
 
 ## Seçim SpiritController'da uygulanır (Ruh düşer, etki hemen başlar). Sahne sonunda koşul
@@ -353,8 +429,11 @@ func _on_boon_picked(boon_id: StringName, mandatory: bool) -> void:
 	_refresh_views()
 	if mandatory:
 		_victory_picks += 1
-		_push_boon_offer(true)
+		if not _push_boon_offer(true):
+			# Modal `closed`'ı yayıp kuyruktan çıktıktan sonra akış ilerlesin (bağlam değişimi).
+			boon_picks_finished.emit.call_deferred()
 
 
+## T15: onay sahne akışından gelir ([method show_leave_confirm]).
 func _on_menu_pressed() -> void:
-	return_to_menu_requested.emit()
+	menu_requested.emit()

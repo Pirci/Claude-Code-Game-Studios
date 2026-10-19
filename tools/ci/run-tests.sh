@@ -86,6 +86,16 @@ if [[ -n "$SAVE_HITS" ]]; then
   echo "$SAVE_HITS" >&2
   SAVE_EXIT=1
 fi
+# scene-flow AC27 / art bible §7: anlatı ve sahne akışı ekranlarında alfa fade yok
+# (modulate / self_modulate tween'i ya da alfa ataması).
+FADE_EXIT=0
+FADE_HITS="$(grep -rnE '(self_)?modulate' --include='*.gd' features/campaign contexts/narrative_context \
+  contexts/chapter_select_context | grep -vE '^[^:]+:[0-9]+:[[:space:]]*#' || true)"
+if [[ -n "$FADE_HITS" ]]; then
+  echo "HATA: sahne akışı ekranlarında modulate kullanımı (alfa fade yasak, scene-flow AC27):" >&2
+  echo "$FADE_HITS" >&2
+  FADE_EXIT=1
+fi
 set -e
 
 if [[ $TEST_EXIT -ne 0 ]]; then
@@ -95,6 +105,9 @@ fi
 if [[ $PALETTE_EXIT -ne 0 ]]; then
   echo "HATA: palet doğrulama başarısız (exit $PALETTE_EXIT)" >&2
   exit "$PALETTE_EXIT"
+fi
+if [[ $FADE_EXIT -ne 0 ]]; then
+  exit "$FADE_EXIT"
 fi
 if [[ $MODIFIER_EXIT -ne 0 ]]; then
   exit "$MODIFIER_EXIT"

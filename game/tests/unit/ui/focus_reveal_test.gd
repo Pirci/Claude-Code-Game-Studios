@@ -84,7 +84,7 @@ func test_root_context_accept_reveals_instead_of_pressing() -> void:
 	root_ctx.save_store = MemorySaveStore.new()
 	add_child(root_ctx)
 	var started: Array[bool] = [false]
-	root_ctx.context_changed.connect(func(name: StringName) -> void: started[0] = started[0] or name == &"game")
+	root_ctx.context_changed.connect(func(name: StringName) -> void: started[0] = started[0] or name == &"narrative")
 	var new_campaign: Control = root_ctx.find_child("NewCampaignButton", true, false) as Control
 	# Bas + bırak: buton bırakmada tetiklenir; ilk basış yalnızca odağı gösterir.
 	var release: InputEventAction = _action(&"ui_accept")

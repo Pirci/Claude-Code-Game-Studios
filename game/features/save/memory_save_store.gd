@@ -5,6 +5,8 @@ extends SaveStore
 
 ## true iken her yazma başarısız olur (disk dolu benzetimi).
 var fail_writes: bool = false
+## Başarılı yazma sayısı (sahne akışı testleri: yenilgide yazım olmamalı).
+var write_count: int = 0
 var _texts: Dictionary[StringName, PackedStringArray] = {}
 
 
@@ -17,6 +19,7 @@ func write(slot: StringName, text: String) -> bool:
 	if history.size() > 2:
 		history.resize(2)
 	_texts[slot] = history
+	write_count += 1
 	return true
 
 

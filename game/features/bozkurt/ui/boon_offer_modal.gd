@@ -17,6 +17,7 @@ var _cards: Array[BoonCard] = []
 var _spirit_label: Label
 var _cost_label: Label
 var _cards_row: HBoxContainer
+var _carries_label: Label
 var _defer_button: Button
 
 
@@ -53,6 +54,17 @@ func _init() -> void:
 	_cost_label.name = "CostLabel"
 	stats.add_child(_cost_label)
 
+	# Sahne sonu altyazısı (scene-flow §3.6): lütuf sonraki sahnelere taşınır.
+	_carries_label = Label.new()
+	_carries_label.name = "CarriesOnLabel"
+	_carries_label.text = tr("BOON_CARRIES_ON")
+	_carries_label.theme_type_variation = &"SecondaryLabel"
+	_carries_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_carries_label.custom_minimum_size = Vector2(LINE_WIDTH, 0)
+	_carries_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_carries_label.hide()
+	vbox.add_child(_carries_label)
+
 	_cards_row = HBoxContainer.new()
 	_cards_row.name = "Cards"
 	_cards_row.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -80,6 +92,7 @@ func show_offer(boons: Array[BoonDefinition], ruh: int, cost: int, mandatory: bo
 	for i: int in boons.size():
 		_cards.append(_card(boons[i], i))
 	_defer_button.visible = not mandatory
+	_carries_label.visible = mandatory
 
 
 ## [ModalQueue] açılışta odağı buraya verir: ilk kart.
