@@ -281,3 +281,7 @@
 - RootContext owns SaveController (public `save_store` injectable for tests), _on_continue, _create_map_state; MenuContext ContinueButton (primary when available); GameContext bind_services(..., save) + autosave in _on_turn_ended + keeps loaded map.
 - run-tests.sh: runs tests/unit + tests/integration; grep guard for loaders in features/save (comments excluded). Tests 234/234.
 - New task C-65 (settings persistence). ADR-0007 checklist 8/10.
+
+## Session Extract — C-62 ADR-0012 (2026-10-19 ~08:00)
+- ADR-0012 Accepted: pure SceneFlow (State enum incl. KOK_BORI_MARK_PAGES/PANEL, FlowStep actions), RootContext executes; NarrativeContext + ChapterSelectContext; modals in GameContext; CampaignDefinition/SceneDefinition.map_path replaces CHAPTER_MAP_PATH_FORMAT (C-40); S2 campaign + scene_entry slot; S3 at COMMIT. Traceability 34/36, gaps 0.
+- C-54 agent (narrative-director) resumed after turn limit.
