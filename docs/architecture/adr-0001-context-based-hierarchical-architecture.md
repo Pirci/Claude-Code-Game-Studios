@@ -89,7 +89,12 @@ Use a **persistent root context with swappable child contexts**.
 
 - `RootContext extends Node` is the Godot main scene. It:
   - owns the long-lived `GameState` instance,
-  - preloads context scenes as `const` `PackedScene`s,
+  - loads context scenes **at transition time** with `load()` (path constants, not
+    `const preload`) — the root context never leaves the tree, so a `preload` would keep
+    the whole game-context dependency chain resident from startup, which the project's
+    forbidden pattern "Kalıcı node'lardan büyük sahne preload'u" rules out. If the game
+    context's load time grows, switch to `ResourceLoader.load_threaded_request()` behind a
+    loading screen (amendment 2026-10-19, C-17; current code still preloads → C-57),
   - instantiates exactly one context at a time via
     `_switch_to(context_name: StringName)`, calling `queue_free()` on the outgoing
     context and `instantiate()` on the incoming one,
@@ -108,7 +113,7 @@ Use a **persistent root context with swappable child contexts**.
 
 ```
 RootContext (Node, main scene)          ← owns GameState, orchestrates transitions
-│  const MENU_SCENE / GAME_SCENE (preload)
+│  const MENU_SCENE_PATH / GAME_SCENE_PATH (load() on transition)
 │  var _game_state: GameState
 │  signal context_changed(context_name)
 │
@@ -222,7 +227,7 @@ signal quit_requested
 |--------|--------|---------------|--------|
 | CPU (frame time) | n/a | Negligible steady-state; brief spike on context swap (free + instantiate) | 16.6 ms/frame (60 FPS) |
 | Memory | n/a | Only one context resident at a time (menu OR game) | 512 MB ceiling |
-| Load Time | n/a | Context instantiation on transition; scenes preloaded as `const` | < 1s per transition |
+| Load Time | n/a | Context `load()` + instantiation on transition (cached after first load) | < 1s per transition |
 
 ## Migration Plan
 

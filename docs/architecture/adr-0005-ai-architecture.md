@@ -101,6 +101,14 @@ each seeing the result of the previous move. With `enemy_actions_per_turn > 1`,
 `EnemyAIController.decide()` must plan against a scratch copy of the map (apply each
 chosen intent to the copy before choosing the next) so that its output equals the
 sequential rule. At the MVP value 1 batch and sequential planning are identical.
+`MapState` is `RefCounted` with no `duplicate()` (ADR-0004 withdrew `duplicate_deep()`),
+so the scratch copy needs an explicit copy routine (e.g. a static `MapStateCopier.copy()`
+in `features/ai/`, regions + owners + armies only) — add it only when the budget exceeds 1.
+
+**Naming outside the defining script (verified 4.7.1, C-17):** inner classes resolve
+unqualified only inside their own script. Callers write `EnemyAIController.MoveIntent`,
+`Array[EnemyAIController.MoveIntent]` and `ErlikSpreadController.SpreadDecision` (the
+existing `CombatResolver.CombatResult` is the working precedent).
 
 ### Key Interfaces
 ```gdscript

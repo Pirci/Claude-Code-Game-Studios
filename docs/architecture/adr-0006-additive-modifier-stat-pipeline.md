@@ -22,7 +22,7 @@ Proposed
 | **Knowledge Risk** | LOW — plain GDScript data classes and pure functions; no rendering/physics/post-cutoff APIs |
 | **References Consulted** | `docs/engine-reference/godot/VERSION.md`, `docs/engine-reference/godot/current-best-practices.md` |
 | **Post-Cutoff APIs Used** | None. (`duplicate_deep()` 4.5+ is relevant only to the future save/load ADR) |
-| **Verification Required** | Typed `Array[StatModifier]` invariance in 4.7 (callers must pass an exactly typed array; `.filter()` results are untyped); `ModifierSource` `.tres` load path |
+| **Verification Required** | ✅ Verified on 4.7.1 (C-17, 2026-10-19): typed arrays are invariant at **runtime** (an untyped array passed to `Array[StatModifier]` errors at call time, not parse time); `.filter()` on a **typed** array returns a typed array, on an untyped array an untyped one; the cast syntax `Array[StatModifier](x)` does not compile — convert with `typed.assign(src)`. Remaining: `ModifierSource` `.tres` load path |
 
 ## ADR Dependencies
 
@@ -142,7 +142,8 @@ var stacks: int = 1
 class_name StatResolver extends RefCounted
 ## Pure: no state, no signals.
 ## `modifiers` must be an exactly typed Array[StatModifier] (typed arrays are invariant;
-## an untyped literal or .filter() result is not accepted).
+## an untyped literal or a .filter() result of an UNTYPED array is not accepted — runtime error;
+## convert with `var t: Array[StatModifier] = []; t.assign(src)`).
 static func resolve(stat_id: StringName, base: float, modifiers: Array[StatModifier]) -> float
 static func flat_sum(stat_id: StringName, modifiers: Array[StatModifier]) -> float
 static func percent_sum(stat_id: StringName, modifiers: Array[StatModifier]) -> float
@@ -239,7 +240,7 @@ func remove_source(source_id: StringName) -> void
 
 - [ ] Unit test: same source added twice → one record, `stacks == 2`.
 - [ ] Unit test: boon + council on the same stat sum once each; duplicate effect under another source in the same `exclusive_group` is rejected.
-- [ ] Unit test: `resolve()` accepts a typed array built from a `.filter()` result via `Array[StatModifier]` conversion.
+- [ ] Unit test: `resolve()` accepts the `.filter()` result of a typed `Array[StatModifier]` directly, and an untyped source after `assign()` conversion.
 - [ ] Unit test: `resolve(base=5, flat=+1, pct=+0.2)` → `7.2`, and caller floor gives resource AC `floor(6 × 1.2) = 7`.
 - [ ] No consumer iterates `GameState.modifiers` outside `features/modifiers/`.
 - [ ] Unit test: a source with `max_stacks = 3` accepts 3 adds and rejects the 4th.

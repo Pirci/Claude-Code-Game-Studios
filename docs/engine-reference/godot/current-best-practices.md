@@ -19,9 +19,10 @@ This supplements (not replaces) the agent's built-in knowledge.
   @abstract
   class_name BaseEnemy extends CharacterBody3D
 
-  @abstract
-  func get_attack_pattern() -> Array[Attack]:
-      pass  # Subclasses MUST override
+  @abstract func get_attack_pattern() -> Array[Attack]
+  # Verified 4.7.1 (2026-10-19): an abstract function must NOT have a body
+  # ("An abstract function cannot have a body"); a subclass that omits it fails to
+  # compile; `BaseEnemy.new()` is a parse error.
   ```
 
 - **Script backtracing**: Detailed call stacks available even in Release builds

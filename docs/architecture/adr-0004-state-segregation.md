@@ -32,8 +32,8 @@ keeps functional code (controllers) cleanly separated from data.
 | **Domain** | Core / Scripting |
 | **Knowledge Risk** | LOW — plain data classes; save/load path (Resource) is a documented future step |
 | **References Consulted** | `docs/engine-reference/godot/VERSION.md`, `docs/engine-reference/godot/current-best-practices.md` |
-| **Post-Cutoff APIs Used** | None currently. `duplicate_deep()` (4.5+) is relevant to the future save/load migration |
-| **Verification Required** | When save/load is implemented, verify `Resource` serialization and nested-copy semantics |
+| **Post-Cutoff APIs Used** | None. (`duplicate_deep()` was relevant only to the withdrawn `Resource` migration — superseded by ADR-0007.) |
+| **Verification Required** | None — state stays `RefCounted`; copies (e.g. ADR-0005 scratch planning) use explicit copy routines |
 
 ## ADR Dependencies
 
@@ -42,7 +42,7 @@ keeps functional code (controllers) cleanly separated from data.
 | **Depends On** | ADR-0001 (RootContext owns the `GameState` lifecycle) |
 | **Enables** | Save/load system (future); deterministic, testable state |
 | **Blocks** | None |
-| **Ordering Note** | A future save/load ADR will revisit the base-class choice (RefCounted → Resource). |
+| **Ordering Note** | Resolved by ADR-0007: state stays `RefCounted`, persistence via JSON `SaveSerializer`. Sections below that describe the `Resource` migration are kept as history and marked superseded. |
 
 ## Context
 
@@ -91,10 +91,9 @@ Keep **long-term state in data-only objects, logic in controllers**.
 - The state hierarchy is rooted at `GameState` (which references `MapState`, which
   references `RegionData`), giving a single traversable tree for debugging and
   (future) serialization.
-- **Current base class: `RefCounted`.** This is sufficient while there is no
-  persistence requirement. **When save/load is implemented, migrate the state
-  classes to `Resource`** (see Migration Plan) to gain built-in serialization and
-  `duplicate_deep()` for independent save slots.
+- **Base class: `RefCounted`** (final — ADR-0007). ~~When save/load is implemented,
+  migrate the state classes to `Resource`~~ — *superseded by ADR-0007: persistence is a
+  pure JSON `SaveSerializer`; state stays `RefCounted`.*
 
 ### Architecture
 
@@ -128,9 +127,9 @@ func get_total_bozkurt_bonus() -> float
 - Never add mutation/business logic to a state class; if a computed value is needed,
   a pure getter is acceptable, a side-effecting method is not.
 - Never store long-term state on a node or controller — route it into a state object.
-- When adding save/load: change `extends RefCounted` → `extends Resource`, annotate
-  persisted fields with `@export`, and use `ResourceSaver.save(state, "user://…")`
-  plus `duplicate_deep()` (Godot 4.5+) for independent copies of nested state.
+- ~~When adding save/load: change `extends RefCounted` → `extends Resource` …~~ —
+  *superseded by ADR-0007* (`SaveSerializer.to_dict/from_dict`; never `ResourceSaver` /
+  `ResourceLoader` on user files).
 
 ## Alternatives Considered
 
