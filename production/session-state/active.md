@@ -187,3 +187,8 @@
 - Godot 4.7.1: `grab_focus(hide_focus)`, `has_focus(ignore_hidden_focus)`; project setting `show_focus_state_on_pointer_event` left default.
 - Tests 131/131 (focus_reveal_test 8). Xvfb: no frame on open; first ↓ shows frame on New Campaign; second ↓ → Settings.
 - NEXT: C-26 (PER_TURN key, 11 languages, no to_lower/to_upper on player-visible text).
+
+## Session Extract — C-26 PER_TURN çeviri key'i (2026-10-19)
+- translations.csv: `PER_TURN` = "%s / turn" (tr tur, de Runde, fr tour, es/pt turno, zh 回合, ja ターン, ko 턴, ru ход, ar دور). RegionInfoPanel: `tr("PER_TURN") % format_int(gold)`; GoldLabel named for tests.
+- grep: no to_lower/to_upper/capitalize in game code. Tests 134/134 (per_turn_label_test 3). de: "Gold: 2 / Runde"; ar renders "ذهب: 2 / دور".
+- NEXT: C-27 (GitHub Actions CI, headless Godot 4.7 + run-tests.sh).

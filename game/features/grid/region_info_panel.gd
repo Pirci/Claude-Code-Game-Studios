@@ -41,6 +41,7 @@ func _ready() -> void:
 	vbox.add_child(_army_label)
 
 	_gold_label = Label.new()
+	_gold_label.name = "GoldLabel"
 	vbox.add_child(_gold_label)
 
 	_send_button = Button.new()
@@ -67,7 +68,8 @@ func show_region(data: RegionData) -> void:
 	_owner_label.text = owner_text
 
 	_army_label.text = "%s: %s" % [tr("ARMY"), NumberFormatter.format_int(data.army_count)]
-	_gold_label.text = "%s: %s / %s" % [tr("GOLD"), NumberFormatter.format_int(data.gold_per_turn), tr("TURN").to_lower()]
+	# "/ tur" birimi ayrı key: dile göre büyük harf ve sıra çeviride (bible: programatik harf dönüşümü yok).
+	_gold_label.text = "%s: %s" % [tr("GOLD"), tr("PER_TURN") % NumberFormatter.format_int(data.gold_per_turn)]
 
 	_send_button.visible = data.owner == RegionData.Owner.PLAYER and data.army_count > 1
 	show()
