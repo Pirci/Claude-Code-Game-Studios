@@ -7,6 +7,9 @@ extends RefCounted
 signal save_failed(reason: StringName)
 
 const CAMPAIGN_SLOT: StringName = &"campaign"
+## Sahne girişi anlık görüntüsü (scene-flow S2, ADR-0012 karar 5): `campaign` ile aynı belge
+## biçimi; her sahne girişinde üzerine yazılır, Yeniden Dene buradan okur.
+const SCENE_ENTRY_SLOT: StringName = &"scene_entry"
 ## Ayarlar ayrı belge (`settings.json`), kendi şema sürümü (C-65).
 const SETTINGS_SLOT: StringName = &"settings"
 
@@ -31,20 +34,52 @@ func save_campaign(game_state: GameState) -> bool:
 	if _newer_save_present:
 		save_failed.emit(&"newer_save_present")
 		return false
-	var saved_at: String = Time.get_datetime_string_from_system(true) + "Z"
-	if not _store.write(CAMPAIGN_SLOT, SaveSerializer.to_text(game_state, saved_at)):
+	if not _store.write(CAMPAIGN_SLOT, SaveSerializer.to_text(game_state, _timestamp())):
 		save_failed.emit(&"write_failed")
 		return false
 	return true
 
 
+## S2 (scene-flow §3.4): 1. tur başı durumu `campaign` **ve** `scene_entry` yuvalarına yazar.
+## İkisi de yazılırsa true; `scene_entry` yazılamazsa Yeniden Dene bellekteki kopyayı kullanır.
+func save_scene_entry(game_state: GameState) -> bool:
+	if not save_campaign(game_state):
+		return false
+	if not _store.write(SCENE_ENTRY_SLOT, SaveSerializer.to_text(game_state, _timestamp())):
+		save_failed.emit(&"scene_entry_write_failed")
+		return false
+	return true
+
+
+## S3 (T18 COMMIT sonrası): tamamlanmış sahne, `map = null` — oyun-sonu kilidinden bağımsız.
+func save_completed(game_state: GameState) -> bool:
+	if _store == null or game_state == null or game_state.map_state != null:
+		return false
+	if _newer_save_present:
+		save_failed.emit(&"newer_save_present")
+		return false
+	if not _store.write(CAMPAIGN_SLOT, SaveSerializer.to_text(game_state, _timestamp())):
+		save_failed.emit(&"write_failed")
+		return false
+	return true
+
+
+## Yeniden Dene için sahne girişi kaydı (asıl → .bak → .tmp).
+func load_scene_entry() -> LoadResult:
+	return _load_slot(SCENE_ENTRY_SLOT)
+
+
 ## Adayları sırayla dener (asıl → .bak → .tmp); ilk geçerli kayıt döner. Daha yeni sürüm
 ## görülürse yedeğe düşülmez (sonraki otomatik kayıt onu ezmesin diye).
 func load_campaign() -> LoadResult:
+	return _load_slot(CAMPAIGN_SLOT)
+
+
+func _load_slot(slot: StringName) -> LoadResult:
 	if _store == null:
 		return LoadResult.error(LoadResult.Code.MISSING, "depo yok")
 	var first_error: LoadResult = null
-	for text: String in _store.read_candidates(CAMPAIGN_SLOT):
+	for text: String in _store.read_candidates(slot):
 		var result: LoadResult = SaveSerializer.from_text(text, _map_factory)
 		if result.code == LoadResult.Code.OK:
 			return result
@@ -80,3 +115,7 @@ func load_settings() -> SettingsSnapshot:
 ## "Devam Et" yalnızca yüklenebilir bir kayıt varken etkin.
 func has_campaign() -> bool:
 	return load_campaign().code == LoadResult.Code.OK
+
+
+static func _timestamp() -> String:
+	return Time.get_datetime_string_from_system(true) + "Z"

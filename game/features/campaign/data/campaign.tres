@@ -1,0 +1,57 @@
+[gd_resource type="Resource" script_class="CampaignDefinition" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://features/campaign/campaign_definition.gd" id="1_camp"]
+[ext_resource type="Script" path="res://features/campaign/scene_definition.gd" id="2_scene"]
+[ext_resource type="Script" path="res://features/campaign/narrative_page.gd" id="3_page"]
+
+[sub_resource type="Resource" id="prolog_intro_1"]
+script = ExtResource("3_page")
+illustration_path = "res://assets/art/illustrations/ill_prolog_intro.png"
+text_key = &"CHAPTER_1_INTRO_1"
+title_key = &"CHAPTER_1_TITLE"
+
+[sub_resource type="Resource" id="prolog_intro_2"]
+script = ExtResource("3_page")
+illustration_path = "res://assets/art/illustrations/ill_prolog_tribes.png"
+text_key = &"CHAPTER_1_INTRO_2"
+
+[sub_resource type="Resource" id="prolog_genesis"]
+script = ExtResource("3_page")
+illustration_path = "res://assets/art/illustrations/ill_prolog_genesis.png"
+text_key = &"CHAPTER_1_KOKBORI_1"
+
+[sub_resource type="Resource" id="prolog_outro_1"]
+script = ExtResource("3_page")
+illustration_path = "res://assets/art/illustrations/ill_prolog_beast_purified.png"
+text_key = &"CHAPTER_1_OUTRO_1"
+
+[sub_resource type="Resource" id="prolog_outro_2"]
+script = ExtResource("3_page")
+illustration_path = "res://assets/art/illustrations/ill_prolog_kagan.png"
+text_key = &"CHAPTER_1_OUTRO_2"
+title_key = &"CHAPTER_1_KAGAN_TITLE"
+
+[sub_resource type="Resource" id="demo_end_1"]
+script = ExtResource("3_page")
+illustration_path = "res://assets/art/illustrations/ill_prolog_kagan.png"
+text_key = &"CAMPAIGN_END_DEMO_1"
+title_key = &"CAMPAIGN_END_DEMO_TITLE"
+
+[sub_resource type="Resource" id="prolog"]
+script = ExtResource("2_scene")
+chapter_id = 1
+title_key = &"CHAPTER_1_TITLE"
+map_path = "res://features/grid/data/chapter_1_map.tres"
+intro_pages = Array[ExtResource("3_page")]([SubResource("prolog_intro_1"), SubResource("prolog_intro_2")])
+kok_bori_pose = 1
+kok_bori_pages = Array[ExtResource("3_page")]([SubResource("prolog_genesis")])
+kok_bori_line_key = &"CHAPTER_1_KOKBORI_LINE"
+objective_region_ids = Array[StringName]([])
+outro_pages = Array[ExtResource("3_page")]([SubResource("prolog_outro_1"), SubResource("prolog_outro_2")])
+teaser_key = &""
+defeat_text_key = &""
+
+[resource]
+script = ExtResource("1_camp")
+scenes = Array[ExtResource("2_scene")]([SubResource("prolog")])
+end_pages = Array[ExtResource("3_page")]([SubResource("demo_end_1")])
