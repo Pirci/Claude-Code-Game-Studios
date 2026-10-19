@@ -198,3 +198,9 @@
 - Local proof: fresh clone (no .godot) → 134/134 + palette, exit 0; intentional failing test → run-tests.sh exit 100.
 - coding-standards.md CI line updated to run-tests.sh / tests.yml.
 - NEXT: C-49 (Prolog Erlik impact + loss condition decision).
+
+## Session Extract — C-50 bozulma seviyesi görseli (2026-10-19)
+- C-49 running in background (game-designer agent, opus): GDD edits + design/balance/prolog-balance-2026-10-19.md; integrate + commit when it reports. Also then update spirit §3.1 line "art bible'da henüz tanımsız → C-50" and AC10 pointer to art bible §4 "Bozulma Seviyeleri".
+- Art bible: §4 "Bozulma Seviyeleri" (Bayer 4×4 density 25/50/75 %, body #33173D, edge #1A1719 2-on/1-off, glint #522961, 2px clean ownership band), UI palette "Erlik bilgisi" #A86BC4 (4.79→4.7), colour-blind row, §7 info panel corruption rows, §8 shader `instance uniform int level`.
+- Mockups: production/qa/evidence/c50-corruption-levels-mockup{,-gray}.png. Tests 134/134.
+- NEXT: integrate C-49, then C-51.

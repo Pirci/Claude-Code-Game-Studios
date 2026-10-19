@@ -361,6 +361,40 @@ ton üretir) ve kilim deseni için 3 tonluk mini rampa kullanır.
   üzerindeki kontrastı yalnızca 2.2:1'dir; kontur her dolguda okunabilirliği
   garanti eder.
 
+### Bozulma Seviyeleri (Harita — C-50, 2026-10-19)
+
+Bozulma seviyesi (`corruption_level` 1–3, spirit §3.1) haritada **lekenin dither
+yoğunluğuyla** okunur; renk değişmez. Yoğunluk hem yapısal (desen) hem value farkı
+verdiği için gri tonlamada ve renk körlüğünde de ayrışır.
+
+| Seviye | Ad | Leke yoğunluğu (4×4 Bayer eşiği) | Görünüm |
+| --- | --- | --- | --- |
+| **0** | Temiz | — | Leke yok; kilim deseni + sahiplik dolgusu |
+| **1** | Gölge | %25 (eşik 4/16) | Seyrek mor noktalar; sahiplik rengi baskın |
+| **2** | Leke | %50 (eşik 8/16 — dama) | Dama dokusu; sahiplik ve leke eşit |
+| **3** | Bozgun | %75 (eşik 12/16) | Koyu, yoğun leke; sahiplik rengi kenar bandında ve aralıklarda |
+
+- **Renkler (yalnızca global palet, opak):** leke gövdesi `#33173D` (Erlik Moru 3);
+  iç kenar `#1A1719` (Erlik Kömürü 3); animasyon pırıltısı `#522961` (Erlik Moru 4).
+  Yarı saydam leke yasak — yoğunluk piksel seçimidir, alfa değil.
+- **Temiz kenar bandı (sahiplik garantisi):** poligonun kenarından içeri **2px**
+  sahiplik dolgusu her seviyede lekesiz kalır; leke bu bandın içindeki alana çizilir.
+  Böylece seviye 3'te de sahiplik rengi kenarda kesintisiz okunur (Bölüm 1, İlke 1).
+- **Tırtıklı iç kenar:** temiz bant ile leke arasında 1px `#1A1719` çizgi,
+  **2 piksel çiz / 1 piksel boşluk** ritmiyle (körmös kesintili outline'ıyla aynı aile).
+- **Hareket:** 2–4 kare/sn; her karede Bayer deseni 1px köşegen kayar ve leke
+  piksellerinin 1/16'sı `#522961` pırıltıya döner — kesin kare geçişi, harmanlama yok.
+  Hareketi Azalt açıkken orta kare sabit (Bölüm 7).
+- **Katman sırası:** sahiplik dolgusu → leke → seçim konturu (`◆`) → etiket/tamga/birim
+  (bilgi katmanı, ton kaydırma yok). Leke etiketlerin altında kalır; etiket konturu
+  okunabilirliği korur.
+- **Kontrast notu:** leke gövdesi `#33173D` dolgular üzerinde: gök mavisi 5.7:1,
+  pas turuncusu 3.6:1, keçe grisi 2.7:1 — nötr üzerinde de desen seçilir.
+- *Tasarım testi:* gri tonlamalı ekran görüntüsünde aynı sahipteki seviye 1, 2 ve 3
+  bölgeleri yan yana ayırt edilebilmeli; render'ın harita alanında palet dışı renk 0
+  (C-22 piksel kontrolüyle aynı yöntem). Kural maketi (renkli + gri, 3 sahiplik × 4
+  seviye): `production/qa/evidence/c50-corruption-levels-mockup{,-gray}.png`.
+
 ### Yön Başına Sıcaklık (Zemin Katmanı Ton Kaydırma)
 
 Ton kaydırma yalnızca zemin `CanvasLayer`'ına uygulanır (Bölüm 2). Hex değerleri
@@ -399,6 +433,7 @@ WCAG 2.x formülüyle **hesaplanmıştır** (bir ondalığa aşağı yuvarlanmı
 | Başarı | `#87B85C` + `✓`/`↑` | 7.7:1 | Arındırma, kazanç |
 | Uyarı | `#E87A7A` + `⚠` | 6.4:1 | "Erlik yayılıyor", tehlike |
 | Hata | `#FFADAD` + `✕` | 10.1:1 | Geçersiz hamle, yetersiz kaynak |
+| Erlik bilgisi | `#A86BC4` | 4.7:1 | Bilgi panelinde bozulma seviyesi ve Erlik direnci değeri (yalnız Erlik) |
 
 Uyarı ve hata aynı aileden olduğu için **ikonla** ayrılır. Metne outline
 uygulanmaz (harita etiketleri hariç — yukarıda).
@@ -411,6 +446,7 @@ uygulanmaz (harita etiketleri hariç — yukarıda).
 | Düşman (turuncu) vs nötr (keçe grisi) | Orta (value yakın: 1.3:1) | Nötr desensiz ve tamgasız; düşman desenli ve tamgalı |
 | Kazanç vs kayıp | Deuteranopi/protanopi | `↑`/`↓` ikonu + "+/−" rakam |
 | Arındırılmış vs bozulmuş | Tritanopi | Tırtıklı leke kenarı + dithering + animasyon + ses |
+| Bozulma seviyesi 1 / 2 / 3 | Tüm tipler (aynı renk) | Dither yoğunluğu %25 / %50 / %75 (desen + value) + bilgi panelinde sayı |
 | Ülgen altını vs Kök Böri mavisi | Tritanopi | Kök Böri: kurt silüeti + titreyen parlama; altın: statik |
 | Erlik moru vs Ülgen indigosu | Tritanopi | Erlik: düzensiz kenar + dithering + uğultu; Ülgen: düz geometrik |
 | Seçili vs normal | Hafif | Kontur + `◆` köşe işareti + tık sesi |
@@ -428,8 +464,8 @@ uygulanmaz (harita etiketleri hariç — yukarıda).
 Uygulandı (2026-10-08): `region_node.gd` opak sahiplik mini rampaları (C-01);
 harita etiketleri `MapLabel` krem + 1px koyu kontur (C-02); `default_theme.tres`,
 `generate_ui_theme_icons.gd` ve `generate_language_name_icons.gd` → UI paleti
-tablosu (C-04). Kalan: harita zemini ve komşuluk çizgilerinin palete bağlanması
-(C-22).
+tablosu (C-04). Harita zemini ve komşuluk çizgileri palete bağlandı (C-22).
+Kalan: bozulma katmanı ve seviye yoğunlukları (yukarıdaki tablo) — C-38.
 
 ## 5. Karakter Tasarım Yönü
 
@@ -755,6 +791,19 @@ palet dışı renk üretir).
 - **Tamga ikonu** bölge merkezinde.
 - **Klavye odağı:** 1px altın kenarlık (mevcut); dinamik oluşturulan butonlar
   (ör. Ordu Gönder) `focus_neighbor_*` ile odak zincirine bağlanır.
+- **Bölge bilgi paneli — bozulma satırları (C-50):** yalnız `corruption_level ≥ 1`
+  iken, Altın satırının hemen altında, aksiyon butonunun üstünde iki satır:
+  1. `Bozulma: 2 / 3` — etiket birincil metin, değer **Erlik bilgisi** `#A86BC4`;
+     maksimum seviye veriden gelir (sabit "3" yazılmaz).
+  2. `Erlik direnci: 8` — arındırmak için gereken kuvvet `> 8` (spirit §3.2 `S`);
+     aynı renk düzeni.
+  Altın satırı bozulmuş bölgede **etkin** üretimi gösterir ve cezayı kayıp kuralıyla
+  işaretler: `Altın: 1 / tur  ↓−1` (açık kırmızı `#E87A7A`, `↓` + "−X"; Bölüm 4
+  kazanç/kayıp). Seviye 3'te `Altın: 0 / tur  ↓−2`. Temiz bölgede satırlar yoktur
+  (panel küçük kalır). Panel yukarı doğru büyür (alt kenar sabit, HUD barın 4px
+  üstü); iki satır ≈ +28px — 640×360'ta üst barla çakışmaz. Çeviri key'leri C-38'de:
+  `CORRUPTION_LEVEL` (`"%s: %s / %s"` biçimine uygun etiket), `ERLIK_RESISTANCE`;
+  harf dönüşümü kodda yapılmaz (C-26).
 
 ### Erişilebilirlik Ayarları (zorunlu)
 
@@ -898,6 +947,13 @@ orta pikseli); Godot'ta `Sprite2D.offset` / `centered=false` ile ayarlanır.
   kaydırma yok).
 - Körmös süzülmesi tween ile; piksel snap açık olduğundan adım adım hareket
   kabul edilir (doğal olmayan hareket karaktere uyar).
+- **Seviye yoğunluğu (C-50):** paylaşılan shader'a bölge başına `instance uniform int
+  level` (1–3) verilir; piksel, 4×4 Bayer değeri `< level × 4` ise lekedir (seviye
+  tablosu Bölüm 4). Bayer indeksi ekran pikseli değil **640×360 tuval pikseli** ile
+  alınır (tam kat ölçeklemede desen bozulmaz). Temiz 2px kenar bandı için leke
+  poligonu `Geometry2D.offset_polygon(polygon, -2.0)` ile içeri kaydırılır; iç kenar
+  çizgisi bu poligonun 1px konturu (2 çiz / 1 boşluk). Seviye değişimi (yayılım +1,
+  arındırma → 0) kare geçişiyle anında; ara harmanlama yok.
 
 ### Palet Doğrulama
 

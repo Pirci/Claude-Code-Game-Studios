@@ -60,6 +60,7 @@ func test_contrast_matches_art_bible_table() -> void:
 	var expected: Dictionary = {
 		"#F2E6C7": 14.5, "#B8A689": 7.6, "#6B655A": 3.1, "#8A6D4F": 3.7,
 		"#EDC76B": 11.1, "#F5DE9E": 13.6, "#87B85C": 7.7, "#E87A7A": 6.4, "#FFADAD": 10.1,
+		"#A86BC4": 4.7,
 	}
 	for hex: String in expected:
 		var ratio: float = _contrast(Color(hex), PANEL_BG)
