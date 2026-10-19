@@ -40,6 +40,8 @@ var _accessibility: AccessibilitySettings = AccessibilitySettings.new()
 var _locale_fonts: LocaleFontController = null
 var _audio: AudioController = null
 var _save: SaveController = null
+## Görülen öğretici ipuçları: ayarlarla kalıcı, GameContext'e enjekte edilir (C-41).
+var _tutorial: TutorialProgress = TutorialProgress.new()
 var _flow: SceneFlow = SceneFlow.new()
 var _flow_state: SceneFlow.State = SceneFlow.State.MAIN_MENU
 var _chapter_id: int = 1
@@ -64,6 +66,7 @@ func _ready() -> void:
 	_save.bind_services(save_store if save_store != null else FileSaveStore.new(), _create_map_state)
 	# Kayıtlı ayarlar UI kurulmadan önce uygulanır (dil fontu dahil) — ADR-0007, C-65.
 	_apply_settings(_save.load_settings())
+	_tutorial.changed.connect(_on_settings_changed)
 
 	_locale_fonts = LocaleFontController.new(ThemeDB.get_project_theme())
 	if arabic_font:
@@ -169,6 +172,7 @@ func _enter_state(state: SceneFlow.State, previous: SceneFlow.State) -> void:
 			menu.new_campaign_confirmed.connect(_dispatch.bind(SceneFlow.EVENT_NEW_CAMPAIGN_CONFIRMED))
 			menu.continue_requested.connect(_on_continue)
 			menu.settings_changed.connect(_on_settings_changed)
+			menu.tutorial_reset_requested.connect(_tutorial.reset)
 			menu.quit_requested.connect(_on_quit)
 			_switch_to(menu, &"menu")
 		SceneFlow.State.CHAPTER_SELECT:
@@ -221,7 +225,7 @@ func _show_pages(pages: Array[NarrativePage]) -> void:
 
 func _show_game() -> GameContext:
 	var game: GameContext = (load(GAME_SCENE_PATH) as PackedScene).instantiate() as GameContext
-	game.bind_services(_game_state, _accessibility, _audio, _save, _scene(), flow_config)
+	game.bind_services(_game_state, _accessibility, _audio, _save, _scene(), flow_config, _tutorial)
 	game.menu_requested.connect(_dispatch.bind(SceneFlow.EVENT_MENU))
 	game.leave_confirmed.connect(_dispatch.bind(SceneFlow.EVENT_LEAVE_CONFIRMED))
 	game.objective_dismissed.connect(_dispatch.bind(SceneFlow.EVENT_OBJECTIVE_DISMISSED))
@@ -333,6 +337,7 @@ func _capture_settings() -> SettingsSnapshot:
 	snapshot.master_volume = AudioController.get_bus_linear(&"Master")
 	snapshot.music_volume = AudioController.get_bus_linear(AudioController.MUSIC_BUS)
 	snapshot.sfx_volume = AudioController.get_bus_linear(AudioController.SFX_BUS)
+	snapshot.seen_hints = _tutorial.seen_ids()
 	return snapshot
 
 
@@ -343,6 +348,7 @@ func _apply_settings(snapshot: SettingsSnapshot) -> void:
 	_accessibility.color_blind_mode = snapshot.color_blind_mode
 	_accessibility.reduce_motion = snapshot.reduce_motion
 	_accessibility.show_region_names = snapshot.show_region_names
+	_tutorial.load_seen(snapshot.seen_hints)
 	TranslationServer.set_locale(snapshot.locale)
 	AudioController.set_bus_linear(&"Master", snapshot.master_volume)
 	AudioController.set_bus_linear(AudioController.MUSIC_BUS, snapshot.music_volume)

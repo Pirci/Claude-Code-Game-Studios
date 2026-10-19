@@ -30,33 +30,55 @@ anchor_right = 1.0
 grow_horizontal = 2
 theme_type_variation = &"HudBarTop"
 
-[node name="TopBar" type="HBoxContainer" parent="TopBarPanel"]
+[node name="TopBarRows" type="VBoxContainer" parent="TopBarPanel"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="TopBar" type="HBoxContainer" parent="TopBarPanel/TopBarRows"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="ChapterLabel" type="Label" parent="TopBarPanel/TopBar"]
+[node name="ChapterLabel" type="Label" parent="TopBarPanel/TopBarRows/TopBar"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "CHAPTER_1_TITLE"
 text_overrun_behavior = 3
 
-[node name="GoldLabel" type="Label" parent="TopBarPanel/TopBar"]
+[node name="GoldLabel" type="Label" parent="TopBarPanel/TopBarRows/TopBar"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "GOLD"
 horizontal_alignment = 1
 
-[node name="SpiritLabel" type="Label" parent="TopBarPanel/TopBar"]
+[node name="SpiritLabel" type="Label" parent="TopBarPanel/TopBarRows/TopBar"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "SPIRIT"
 
-[node name="TurnLabel" type="Label" parent="TopBarPanel/TopBar"]
+[node name="TurnLabel" type="Label" parent="TopBarPanel/TopBarRows/TopBar"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "TURN"
 horizontal_alignment = 2
+
+[node name="ObjectiveBar" type="HBoxContainer" parent="TopBarPanel/TopBarRows"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ObjectiveLabel" type="Label" parent="TopBarPanel/TopBarRows/ObjectiveBar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text_overrun_behavior = 3
+
+[node name="ProgressLabel" type="Label" parent="TopBarPanel/TopBarRows/ObjectiveBar"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ShadowLabel" type="Label" parent="TopBarPanel/TopBarRows/ObjectiveBar"]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="BottomBarPanel" type="PanelContainer" parent="."]
 layout_mode = 1

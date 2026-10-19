@@ -35,6 +35,12 @@ const LABEL_HEIGHT: int = 16
 ## (merkezde etiketlerle çakışırdı). Kutunun alt boş satırları metinle arasında
 ## ~2px bırakır; 0 boşlukla tamga ile alt kontur arasında da 1px dolgu kalır.
 const TAMGA_GAP: int = 0
+## Hedef işareti (scene-flow §3.5): 9×9 gök mavisi / beyaz / altın ışık elması, bölge etiketinin
+## üstünde; sahiplik ve bozulma katmanını örtmez. Alfa 0/255, animasyonsuz (Hareketi Azalt ile aynı).
+const OBJECTIVE_MARK_RADIUS: int = 4
+const OBJECTIVE_MARK_OFFSET: int = 30
+const COLOR_OBJECTIVE_BLUE := Color("#47A3E8")
+const COLOR_OBJECTIVE_WHITE := Color("#D4EDFF")
 ## Erlik lekesi kare hızı (art bible §2/§4: 2–4 kare/sn, kesin geçiş).
 const STAIN_FPS: float = 3.0
 
@@ -61,6 +67,13 @@ var show_name_label: bool = true:
 		if _label:
 			_label.visible = value
 		_layout_army_and_tamga()
+## Kazanma koşulundaki çözülmemiş hedef bölgesi mi (F7 `V` kümesi) — işaret çizilir.
+var is_objective_marked: bool = false:
+	set(value):
+		if is_objective_marked == value:
+			return
+		is_objective_marked = value
+		queue_redraw()
 ## Hareketi Azalt (art bible §7): leke animasyonu durur, sabit orta kare gösterilir.
 var reduce_motion: bool = false:
 	set(value):
@@ -111,6 +124,8 @@ func _draw() -> void:
 	# Leke sahiplik dolgusunun üstünde, seçim işaretlerinin altında (art bible §4 katman sırası).
 	if not _stain_textures.is_empty():
 		draw_texture(_stain_textures[_stain_frame], Vector2(_stain.origin))
+	if is_objective_marked:
+		_draw_objective_mark()
 	if is_selected:
 		for point: Vector2 in _points:
 			var center: Vector2i = Vector2i(point.round()) + OUTLINE_PIXEL_OFFSET
@@ -118,6 +133,17 @@ func _draw() -> void:
 				draw_rect(Rect2(row), COLOR_SELECTION_MARK_EDGE)
 			for row: Rect2i in diamond_rows(center, SELECTION_MARK_RADIUS):
 				draw_rect(Rect2(row), COLOR_HIGHLIGHT_OUTLINE)
+
+
+func _draw_objective_mark() -> void:
+	var center: Vector2i = Vector2i(_anchor.round()) - Vector2i(0, OBJECTIVE_MARK_OFFSET)
+	for row: Rect2i in diamond_rows(center, OBJECTIVE_MARK_RADIUS):
+		draw_rect(Rect2(row), COLOR_SELECTION_MARK_EDGE)
+	for row: Rect2i in diamond_rows(center, OBJECTIVE_MARK_RADIUS - 1):
+		draw_rect(Rect2(row), COLOR_OBJECTIVE_BLUE)
+	for row: Rect2i in diamond_rows(center, OBJECTIVE_MARK_RADIUS - 3):
+		draw_rect(Rect2(row), COLOR_OBJECTIVE_WHITE)
+	draw_rect(Rect2(center.x, center.y, 1, 1), COLOR_HIGHLIGHT_OUTLINE)
 
 
 func setup(data: RegionData) -> void:

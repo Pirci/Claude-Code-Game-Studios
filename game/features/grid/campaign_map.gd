@@ -59,6 +59,18 @@ func apply_accessibility(settings: AccessibilitySettings) -> void:
 		node.reduce_motion = settings.reduce_motion
 
 
+## Hedef işaretleri (F7 `V`): listedeki bölgeler işaretlenir, diğerlerinin işareti kalkar.
+func set_objective_markers(region_ids: Array[StringName]) -> void:
+	for id: StringName in _region_nodes:
+		(_region_nodes[id] as RegionNode).is_objective_marked = id in region_ids
+
+
+## Testler için: bölge işaretli mi.
+func is_region_marked(region_id: StringName) -> bool:
+	var node: RegionNode = _region_nodes.get(region_id) as RegionNode
+	return node != null and node.is_objective_marked
+
+
 func clear_selection() -> void:
 	for node: RegionNode in _region_nodes.values():
 		node.is_selected = false

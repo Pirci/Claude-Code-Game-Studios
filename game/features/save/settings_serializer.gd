@@ -24,6 +24,7 @@ static func to_text(snapshot: SettingsSnapshot) -> String:
 			"music": snapshot.music_volume,
 			"sfx": snapshot.sfx_volume,
 		},
+		"tutorial": {"seen_hints": snapshot.seen_hints},
 	}
 	return JSON.stringify(data, "\t", true, true)
 
@@ -58,4 +59,21 @@ static func from_text(text: String) -> SettingsSnapshot:
 		if not is_finite(float(volume)) or float(volume) < 0.0 or float(volume) > 1.0:
 			return null
 		snapshot.set(pair[1], float(volume))
+	snapshot.seen_hints = _read_seen_hints(data.get("tutorial"))
 	return snapshot
+
+
+## Eski dosyalarda `tutorial` yok → boş. Bilinmeyen ya da yinelenen kimlikler atılır (bozuk
+## öğretici durumu oyunu ya da ayarları geçersiz kılmaz).
+static func _read_seen_hints(tutorial: Variant) -> Array[StringName]:
+	var seen: Array[StringName] = []
+	if typeof(tutorial) != TYPE_DICTIONARY:
+		return seen
+	var raw: Variant = (tutorial as Dictionary).get("seen_hints")
+	if typeof(raw) != TYPE_ARRAY:
+		return seen
+	for item: Variant in raw as Array:
+		if typeof(item) == TYPE_STRING and StringName(item as String) in TutorialRules.ALL \
+				and StringName(item as String) not in seen:
+			seen.append(StringName(item as String))
+	return seen

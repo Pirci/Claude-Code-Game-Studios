@@ -160,6 +160,11 @@ text_overrun_behavior = 3
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="TutorialResetButton" type="Button" parent="Frame/Panel"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "TUTORIAL_RESET"
+
 [node name="Spacer" type="Control" parent="Frame/Panel"]
 layout_mode = 2
 size_flags_vertical = 3

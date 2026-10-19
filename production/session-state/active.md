@@ -305,3 +305,6 @@
 ## Session Extract — C-40 sahne akışı (2026-10-19 ~13:30 UTC)
 - Kullanıcı geldi: otomatik devam KAPALI, kararlar sorulacak, sayaç yok.
 - C-40 bitti: features/campaign (SceneFlow, CampaignRules, Campaign/Scene/NarrativePage, SceneFlowConfig, ui/objective_panel, victory_card, defeat_screen), contexts/narrative_context, contexts/chapter_select_context, ui/confirm_dialog + input_guard; RootContext flow executor; GameContext up-signals + modals; SaveController scene_entry/save_completed; run-tests.sh fade guard. Tests 300/300. Yeni görev C-68.
+
+## Session Extract — C-41 Prolog öğreticisi (2026-10-19)
+- features/tutorial (TutorialRules, TutorialProgress, ui/hint_bubble), SettingsSnapshot.seen_hints + serializer, Settings reset button → MenuContext → RootContext, GameContext hint triggers + HUD ObjectiveBar (ObjectiveLabel/ProgressLabel/ShadowLabel), HudModel/HudPresenter objective+erlik, RegionNode objective mark, CampaignMap.set_objective_markers. design/ux/prolog-tutorial.md. Tests 312/312. Yeni görev C-69.

@@ -9,6 +9,7 @@ signal new_campaign_confirmed
 signal continue_requested
 ## Ayarlar ekranında bir ayar değişti — RootContext kalıcı kaydeder (C-65).
 signal settings_changed
+signal tutorial_reset_requested
 signal quit_requested
 
 
@@ -82,6 +83,7 @@ func _on_settings_pressed() -> void:
 	_settings_screen.bind_services(_accessibility)
 	_settings_screen.back_requested.connect(_on_settings_back)
 	_settings_screen.settings_changed.connect(settings_changed.emit)
+	_settings_screen.tutorial_reset_requested.connect(tutorial_reset_requested.emit)
 	add_child(_settings_screen)
 
 

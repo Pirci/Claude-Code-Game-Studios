@@ -28,6 +28,9 @@ const BOON_CATALOG: BoonCatalog = preload("res://features/bozkurt/data/boon_cata
 @onready var _turn_label: Label = %TurnLabel
 @onready var _spirit_label: Label = %SpiritLabel
 @onready var _kok_bori_button: Button = %KokBoriButton
+@onready var _objective_label: Label = %ObjectiveLabel
+@onready var _progress_label: Label = %ProgressLabel
+@onready var _shadow_label: Label = %ShadowLabel
 @onready var _end_turn_button: Button = %EndTurnButton
 @onready var _menu_button: Button = %MenuButton
 
@@ -37,6 +40,9 @@ var _audio: AudioController = null
 var _save: SaveController = null
 var _scene: SceneDefinition = null
 var _flow_config: SceneFlowConfig = SceneFlowConfig.new()
+## Görülen öğretici ipuçları (RootContext enjekte eder; null → öğretici kapalı).
+var _tutorial: TutorialProgress = null
+var _hint_bubble: HintBubble = null
 var _map_def: ChapterMapDefinition
 var _map_controller: MapController
 var _army_controller: ArmyController
@@ -64,6 +70,7 @@ func bind_services(
 	save: SaveController = null,
 	scene: SceneDefinition = null,
 	flow_config: SceneFlowConfig = null,
+	tutorial: TutorialProgress = null,
 ) -> void:
 	_game_state = game_state
 	_accessibility = accessibility
@@ -72,6 +79,7 @@ func bind_services(
 	_scene = scene
 	if flow_config != null:
 		_flow_config = flow_config
+	_tutorial = tutorial
 
 
 func _ready() -> void:
@@ -82,6 +90,8 @@ func _ready() -> void:
 	_connect_signals()
 	_refresh_views()
 	FocusReveal.focus_quietly(_end_turn_button)
+	# Hedef paneli (RootContext) senkron açılır; panel yoksa (Devam Et) 1. tur ipucu hemen.
+	_check_start_hint.call_deferred()
 
 
 func _setup_controllers() -> void:
@@ -162,6 +172,7 @@ func _setup_map_visuals() -> void:
 	_modal_queue = ModalQueue.new()
 	_modal_queue.name = "ModalQueue"
 	overlay.add_child(_modal_queue)
+	_modal_queue.drained.connect(_check_start_hint)
 
 
 func _connect_signals() -> void:
@@ -178,6 +189,8 @@ func _connect_signals() -> void:
 	_map_controller.combat_occurred.connect(_on_combat_occurred)
 	_map_controller.purification_resolved.connect(_on_purification_resolved)
 	_map_controller.army_moved.connect(_on_army_moved)
+	_map_controller.corruption_spread.connect(_on_corruption_spread)
+	_spirit.ruh_changed.connect(_on_ruh_changed)
 	_map_controller.game_won.connect(_on_game_won)
 	_map_controller.game_lost.connect(_on_game_lost)
 
@@ -198,9 +211,38 @@ func _render_hud(model: HudModel) -> void:
 	if ongoing:
 		_gold_label.text += " " + tr("INCOME_PER_TURN") % NumberFormatter.format_int(model.income_forecast)
 	_spirit_label.text = "%s: %s" % [tr("SPIRIT"), NumberFormatter.format_int(model.ruh)]
+	_render_objective(model)
 	_turn_label.text = "%s: %s" % [tr("TURN"), NumberFormatter.format_int(model.turn)]
 	_end_turn_button.disabled = not ongoing
 	_kok_bori_button.visible = model.boon_offer_available
+
+
+## Kalıcı "Hedef" satırı + ilerleme + Erlik'in Gölgesi (scene-flow §10, spirit AC24); eşik
+## kapalıysa (0) gölge gizlenir. `erlik_power = eşik − 1` iken hedef metninin yerini aynı satırda
+## kırmızı "bir sonraki yayılımda kayıp" uyarısı alır (üst çubuk büyümez, harita örtülmez).
+func _render_objective(model: HudModel) -> void:
+	var ongoing: bool = model.game_result == MapState.GameResult.ONGOING
+	var warning: bool = model.erlik_warning and ongoing
+	_objective_label.text = tr("ERLIK_SHADOW_WARNING") if warning \
+		else "%s: %s" % [tr("OBJECTIVE_LABEL"), tr(String(model.objective_key))]
+	_objective_label.add_theme_color_override(&"font_color", RegionInfoPanel.COLOR_LOSS) if warning \
+		else _objective_label.remove_theme_color_override(&"font_color")
+	var parts: PackedStringArray = []
+	if model.neutral_required > 0:
+		parts.append(tr("OBJECTIVE_TRIBES") % _fraction(model.neutral_conquered, model.neutral_required))
+	if model.foci_total > 0:
+		parts.append(tr("OBJECTIVE_FOCI") % _fraction(model.foci_cleansed, model.foci_total))
+	_progress_label.text = "  ".join(parts)
+	_progress_label.visible = not warning  # uyarı tam okunsun diye aynı satırda yer açılır
+	_shadow_label.visible = model.erlik_threshold > 0
+	_shadow_label.text = tr("ERLIK_SHADOW_VALUE") % [
+		NumberFormatter.format_int(model.erlik_power), NumberFormatter.format_int(model.erlik_threshold)]
+	_shadow_label.add_theme_color_override(&"font_color", RegionInfoPanel.COLOR_LOSS if model.erlik_warning \
+		else RegionInfoPanel.COLOR_ERLIK_INFO)
+
+
+func _fraction(current: int, total: int) -> String:
+	return "%s / %s" % [NumberFormatter.format_int(current), NumberFormatter.format_int(total)]
 
 
 ## Her işlenmiş değişiklikten sonra tam yenileme (ADR-0011 karar 2): harita, HUD ve seçili
@@ -210,7 +252,10 @@ func _refresh_views() -> void:
 	var selected: RegionData = _game_state.map_state.get_region(_game_state.map_state.selected_region_id)
 	if selected != null:
 		_show_region_info(selected)
-	_render_hud(HudPresenter.build(_game_state, _resource_controller, _spirit, _modifiers.get_modifiers()))
+	_render_hud(HudPresenter.build(_game_state, _resource_controller, _spirit, _modifiers.get_modifiers(),
+		_map_def.win_condition))
+	_campaign_map.set_objective_markers(
+		CampaignRules.objective_markers(_game_state.map_state, _map_def.win_condition, _scene))
 	_update_focus_chain()
 
 
@@ -248,6 +293,7 @@ func _on_controller_region_selected(region_id: StringName) -> void:
 		_audio.play_sfx(AudioController.SFX_REGION_SELECT)
 	_campaign_map.set_selected(region_id)
 	_refresh_views()
+	_offer_hint(TutorialRules.hint_for_selection(_game_state.map_state.get_region(region_id)))
 
 
 ## Bilgi paneline bölge + Erlik bilgisi (direnç, seviye sınırı, cezalı gelir) — değerler
@@ -274,6 +320,53 @@ func _show_region_info(data: RegionData) -> void:
 		RegionData.Owner.ENEMY:
 			if _game_state.map_state.enemy_reinforcement_per_turn > 0:
 				_info_panel.show_reinforcement(_game_state.map_state.enemy_reinforcement_per_turn)
+
+
+# --- Öğretici ipuçları (design/ux/prolog-tutorial.md) ---
+
+## 1. turda altın yetiyorsa "önce üret" — modal açıkken bekler, kapanınca (`drained`) gelir.
+func _check_start_hint() -> void:
+	if _game_state.map_state == null or _modal_queue.is_open() \
+			or _game_state.map_state.game_result != MapState.GameResult.ONGOING:
+		return
+	_offer_hint(TutorialRules.hint_at_turn_start(
+		_game_state.map_state.current_turn, _game_state.gold, _resource_controller.recruit_cost()))
+
+
+func _on_corruption_spread(_region_id: StringName) -> void:
+	_offer_hint(TutorialRules.HINT_SPREAD)
+
+
+func _on_ruh_changed(ruh: int) -> void:
+	if ruh > 0:
+		_offer_hint(TutorialRules.HINT_SPIRIT)
+
+
+## İpucunu gösterir: görülmediyse, başka balon/modal yoksa ve oyun sürüyorsa. Görülmüş sayılması
+## balon kapanınca olur; meşgulken kaçan ipucu bir sonraki tetikte yeniden denenir.
+func _offer_hint(hint_id: StringName) -> void:
+	if _tutorial == null or hint_id == &"" or _tutorial.has_seen(hint_id):
+		return
+	if _hint_bubble != null or _modal_queue.is_open():
+		return
+	# Sahne tamamlanınca (COMMIT) harita durumu null olur; o zaman ipucu yok.
+	if _game_state.map_state == null or _game_state.map_state.game_result != MapState.GameResult.ONGOING:
+		return
+	_hint_bubble = HintBubble.new(hint_id)
+	_hint_bubble.layout_mode = 1
+	_hint_bubble.anchors_preset = 0
+	# Sol üst: üst çubuğun altında, boş şerit (alt-sol Bereket Vadisi'ni örterdi).
+	_hint_bubble.offset_left = 4.0
+	_hint_bubble.offset_top = 38.0
+	_hint_bubble.dismissed.connect(_on_hint_dismissed)
+	add_child(_hint_bubble)
+
+
+func _on_hint_dismissed(hint_id: StringName) -> void:
+	_tutorial.mark_seen(hint_id)
+	remove_child(_hint_bubble)
+	_hint_bubble.queue_free()
+	_hint_bubble = null
 
 
 ## Ordu Topla aksiyon harcamaz (resource R4); sonuç panel ve HUD yenilenince görünür.

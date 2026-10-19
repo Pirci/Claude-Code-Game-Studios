@@ -5,6 +5,8 @@ extends Control
 signal back_requested
 ## Herhangi bir ayar değişti — ebeveyn kalıcı kaydeder (C-65, ADR-0007).
 signal settings_changed
+## "Öğreticiyi Sıfırla": görülen ipuçları silinir, RootContext kalıcı yazar (C-41).
+signal tutorial_reset_requested
 
 
 const LOCALES: Array[Dictionary] = [
@@ -37,6 +39,7 @@ var _accessibility: AccessibilitySettings = null
 @onready var _reduce_motion_check: CheckButton = %ReduceMotionCheck
 @onready var _region_names_check: CheckButton = %RegionNamesCheck
 @onready var _back_button: Button = %BackButton
+@onready var _tutorial_reset_button: Button = %TutorialResetButton
 
 
 ## Erişilebilirlik anahtarlarının okuyup yazacağı tercihler (null ise anahtarlar gizlenir).
@@ -59,6 +62,7 @@ func _ready() -> void:
 	_reduce_motion_check.toggled.connect(_on_reduce_motion_toggled)
 	_region_names_check.toggled.connect(_on_region_names_toggled)
 	_back_button.pressed.connect(_on_back_pressed)
+	_tutorial_reset_button.pressed.connect(tutorial_reset_requested.emit)
 	FocusReveal.focus_quietly(_language_option)
 
 

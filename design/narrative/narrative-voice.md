@@ -253,6 +253,19 @@ sırasını kendi yazımına göre kurar (tr `%%%s`; de/fr/es/ru `%s %%`).
 | `BOON_YIGIT_RUHU` | Lütuf adı | — | Spirit of the Brave |
 | `BOON_YIGIT_RUHU_DESC` | Lütuf kartı açıklaması | sayı + `%%` | Hero strength +%s%%. |
 
+### C-41 öğretici anahtarları
+
+| Anahtar | Yer | en |
+| ---- | ---- | ---- |
+| `TUTORIAL_GOT_IT` | İpucunu kapatan düğme | Got it |
+| `TUTORIAL_RESET` | Ayarlar düğmesi (ipuçları yeniden gösterilir) | Reset Tutorial |
+| `HINT_RECRUIT` | İlk tur ipucu | Raise warriors first. Gold buys them in your camp, and they can march the same turn. |
+| `HINT_SEND_ARMY` | Ordu gönderme ipucu (`SEND_ARMY` metniyle aynı) | Select your camp, press Send Army, then choose a neighbouring land. One warrior always stays behind. |
+| `HINT_NEUTRAL` | Tarafsız toprak ipucu | A free tribe holds this land. Send more warriors than they have and the land joins you. |
+| `HINT_CORRUPTED` | Lekeli toprak ipucu (`ERLIK_HOLD` terimi) | Erlik's stain lies here. Only a host stronger than Erlik's hold can cleanse it. A weaker host is lost. |
+| `HINT_SPREAD` | Leke yayılımı ipucu | The stain spreads every few turns. Cleanse it, or Erlik's shadow will grow. |
+| `HINT_SPIRIT` | Ruh / lütuf ipucu | Cleansing earns Spirit. Enough Spirit calls Kök Böri to offer a blessing. |
+
 ## 9. Karar Günlüğü (C-54, gece modu — önerilen seçenek uygulandı)
 
 | Karar | Seçilen | Reddedilen | Geri alma maliyeti |
