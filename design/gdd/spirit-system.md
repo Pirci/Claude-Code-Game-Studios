@@ -143,8 +143,10 @@ geçmeliyim" baskısı hisseder; arındırdıkça "kutsandım" tatmini yaşar.
 Etkiler ADR-0006 modifikatör hattından geçer (`stat_id`, `FLAT`/`PERCENT`, yığın
 başına değer). Tablodaki sayılar §4/§7 knob'larının varsayılanlarıdır — değerin sahibi
 knob'dur, katalog onu gösterir (C-53). Katalog içeriği spirit feature'ının
-`BoonDefinition` kaynağıdır (`boon_id`, ad key'i, `requires`, `max_stacks`,
-`ModifierSource`); `ModifierSource` yalnızca etkiyi taşır (ADR-0006). **Uygun havuz** = katalog − gerektirdiği sistemi etkin olmayanlar −
+`BoonDefinition` kaynağıdır (`boon_id`, ad key'i, `requires`, `ModifierSource`);
+yığılma sınırının **tek sahibi** `ModifierSource.max_stacks`'tir (Gök Kalkanı `.tres`'i
+`GOK_KALKANI_MAX_STACKS` değerini taşır) ve uygunluk `ModifierController.can_add()` ile
+sorulur (ADR-0006, mimari inceleme 2026-10-19 D2). **Uygun havuz** = katalog − gerektirdiği sistemi etkin olmayanlar −
 yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı.
 
 | Lütuf (`boon_id`) | Etki (yığın başına) | Stat / tür | Gerektirir | Yığılma sınırı | İlk kademe |
@@ -316,6 +318,9 @@ yayılım ⇔ current_turn − last_erlik_spread_turn ≥ I_eff
 yayılım turunda (hedef bulunsun bulunmasın): last_erlik_spread_turn = current_turn
 ```
 `k` = Gök Kalkanı yığını. Örnek: Prolog aralığı 3; 1 kalkan → 4, 3 kalkan → 6.
+Uygulamada `k` zaten `max_stacks` ile yazım anında sınırlıdır (ADR-0006); `min` güvenlik
+ifadesidir, tüketici `stacks`'i doğrudan okumaz — `I_eff = resolve(&"erlik_spread_interval",
+taban)`.
 Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
 
 ---
@@ -341,11 +346,12 @@ Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
   Böri'nin **ilk lütuf sunumu** bu ana denk gelebilir (Kök Böri'nin "genesis" görünüşü
   ise sahne açılışındadır — `scene-flow.md`, C-35).
 - **Gök Kalkanı yığılma sınırı**: 3 yığından sonra sunulmaz; sınır knob'u düşürülürse
-  mevcut fazla yığınlar korunur ama etkileri `min(k, sınır)` ile kırpılır.
+  fazla seçimler `boons`'ta kalır (maliyet sayımı `n` değişmez) ama bir sonraki
+  yüklemede `rebuild()` en fazla sınır kadar yığın kurar.
 - **Arındırma başarısız olursa** (`P ≤ S`): gelen kuvvet tamamen kaybolur; bölge
   bozuk kalır; Ruh verilmez; kısmi ilerleme kaydedilmez; aksiyon harcanmış olur.
-- **Eşitlik** (`P == S`): başarısızlıktır (CombatResolver Dal 3, savunma avantajı
-  direnç lehine).
+- **Eşitlik** (`P == S`): başarısızlıktır — kural `başarı ⇔ P_eff > S`'dir ve
+  `draw_favors_defender`'dan bağımsızdır (§3.2, savaş §5).
 - **Bozulmuş + yabancı garnizonlu bölge**: önce savaş (fetih), bozulma kalır;
   arındırma ayrı, sonraki bir hamledir (§3.2).
 - **Ruh çiftçiliği riski**: Arındırılmış bölge yayılımla yeniden bozulabilir; tekrar

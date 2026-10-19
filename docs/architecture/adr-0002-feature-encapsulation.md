@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-review-2026-10-19.md))
 
 ## Date
 
@@ -40,7 +40,7 @@ injected leaf services.
 
 | Field | Value |
 |-------|-------|
-| **Depends On** | ADR-0001 (contexts instantiate and orchestrate feature services) |
+| **Depends On** | ADR-0001 (contexts instantiate and orchestrate feature services), ADR-0003 (features expose services wired via `bind_services`) |
 | **Enables** | Modular grand-strategy expansion (systems-index Post-v1.0 layers) |
 | **Blocks** | None |
 | **Ordering Note** | Assumes the context hierarchy from ADR-0001 exists to host feature services. |
@@ -59,7 +59,8 @@ be added without rewriting the core.
 ### Current State
 
 Implemented. `game/features/` contains `grid/`, `army/`, `combat/`, `resources/`,
-`diplomacy/`, `bozkurt/`, `campaign/`, `audio/`. Data resources are co-located in
+`localization/`, `diplomacy/`, `bozkurt/`, `campaign/`, `audio/` (planned: `ai/` —
+ADR-0005, `modifiers/` — ADR-0006, `save/` — ADR-0007). Data resources are co-located in
 `feature/data/` (e.g. `combat/data/combat_config.tres`,
 `grid/data/chapter_1_map.tres`). `combat/combat_resolver.gd` is a pure leaf with no
 outside dependencies; `grid/map_controller.gd` orchestrates army/resource/combat
@@ -110,7 +111,10 @@ game/
 │   ├── resources/     LEAF-ish — resource_controller
 │   ├── grid/          ORCHESTRATOR — map_controller depends on army+resources+combat
 │   │   └── data/      chapter_1_map.tres, region definitions
-│   └── diplomacy/ bozkurt/ campaign/ audio/
+│   ├── bozkurt/       spirit feature (Kök Böri / Ruh): SpiritController = sole writer of
+│   │                  corruption_level / ruh / boons, BoonDefinition catalog (C-17 D3)
+│   ├── ai/ modifiers/ save/   planned (ADR-0005 / 0006 / 0007)
+│   └── localization/ diplomacy/ campaign/ audio/
 ├── state/             data-only (ADR-0004)
 ├── ui/                shared UI shell (hud/, screens/)
 └── assets/            shared art/audio/fonts/shaders/locale

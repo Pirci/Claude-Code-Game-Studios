@@ -1,7 +1,7 @@
 # ADR-0005: AI Architecture — Pure Decision Services
 
 ## Status
-Proposed
+Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-review-2026-10-19.md))
 
 > **Amendment 2026-10-19 (C-53, cross-review W-E):** `ErlikSpreadController.decide()`
 > takes the effective interval and returns a `SpreadDecision` (spread-turn flag + target),
@@ -30,7 +30,7 @@ Proposed
 
 | Field | Value |
 |-------|-------|
-| **Depends On** | ADR-0001 (contexts host services), ADR-0003 (DI via bind_services), ADR-0004 (state segregation) |
+| **Depends On** | ADR-0001 (contexts host services), ADR-0002 (`features/ai/` feature folder), ADR-0003 (DI via bind_services), ADR-0004 (state segregation), ADR-0006 (caller resolves the effective spread interval via `StatResolver`) |
 | **Enables** | spirit-system implementation (Erlik spread AI); future AI behaviors (diplomacy, hero AI) |
 | **Blocks** | Erlik spread stories cannot start until this is Accepted |
 | **Ordering Note** | Refactors existing enemy AI out of MapController; do before spirit-system implementation to avoid AI logic accreting in the orchestrator |
@@ -65,14 +65,17 @@ AI decision logic lives in **dedicated, injected, pure decision services** under
 
 - Each behavior is its own `RefCounted` service: `EnemyAIController` (political),
   `ErlikSpreadController` (corruption spread).
-- Each exposes a **pure** `decide(map_state) -> Array[intent]` method: it *reads*
-  `MapState` and returns a deterministic list of intents. It does **not** mutate
-  state and does **not** emit gameplay signals.
+- Each exposes a **pure** `decide(...)` method: it *reads* `MapState` (plus explicit
+  inputs) and returns a deterministic **intent** — `EnemyAIController` the next
+  `MoveIntent` (or `null`), `ErlikSpreadController` a `SpreadDecision`. It does **not**
+  mutate state and does **not** emit gameplay signals.
 - The orchestrator (`MapController`) receives them via `bind_services(...)`, calls
-  `decide()` during `end_turn()`, then **applies** each intent using the
-  already-injected `ArmyController` / `CombatResolver`, emitting the existing
-  `combat_occurred` / `army_moved` signals. Mutation + signals stay centralized in
-  the orchestrator ("call down, signal up", ADR-0004).
+  `decide()` during `end_turn()`, then **applies** each intent through the same
+  owner-agnostic rules the player uses — `ArmyController.can_move(…, mover = ENEMY)`
+  and the arrival branches 1/3 of `army-system.md` §3.3 (combat / peaceful; a region
+  emptied by combat becomes `NEUTRAL`) — emitting the existing `combat_occurred` /
+  `army_moved` signals. Mutation + signals stay centralized in the orchestrator
+  ("call down, signal up", ADR-0001/ADR-0003).
 - Intent data uses **inner classes** (e.g. `EnemyAIController.MoveIntent`) — type-safe
   and scoped, avoiding both untyped Dictionaries and top-level file clutter.
 - Determinism: tie-breaks are rule-based (lowest `army_count`, then `region_id`
@@ -81,29 +84,32 @@ AI decision logic lives in **dedicated, injected, pure decision services** under
 ### Architecture Diagram
 ```
 game/features/ai/                     ← LEAF decision services (pure, no mutation)
-├── enemy_ai_controller.gd            decide(map_state) -> Array[MoveIntent]
+├── enemy_ai_controller.gd            decide(map_state, acted) -> MoveIntent (null = none)
 └── erlik_spread_controller.gd        decide(map_state, effective_interval) -> SpreadDecision
 
 MapController.end_turn():             ← ORCHESTRATOR (mutates + signals)
-   for intent in _enemy_ai.decide(_map_state):
-       apply via _army_controller / _combat_resolver ; emit signals
-   var spread := _erlik.decide(_map_state, effective_interval)   # interval: caller resolves
-   if spread.is_spread_turn:                                     # (base + Gök Kalkanı, clamped)
+   var acted: Array[StringName] = []
+   for i in _map_state.enemy_actions_per_turn:          # decide → apply loop = sequential
+       var intent := _enemy_ai.decide(_map_state, acted)
+       if intent == null: break
+       apply via _army_controller (can_move mover=ENEMY, branches 1/3) ; emit signals
+       acted.append(intent.from_id)
+   # effective interval: base = _map_state.erlik_spread_interval (chapter content),
+   # + Gök Kalkanı via StatResolver.resolve(&"erlik_spread_interval", base, modifiers)
+   var spread := _erlik.decide(_map_state, effective_interval)
+   if spread.is_spread_turn:
        _map_state.last_erlik_spread_turn = _map_state.current_turn
-       if spread.target_id != &"": increment corruption via controller
+       if spread.target_id != &"": _spirit.apply_spread(spread.target_id)   # spirit feature = sole corruption writer
 
 Data flow:  MapController ──reads via──▶ AI service ──returns intents──▶ MapController applies
             (AI never writes state, never emits gameplay signals)
 ```
 
-**Sequential semantics (C-53):** the GDD rule processes enemy regions one after another,
-each seeing the result of the previous move. With `enemy_actions_per_turn > 1`,
-`EnemyAIController.decide()` must plan against a scratch copy of the map (apply each
-chosen intent to the copy before choosing the next) so that its output equals the
-sequential rule. At the MVP value 1 batch and sequential planning are identical.
-`MapState` is `RefCounted` with no `duplicate()` (ADR-0004 withdrew `duplicate_deep()`),
-so the scratch copy needs an explicit copy routine (e.g. a static `MapStateCopier.copy()`
-in `features/ai/`, regions + owners + armies only) — add it only when the budget exceeds 1.
+**Sequential semantics (C-53, simplified C-17):** the GDD rule processes enemy regions
+one after another, each seeing the result of the previous move. The orchestrator
+therefore calls `decide()` once per action and applies the result before the next call
+(decide → apply loop); `acted` lists regions that already moved this turn (each enemy
+region moves at most once). No scratch copy of `MapState` is needed.
 
 **Naming outside the defining script (verified 4.7.1, C-17):** inner classes resolve
 unqualified only inside their own script. Callers write `EnemyAIController.MoveIntent`,
@@ -122,17 +128,21 @@ class MoveIntent:
         from_id = p_from
         to_id = p_to
 
-func decide(map_state: MapState) -> Array[MoveIntent]
+## Next move of the first enemy region (region_id order) not in `acted` that can move;
+## null when none. Callers outside this script: `EnemyAIController.MoveIntent`.
+func decide(map_state: MapState, acted: Array[StringName]) -> MoveIntent
 
 class_name ErlikSpreadController extends RefCounted
-func bind_config(config: SpiritConfig) -> void   # base interval, levels, etc.
-## effective_interval = scene base interval + min(k, GOK_KALKANI_MAX_STACKS) × bonus,
-## resolved by the caller via StatResolver (ADR-0006) — this service does not read modifiers.
+## No config: the base interval is chapter content (`MapState.erlik_spread_interval`) and
+## the effective interval (base + Gök Kalkanı stacks, capped by ModifierSource.max_stacks)
+## is resolved by the caller via StatResolver (ADR-0006) — this service never reads modifiers.
 func decide(map_state: MapState, effective_interval: int) -> SpreadDecision
 
 class SpreadDecision extends RefCounted:
     var is_spread_turn: bool = false   # current_turn − last_erlik_spread_turn ≥ effective_interval
-    var target_id: StringName = &""    # empty on a spread turn with no candidate (counter still resets)
+    var target_id: StringName = &""    # computed on EVERY call: the candidate the rule picks for
+                                       # the current state (HUD telegraph, TR-spirit-010);
+                                       # empty when no candidate (counter still resets on a spread turn)
 ```
 
 ## Alternatives Considered
@@ -189,11 +199,14 @@ class SpreadDecision extends RefCounted:
 - **Network**: N/A (single-player).
 
 ## Migration Plan
-1. Create `game/features/ai/enemy_ai_controller.gd` with `decide(map_state)` holding
-   the current target-selection logic from `_run_enemy_ai()` (returns intents).
-2. `MapController.end_turn()` calls `_enemy_ai.decide()` then applies intents via
-   `ArmyController`/`CombatResolver`, emitting existing signals; delete the inline
-   `_run_enemy_ai()`.
+1. Create `game/features/ai/enemy_ai_controller.gd` with `decide(map_state, acted)`
+   holding the target-selection logic from `_run_enemy_ai()` (returns the next intent),
+   including the C-33 rules (region_id tie-break and processing order — C-52 lands them
+   inline first).
+2. `MapController.end_turn()` runs the decide → apply loop (budget
+   `enemy_actions_per_turn`), applying each intent via `ArmyController` (owner-agnostic
+   `can_move`, branches 1/3, emptied region → `NEUTRAL`) and `CombatResolver`, emitting
+   existing signals; delete the inline `_run_enemy_ai()`.
 3. Add `EnemyAIController` to `GameContext._setup_controllers()` and MapController's
    `bind_services(...)`.
 4. Add isolated unit tests for `EnemyAIController.decide()`; keep existing
@@ -203,8 +216,11 @@ class SpreadDecision extends RefCounted:
 **Rollback plan**: Re-inline `decide()` back into MapController (reverse of step 1–2).
 
 ## Validation Criteria
-- [ ] `EnemyAIController.decide()` returns the same moves the inline AI produced for
-      identical `MapState` (regression parity).
+- [ ] The decide → apply loop produces the same moves the inline AI produced (after C-52)
+      for identical `MapState` (regression parity).
+- [ ] With `enemy_actions_per_turn = 2`, the second move sees the result of the first.
+- [ ] `ErlikSpreadController.decide()` returns `target_id` on non-spread turns too, and
+      `is_spread_turn = true` with empty `target_id` when no candidate exists.
 - [ ] `EnemyAIController` is unit-tested in isolation with a stub `MapState`.
 - [ ] AI services contain no state mutation and emit no gameplay signals.
 - [ ] Adding `ErlikSpreadController` requires no change to `EnemyAIController`.

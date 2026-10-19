@@ -24,7 +24,7 @@
 #
 # STATUS VALUES: active | deprecated | superseded-by: TR-[system]-NNN
 
-version: 2
+version: 3
 last_updated: "2026-10-19"
 
 requirements:
@@ -32,25 +32,25 @@ requirements:
   - id: TR-map-001
     system: map
     gdd: design/gdd/region-map-system.md
-    requirement: "Per-region persistent state (owner, army_count, gold_per_turn, adjacency, geometry) tracked across turns"
+    requirement: "Per-region and per-map state tracked across turns as data-only state, with static content fields (from ChapterMapDefinition, not saved) distinguished from mutable saved fields (owner, army_count, planned corruption_level, recruited_this_turn, herd_per_turn)"
     created: 2026-08-13
-    revised: ""
+    revised: "2026-10-19"
     status: active
 
   - id: TR-map-002
     system: map
     gdd: design/gdd/region-map-system.md
-    requirement: "Map is data-driven from a ChapterMapDefinition Resource (.tres), loadable per chapter"
+    requirement: "Map and per-chapter tuning are data-driven from a ChapterMapDefinition (.tres) selected by chapter_id and loaded with load() (not const preload): region definitions incl. initial owner/army/corruption, action budgets, tamga ids, starting_gold, enemy_reinforcement_per_turn, erlik_spread_interval, win_condition; content is never saved"
     created: 2026-08-13
-    revised: ""
+    revised: "2026-10-19"
     status: active
 
   - id: TR-map-003
     system: map
     gdd: design/gdd/region-map-system.md
-    requirement: "Turn-flow orchestration (end_turn: enemy AI -> Erlik spread -> income -> turn++ -> win-check) over injected systems"
+    requirement: "end_turn is a no-op unless ONGOING: (1) enemy AI -> early LOST exit if the player has no regions -> (2) Erlik spread -> (3) economy step -> (4) turn++, actions reset, recruit counters reset -> (5) lose-then-win check; turn_ended emitted only after step 5 and only while ONGOING"
     created: 2026-08-13
-    revised: "2026-10-18"
+    revised: "2026-10-19"
     status: active
 
   - id: TR-map-004
@@ -64,17 +64,17 @@ requirements:
   - id: TR-map-005
     system: map
     gdd: design/gdd/region-map-system.md
-    requirement: "Enemy AI: per-enemy-region target selection (lowest-army non-enemy neighbour, ties by region_id alphabetical; enemy regions processed in region_id order) with a per-turn action budget"
+    requirement: "Enemy AI: per-enemy-region target selection (lowest-army non-enemy neighbour, ties by region_id alphabetical; enemy regions processed in region_id order, each at most once) with a per-turn action budget; planning is sequential (decide -> apply loop, each move sees the previous result)"
     created: 2026-08-13
-    revised: "2026-10-18"
+    revised: "2026-10-19"
     status: active
 
   - id: TR-map-006
     system: map
     gdd: design/gdd/region-map-system.md
-    requirement: "Data-driven win/lose evaluation (WinCondition: defeat-all-enemies + initially-neutral non-focus conquests + erlik_foci purified); checked after each player move and at end_turn (lose before win); game_result latch ends the game once"
+    requirement: "Data-driven win/lose evaluation (WinCondition: defeat-all-enemies + initially-neutral non-focus conquests + erlik_foci purified); checked after each player move and at end_turn (lose before win); game_won only after all move results are committed; game_result latch rejects moves/end_turn/recruit but not boon picks"
     created: 2026-08-13
-    revised: "2026-10-18"
+    revised: "2026-10-19"
     status: active
 
   # --- army-system (slug: army) ---
@@ -89,9 +89,17 @@ requirements:
   - id: TR-army-002
     system: army
     gdd: design/gdd/army-system.md
-    requirement: "Arrival resolution routes by target state in priority order: combat (foreign garrison) -> purification (no foreign garrison + corrupted; player only) -> peaceful merge/occupation"
+    requirement: "Arrival resolution routes by target state in priority order: combat (foreign garrison) -> purification (no foreign garrison + corrupted; player only) -> peaceful merge/occupation; enemy moves use only combat/peaceful branches; a losing attacker's survivors disperse"
     created: 2026-08-13
-    revised: "2026-10-18"
+    revised: "2026-10-19"
+    status: active
+
+  - id: TR-army-003
+    system: army
+    gdd: design/gdd/army-system.md
+    requirement: "Move-outcome preview: with a source selected, hovering a target shows the deterministic outcome (branch combat/purification/peaceful, losses, remaining; for purification success/failure and Ruh) computed by the same pure rule code that applies the move; a move that would fail purification requires a second confirmation"
+    created: 2026-10-19
+    revised: ""
     status: active
 
   # --- combat-system (slug: combat) ---
@@ -114,8 +122,16 @@ requirements:
   - id: TR-combat-003
     system: combat
     gdd: design/gdd/combat-system.md
-    requirement: "CombatResult is surfaced to the UI as a detailed battle report (losses, remaining, outcome)"
+    requirement: "CombatResult is surfaced to the UI as a detailed battle report (losses, remaining, outcome, including the loser's dispersed survivors)"
     created: 2026-08-13
+    revised: "2026-10-19"
+    status: active
+
+  - id: TR-combat-004
+    system: combat
+    gdd: design/gdd/combat-system.md
+    requirement: "Effective strength (M2): when the player attacks/defends, A_eff = ceil(resolve(army_attack, A)) / D_eff = ceil(resolve(army_defense, D)) select the branch; each side's losses derive from the opposing side's effective strength, remaining troops from real unit counts; with no modifiers results equal the base formulas; corruption_strength never receives defense modifiers; the caller resolves, CombatResolver stays a leaf"
+    created: 2026-10-19
     revised: ""
     status: active
 
@@ -131,25 +147,25 @@ requirements:
   - id: TR-spirit-002
     system: spirit
     gdd: design/gdd/spirit-system.md
-    requirement: "Ruh (spirit) resource and a persistent, cross-scene boons list held on GameState"
+    requirement: "Ruh resource and an ordered boons list (picked boon_ids) on GameState, persisted across scenes; boons is the single source of truth for n and for rebuilding boon modifiers"
     created: 2026-08-13
-    revised: ""
+    revised: "2026-10-19"
     status: active
 
   - id: TR-spirit-003
     system: spirit
     gdd: design/gdd/spirit-system.md
-    requirement: "Purification reuses CombatResolver (arriving force vs corruption_strength); failure loses the whole arriving force; conquest keeps corruption"
+    requirement: "Purification reuses CombatResolver (P_eff vs corruption_strength); success iff P_eff > S regardless of draw_favors_defender; survivors = P - ceil(S x attacker_win_loss_ratio); failure loses the whole arriving force; conquest keeps corruption"
     created: 2026-08-13
-    revised: "2026-10-18"
+    revised: "2026-10-19"
     status: active
 
   - id: TR-spirit-004
     system: spirit
     gdd: design/gdd/spirit-system.md
-    requirement: "Deterministic seeded boon-offer selection (3-of-pool, reproducible for tests)"
+    requirement: "Deterministic (no RNG) 3-slot offer from the boon_id-sorted eligible pool: seed = (chapter_id x 31 + n x 7) mod pool_size; slots repeat when pool_size < 3"
     created: 2026-08-13
-    revised: ""
+    revised: "2026-10-19"
     status: active
 
   - id: TR-spirit-005
@@ -163,24 +179,89 @@ requirements:
   - id: TR-spirit-006
     system: spirit
     gdd: design/gdd/spirit-system.md
-    requirement: "Shared additive modifier pipeline for boons + council bonuses, preventing double-counting"
+    requirement: "Shared additive modifier pipeline for boons + council bonuses, preventing double-counting; modifier records are derived from saved choices (boons, later council state) and rebuilt on load"
     created: 2026-08-13
-    revised: ""
+    revised: "2026-10-19"
     status: active
 
   - id: TR-spirit-007
     system: spirit
     gdd: design/gdd/spirit-system.md
-    requirement: "Corruption visual state: distinguishable region colour by corruption level"
+    requirement: "Corruption visual layer: Erlik purple/charcoal dither overlay above (never hiding) ownership colour; levels 1-3 distinguished per art bible rule (C-50); info panel shows level + corruption_strength"
     created: 2026-08-13
-    revised: ""
+    revised: "2026-10-19"
     status: active
 
   - id: TR-spirit-008
     system: spirit
     gdd: design/gdd/spirit-system.md
-    requirement: "Boon offer state derived from ruh/boons (no saved flag); presented at player turn start (max 1) or at scene victory (mandatory); deferral keeps the same deterministic offer; eligible pool gated by required systems and stack caps"
+    requirement: "Boon offer state derived from ruh/boons (no saved flag); auto-modal at most once per player turn start, mandatory sequential offers at scene victory; HUD button may chain picks within a turn; offer recomputed when opened; picks allowed under the game_result lock; eligible pool gated by required systems and ModifierSource.max_stacks"
     created: 2026-10-18
+    revised: "2026-10-19"
+    status: active
+
+  - id: TR-spirit-009
+    system: spirit
+    gdd: design/gdd/spirit-system.md
+    requirement: "Ruh is earned only by successful purification: ruh_gain = round(resolve(ruh_gain, pre-purification level x RUH_PER_LEVEL)); spent only on boons (boon_cost(n) = BASE_BOON_COST + n x BOON_COST_STEP); all move results (owner, army, corruption, Ruh, actions) are committed before win evaluation and game_won emission; SpiritController is the sole writer of corruption_level, ruh and boons"
+    created: 2026-10-19
+    revised: ""
+    status: active
+
+  - id: TR-spirit-010
+    system: spirit
+    gdd: design/gdd/spirit-system.md
+    requirement: "Spread telegraph: HUD shows turns remaining until the next spread (from last_erlik_spread_turn and the effective interval) and the target the spread rule would pick for the current state, computed by the same pure rule used in end_turn"
+    created: 2026-10-19
+    revised: ""
+    status: active
+
+  # --- resource-system (slug: resource) — added 2026-10-19 (C-17) ---
+  - id: TR-resource-001
+    system: resource
+    gdd: design/gdd/resource-system.md
+    requirement: "Gold is data-only GameState state (int, never negative); each scene opens with ChapterMapDefinition.starting_gold; gold is not carried between scenes and cannot be converted to/from army or Ruh"
+    created: 2026-10-19
+    revised: ""
+    status: active
+
+  - id: TR-resource-002
+    system: resource
+    gdd: design/gdd/resource-system.md
+    requirement: "End-of-turn economy step (end_turn step 3, after enemy AI and Erlik spread) applies in order: player income F2 = max(I_floor, floor((sum floor(G_base x M_c) + B_add) x M_g)) over player regions (0 if none), enemy reinforcement +E_r per ENEMY region, upkeep F7 (MVP U = 0, debt never accumulates); summation and rounding owned by ResourceController, B_add/M_g from the modifier pipeline, M_c from spirit"
+    created: 2026-10-19
+    revised: ""
+    status: active
+
+  - id: TR-resource-003
+    system: resource
+    gdd: design/gdd/resource-system.md
+    requirement: "Recruit action on a player-owned region during the player's turn: k >= 1, k <= remaining cap, k x recruit_cost <= gold, all-or-nothing; consumes no action; troops usable immediately; rejected on non-player regions and when game_result != ONGOING; no refunds"
+    created: 2026-10-19
+    revised: ""
+    status: active
+
+  - id: TR-resource-004
+    system: resource
+    gdd: design/gdd/resource-system.md
+    requirement: "Per-region recruit counter (RegionData.recruited_this_turn) with recruit_cap = max(R_min, G_eff); reset for all regions in end_turn step 4 and on ownership change; always 0 at turn-end autosave (initialised to 0 on load)"
+    created: 2026-10-19
+    revised: ""
+    status: active
+
+  - id: TR-resource-005
+    system: resource
+    gdd: design/gdd/resource-system.md
+    requirement: "Economy tuning is data-driven: global knobs (recruit_cost, R_min, I_floor, upkeep_per_army, A_free) in an injected config resource with @export defaults; per-chapter knobs (starting_gold, enemy_reinforcement_per_turn) in ChapterMapDefinition; no hardcoded starting gold"
+    created: 2026-10-19
+    revised: ""
+    status: active
+
+  - id: TR-resource-006
+    system: resource
+    gdd: design/gdd/resource-system.md
+    requirement: "HUD shows gold and projected income (+X/turn) equal to F2 for current ownership, computed by the same pure income function the economy step uses; recruit control shows cost, used/cap and disabled-state hints via translation keys"
+    created: 2026-10-19
     revised: ""
     status: active
 
@@ -204,9 +285,9 @@ requirements:
   - id: TR-concept-003
     system: concept
     gdd: design/gdd/game-concept.md
-    requirement: "Three data-driven resources (gold/herds/spirit), extensible without core rewrite"
+    requirement: "Resources data-driven: gold active in MVP, herds defined but inert (herd_per_turn reserved), Ruh owned by spirit; adding a resource needs no core rewrite"
     created: 2026-08-13
-    revised: ""
+    revised: "2026-10-19"
     status: active
 
   - id: TR-concept-004
@@ -230,5 +311,13 @@ requirements:
     gdd: design/gdd/game-concept.md
     requirement: "Localization: 11 languages via tr()/CSV, no hardcoded player-visible text"
     created: 2026-08-13
+    revised: ""
+    status: active
+
+  - id: TR-concept-007
+    system: concept
+    gdd: design/gdd/game-concept.md
+    requirement: "Scene-end sequence: on victory, pending Kök Böri offers are shown sequentially and are mandatory (exempt from the game_result lock), then the outro; scene flow persists completion (chapters_completed, map cleared) after the picks; on defeat no offer is shown and the last turn-end autosave is kept"
+    created: 2026-10-19
     revised: ""
     status: active

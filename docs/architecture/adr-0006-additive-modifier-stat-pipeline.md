@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-review-2026-10-19.md))
 
 > **Amendment 2026-10-19 (C-53, cross-review W-F):** Gök Kalkanı is a `FLAT` modifier on
 > `erlik_spread_interval` (C-31); `ModifierSource` gains `max_stacks`; persistence follows
@@ -21,7 +21,7 @@ Proposed
 | **Domain** | Core / Scripting |
 | **Knowledge Risk** | LOW — plain GDScript data classes and pure functions; no rendering/physics/post-cutoff APIs |
 | **References Consulted** | `docs/engine-reference/godot/VERSION.md`, `docs/engine-reference/godot/current-best-practices.md` |
-| **Post-Cutoff APIs Used** | None. (`duplicate_deep()` 4.5+ is relevant only to the future save/load ADR) |
+| **Post-Cutoff APIs Used** | None |
 | **Verification Required** | ✅ Verified on 4.7.1 (C-17, 2026-10-19): typed arrays are invariant at **runtime** (an untyped array passed to `Array[StatModifier]` errors at call time, not parse time); `.filter()` on a **typed** array returns a typed array, on an untyped array an untyped one; the cast syntax `Array[StatModifier](x)` does not compile — convert with `typed.assign(src)`. Remaining: `ModifierSource` `.tres` load path |
 
 ## ADR Dependencies
@@ -29,9 +29,9 @@ Proposed
 | Field | Value |
 |-------|-------|
 | **Depends On** | ADR-0003 (dependency injection — resolver is injected), ADR-0004 (state segregation — modifier list is data-only state) |
-| **Enables** | Spirit/boon implementation (TR-spirit-006), council-system GDD, resource-system F2 (`B_add`/`M_g`) wiring (C-37), `CombatResolver` stat inputs |
+| **Enables** | Spirit/boon implementation (TR-spirit-006), council-system GDD, resource-system F2 (`B_add`/`M_g`) wiring (C-39), effective combat strength computed by the caller of `CombatResolver` (M2), ADR-0007 (modifier rebuild on load) |
 | **Blocks** | Spirit (boons) and council implementation stories |
-| **Ordering Note** | Save/Load ADR (C-16) serializes `GameState.modifiers`; keep `StatModifier` a plain field-only class; ADR-0007 serializes it as JSON via `SaveSerializer` (it stays `RefCounted`; `ModifierSource` is content, a `Resource`, never saved) |
+| **Ordering Note** | `GameState.modifiers` is **derived** and never serialized (amendment 2026-10-19); ADR-0007 saves the choices (`boons`) and `ModifierController.rebuild()` restores the records on load. `StatModifier` stays a plain field-only `RefCounted`; `ModifierSource` is content (`Resource`, `res://` only), never saved |
 
 ## Context
 
@@ -55,7 +55,7 @@ double-counting will be a matter of time.
 - ADR-0004: state objects hold data + pure getters only; no logic.
 - Technical preferences: no autoload singletons, no central signal hub; static typing mandatory; gameplay values data-driven.
 - Determinism: results must be identical for identical state (tests, seeded boon offers).
-- Must be serializable later (C-16).
+- Must survive save/load (ADR-0007) — satisfied by rebuilding from saved choices.
 
 ### Requirements
 
@@ -83,6 +83,7 @@ Introduce a **source-keyed modifier list** (data, in `GameState`) and a **pure
   on the existing record; it never appends a duplicate.
 - `ModifierSource` (`extends Resource`, `.tres`, `@export`ed typed fields):
   `source_id: StringName`, `exclusive_group: StringName` (empty = none),
+  `max_stacks: int` (0 = unlimited — the **single owner** of a stack cap, C-17 D2),
   `effects: Array[ModifierEffect]` where `ModifierEffect` (`Resource`) holds
   `stat_id`, `kind`, `value`. The group lives on the **source**, not on each
   modifier, and is checked **per source** at registration.
@@ -113,6 +114,16 @@ council member and a boon both granting +10% gold) share one group, so only
 one can be active — this is how boon vs. council double-counting is
 blocked. Re-adding the *same* `source_id` increments `stacks`. It emits
 `modifiers_changed(stat_id: StringName)` (signal up) so HUD/consumers refresh.
+A re-add that would exceed the source's `max_stacks` is rejected (`false`); eligibility
+checks (e.g. spirit's boon pool) ask `ModifierController.can_add(source)` instead of
+reading `stacks` themselves.
+
+**Rebuild on load / context start (C-17, W2):** `rebuild(sources: Array[ModifierSource])`
+**clears** `GameState.modifiers` and re-adds each source in order (one entry per saved
+choice — e.g. the spirit feature maps `GameState.boons` → `BoonDefinition.modifier_source`).
+`GameContext` calls it once during setup, before any consumer resolves, so a `GameState`
+that survives across chapters never double-stacks. `SaveSerializer` stays pure and only
+restores `boons`.
 
 ### Architecture
 
@@ -125,7 +136,8 @@ ModifierSource (.tres, data)  ──add_source──▶ ModifierController (sole
                                                    ▼
                        StatResolver.resolve(stat_id, base, modifiers) -> float
                           ▲            ▲              ▲
-                 ResourceController  CombatResolver  Spirit/Council UI
+          ResourceController  MapController (combat A_eff/D_eff, spread interval)  Spirit/Council UI
+          (CombatResolver itself stays a zero-dependency leaf — ADR-0002; it receives resolved values)
 ```
 
 ### Key Interfaces
@@ -151,15 +163,17 @@ static func percent_sum(stat_id: StringName, modifiers: Array[StatModifier]) -> 
 class_name ModifierController extends RefCounted   # no tree/per-frame need
 signal modifiers_changed(stat_id: StringName)
 func bind_services(game_state: GameState) -> void
-func add_source(source: ModifierSource) -> bool
+func add_source(source: ModifierSource) -> bool        # false on exclusive_group clash or max_stacks
+func can_add(source: ModifierSource) -> bool
 func remove_source(source_id: StringName) -> void
+func rebuild(sources: Array[ModifierSource]) -> void   # clear + re-add (load / context start)
 ```
 
 ### Scope notes
 
 - Stat ids are data (`StringName` constants in one `stat_ids.gd` per consuming feature), not an enum, so new stats need no pipeline change.
-- Interval-type boon effects are ordinary stats: Gök Kalkanı is `FLAT +GOK_KALKANI_INTERVAL_BONUS` on `erlik_spread_interval` (C-31, `spirit-system.md` §3.5/§4.6). Clamps (e.g. `min(k, GOK_KALKANI_MAX_STACKS)` on the effect) remain the caller's job; the resolver never clamps.
-- **Stack caps:** `ModifierSource` has `max_stacks: int` (0 = unlimited). `ModifierController.add_source()` rejects (returns `false`) a re-add that would exceed it. Boon catalog metadata (`boon_id`, name key, `requires`) lives in the spirit feature's `BoonDefinition` content resource, which references a `ModifierSource`; the pipeline knows only effects.
+- Interval-type boon effects are ordinary stats: Gök Kalkanı is `FLAT +GOK_KALKANI_INTERVAL_BONUS` on `erlik_spread_interval` (C-31, `spirit-system.md` §3.5/§4.6). Range clamps of a *resolved value* (e.g. `M_g` 1.0–2.0) remain the caller's job; the resolver never clamps. Stack limits are **not** a caller clamp — they are enforced at write time by `max_stacks` (below), so no consumer ever reads `stacks` directly.
+- **Stack caps (single owner, C-17 D2):** `ModifierSource.max_stacks` (the Gök Kalkanı `.tres` carries `GOK_KALKANI_MAX_STACKS` = 3). `ModifierController.add_source()` rejects a re-add that would exceed it; if the knob is lowered, `rebuild()` on the next load clips the extra picks. Boon catalog metadata (`boon_id`, name key, `requires`) lives in the spirit feature's `BoonDefinition` content resource, which references a `ModifierSource`; the pipeline knows only effects.
 - **Persistence — save choices, derive effects (C-53):** `GameState.modifiers` is **derived state**. The saved choices (`GameState.boons`: picked `boon_id`s in order; later the council state) are the single source of truth; on load `ModifierController` rebuilds the records by re-adding each choice's source. This removes the "picks (`n`) vs stacks" double bookkeeping and lets rebalanced content apply to old saves.
 - Multipliers that are **not** player-sourced (corruption `M_c`) stay outside the pipeline — they are per-region game rules, not accumulated bonuses.
 
@@ -177,7 +191,7 @@ func remove_source(source_id: StringName) -> void
 - **Description**: `Π(1 + p_i)`.
 - **Pros**: Cannot exceed intuitive bounds as fast at low values; common in ARPGs.
 - **Cons**: Contradicts GDD "toplamsal"; exponential growth on repeat boons; harder to read in UI ("+%20 total").
-- **Rejection Reason**: GDD defines additive stacking; balance range %3–%15 is tuned for additive.
+- **Rejection Reason**: GDD defines additive stacking; boon values (flat +1, Arınma Ustalığı +20 %, `spirit-system.md` §3.5/§7) are tuned for additive.
 
 ### Alternative 3: Godot `Resource`-based stat graph / node-attached stat components
 
@@ -208,7 +222,7 @@ func remove_source(source_id: StringName) -> void
 | A system bypasses the resolver and re-sums bonuses | Code-review rule + grep check in CI for direct `modifiers` iteration outside `features/modifiers/` |
 | `exclusive_group` forgotten when authoring a new source | `ModifierSource` validation test iterates all `.tres` sources and fails on duplicate effects |
 | Percent sums exceed GDD ranges | Consumers clamp to GDD range; tuning knob table owns ranges |
-| Non-numeric lütuf effects forced into stat form | Allowed to remain outside pipeline; decided per boon in C-31 |
+| Non-numeric lütuf effects forced into stat form | C-31 resolved: every MVP/M2 boon is a numeric stat (interval included); a future non-numeric effect may stay outside the pipeline by its GDD's decision |
 
 ## GDD Requirements Addressed
 
@@ -217,14 +231,14 @@ func remove_source(source_id: StringName) -> void
 | `spirit-system.md` §3.4 | Boon effects passive, additive, stack on repeat | `stacks` on a single record; additive `pct_sum` |
 | `spirit-system.md` §6 / TR-spirit-006 | Council shares the additive pipeline; no double-count | Single list + uniqueness invariant + `exclusive_group` |
 | `resource-system.md` F2 | `B_add` (flat) then `M_g` multiplier | `flat_sum` → `B_add`; `1 + pct_sum` → `M_g` |
-| `combat-system.md` | Attack/defense strength boons (Kurt Gücü, Demir Post) | `army_attack` / `army_defense` stats resolved via `StatResolver` (formula integration in C-31/C-33) |
+| `combat-system.md` §4 "Etkin güç" | Attack/defense strength boons (Kurt Gücü, Demir Post) | `army_attack` / `army_defense` resolved by the caller (`MapController`) and passed to `CombatResolver` as effective strength (TR-combat-004, M2) |
 | `council-system.md` (not yet written) | Council bonuses | Council members are `ModifierSource`s |
 
 ## Performance Implications
 
 - **CPU**: Resolution is O(n) over ≤ ~50 modifiers, called a handful of times per turn — negligible.
 - **Memory**: A few dozen small objects.
-- **Load Time**: None until save/load.
+- **Load Time**: `rebuild()` at context start — O(boons), negligible.
 - **Network**: N/A.
 
 ## Migration Plan
@@ -243,7 +257,8 @@ func remove_source(source_id: StringName) -> void
 - [ ] Unit test: `resolve()` accepts the `.filter()` result of a typed `Array[StatModifier]` directly, and an untyped source after `assign()` conversion.
 - [ ] Unit test: `resolve(base=5, flat=+1, pct=+0.2)` → `7.2`, and caller floor gives resource AC `floor(6 × 1.2) = 7`.
 - [ ] No consumer iterates `GameState.modifiers` outside `features/modifiers/`.
-- [ ] Unit test: a source with `max_stacks = 3` accepts 3 adds and rejects the 4th.
+- [ ] Unit test: a source with `max_stacks = 3` accepts 3 adds and rejects the 4th; `can_add()` reports it.
+- [ ] Unit test: `rebuild()` twice with the same sources leaves identical records (no double stacks).
 - [ ] Unit test: rebuilding modifiers from `GameState.boons = [bereket, bereket, gok_kalkani]` yields `gold_income` flat 2 and `erlik_spread_interval` flat 1.
 
 ## Related Decisions

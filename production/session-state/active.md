@@ -134,3 +134,13 @@
 - Rapor uyarıları kapatıldı (çözüm günlüğü raporun sonunda). Önemli kararlar: aynı tur ikinci lütuf seçimi HUD'dan serbest (otomatik modal tur başı ≤1); "seçimi sakla, etkiyi türet" — `GameState.boons` tek kaynak, modifikatörler yüklemede yeniden kurulur (ADR-0006/0007 amendment), `ModifierSource.max_stacks`; `turn_ended` kontrol sonrası + yalnızca ONGOING, 1. adım sonrası erken kayıp; ADR-0005 `SpreadDecision`; arındırma `draw_favors_defender`'dan bağımsız; hamle önizlemesi + yayılım göstergesi gereksinimi (başarısız arındırma ikinci onay).
 - Kalanlar sahipli: C-49 (N1–N4, N9, W-B), C-36 (S1-e, beast tamga), C-44, C-54, C-35.
 - NEXT: C-17 `/architecture-review` (ADR'leri Accepted yap). Not: kendi yazdığım ADR değişiklikleri taze gözle incelenmeli — C-17 bağımsız ajanlarla yapılacak.
+
+## Session Extract — /architecture-review 2026-10-19 (C-17)
+- Verdict: CONCERNS
+- Requirements: 36 total — 23 covered, 9 partial, 4 gaps
+- New TR-IDs registered: 11 (TR-army-003, TR-combat-004, TR-resource-001…006, TR-spirit-009/010, TR-concept-007); 15 revised; registry v3
+- GDD revision flags: None (spirit §3.5/§5 aligned)
+- Top ADR gaps: Move Resolution (pure Outcome + Apply), Presentation Layer & Reports, Scene flow & chapter loading (+ Localization)
+- Report: docs/architecture/architecture-review-2026-10-19.md
+- Decisions (recommended, night mode): D1 load() on transition; D2 ModifierSource.max_stacks sole owner; D3 SpiritController sole writer of spirit state (features/bozkurt/); D4 RootContext owns SaveController + continue_requested; AI decide→apply loop.
+- All 7 ADRs → Accepted. New tasks C-57…C-62. NEXT: C-18 /create-architecture.

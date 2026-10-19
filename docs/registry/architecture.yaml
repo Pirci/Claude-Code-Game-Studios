@@ -30,7 +30,7 @@
 #   Superseded entries:     Grep pattern="status: superseded"
 
 version: 1
-last_updated: "2026-10-18"
+last_updated: "2026-10-19"
 
 # ─── STATE OWNERSHIP ─────────────────────────────────────────────────────────
 # Who is the authoritative owner of each piece of shared game state.
@@ -48,7 +48,7 @@ state_ownership:
     status: active           # active | superseded_by: ADR-NNNN
     owner_system: root-context
     adr: docs/architecture/adr-0001-context-based-hierarchical-architecture.md
-    interface: "GameState instance created and owned by RootContext; injected into GameContext via bind_services(game_state: GameState). One instance per campaign; discarded on return-to-menu."
+    interface: "GameState instance created and owned by RootContext (new campaign: GameState.new(); Continue: RootContext asks its SaveController to load — C-17 D4); injected into GameContext via bind_services(game_state, accessibility). One instance per campaign; discarded on return-to-menu."
     write_access: game-context-controllers   # controllers under GameContext mutate; RootContext owns lifecycle
     referenced_by:
       - docs/architecture/adr-0001-context-based-hierarchical-architecture.md
@@ -69,6 +69,19 @@ state_ownership:
       - docs/architecture/adr-0007-save-load-persistence.md   # not saved; rebuilt from boons
     added: 2026-10-18
     revised: 2026-10-19   # C-53: derived state + max_stacks (cross-review W-F)
+
+  - state: spirit_state
+    status: active
+    owner_system: spirit-system
+    adr: docs/architecture/adr-0005-ai-architecture.md   # spread application; ownership decided in /architecture-review 2026-10-19 (D3)
+    interface: "RegionData.corruption_level, GameState.ruh, GameState.boons — read freely; written ONLY by SpiritController (game/features/bozkurt/, C-38/C-39): apply_spread(region_id), apply_purification(...) (called by MapController for arrival branch 2), pick_boon(boon_id) (also allowed under the game_result lock). MapController orchestrates; ArmyController never writes spirit state."
+    write_access: spirit-controller-only
+    referenced_by:
+      - docs/architecture/adr-0005-ai-architecture.md
+      - docs/architecture/adr-0006-additive-modifier-stat-pipeline.md   # pick_boon → ModifierController.add_source
+      - docs/architecture/adr-0007-save-load-persistence.md             # ruh + boons saved, corruption_level per region
+    added: 2026-10-19
+    revised: ""
 
   - state: save_files
     status: active
@@ -115,25 +128,27 @@ interfaces:
     consumers:
       - root-context         # listens and drives _switch_to()
     adr: docs/architecture/adr-0001-context-based-hierarchical-architecture.md
-    signal_signature: "MenuContext.new_campaign_requested(); MenuContext.quit_requested(); GameContext.return_to_menu_requested(); RootContext.context_changed(context_name: StringName)"
+    signal_signature: "MenuContext.new_campaign_requested(); MenuContext.continue_requested(); MenuContext.quit_requested(); GameContext.return_to_menu_requested(); RootContext.context_changed(context_name: StringName)"
     referenced_by:
       - docs/architecture/adr-0001-context-based-hierarchical-architecture.md
+      - docs/architecture/adr-0007-save-load-persistence.md   # continue_requested → RootContext loads
     added: 2026-08-13
-    revised: ""
+    revised: 2026-10-19   # C-17 D4: continue_requested added; RootContext owns SaveController
 
   - contract: ai_turn_execution
     status: active
     # Approved by user 2026-10-07 (was written 2026-08-13 pending approval — K-02)
-    pattern: direct_call     # orchestrator calls decide(), then applies intents
+    pattern: direct_call     # orchestrator calls decide(), then applies intents (decide → apply loop)
     producer: ai-decision-services (enemy-ai, erlik-spread)
     consumers:
-      - map-controller       # calls decide(map_state), applies returned intents, emits signals
+      - map-controller       # calls decide(), applies each intent via owner-agnostic rules, emits signals
     adr: docs/architecture/adr-0005-ai-architecture.md
-    signal_signature: "EnemyAIController.decide(map_state: MapState) -> Array[MoveIntent]; ErlikSpreadController.decide(map_state: MapState) -> Array[StringName]  (pure: reads state, returns intents; no mutation, no signals)"
+    # was: "EnemyAIController.decide(map_state) -> Array[MoveIntent]; ErlikSpreadController.decide(map_state) -> Array[StringName]" (2026-08-13)
+    signal_signature: "EnemyAIController.decide(map_state: MapState, acted: Array[StringName]) -> EnemyAIController.MoveIntent (null = no move; called once per enemy action); ErlikSpreadController.decide(map_state: MapState, effective_interval: int) -> ErlikSpreadController.SpreadDecision {is_spread_turn, target_id (computed every call)}  (pure: reads state, returns intents; no mutation, no signals)"
     referenced_by:
       - docs/architecture/adr-0005-ai-architecture.md
     added: 2026-08-13
-    revised: ""
+    revised: 2026-10-19   # C-53 W-E + C-17 W3
 
   - contract: stat_resolution
     status: active
@@ -141,29 +156,30 @@ interfaces:
     producer: modifier-system (StatResolver)
     consumers:
       - resource-controller  # B_add / M_g for income (resource-system F2)
-      - combat-resolver      # attack/defense strength stats
+      - map-controller       # resolves army_attack/army_defense (A_eff/D_eff) and erlik_spread_interval; CombatResolver stays a leaf (C-17 W7)
+      - spirit-controller    # ruh_gain; boon eligibility via ModifierController.can_add
       - spirit-ui            # tooltips / HUD
     adr: docs/architecture/adr-0006-additive-modifier-stat-pipeline.md
-    signal_signature: "StatResolver.resolve(stat_id: StringName, base: float, modifiers: Array[StatModifier]) -> float  = (base + flat_sum) * (1 + percent_sum); caller rounds. ModifierController.modifiers_changed(stat_id: StringName) signals refresh."
+    signal_signature: "StatResolver.resolve(stat_id: StringName, base: float, modifiers: Array[StatModifier]) -> float  = (base + flat_sum) * (1 + percent_sum); caller rounds. ModifierController.modifiers_changed(stat_id: StringName) signals refresh; ModifierController.rebuild(sources) clears + re-adds at context start."
     referenced_by:
       - docs/architecture/adr-0006-additive-modifier-stat-pipeline.md
+      - docs/architecture/adr-0005-ai-architecture.md   # effective spread interval
     added: 2026-10-18
-    revised: ""
+    revised: 2026-10-19
 
   - contract: save_load
     status: active
     pattern: direct_call     # SaveSerializer is pure; SaveController orchestrates; failures signal up
     producer: save-system (SaveSerializer, SaveStore, SaveController)
     consumers:
-      - game-context         # autosave after turn_ended
-      - menu-context         # Continue
-      - root-context         # settings load at startup
+      - game-context         # autosave after turn_ended (emitted only after the end check, while ONGOING)
+      - root-context         # owns SaveController; Continue (on MenuContext.continue_requested) + settings load at startup (C-17 D4)
     adr: docs/architecture/adr-0007-save-load-persistence.md
-    signal_signature: "SaveSerializer.to_dict(game_state: GameState) -> Dictionary; SaveSerializer.from_dict(data: Dictionary, map_factory: Callable) -> LoadResult; SaveController.save_failed(reason: StringName); SaveController.loaded(game_state: GameState)"
+    signal_signature: "SaveSerializer.to_dict(game_state: GameState) -> Dictionary; SaveSerializer.from_dict(data: Dictionary, map_factory: Callable) -> LoadResult; SaveController.save_failed(reason: StringName); SaveController.load_campaign() -> LoadResult"
     referenced_by:
       - docs/architecture/adr-0007-save-load-persistence.md
     added: 2026-10-18
-    revised: ""
+    revised: 2026-10-19   # C-17: LoadResult everywhere; RootContext owns the controller
 
 # Example:
 #
@@ -313,8 +329,8 @@ forbidden_patterns:
   - pattern: ai_service_mutates_or_signals
     status: active
     # Approved by user 2026-10-07 together with ai_turn_execution (K-02)
-    description: "AI decision services (decide(map_state) -> Array[intent]) must be
-      pure: read MapState and return intents only. They must not mutate state or emit
+    description: "AI decision services (decide(...) -> intent) must be
+      pure: read MapState and explicit inputs and return intents only. They must not mutate state or emit
       gameplay signals. The orchestrator (MapController) applies intents and emits."
     why: "Keeping AI pure makes each behavior deterministic and unit-testable in
       isolation, and keeps mutation + signals centralized ('call down, signal up').

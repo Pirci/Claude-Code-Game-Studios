@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed — **partially superseded by ADR-0007 (2026-10-18)**: the `RefCounted → Resource` save/load migration (Decision bullet 4, Alternative 2 deferral, Migration Plan) is replaced by a JSON `SaveSerializer`; state classes stay `RefCounted`. The data-only segregation rule is unchanged.
+Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-review-2026-10-19.md)) — **partially superseded by ADR-0007 (2026-10-18)**: the `RefCounted → Resource` save/load migration (Decision bullet 4, Alternative 2 deferral, Migration Plan) is replaced by a JSON `SaveSerializer`; state classes stay `RefCounted`. The data-only segregation rule is unchanged.
 
 ## Date
 
@@ -30,7 +30,7 @@ keeps functional code (controllers) cleanly separated from data.
 |-------|-------|
 | **Engine** | Godot 4.7 |
 | **Domain** | Core / Scripting |
-| **Knowledge Risk** | LOW — plain data classes; save/load path (Resource) is a documented future step |
+| **Knowledge Risk** | LOW — plain `RefCounted` data classes; persistence is ADR-0007's JSON serializer |
 | **References Consulted** | `docs/engine-reference/godot/VERSION.md`, `docs/engine-reference/godot/current-best-practices.md` |
 | **Post-Cutoff APIs Used** | None. (`duplicate_deep()` was relevant only to the withdrawn `Resource` migration — superseded by ADR-0007.) |
 | **Verification Required** | None — state stays `RefCounted`; copies (e.g. ADR-0005 scratch planning) use explicit copy routines |
@@ -40,7 +40,7 @@ keeps functional code (controllers) cleanly separated from data.
 | Field | Value |
 |-------|-------|
 | **Depends On** | ADR-0001 (RootContext owns the `GameState` lifecycle) |
-| **Enables** | Save/load system (future); deterministic, testable state |
+| **Enables** | ADR-0007 (save/load); deterministic, testable state |
 | **Blocks** | None |
 | **Ordering Note** | Resolved by ADR-0007: state stays `RefCounted`, persistence via JSON `SaveSerializer`. Sections below that describe the `Resource` migration are kept as history and marked superseded. |
 
@@ -58,19 +58,22 @@ for all long-term state, separated from the logic that mutates it.
 Implemented. `game/state/` holds three data-only classes, all `extends RefCounted`:
 
 - `GameState` — campaign-level state: `current_chapter`, `gold`,
-  `bozkurt_bonuses`, `chapters_completed`, `map_state`. Getters only
-  (`is_chapter_unlocked`, `get_total_bozkurt_bonus`, `reset`).
+  `chapters_completed`, `map_state` (as built also the legacy `bozkurt_bonuses` /
+  `get_total_bozkurt_bonus()`, replaced by `modifiers` per ADR-0006 — C-55); planned
+  `ruh`, `boons` (spirit-system, C-39). Getters only (`is_chapter_unlocked`, `reset`).
 - `MapState` — per-map state: `regions` dict, `current_turn`,
-  `actions_remaining`, etc. Query getters only.
+  `actions_remaining`, etc. (planned `game_result`, `last_erlik_spread_turn` —
+  region-map §3.1). Query getters only.
 - `RegionData` — per-region state: owner, army_count, gold_per_turn, geometry.
 
 All mutation happens in controllers (`MapController`, `ArmyController`,
-`ResourceController`), never inside the state classes. No save/load exists yet.
+`ResourceController`), never inside the state classes. Save/load: ADR-0007 (not yet built).
 
 ### Constraints
 
-- **Technical**: `RefCounted` has no built-in serialization; `Resource` does
-  (`ResourceSaver`/`ResourceLoader`, `.tres`/`.res`).
+- **Technical**: `RefCounted` has no built-in serialization — ADR-0007 adds a pure
+  JSON `SaveSerializer` instead of `ResourceSaver`/`ResourceLoader` (which would allow
+  script instantiation from user files — forbidden pattern `untrusted_resource_loading`).
 - **Compatibility**: State is created/owned per ADR-0001 and mutated by injected
   controllers per ADR-0003.
 
@@ -94,18 +97,22 @@ Keep **long-term state in data-only objects, logic in controllers**.
 - **Base class: `RefCounted`** (final — ADR-0007). ~~When save/load is implemented,
   migrate the state classes to `Resource`~~ — *superseded by ADR-0007: persistence is a
   pure JSON `SaveSerializer`; state stays `RefCounted`.*
+- **Derived state (amendment 2026-10-19, C-17):** a state field may hold *derived*
+  data (e.g. `GameState.modifiers`, ADR-0006) when it has exactly one writer that can
+  rebuild it from saved choices; derived fields are never serialized.
 
 ### Architecture
 
 ```
 GameState (RefCounted, data-only)          ← owned by RootContext (ADR-0001)
-├── gold, current_chapter, bozkurt_bonuses, chapters_completed
+├── gold, current_chapter, chapters_completed, ruh*, boons*, modifiers* (derived)
 └── map_state: MapState (data-only)
-        ├── current_turn, actions_remaining, selected_region_id
+        ├── current_turn, actions_remaining, selected_region_id, game_result*
         └── regions: { StringName -> RegionData (data-only) }
 
 Mutation flow:  Controller ──writes──▶ State ; Controller ──signal──▶ observers
                 (State never mutates itself or calls out)
+* planned (C-39 / C-51 / C-55)
 ```
 
 ### Key Interfaces
@@ -116,7 +123,7 @@ class_name GameState extends RefCounted
 var gold: int
 var map_state: MapState
 func is_chapter_unlocked(chapter: int) -> bool
-func get_total_bozkurt_bonus() -> float
+# (legacy get_total_bozkurt_bonus() is removed by ADR-0006 / C-55)
 
 # Controllers are the sole mutators (ADR-0003):
 # MapController.end_turn() writes map_state.current_turn, emits turn_ended
@@ -141,16 +148,14 @@ func get_total_bozkurt_bonus() -> float
   the "lone score var on a player controller" anti-pattern; hard to debug.
 - **Rejection Reason**: Defeats save/load and debuggability; the problem this ADR solves.
 
-### Alternative 2: State objects as `Resource` from the start
+### Alternative 2: State objects as `Resource`
 
-- **Description**: Make `GameState`/`MapState`/`RegionData` extend `Resource` now.
-- **Pros**: Built-in serialization immediately; `duplicate_deep()` available.
-- **Cons**: `Resource` carries editor/import machinery and `.tres` identity semantics
-  not needed until persistence exists; larger change with no current payoff.
-- **Estimated Effort**: Moderate refactor (base class + `@export` annotations + test
-  updates).
-- **Rejection Reason (for now)**: No save/load requirement yet. Deferred to the
-  Migration Plan — this is the intended path once persistence is designed.
+- **Description**: Make `GameState`/`MapState`/`RegionData` extend `Resource`.
+- **Pros**: Built-in serialization; `duplicate_deep()` available.
+- **Cons**: `Resource` carries editor/import machinery and `.tres` identity semantics;
+  loading `.tres` from `user://` can instantiate scripts (unsafe for player-editable saves).
+- **Rejection Reason**: Rejected definitively by ADR-0007 (2026-10-18) in favour of a
+  pure JSON serializer; the earlier "deferred migration" plan is withdrawn.
 
 ## Consequences
 
@@ -162,23 +167,22 @@ func get_total_bozkurt_bonus() -> float
 
 ### Negative
 
-- `RefCounted` state has no built-in persistence; save/load will require the
-  documented `Resource` migration before it can ship.
+- `RefCounted` state has no built-in persistence; ADR-0007's serializer must be kept
+  in step with every new saved field (round-trip tests guard it).
 - Slight indirection: controllers must be handed the state they mutate.
 
 ### Neutral
 
-- The base-class choice (`RefCounted` today, `Resource` later) is an explicit,
-  revisitable decision tied to the save/load milestone.
+- The base-class choice is settled (`RefCounted`, ADR-0007).
 
 ## Risks
 
 | Risk | Probability | Impact | Mitigation |
 |------|------------|--------|-----------|
-| Save/load added without migrating to `Resource` → hand-rolled serialization | Medium | Medium | Follow the Migration Plan; write a save/load ADR that supersedes this base-class choice |
+| A new state field is forgotten by the JSON serializer | Medium | Medium | ADR-0007 round-trip tests over every state class; review rule: new field ⇒ serializer + test |
 | Logic creeps into state classes over time | Medium | Medium | Code review rule: state = data + pure getters only |
 | Long-term state added to a controller instead of a state object | Medium | Medium | Review: all persistent fields must live under `GameState` |
-| Nested state shared between save slots (aliasing) after migration | Low | High | Use `duplicate_deep()` (4.5+) when copying `GameState` for a slot |
+| Derived state (modifiers) serialized or written by a second writer | Low | Medium | Registry: modifiers derived, sole writer `ModifierController` (ADR-0006) |
 
 ## Performance Implications
 
@@ -186,25 +190,14 @@ func get_total_bozkurt_bonus() -> float
 |--------|--------|---------------|--------|
 | CPU (frame time) | n/a | Negligible — plain field access | 16.6 ms/frame |
 | Memory | n/a | State tree is small (regions + scalars) | 512 MB ceiling |
-| Load Time | n/a | Negligible now; future `Resource` load is one-time on save load | — |
+| Load Time | n/a | Negligible; JSON load is one-time at Continue (ADR-0007) | — |
 
 ## Migration Plan
 
-**Current → save/load capable (triggered when a save/load system is designed):**
-
-1. Change `GameState`, `MapState`, `RegionData` from `extends RefCounted` to
-   `extends Resource`.
-2. Annotate persisted fields with `@export` so they serialize.
-3. Replace ad hoc copies with `duplicate_deep()` (Godot 4.5+) for independent slots.
-4. Save via `ResourceSaver.save(game_state, "user://slot_N.tres")`; load via
-   `ResourceLoader.load(...)`.
-5. Update `game/tests/unit/` fixtures that construct state objects if instantiation
-   changes.
-6. Record the change in a new save/load ADR that supersedes this ADR's base-class
-   choice.
-
-**Rollback plan**: The `RefCounted` design remains valid for a persistence-free
-build; reverting the migration is a base-class change back.
+~~Current → save/load capable via `Resource` migration~~ — **superseded by ADR-0007**
+(2026-10-18). No migration of the state base class is planned. Remaining state work:
+replace `bozkurt_bonuses` with `modifiers` (ADR-0006, C-55); add `ruh`/`boons` (C-39) and
+`game_result` / `last_erlik_spread_turn` (C-51, C-38) as plain fields.
 
 ## Validation Criteria
 
@@ -212,7 +205,8 @@ build; reverting the migration is a base-class change back.
 - [ ] State classes contain no mutation/business logic (data + pure getters only).
 - [ ] Controllers are the sole mutators of state.
 - [ ] `GameState` is the single root from which all campaign state is reachable.
-- [ ] (Future) After migration, state serializes via `ResourceSaver` round-trip.
+- [ ] State round-trips through ADR-0007's `SaveSerializer` (never `ResourceSaver`).
+- [ ] Derived fields (`modifiers`) are rebuilt by their sole writer, never serialized.
 
 ## GDD Requirements Addressed
 
@@ -221,14 +215,15 @@ build; reverting the migration is a base-class change back.
 | GDD Document | System | Requirement | How This ADR Satisfies It |
 |-------------|--------|-------------|--------------------------|
 | `design/gdd/region-map-system.md` | Bölge Fethi / Harita | Per-region ownership, army counts, adjacency tracked across turns | `MapState`/`RegionData` hold this as data; `MapController` mutates it |
-| `design/gdd/game-concept.md` | Bölüm ilerlemesi / kampanya | Chapter unlocks and cross-chapter progress persist | `GameState.chapters_completed` + `is_chapter_unlocked` (persistence via future migration) |
+| `design/gdd/game-concept.md` | Bölüm ilerlemesi / kampanya | Chapter unlocks and cross-chapter progress persist | `GameState.chapters_completed` + `is_chapter_unlocked` (persistence: ADR-0007) |
 
 > Foundational — enables save/load, debugging, and deterministic tests across all systems.
 
 ## Related
 
 - Depends on ADR-0001 (RootContext owns `GameState`); mutated by controllers per ADR-0003.
-- Will be partially superseded by a future save/load ADR (base-class RefCounted → Resource).
+- Partially superseded by ADR-0007 (persistence; the `Resource` migration is withdrawn).
+- ADR-0006: `GameState.modifiers` is derived state under this ADR's derived-state rule.
 - Implemented in: `game/state/game_state.gd`, `game/state/map_state.gd`,
   `game/state/region_data.gd`.
 - Architecture principles: `.claude/docs/directory-structure.md` → "Mimari İlkeler".

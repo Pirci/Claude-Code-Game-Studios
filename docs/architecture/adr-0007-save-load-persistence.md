@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-review-2026-10-19.md))
 
 > **Amendment 2026-10-19 (C-53, cross-review W-D/W-F):** the `game` block saves `ruh` and
 > `boons` (choices); `modifiers` are derived on load (ADR-0006 amended) and not saved.
@@ -28,7 +28,7 @@ Proposed
 
 | Field | Value |
 |-------|-------|
-| **Depends On** | ADR-0001 (RootContext owns `GameState` lifecycle), ADR-0003 (DI), ADR-0004 (state segregation) |
+| **Depends On** | ADR-0001 (RootContext owns `GameState` lifecycle and the Continue transition), ADR-0003 (DI), ADR-0004 (state segregation), ADR-0006 (modifiers are rebuilt from saved choices) |
 | **Enables** | "Continue" menu entry; resource-system open question #6; any cross-session feature |
 | **Blocks** | Save/load implementation stories; settings persistence |
 | **Ordering Note** | **Partially supersedes ADR-0004**: its "migrate state to `Resource` for save/load" plan is replaced by this ADR (state stays `RefCounted`). ADR-0006 `ModifierSource` remains a `Resource` (read-only content, never saved). |
@@ -86,7 +86,7 @@ Persist as **versioned JSON text**.
     "current_chapter": 1, "gold": 6,
     "chapters_completed": [],
     "ruh": 10, "boons": ["bereket"],         // choices; modifiers are rebuilt from boons on load (C-53)
-    "map": { "current_turn": 4, "chapter_id": 1, "last_erlik_spread_turn": 3, "player_tamga_id": "...", "enemy_tamga_id": "...",
+    "map": { "current_turn": 4, "chapter_id": 1, "last_erlik_spread_turn": 3,   // tamga ids are content — not saved (C-17)
              "regions": { "r1": { "owner": 1, "army_count": 3, "corruption_level": 0, "...": 0 } } }
   }
 }
@@ -101,9 +101,9 @@ Persist as **versioned JSON text**.
 ### Components
 
 ```
-SaveController (RefCounted service, bind_services(store, map_factory))
-   ├─ save_campaign()  ← called by MapController.turn_ended (via GameContext wiring)
-   ├─ load_campaign() -> GameState | null
+SaveController (RefCounted service OWNED BY RootContext — C-17 D4; bind_services(store, map_factory))
+   ├─ save_campaign(game_state)  ← GameContext calls it on MapController.turn_ended (controller injected by RootContext)
+   ├─ load_campaign() -> LoadResult  ← RootContext on MenuContext.continue_requested
    │
 SaveSerializer (pure, static, no shared state):
                                 to_dict(GameState) -> Dictionary
@@ -119,8 +119,8 @@ SaveStore (I/O; @abstract base + FileSaveStore impl + in-memory test double):
 - **Load order:** `final` → if missing/invalid, `.bak` → (a crash between steps 4 and 5 leaves `final` missing with `.bak` and `.tmp` present: `.tmp` is tried last, only if it parses and validates). Stale `.tmp` is deleted after a successful save.
 - **Deterministic output:** `JSON.stringify(data, "\t", true, true)` (indent + `sort_keys` + `full_precision`) so saves diff cleanly and floats round-trip (default precision writes `0.333333333333333`); floats are validated with `is_finite` before stringify (JSON cannot hold NaN/INF).
 - **Parsing:** strip a leading UTF-8 BOM (`\uFEFF`, e.g. after a Notepad edit) → `JSON.new().parse()` (gives line + message on error) and `typeof(json.data) == TYPE_DICTIONARY`; never `str_to_var`, `bytes_to_var`, `get_var(true)`, `ResourceLoader`, or `load()` on user files.
-- **Post-parse validation (C-17):** every number destined for an `int` field must pass `is_finite(v) and floor(v) == v` and its GDD range **before** `int(v)` (`int(INF)` = INT64_MIN); out-of-range → `LoadResult.Code.INVALID` → `.bak`. Parsed arrays/dictionaries are untyped with `String` keys: rebuild typed fields with `assign()` / element loops and convert ids with `StringName(k)`.
-- **Validation:** `from_dict` is total — checks types, ranges and known region ids; unknown keys are ignored; any structural error returns `null` with an error code (`CORRUPT`, `VERSION_TOO_NEW`, `MISSING`). Never partially applies.
+- **Post-parse validation (C-17):** every number destined for an `int` field must pass `is_finite(v) and floor(v) == v` and its GDD range **before** `int(v)` (`int(INF)` = INT64_MIN); out-of-range → `LoadResult.Code.CORRUPT` → `.bak`. Parsed arrays/dictionaries are untyped with `String` keys: rebuild typed fields with `assign()` / element loops and convert ids with `StringName(k)`.
+- **Validation:** `from_dict` is total — checks types, ranges and known region ids; unknown keys are ignored; any structural error returns a `LoadResult` with a non-OK code (`CORRUPT`, `VERSION_TOO_NEW`, `MISSING`) and `state = null`. Never partially applies. Consistency checks: `game.current_chapter == map.chapter_id` when `map` is present; `map: null` (written after a chapter victory) is valid and yields a `GameState` with `map_state = null` → Continue opens chapter selection.
 - **Version policy:** `schema_version` greater than the build's → refuse (`VERSION_TOO_NEW`, do not overwrite). Lower → run migrations in order, then load; the file is rewritten at the next save.
 - **Number handling:** JSON numbers are floats; the serializer casts counters back to `int` and rejects non-integral values for int fields.
 
@@ -129,7 +129,7 @@ SaveStore (I/O; @abstract base + FileSaveStore impl + in-memory test double):
 - Autosave **once per turn end, after the full end-of-turn pipeline** (enemy AI, Erlik spread, income, turn++, end check) has finished and `turn_ended` is emitted — `turn_ended` fires only after the end check and only while the result is `ONGOING` (`region-map-system.md` §3.4, C-53). At that point there is no in-flight state: `actions_remaining` is reset, `selected_region_id` is empty and is **not saved**.
 - Resource-system open question #6 resolved: gold is saved as it is at turn end; production counters are always 0 at that point (reset in step 4) and are initialised to 0 on load; **no mid-turn saves** in this scope.
 - One active campaign slot. The format and `SaveStore` take a `slot` id so multi-slot / manual save can be added without a format change.
-- "Continue" in the main menu is enabled iff `read()` + `from_dict()` succeed.
+- "Continue" in the main menu is enabled iff `read()` + `from_dict()` succeed. Flow (C-17 D4): `MenuContext` emits `continue_requested` → `RootContext` (owner of `GameState` and `SaveController`) calls `load_campaign()`; on `OK` it adopts the loaded `GameState` and switches to the game context, otherwise it shows the error and stays in the menu.
 - When a chapter ends (victory) there is no turn end (mid-turn win latch, `region-map-system.md` §3.7). The **scene flow** (`scene-flow.md`, C-35) persists it after the mandatory boon picks: it records `chapters_completed` and writes `map: null`, so Continue opens chapter selection rather than a finished map. Defeat leaves the last turn-end autosave untouched (the player may reload it). Neither deletes the file.
 
 ### Settings persistence
@@ -161,7 +161,6 @@ static func migrate(data: Dictionary) -> Dictionary
 
 class_name SaveController extends RefCounted        # service must stay referenced by its owner
 signal save_failed(reason: StringName)
-signal loaded(game_state: GameState)
 func bind_services(store: SaveStore, map_factory: Callable) -> void
 func save_campaign(game_state: GameState) -> bool
 func load_campaign() -> LoadResult
@@ -215,7 +214,7 @@ func has_campaign() -> bool
 | Steam Cloud sync conflicts | Out of scope now; single file + `.bak`, `saved_at` kept for a future conflict policy |
 | Disk full / write failure | `save_failed` signal, previous save intact, non-blocking UI warning |
 | Save written while state is inconsistent | Save only from the turn-end hook after the pipeline completes; never from UI handlers |
-| Float drift in saved modifier values | Values are authored decimals; round-trip test uses exact values; consumers round per GDD |
+| Float fields lose precision (e.g. future settings volume) | `JSON.stringify(..., full_precision = true)`; round-trip test with non-terminating decimals |
 | Player edits JSON (cheating) | Out of scope for a single-player game; `from_dict` validates ranges so edits cannot crash the game. Revisit before Steam release (`/security-audit`) |
 
 ## GDD Requirements Addressed
@@ -238,8 +237,8 @@ func has_campaign() -> bool
 ## Migration Plan
 
 1. Add `game/features/save/` (`save_serializer.gd`, `save_store.gd`, `file_save_store.gd`, `save_controller.gd`) with unit tests and an in-memory `SaveStore` double.
-2. Implement `to_dict`/`from_dict` for `GameState` (incl. `ruh`, `boons`), `MapState`, `RegionData`; rebuild modifiers from `boons` on load (ADR-0006); write the round-trip + corruption + version tests.
-3. Wire `SaveController` into `GameContext` (autosave on `turn_ended`) and `MenuContext` (Continue).
+2. Implement `to_dict`/`from_dict` for `GameState` (incl. `ruh`, `boons`), `MapState`, `RegionData`; the serializer restores `boons` only — `ModifierController.rebuild()` (ADR-0006) recreates the modifier records during `GameContext` setup; write the round-trip + corruption + version tests.
+3. `RootContext` creates and owns `SaveController`; injects it into `GameContext` (autosave on `turn_ended` — requires C-51's corrected `turn_ended` order) and handles `MenuContext.continue_requested` (Continue).
 4. Persist `AccessibilitySettings` through the same pair.
 5. Update ADR-0004 status note (migration plan superseded). (ADR-0006 already amended: modifiers are derived, not serialized — C-53.)
 
@@ -254,9 +253,13 @@ func has_campaign() -> bool
 - [ ] Simulated failure at each step of the write sequence (failing `SaveStore` double) leaves a loadable `final`, `.bak` or `.tmp`.
 - [ ] Same state serializes to byte-identical text twice (sorted keys).
 - [ ] No use of `load()`, `ResourceLoader`, `str_to_var`, `bytes_to_var`, `get_var(true)` on `user://` content (grep check).
+- [ ] `map: null` loads as "chapter selection"; `current_chapter != map.chapter_id` → `CORRUPT`.
+- [ ] BOM-prefixed and `1e999`-containing files → `CORRUPT` (no INT64_MIN values reach state).
+- [ ] Loading the same save twice into a fresh `GameContext` yields identical modifiers (no double stacks).
 
 ## Related Decisions
 
 - ADR-0004 (partially superseded), ADR-0006 (modifiers), ADR-0001/0003.
 - `design/gdd/resource-system.md` open question #6; `game-concept.md` TR-concept-002.
-- Follow-ups: C-17 (architecture review), C-39 (ruh/boon fields), security audit before release.
+- Follow-ups: C-17 ✅ (architecture review 2026-10-19), C-39 (ruh/boon fields), C-56 (implementation, after C-51), security audit before release.
+- Engine note (verified 4.7.1): `@abstract class_name SaveStore extends RefCounted` on one line and `@abstract func …` **without a body** are the valid syntax.

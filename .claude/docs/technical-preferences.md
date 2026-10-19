@@ -70,15 +70,15 @@
 
 ## Architecture Decisions Log
 
-- **ADR-0001** (Proposed): Context-based hierarchical architecture — root_context → game_context / menu_context. → [adr-0001](../../docs/architecture/adr-0001-context-based-hierarchical-architecture.md)
-- **ADR-0002** (Proposed): Feature encapsulation — her sistem kendi klasöründe, minimal dış bağımlılık. → [adr-0002](../../docs/architecture/adr-0002-feature-encapsulation.md)
-- **ADR-0003** (Proposed): Dependency injection — bind_services() pattern ile servis bağlama. → [adr-0003](../../docs/architecture/adr-0003-dependency-injection.md)
-- **ADR-0004** (Proposed): State segregation — game state objeleri sadece veri tutar, mantık controller'larda. → [adr-0004](../../docs/architecture/adr-0004-state-segregation.md)
-- **ADR-0005** (Proposed): AI mimarisi — saf `decide()` servisleri, MapController uygular. → [adr-0005](../../docs/architecture/adr-0005-ai-architecture.md)
-- **ADR-0006** (Proposed): Additive modifier / stat pipeline — kaynak anahtarlı `StatModifier` + saf `StatResolver`, çift sayım yok. → [adr-0006](../../docs/architecture/adr-0006-additive-modifier-stat-pipeline.md)
-- **ADR-0007** (Proposed): Save/load — versiyonlu JSON + saf `SaveSerializer`, atomik `.bak` rotasyonu, tur sonu otomatik kayıt; ADR-0004 göç planını kısmen supersede eder. → [adr-0007](../../docs/architecture/adr-0007-save-load-persistence.md)
+- **ADR-0001** (Accepted 2026-10-19): Context-based hierarchical architecture — root_context → game_context / menu_context. → [adr-0001](../../docs/architecture/adr-0001-context-based-hierarchical-architecture.md)
+- **ADR-0002** (Accepted 2026-10-19): Feature encapsulation — her sistem kendi klasöründe, minimal dış bağımlılık. → [adr-0002](../../docs/architecture/adr-0002-feature-encapsulation.md)
+- **ADR-0003** (Accepted 2026-10-19): Dependency injection — bind_services() pattern ile servis bağlama. → [adr-0003](../../docs/architecture/adr-0003-dependency-injection.md)
+- **ADR-0004** (Accepted 2026-10-19): State segregation — game state objeleri sadece veri tutar, mantık controller'larda. → [adr-0004](../../docs/architecture/adr-0004-state-segregation.md)
+- **ADR-0005** (Accepted 2026-10-19): AI mimarisi — saf `decide()` servisleri, MapController uygular. → [adr-0005](../../docs/architecture/adr-0005-ai-architecture.md)
+- **ADR-0006** (Accepted 2026-10-19): Additive modifier / stat pipeline — kaynak anahtarlı `StatModifier` + saf `StatResolver`, çift sayım yok. → [adr-0006](../../docs/architecture/adr-0006-additive-modifier-stat-pipeline.md)
+- **ADR-0007** (Accepted 2026-10-19): Save/load — versiyonlu JSON + saf `SaveSerializer`, atomik `.bak` rotasyonu, tur sonu otomatik kayıt; ADR-0004 göç planını kısmen supersede eder. → [adr-0007](../../docs/architecture/adr-0007-save-load-persistence.md)
 
-> Tümü `/architecture-decision` ile geriye dönük yazıldı (as-built). Taze bir oturumda `/architecture-review` çalıştırıp doğruladıktan sonra Status → Accepted yapılabilir.
+> Tümü `/architecture-decision` ile yazıldı; `/architecture-review` (2026-10-19, C-17 — CONCERNS, bağımsız technical-director + godot-specialist incelemesi, düzeltmeler uygulandı) sonrası **Accepted**. Eksik ADR'ler: Move Resolution, Presentation Layer, Scene flow, Localization (bkz. [rapor](../../docs/architecture/architecture-review-2026-10-19.md)).
 
 ## Godot Project Settings Checklist
 

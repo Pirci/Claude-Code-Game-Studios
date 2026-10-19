@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-review-2026-10-19.md))
 
 ## Date
 

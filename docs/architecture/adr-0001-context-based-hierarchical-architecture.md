@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-review-2026-10-19.md))
 
 ## Date
 
@@ -10,7 +10,7 @@ Proposed
 
 ## Last Verified
 
-2026-08-13
+2026-10-19 (`/architecture-review`, C-17 — amendments: `load()` on transition, Continue path, as-built `bind_services`)
 
 ## Decision Makers
 
@@ -119,10 +119,11 @@ RootContext (Node, main scene)          ← owns GameState, orchestrates transit
 │
 ├── (one active child at a time)
 │
-├── MenuContext (Control)               ← signals up: new_campaign_requested, quit_requested
-│      builds menu UI / services
+├── MenuContext (Control)               ← bind_services(accessibility); signals up: new_campaign_requested,
+│      builds menu UI / services             continue_requested, quit_requested
 │
-└── GameContext (Control)               ← bind_services(game_state); signals up: return_to_menu_requested
+└── GameContext (Control)               ← bind_services(game_state, accessibility[, save_controller]);
+                                          signals up: return_to_menu_requested
        builds gameplay controllers/services in _ready()
 
 Data flow:  RootContext ──call down (bind_services / methods)──▶ Context
@@ -137,11 +138,14 @@ signal context_changed(context_name: StringName)
 func _switch_to(context_name: StringName) -> void   # &"menu" | &"game"
 
 # GameContext
-func bind_services(game_state: GameState) -> void    # called BEFORE add_child
+func bind_services(game_state: GameState, accessibility: AccessibilitySettings) -> void  # BEFORE add_child
+# (+ save_controller when ADR-0007 lands — C-56)
 signal return_to_menu_requested
 
 # MenuContext
+func bind_services(accessibility: AccessibilitySettings) -> void
 signal new_campaign_requested
+signal continue_requested     # RootContext loads via its SaveController (ADR-0007, C-17 D4)
 signal quit_requested
 ```
 
@@ -155,6 +159,13 @@ signal quit_requested
   string form.
 - Contexts that hold external resources (timers, threaded loads) should clean up in
   `_exit_tree()`; `queue_free()` guarantees node removal but not custom teardown.
+- Call `remove_child(old)` **before** `old.queue_free()` in `_switch_to()` so the
+  outgoing context leaves the tree (and stops receiving input) in the same frame the
+  incoming one is added — `queue_free()` alone keeps it in the tree until frame end
+  (godot-specialist advisory 2026-08-13, re-confirmed 2026-10-19).
+- Chapter content (`ChapterMapDefinition`) is loaded by `chapter_id` at game-context
+  start with `load()`, never `const preload`ed by a context (TR-map-002; C-57 fixes the
+  current `GameContext` preload of `chapter_1_map.tres`).
 
 ## Alternatives Considered
 
