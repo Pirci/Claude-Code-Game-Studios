@@ -15,7 +15,7 @@ config/description="Gök kurt Kök Böri'nin rehberliğinde Oğuz Kağan Destan�
 run/main_scene="res://contexts/root_context/root_context.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 run/max_fps=60
-config/icon="res://icon.svg"
+config/icon="res://icon.png"
 
 [debug]
 
@@ -52,3 +52,4 @@ textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true
+textures/vram_compression/import_etc2_astc=true

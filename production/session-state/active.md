@@ -314,3 +314,11 @@
 
 ## Session Extract — C-64 (2026-10-19)
 - tests/integration/balance/prolog_replay.gd + prolog_balance_test.gd (12 lines, AC15 extras, pruned T4 search ~14s). Tests 322/322. resource Q2 closed. NEXT: C-42 (kullanıcıya sor).
+
+## Session Extract — C-42 ilerleme (2026-10-19)
+- Kararlar: export macOS + Windows; playtest'i kullanıcı oynar (ben protokol + şablon hazırlarım).
+- tests/integration/campaign/prolog_playthrough_test.gd (yalnız UI düğmeleriyle Prolog → zafer → bölüm seçimi), RegionInfoPanel SendArmyButton adı.
+- export_presets.cfg (Windows embed pck, macOS universal ad-hoc codesign=1, ETC2/ASTC açık), icon.png (tools/asset-pipeline/generate_app_icon.gd); .gitignore artık export_presets.cfg'yi takip eder.
+- HATA: SaveSerializer.UTF8_BOM çıplak U+FEFF → export'ta silinip "" oluyordu → kayıt/ayar ilk karakteri kesiliyordu. Düzeltme "﻿" + strip_bom(); regresyon testi; run-tests.sh çıplak BOM bekçisi. Testler 324/324.
+- production/qa/smoke-2026-10-19.md (PASS), production/qa/playtest-c42-protocol.md. Build'ler build/ (gitignored) kullanıcıya gönderildi.
+- NEXT: kullanıcının playtest raporu → /playtest-report analyze → C-42 kapanışı.

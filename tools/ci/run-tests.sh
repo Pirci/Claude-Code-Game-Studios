@@ -96,6 +96,16 @@ if [[ -n "$FADE_HITS" ]]; then
   echo "$FADE_HITS" >&2
   FADE_EXIT=1
 fi
+# C-42: kaynakta çıplak U+FEFF (BOM) dışa aktarmada silinir → sabit boş string olur ve kayıt /
+# ayar ayrıştırması export'ta bozulur. Görünmez karakter yerine "\uFEFF" kaçışı kullanılır.
+BOM_EXIT=0
+BOM_HITS="$(LC_ALL=C.UTF-8 grep -rlP '\x{FEFF}' --include='*.gd' --include='*.tscn' --include='*.tres' . \
+  | grep -vE '^\./addons/' || true)"
+if [[ -n "$BOM_HITS" ]]; then
+  echo "HATA: kaynakta çıplak U+FEFF (dışa aktarmada silinir; \\uFEFF kaçışı kullan):" >&2
+  echo "$BOM_HITS" >&2
+  BOM_EXIT=1
+fi
 set -e
 
 if [[ $TEST_EXIT -ne 0 ]]; then
@@ -114,4 +124,7 @@ if [[ $MODIFIER_EXIT -ne 0 ]]; then
 fi
 if [[ $SAVE_EXIT -ne 0 ]]; then
   exit "$SAVE_EXIT"
+fi
+if [[ $BOM_EXIT -ne 0 ]]; then
+  exit "$BOM_EXIT"
 fi

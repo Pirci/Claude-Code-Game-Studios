@@ -30,7 +30,7 @@ static func to_text(snapshot: SettingsSnapshot) -> String:
 
 
 static func from_text(text: String) -> SettingsSnapshot:
-	var clean: String = text.substr(1) if text.begins_with(SaveSerializer.UTF8_BOM) else text
+	var clean: String = SaveSerializer.strip_bom(text)
 	var json: JSON = JSON.new()
 	if clean.is_empty() or json.parse(clean) != OK or typeof(json.data) != TYPE_DICTIONARY:
 		return null

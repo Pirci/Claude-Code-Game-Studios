@@ -43,7 +43,8 @@ dist/
 # === Engine: Godot ===
 .godot/
 *.translation
-export_presets.cfg
+# export_presets.cfg takip edilir (C-42): Godot 4 imza/parola bilgilerini
+# .godot/export_credentials.cfg'de tutar, ön ayar dosyası gizli bilgi içermez.
 # Uncomment if using Godot:
 # *.import
 

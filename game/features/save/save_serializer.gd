@@ -16,7 +16,8 @@ const MAX_CHAPTER: int = 1000
 const MAX_CORRUPTION: int = 3
 ## Kayıtta sahiplik enum'u int olarak (RegionData.Owner: NEUTRAL 0, PLAYER 1, ENEMY 2).
 const OWNER_MAX: int = 2
-const UTF8_BOM: String = "﻿"
+## Kaçış dizisiyle yazılır: kaynakta çıplak U+FEFF dışa aktarmada silinir (C-42 hatası).
+const UTF8_BOM: String = "\uFEFF"
 
 
 ## [param saved_at] bilgi amaçlıdır, mantık okumaz; testlerde sabit verilir (byte-eşit çıktı).
@@ -40,11 +41,17 @@ static func to_text(game_state: GameState, saved_at: String = "") -> String:
 	return JSON.stringify(to_dict(game_state, saved_at), "\t", true, true)
 
 
+## Öndeki UTF-8 BOM'u atar; karşılaştırma karakter koduyla (sabit boş olsa bile ilk
+## karakteri kesmez — C-42).
+static func strip_bom(text: String) -> String:
+	return text.substr(1) if not text.is_empty() and text.unicode_at(0) == 0xFEFF else text
+
+
 ## Metni ayrıştırır (önde BOM atılır) ve doğrular. Hiçbir zaman `str_to_var`/`load()` yok.
 static func from_text(text: String, map_factory: Callable) -> LoadResult:
 	if text.is_empty():
 		return LoadResult.error(LoadResult.Code.MISSING, "boş kayıt")
-	var clean: String = text.substr(1) if text.begins_with(UTF8_BOM) else text
+	var clean: String = strip_bom(text)
 	var json: JSON = JSON.new()
 	if json.parse(clean) != OK:
 		return LoadResult.error(LoadResult.Code.CORRUPT,

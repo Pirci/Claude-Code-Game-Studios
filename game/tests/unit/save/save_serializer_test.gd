@@ -139,6 +139,14 @@ func test_bom_prefixed_valid_save_loads() -> void:
 	assert_int(SaveSerializer.from_text(text, _definition_map).code).is_equal(LoadResult.Code.OK)
 
 
+## C-42: dışa aktarmada çıplak U+FEFF silinip sabit boş kalınca ilk karakter kesiliyordu.
+func test_strip_bom_only_removes_real_bom() -> void:
+	assert_int(SaveSerializer.UTF8_BOM.unicode_at(0)).is_equal(0xFEFF)
+	assert_str(SaveSerializer.strip_bom(String.chr(0xFEFF) + "{}")).is_equal("{}")
+	assert_str(SaveSerializer.strip_bom("{}")).is_equal("{}")
+	assert_str(SaveSerializer.strip_bom("")).is_equal("")
+
+
 func test_newer_schema_is_refused() -> void:
 	var data: Dictionary = _with(func(d: Dictionary) -> void: d["schema_version"] = SaveSerializer.SCHEMA_VERSION + 1)
 	assert_int(SaveSerializer.from_dict(data, _definition_map).code).is_equal(LoadResult.Code.VERSION_TOO_NEW)
