@@ -226,3 +226,7 @@
 - ADR-0009 Accepted (as-built + glyph-coverage rule). Finding: U+2212 −, ⚠, ✕, ✓, U+202F absent from all Fusion Pixel subsets (only Unifont) → not used in text; ASCII "-" + pixel icons. glyph_coverage_test.gd reads translations.csv (imported translations are OptimizedTranslation → no key list).
 - Indexes: architecture.md (ADR-0009), technical-preferences ADR log (+0009), traceability 24/36 covered, coding-standards localization bullets. Tests 163/163.
 - C-58 agent (godot-specialist) resumed after 20-turn limit; C-49 agent still running.
+
+## Session Extract — C-59 ADR-0010 move resolution (2026-10-19)
+- ADR-0010 Accepted: MoveOutcome (features/army, data incl. target_*_after, dispersed, ruh_gain), MoveResolver.resolve(map, from, to, mover, modifiers) read-only with INVALID+reason, branch order COMBAT → PURIFICATION (player only) → PEACEFUL; apply via ArmyController.apply_outcome + SpiritController.apply_purification; MapController.preview_move; CombatResolver.resolve_effective (M2); IncomeRules.turn_income (F2) with EconomyConfig (C-37).
+- Traceability 27/36 covered. Implementation = first step of C-38.

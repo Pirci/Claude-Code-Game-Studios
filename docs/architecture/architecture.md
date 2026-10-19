@@ -8,7 +8,7 @@
 - **GDDs Covered:** `game-concept.md`, `systems-index.md`, `region-map-system.md`,
   `army-system.md`, `combat-system.md`, `resource-system.md`, `spirit-system.md`
   (cross-review 2026-10-19: CONCERNS, resolved in C-53)
-- **ADRs Referenced:** ADR-0001 … ADR-0009 (all **Accepted** 2026-10-19; ADR-0008 audio added by C-23, ADR-0009 localization by C-61 —
+- **ADRs Referenced:** ADR-0001 … ADR-0010 (all **Accepted** 2026-10-19; ADR-0008 audio added by C-23, ADR-0009 localization by C-61, ADR-0010 move resolution by C-59 —
   [architecture-review-2026-10-19.md](architecture-review-2026-10-19.md))
 - **Requirements baseline:** [tr-registry.yaml](tr-registry.yaml) v3 — 36 TRs; coverage in
   [architecture-traceability.md](architecture-traceability.md)
@@ -187,8 +187,9 @@ RegionNode.clicked(id) → CampaignMap.region_clicked(id) → GameContext
        ALL results committed  →  WinCondition.is_met(map)?  → game_result = WON → game_won (once)
   signals → GameContext refreshes views; HUD reads state
 ```
-Synchronous direct calls down; signals up to the context. Preview (TR-army-003) must use
-the same pure branch function — ADR **C-59**.
+Synchronous direct calls down; signals up to the context. Preview (TR-army-003) uses the
+same pure branch function — **ADR-0010** (`MoveResolver.resolve` → `MoveOutcome` → apply;
+implemented as the first step of C-38).
 
 ### 4.2 End of turn (`MapController.end_turn`)
 
@@ -376,7 +377,7 @@ Decisions made in this document that are not yet ADRs are listed in §7.
 ## 7. Required ADRs
 
 **Must have before the relevant code starts (Core):**
-1. **Move Resolution — pure Outcome + Apply** (C-59) → TR-army-003, TR-resource-006; also fixes
+1. ~~**Move Resolution — pure Outcome + Apply** (C-59)~~ — done: **ADR-0010** → TR-army-003, TR-resource-006; also fixes
    the `CombatResolver` effective-strength signature (TR-combat-004) and the
    `SpiritController.apply_purification` call point. Before C-38 / C-41 / C-45.
 

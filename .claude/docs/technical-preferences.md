@@ -85,9 +85,10 @@
 - **ADR-0006** (Accepted 2026-10-19): Additive modifier / stat pipeline — kaynak anahtarlı `StatModifier` + saf `StatResolver`, çift sayım yok. → [adr-0006](../../docs/architecture/adr-0006-additive-modifier-stat-pipeline.md)
 - **ADR-0008** (Accepted 2026-10-19, C-23): Ses mimarisi — RootContext'in kalıcı `AudioController`'ı, `Master → Music/SFX` bus düzeni, data-driven `SfxLibrary`. → [adr-0008](../../docs/architecture/adr-0008-audio-architecture.md)
 - **ADR-0007** (Accepted 2026-10-19): Save/load — versiyonlu JSON + saf `SaveSerializer`, atomik `.bak` rotasyonu, tur sonu otomatik kayıt; ADR-0004 göç planını kısmen supersede eder. → [adr-0007](../../docs/architecture/adr-0007-save-load-persistence.md)
+- **ADR-0010** (Accepted 2026-10-19, C-59): Move resolution — saf `MoveResolver.resolve()` → `MoveOutcome`, uygulama yalnız outcome'u yazar (`ArmyController.apply_outcome`, arındırmada `SpiritController.apply_purification`); önizleme / oyuncu / düşman aynı yol; `CombatResolver.resolve_effective` (M2), saf `IncomeRules` (F2 = HUD tahmini). → [adr-0010](../../docs/architecture/adr-0010-move-resolution-outcome-apply.md)
 - **ADR-0009** (Accepted 2026-10-19, C-61): Localization & pixel-font pipeline — tek CSV + `tr()` key'leri, çevirmen sahipli biçim key'leri (`PER_TURN`), Fusion 12 / Unifont 16 zinciri (yalnız native boyut), Arapça tema geçişi, harita LTR / içerik locale yönü, glif kapsama testi (Fusion'da olmayan semboller ikon). → [adr-0009](../../docs/architecture/adr-0009-localization-pixel-font-pipeline.md)
 
-> Tümü `/architecture-decision` ile yazıldı; `/architecture-review` (2026-10-19, C-17 — CONCERNS, bağımsız technical-director + godot-specialist incelemesi, düzeltmeler uygulandı) sonrası **Accepted**. Eksik ADR'ler: Move Resolution (C-59), Presentation Layer (C-60), Scene flow (C-62) — Localization ADR-0009 ile kapandı (bkz. [rapor](../../docs/architecture/architecture-review-2026-10-19.md)).
+> Tümü `/architecture-decision` ile yazıldı; `/architecture-review` (2026-10-19, C-17 — CONCERNS, bağımsız technical-director + godot-specialist incelemesi, düzeltmeler uygulandı) sonrası **Accepted**. Eksik ADR'ler: Presentation Layer (C-60), Scene flow (C-62) — Localization ADR-0009, Move Resolution ADR-0010 ile kapandı (bkz. [rapor](../../docs/architecture/architecture-review-2026-10-19.md)).
 
 ## Godot Project Settings Checklist
 
