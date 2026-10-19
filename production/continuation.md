@@ -5,7 +5,7 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-19
-- **Son commit:** `__H__` (C-21: koçboynuzu/kilim çerçeveler)
+- **Son commit:** `21a9735` (C-21: koçboynuzu/kilim çerçeveler)
 - **Proje evresi:** Concept (`production/stage.txt`)
 - **Aktif görev:** — (yok; sıradaki: C-22)
 
@@ -124,7 +124,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-18 | [x] `bf6932f` | `/create-architecture` | Technical Setup | C-17 | Mimari doküman |
 | C-19 | [x] `278760f` | ADR-0005 uygulaması: `game/features/ai/` altında `EnemyAIController` + `ErlikSpreadController` (saf `decide()`), `MapController` intent'leri uygular; `_run_enemy_ai()` taşınır | ADR-0005 (K-02 sırasında keşfedildi) | C-17 | Davranış aynı kalır; mevcut testler yeşil + `decide()` için izole testler |
 | C-20 | [x] `5371770` | `tools/ci/run-tests.sh` varsayılan Godot yolu eskimiş (`~/Downloads/Applications`); Godot artık `/Applications/Godot.app` → yaygın konumları sırayla dene | C-01 sırasında keşfedildi (script `GODOT` olmadan çalışmıyor) | — | `GODOT` ayarlamadan `run-tests.sh` testleri çalıştırır |
-| C-21 | [x] `__H__` | Birincil buton (Tur Bitir, Saldır) ve modal panel (ayarlar, savaş raporu) çerçeveleri: 5×5 koçboynuzu köşe + 2px kilim şevron bandı → üretici script + 9-slice `StyleBoxTexture`, `PrimaryButton` / `ModalPanel` tema varyasyonları; ayarlar ekranı modal panele alınır | Art bible §3, §7 (C-04 sırasında keşfedildi) | C-04 | Ekran görüntüsü + tema testi |
+| C-21 | [x] `21a9735` | Birincil buton (Tur Bitir, Saldır) ve modal panel (ayarlar, savaş raporu) çerçeveleri: 5×5 koçboynuzu köşe + 2px kilim şevron bandı → üretici script + 9-slice `StyleBoxTexture`, `PrimaryButton` / `ModalPanel` tema varyasyonları; ayarlar ekranı modal panele alınır | Art bible §3, §7 (C-04 sırasında keşfedildi) | C-04 | Ekran görüntüsü + tema testi |
 | C-22 | [ ] | Harita zemini (`#222A18`) ve komşuluk çizgileri (%30 saydam gri — palet dışı ton üretir) palete bağlanır: opak çizgi rengi + bölüm zemin tonu (bible §4 "Yön Başına Sıcaklık"), data-driven | Art bible §4 (C-04 sırasında keşfedildi) | — | Ekran görüntüsü + piksel kontrolü |
 | C-23 | [ ] | Bölge seçim "tık" sesi (bible: seçimin renk körlüğü yedeği) — ses altyapısı (`features/audio`, SFX bus) henüz yok; önce ses yönetimi tasarımı/ADR gerekir | Art bible §4 (C-05 sırasında keşfedildi) | — | Seçimde ses çalar; ses ayarı (SFX) ile ölçeklenir |
 | C-24 | [ ] | **Karar:** `.uid` dosyaları `game/.gitignore` ile yok sayılıyor (repoda 0 adet); Godot 4.4+ bunların commit'lenmesini öneriyor (UID referansları klonlar arasında tutarlı kalsın). Politikayı seç → gerekiyorsa ignore'dan çıkar + mevcutları ekle | C-06 sırasında keşfedildi | — | Karar kaydı + (seçilirse) tüm `.uid`'ler takipte |
@@ -213,4 +213,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-19 | C-17: `/architecture-review` → CONCERNS (36 TR: 23 ✅ / 9 ⚠️ / 4 ❌); bağımsız technical-director + godot-specialist (4.7.1 deneyleri); 4 metin çakışması (B1–B4) + W1–W11 düzeltildi; 7 ADR **Accepted**; TR registry v3 (+11 TR, `resource` slug'ı, 15 revizyon); mimari registry (`spirit_state`, Continue, AI imzası); yeni görevler C-57…C-62 *(gece modu: önerilen seçenekler D1–D4)* | `815e07c` |
 | 2026-10-19 | C-18: `docs/architecture/architecture.md` v1.0 — katman haritası, modül sahipliği, veri akışları (hamle, tur sonu, kayıt/yükleme, başlatma, zafer), API sınırları, ADR denetimi, gerekli ADR'ler (C-59…C-62), ilkeler, açık sorular QQ-01…08; TD öz-inceleme CONCERNS *(gece modu)* | `bf6932f` |
 | 2026-10-19 | C-19: ADR-0005 uygulaması — `EnemyAIController.decide(map, acted)` + `ErlikSpreadController.decide(map, interval) -> SpreadDecision` (saf), `MapController` karar → uygula döngüsü (ele geçirilen bölge aynı tur hareket etmez), `ArmyController` `mover` parametresi; `RegionData.corruption_level`, `MapState.erlik_spread_interval/last_erlik_spread_turn` alanları; 104/104 test (24 yeni) | `278760f` |
-| 2026-10-19 | C-21: koçboynuzu köşe + kilim şevron bandı 9-slice çerçeveleri (`generate_ui_frames.gd`, 5 PNG), `PrimaryButton` / `ModalPanel` tema varyasyonları; Tur Bitir, Ordu Gönder, Yeni Sefer birincil; ayarlar ekranı modal panelde; 112/112 test (8 yeni), palet 0 ihlal; en/de ekran görüntüleri (Xvfb) *(gece modu)* | `__H__` |
+| 2026-10-19 | C-21: koçboynuzu köşe + kilim şevron bandı 9-slice çerçeveleri (`generate_ui_frames.gd`, 5 PNG), `PrimaryButton` / `ModalPanel` tema varyasyonları; Tur Bitir, Ordu Gönder, Yeni Sefer birincil; ayarlar ekranı modal panelde; 112/112 test (8 yeni), palet 0 ihlal; en/de ekran görüntüleri (Xvfb) *(gece modu)* | `21a9735` |
