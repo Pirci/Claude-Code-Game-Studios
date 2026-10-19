@@ -5,7 +5,7 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-19
-- **Son commit:** `__H__` (C-17: mimari inceleme, ADR'ler Accepted)
+- **Son commit:** `815e07c` (C-17: mimari inceleme, ADR'ler Accepted)
 - **Proje evresi:** Concept (`production/stage.txt`)
 - **Aktif görev:** — (yok; sıradaki: C-18 `/create-architecture`)
 
@@ -118,7 +118,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-14 | [x] `5ba890b` | `/consistency-check` (GDD'ler ↔ art bible ↔ entity registry) | Tutarlılık | C-13 | Rapor |
 | C-15 | [x] `62de438` | ADR: Additive Modifier / Stat Pipeline (`/architecture-decision`) | Arch. review 2026-08-13 | — | ADR dosyası |
 | C-16 | [x] `bf4f2ff` | ADR: Save/Load Persistence (`/architecture-decision`) | Arch. review 2026-08-13 | — | ADR dosyası |
-| C-17 | [x] `__H__` | `/architecture-review` yeniden → ADR'leri Accepted yap | Arch. review | C-15, C-16, K-02, C-34, C-53 | Rapor + ADR durumları |
+| C-17 | [x] `815e07c` | `/architecture-review` yeniden → ADR'leri Accepted yap | Arch. review | C-15, C-16, K-02, C-34, C-53 | Rapor + ADR durumları |
 | C-18 | [ ] | `/create-architecture` | Technical Setup | C-17 | Mimari doküman |
 | C-19 | [ ] | ADR-0005 uygulaması: `game/features/ai/` altında `EnemyAIController` + `ErlikSpreadController` (saf `decide()`), `MapController` intent'leri uygular; `_run_enemy_ai()` taşınır | ADR-0005 (K-02 sırasında keşfedildi) | C-17 | Davranış aynı kalır; mevcut testler yeşil + `decide()` için izole testler |
 | C-20 | [x] `5371770` | `tools/ci/run-tests.sh` varsayılan Godot yolu eskimiş (`~/Downloads/Applications`); Godot artık `/Applications/Godot.app` → yaygın konumları sırayla dene | C-01 sırasında keşfedildi (script `GODOT` olmadan çalışmıyor) | — | `GODOT` ayarlamadan `run-tests.sh` testleri çalıştırır |
@@ -208,4 +208,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-18 | C-33: GDD düzeltmeleri — W1 örnek (army=2), W2 dağılma, W3 boş kalan bölge nötr, W4 knob, W5 sahip-bağımsız kurallar + §3.5 planlı, W6 alfabetik eşitlik bozma; bilgi notları (indeks bağımlılık sütunu + eksik sistemler, konsept tarih/adımlar, MapState alanları, AC9 renk körlüğü, `scene_id = chapter_id`, yayılım aday kümesi + sayaç); kod düzeltmesi C-52 *(gece modu: önerilen seçenek)* | `1390df2` |
 | 2026-10-19 | C-34: `/review-all-gdds` yeniden → **CONCERNS** (0 engelleyici; 9 tutarlılık + 12 tasarım uyarısı); rapor `gdd-cross-review-2026-10-19.md`; indeks Designed; yeni görevler C-53 (düzeltmeler, C-17'yi bloklar), C-54 (anlatı sesi), C-55/C-56 (ADR-0006/0007 uygulaması); C-49 kapsamı genişledi *(gece modu: önerilen seçenek)* | `f661227` |
 | 2026-10-19 | C-53: çapraz inceleme düzeltmeleri — resource §4/AC15 "eskimiş" işaretleri + aralıklar; spirit aynı tur lütuf kuralı, `P_eff`, işleme sırası (S1-a), hamle önizlemesi + yayılım göstergesi gereksinimleri (N7), `boons` tek kaynak; region-map veri modeli sahipliği (W-G), `turn_ended`/erken çıkış (W-D, S2-b), kilitte lütuf seçimi (S1-c); army 'barışçıl' nitelemeleri + yerinde üretim (N11c); combat arındırma ↔ knob ayrımı; konsept kademe tablosu (W-H); ADR-0005/0006/0007 değişiklik notları; registry +4 sabit, TR-spirit-005 revised; C-39/C-44/C-51/C-36 kriterleri güncellendi *(gece modu: önerilen seçenek)* | `62f8b96` |
-| 2026-10-19 | C-17: `/architecture-review` → CONCERNS (36 TR: 23 ✅ / 9 ⚠️ / 4 ❌); bağımsız technical-director + godot-specialist (4.7.1 deneyleri); 4 metin çakışması (B1–B4) + W1–W11 düzeltildi; 7 ADR **Accepted**; TR registry v3 (+11 TR, `resource` slug'ı, 15 revizyon); mimari registry (`spirit_state`, Continue, AI imzası); yeni görevler C-57…C-62 *(gece modu: önerilen seçenekler D1–D4)* | `__H__` |
+| 2026-10-19 | C-17: `/architecture-review` → CONCERNS (36 TR: 23 ✅ / 9 ⚠️ / 4 ❌); bağımsız technical-director + godot-specialist (4.7.1 deneyleri); 4 metin çakışması (B1–B4) + W1–W11 düzeltildi; 7 ADR **Accepted**; TR registry v3 (+11 TR, `resource` slug'ı, 15 revizyon); mimari registry (`spirit_state`, Continue, AI imzası); yeni görevler C-57…C-62 *(gece modu: önerilen seçenekler D1–D4)* | `815e07c` |
