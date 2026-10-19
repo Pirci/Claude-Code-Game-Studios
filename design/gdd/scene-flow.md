@@ -2,7 +2,7 @@
 
 *Oyun: ULUS: Blood of the Sky Wolf*
 *Oluşturulma: 2026-10-19*
-*Durum: Designed (inceleme bekliyor — `/design-review` taze oturumda). Kod henüz yok: uygulama C-40, mimari karar C-62, anlatı metinleri C-54; kayıp sebebi C-63'te kodlandı (`MapState.loss_reason`). Prolog kayıp kuralı C-49 ile belirlendi (§3.7).*
+*Durum: Designed (inceleme bekliyor — `/design-review` taze oturumda). Kod henüz yok: uygulama C-40, mimari karar C-62, anlatı metinleri C-54 ([`narrative-voice.md`](../narrative/narrative-voice.md)); kayıp sebebi C-63'te kodlandı (`MapState.loss_reason`). Prolog kayıp kuralı C-49 ile belirlendi (§3.7).*
 *Creative Director Review (CD-GDD-ALIGN): atlandı — lean mod*
 *Katman: Presentation*
 *Uyguladığı sütun: Destanı Yaşa · Epik Ama Erişilebilir*
@@ -897,7 +897,7 @@ M1'de uygulanmaz; katmanlı illüstrasyon varlığı sağlanırsa cila olarak de
 | Q5 | Final çıkışındaki miras/bölünme aşaması (`legacy-division.md`) durum makinesine nasıl eklenir (OUTRO ile CAMPAIGN_END arası yeni durum öngörülür) | game-designer / narrative | Final tasarımı |
 | Q6 | ADR C-62 kararları: anlatı ekranlarının bağlamı, `scene_entry` yuvası mı şema alanı mı, S2 kaydı, `CONTENT_MISSING`, `SceneDefinition` yükleme yolu | technical-director | C-62 |
 | Q7 | Lütuf seçimi sırasında kapatma zaferi kaybettirir (en çok 1 hamle). Sertleştirme: `game_won` anında "zafer-bekliyor" kaydı yazıp yüklemede `WinCondition.is_met` ile zafer akışını sürdürmek | Kullanıcı | Playtest geri bildirimine göre |
-| Q8 | Anlatı metinleri, Kök Böri sözü ve neden metinleri (D7/N10) | narrative-director (C-54) | M1 |
+| Q8 | ~~Anlatı metinleri, Kök Böri sözü ve neden metinleri (D7/N10)~~ **Çözüldü (C-54, 2026-10-19):** [`narrative-voice.md`](../narrative/narrative-voice.md) — Prolog sayfaları (`CHAPTER_1_INTRO_*`, `CHAPTER_1_KOKBORI_1`, `CHAPTER_1_OUTRO_*`), `OBJECTIVE_LABEL` + `CHAPTER_1_KOKBORI_LINE`, `DEFEAT_REASON_*`, `DEFEAT_PROGRESS_KEPT` 11 dilde; `CHAPTER_1_TEASER` / `end_pages` C-43'e | narrative-director (C-54) | M1 ✅ |
 | Q9 | Sahne başına müzik/ambiyans (ADR-0008 takibi) ve anlatı ekranı cilası (katmanlı illüstrasyonla kaydırma) | audio / art | M2 |
 
 ---
