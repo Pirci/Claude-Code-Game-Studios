@@ -175,3 +175,8 @@
 - GameContext.bind_services(game_state, accessibility, audio = null) plays region_select on MapController.region_selected. Settings sliders now affect real buses.
 - Tests 123/123 (audio_controller_test 7). Real-device audibility = manual check for the user.
 - NEXT: C-24 (.uid git policy — decision task).
+
+## Session Extract — C-24 .uid politikası (2026-10-19)
+- Decision (recommended): commit .uid files (Godot 4.4+). Removed `*.uid` from game/.gitignore; 272 .uid added (no orphans). Scenes reference scripts by path, so no existing reference breaks.
+- User note: on the Mac, if `git pull` complains about untracked .uid files, delete local *.uid (they were ignored before) and pull again; Godot adopts the committed UIDs.
+- NEXT: C-25 (initial keyboard focus decision + implementation).

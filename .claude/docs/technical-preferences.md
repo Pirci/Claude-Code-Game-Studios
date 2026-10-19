@@ -64,6 +64,13 @@
 - **Dosya tipi bazlı klasörleme**: `scripts/`, `scenes/`, `art/` gibi dosya tipine göre klasörleme YASAK. Feature bazlı klasörleme kullan (ör: `features/combat/`, `features/army/`). Dosya tipine göre filtreleme zaten editörde yapılabiliyor.
 - **Tight coupling**: Bir script'in doğrudan parent'ını bilmesi YASAK. Çocuk node'lar parent'a sinyal ile iletişim kurar, parent çocuğa doğrudan çağrı yapar ("call down, signal up").
 
+## Version Control Notes
+
+- **`.uid` dosyaları commit edilir** (Godot 4.4+ önerisi; C-24, 2026-10-19). Yeni script /
+  shader eklerken yanındaki `.uid` de commit'e girer. Sahneler script'lere hâlâ yol ile
+  referans verebilir; UID'ler klonlar arasında aynı kalır.
+- `.godot/` ve `reports/` takip edilmez.
+
 ## Allowed Libraries / Addons
 
 - **GDUnit4** — Otomatik test framework'ü

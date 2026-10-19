@@ -1,6 +1,7 @@
 # Godot 4 specific ignores
 .godot/
-*.uid
+# .uid dosyaları COMMIT edilir (Godot 4.4+ önerisi; klonlar arası UID referansları
+# tutarlı kalsın) — C-24 kararı, 2026-10-19.
 
 # Godot export
 export/
