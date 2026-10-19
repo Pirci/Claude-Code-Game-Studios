@@ -75,7 +75,8 @@ Biriktirmek de gerçek bir seçenek olmalı.
    düşman AI ve Erlik yayılımından sonra) toplanır.
    - Altın, oyuncu bölgelerinin efektif gelirlerinin toplamı kadar artar (formül §4).
    - Bölge başına çarpanlar (ör. Ruh sisteminin bozulma cezası) ve toplam üzerindeki
-     çarpanlar (ör. Bereket lütfu) bu sisteme girdi olarak gelir; **toplama ve
+     lütuf bonusları (ör. Bereket: düz +1, `B_add`; yüzde kaynakları `M_g`) bu sisteme
+     girdi olarak gelir; **toplama ve
      yuvarlama bu sistemindir**. Gelir formülünün sahibi bu GDD'dir (çapraz
      inceleme W8).
 4. **Ordu Topla (üretim):** Oyuncunun kendi turunda, sahip olduğu herhangi bir
@@ -120,7 +121,7 @@ Biriktirmek de gerçek bir seçenek olmalı.
 | --- | --- | --- | --- |
 | Harita / Tur Akışı (`region-map-system.md`) | Bölge sahipliği, `gold_per_turn`; tur sonu sırası | Ekonomi adımını çağırır (gelir + düşman takviyesi + bakım); 4. adımda sayaçları sıfırlar | Sıra: Harita · İçerik: Kaynak |
 | Ordu (`army-system.md`) | — | Üretim `army_count`'u artırır; garnizon ve hareket kuralları değişmez | Kaynak |
-| Kök Böri / Ruh (`spirit-system.md`) | Bölge başına üretim çarpanı (bozulma), toplam gelir çarpanları (lütuflar) | — (Ruh'a dokunmaz) | Çarpanlar: Ruh · Uygulama: Kaynak |
+| Kök Böri / Ruh (`spirit-system.md`) | Bölge başına üretim çarpanı (bozulma), lütuf gelir bonusları (`B_add`, `M_g`) | — (Ruh'a dokunmaz) | Çarpanlar: Ruh · Uygulama: Kaynak |
 | Savaş (`combat-system.md`) | — | — (dolaylı: üretilen ordu savaşa girer) | — |
 | Oyun Durumu (`GameState`) | — | `gold` (yalnızca veri) | Kaynak |
 | Bölüm verisi (`ChapterMapDefinition`) | `starting_gold`, `enemy_reinforcement_per_turn` | — | Kaynak (ayar) |
@@ -159,8 +160,8 @@ sonuç 0'dır.
 
 | Değişken | Sembol | Tip | Aralık | Açıklama |
 | --- | --- | --- | --- | --- |
-| Ham gelir | `I_raw` | int | 0–50 | Oyuncu bölgelerinin `G_eff` toplamı |
-| Toplamsal lütuf bonusu | `B_add` | int | 0–10 | Ruh sisteminin tanımladığı düz bonus (ör. "+1 altın/tur"); MVP 0 |
+| Ham gelir | `I_raw` | int | 0–75 | Oyuncu bölgelerinin `G_eff` toplamı (Final: 15 bölge × 5) |
+| Toplamsal lütuf bonusu | `B_add` | int | 0–10 | Ruh sisteminin tanımladığı düz bonus: Bereket yığını × 1 (M1'de tipik 0–1) |
 | Çarpımsal lütuf çarpanı | `M_g` | float | 1.0–2.0 | Ruh sisteminin tanımladığı yüzde bonus; MVP 1.0 |
 | Gelir tabanı | `I_floor` | int | 0–3 | Kayıp sonrası toparlanma güvencesi; **MVP 0** |
 | Tur geliri | `I_turn` | int | 0–100 | Ekonomi adımında hazineye eklenir |
@@ -180,7 +181,7 @@ yüzde kaynakları için), MVP'de 1.0.
 | --- | --- | --- | --- | --- |
 | Efektif gelir | `G_eff` | int | 0–5 | F1'in çıktısı |
 | Asgari tavan | `R_min` | int | 0–2 | Her obanın verebileceği en az yiğit; MVP 1 |
-| Tavan | `R_cap` | int | 1–5 | O bölgenin bir turda verebileceği en fazla birlik |
+| Tavan | `R_cap` | int | 0–5 | O bölgenin bir turda verebileceği en fazla birlik (MVP `R_min = 1` iken 1–5; `R_min = 0` ise 0 olabilir) |
 
 **Çıktı aralığı:** Prolog'da 1–3. Tam fetihte toplam tavan 10/tur; bunun maliyeti
 20 altın, gelir ise 10. Yani geç oyunda kısıt **altın** olur ve biriktirme kararı
@@ -195,7 +196,7 @@ anlam kazanır.
 | Değişken | Sembol | Tip | Aralık | Açıklama |
 | --- | --- | --- | --- | --- |
 | Birlik sayısı | `k` | int | 1–`R_cap` | Oyuncunun seçimi |
-| Birlik maliyeti | `recruit_cost` | int | 1–5 | **Sabit 2 altın** (MVP) |
+| Birlik maliyeti | `recruit_cost` | int | 1–4 | **Sabit 2 altın** (MVP; güvenli aralık §7) |
 
 **Örnek:** 6 altınla Otağ'da 2 birlik (tavan 2) → 4 altın harcanır, 2 kalır.
 
@@ -212,7 +213,7 @@ Ekonomi adımında her düşman bölgesi `i` için: `army_i += E_r`. **Prolog'da
 | --- | --- | --- | --- | --- |
 | Takviye | `E_r` | int | 0–3 | `enemy_reinforcement_per_turn` (bölüm verisi) |
 
-**Örnek:** 1. turun sonunda düşmanın inde 1 + 1 = 2, yeni aldığı Doğu Obası'nda
+**Örnek (eski model — C-49'a dek eskimiş):** 1. turun sonunda düşmanın inde 1 + 1 = 2, yeni aldığı Doğu Obası'nda
 3 + 1 = 4 ordu olur.
 
 ### F7 — Bakım gideri (MVP'de etkisiz)
@@ -227,7 +228,14 @@ Ekonomi adımında her düşman bölgesi `i` için: `army_i += E_r`. **Prolog'da
 
 ### Prolog doğrulaması
 
-Yukarıdaki değerlerle, kuralları birebir uygulayan simülasyon:
+> ⚠️ **ESKİMİŞ — C-49'a dek (C-53 işareti, 2026-10-19):** Bu tablo, 1. tur örneği ve F6
+> örneği Canavarın İni'nin **düşman** (6 ordu, takviyeli) olduğu C-29 öncesi modelle
+> hesaplandı. C-29 sonrası Prolog'da düşman bölgesi yok; in **nötr + seviye 3** (direnç 12 →
+> komşu kaynakta ≥ 14 ordu, `army-system.md` §4). C-34 elle simülasyonu: en hızlı zafer ≈ 6.
+> tur (T4 recruit + T6 arındırma); pasif oyuncu için kayıp yolu yok. Yeni değerler ve
+> doğrulama **C-49** (`/balance-check`).
+
+Yukarıdaki değerlerle, kuralları birebir uygulayan simülasyon (eski model):
 
 | Durum | Sonuç |
 | --- | --- |
@@ -242,7 +250,7 @@ kazanıyor — baskı zayıf); başlangıç 4 altın (tolerans 4 tura iniyor); t
 `ceil(G_eff / 2)` + tüm bölgelere takviye (4 tur boşa → kaybedilen — öğretici
 için sert). Gelir tabanı Prolog'da hiç devreye girmedi (Otağ her zaman ≥ 2 verir).
 
-**1. tur örneği:** Oyuncu 6 altınla başlıyor. Otağ'da 2 birlik üretiyor (−4 altın),
+**1. tur örneği (eski model — C-49'a dek eskimiş):** Oyuncu 6 altınla başlıyor. Otağ'da 2 birlik üretiyor (−4 altın),
 6 orduyla boş Bereket Vadisi'ne yürüyor. Düşman AI inden en zayıf komşusu Doğu
 Obası'na saldırıyor: 5'e 3, düşman kazanıyor ve bölgede 3 ordusu kalıyor. Ekonomi
 adımında oyuncunun geliri 2 + 3 = 5, hazinesi 7 altın oluyor. Takviyeyle düşmanın
@@ -278,13 +286,19 @@ inde 2, Doğu Obası'nda 4 ordu oluyor.
   sabittir.
 - **Bakım gideri altını aşarsa** (yalnızca `U > 0` olduğunda): Mevcut altın
   ödenir ve hazine 0 olur. Kalan borç silinir; birlik dağıtılmaz, borç birikmez.
-- **Üst sınırlar:** Altında ve orduda üst sınır yoktur; Prolog simülasyonunda en
-  büyük ordu 19 oldu. UI 3 haneye kadar gösterir; daha büyük değerler tasarım
+- **Üst sınırlar:** Altında ve orduda üst sınır yoktur; (eski model) Prolog
+  simülasyonunda en büyük ordu 19 oldu. UI 3 haneye kadar gösterir; daha büyük değerler tasarım
   dışıdır ve ayar hatası sayılır.
 - **Sahne sonu:** Harcanmamış altın silinir (§3.1 R8). Sonraki sahne kendi
   `starting_gold` değeriyle açılır.
 - **Düşman turunda üretim:** Mümkün değildir. Üretim yalnızca oyuncunun turunda
   yapılabilir.
+- **Oyun bittikten sonra** (`region-map-system.md` §3.7, `game_result ≠ ONGOING`):
+  üretim reddedilir.
+- **Bozuk bölgedeki garnizonu güçlendirmek:** Yerinde üretim (R4) arındırma girişimi
+  değildir; bozuk bölgeye ordu *göndermek* ise arındırma girişimidir (`army-system.md`
+  §3.3). Bozuk kendi bölgesini korumak isteyen oyuncu orada üretir (tavan `G_eff`
+  bozulmayla düştüğü için en az `R_min`).
 - **Ekonomi adımı sırası:** Önce oyuncu geliri, sonra düşman takviyesi, sonra
   bakım. Bu üç işlem birbirini etkilemediği için sıra sonucu değiştirmez.
 
@@ -305,14 +319,15 @@ inde 2, Doğu Obası'nda 4 ordu oluyor.
 | --- | --- | --- |
 | Ordu (`army-system.md`) | **Sert** | Üretim `army_count`'u artırır. Ordunun büyüyebildiği tek kaynak bu sistemdir. |
 | Harita / Tur Akışı — düşman tarafı | **Sert** | Düşman takviyesi (F6) ekonomi adımında uygulanır. |
-| Kök Böri / Ruh (`spirit-system.md`) | Yumuşak | Bereket ve Sürü Kutsaması lütuflarının etkisi bu sistemin gelir formülünden (F2) geçer. |
+| Kök Böri / Ruh (`spirit-system.md`) | Yumuşak | Bereket (`B_add`) bu sistemin gelir formülünden (F2) geçer. Sürü Kutsaması kilitli: sürü formülü tanımlanınca (§3.1, Açık Soru 3) bağlanır. |
 | HUD / Bilgi paneli | Sert | Altın, tahmini gelir, Ordu Topla kontrolü (§10). |
-| Kayıt / Yükleme (ADR-0007) | Sert | Tur sonu otomatik kayıt: `gold` ve bölge üretim sayaçları tur sonunda saklanır; tur ortası kayıt yok. |
+| Kayıt / Yükleme (ADR-0007) | Sert | Tur sonu otomatik kayıt: `gold` saklanır; bölge üretim sayaçları 4. adımda sıfırlandığı için kayıt anında hep 0'dır (yüklemede 0 başlatılır); tur ortası kayıt yok. |
 | Katmanlı Düşman (`enemy-layers.md`, yazılmadı) | Gelecek | Düşman takviyesini devralacak (geçici sözleşme). |
 
 ### Diğer GDD'lerde gereken karşı güncellemeler
 
-Çift yönlü bağımlılık kuralı gereği (C-28 kapsamında yapılır):
+✅ **Tamamlandı (C-28, 2026-10-08)** — liste tarihsel kayıt olarak duruyor.
+Çift yönlü bağımlılık kuralı gereği (C-28 kapsamında yapıldı):
 
 1. **`army-system.md` §6:** Kaynak sistemi bağımlılık olarak eklenecek. §7'deki
    "ordu bakım maliyeti (planlı)" notu bu GDD'nin F7'sine işaret edecek.
@@ -429,7 +444,8 @@ Test tipi her grubun başında; birim ve entegrasyon testleri BLOCKING.
 
 ### Sistem / simülasyon (ADVISORY)
 
-- **AC15:**
+- **AC15:** ⚠️ *ESKİMİŞ — C-49 yeniden yazar (eski modelde düşman inine göre; C-29 sonrası
+  ilk madde 4. turda sağlanamaz, ikinci madde düşmansız Prolog'da desteklenmez).*
   - **GIVEN** GDD değerleriyle Prolog, **WHEN** kusursuz bir hamle dizisi oynanır,
     **THEN** 4. turda zafer mümkündür.
   - **WHEN** oyuncu 8 tur yalnızca Otağ'da üretir, **THEN** 18. turdan önce zafer
@@ -474,7 +490,9 @@ Tamamı art bible'a bağlıdır.
 ## 10. UI Requirements
 
 - **HUD üst bar:** `Altın: X (+Y)`. Y, mevcut sahipliğe göre F2'nin tahmini
-  değeridir. Sayılar `NumberFormatter` ile biçimlenir.
+  değeridir. Sayılar `NumberFormatter` ile biçimlenir. Tahmin, tur sonunda gelirden
+  önce çalışan düşman AI ve Erlik yayılımını (region-map §3.4 adım 1–2) yansıtmaz;
+  yayılım hedefi deterministik olduğundan UX bunu ayrıca gösterebilir (C-41/C-45).
 - **Bilgi paneli, oyuncu bölgesi — "Ordu Topla" bölümü:**
   - −/+ seçici: `k` 1 ile `min(kalan tavan, altınla alınabilecek)` arasında.
   - Maliyet satırı: `k × 2 = Z altın`.
@@ -502,4 +520,4 @@ Tamamı art bible'a bağlıdır.
 | 4 | Katmanlı Düşman GDD'si takviyeyi devraldığında düşman ekonomisi simetrik mi olacak? | game-designer | `enemy-layers.md` |
 | 5 | Toparlanma mekanizması ve bakım gideri (çapraz inceleme D1/D2): `I_floor` ve `U` açılsın mı? | Kullanıcı | İlk Prolog playtesti |
 | 6 | ~~Sahne ortası kayıtta altın ve üretim sayaçları nasıl saklanacak?~~ **Çözüldü (ADR-0007, 2026-10-18):** yalnızca tur sonu otomatik kayıt; altın ve üretim sayaçları tur sonunda oturmuş haliyle JSON'a yazılır, tur ortası kayıt yok. | technical-director | C-16 ✅ |
-| 7 | Kusursuz oyunla 4 turda zafer öğretici için fazla hızlı mı? Hedef: tipik oyuncu 10–18 tur. | Kullanıcı | İlk Prolog playtesti |
+| 7 | Kusursuz oyunla 4 turda zafer öğretici için fazla hızlı mı? Hedef: tipik oyuncu 10–18 tur. *(Eski model; C-29 sonrası en hızlı ≈ 6. tur — C-49 yeniden değerlendirir.)* | Kullanıcı | C-49 / ilk Prolog playtesti |

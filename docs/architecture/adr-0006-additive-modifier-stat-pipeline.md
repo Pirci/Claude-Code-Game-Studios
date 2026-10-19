@@ -4,6 +4,11 @@
 
 Proposed
 
+> **Amendment 2026-10-19 (C-53, cross-review W-F):** Gök Kalkanı is a `FLAT` modifier on
+> `erlik_spread_interval` (C-31); `ModifierSource` gains `max_stacks`; persistence follows
+> "save choices, derive effects" — `GameState.modifiers` is rebuilt on load from saved
+> choices (`GameState.boons`, later council state) and is not serialized (ADR-0007 amended).
+
 ## Date
 
 2026-10-18
@@ -152,7 +157,9 @@ func remove_source(source_id: StringName) -> void
 ### Scope notes
 
 - Stat ids are data (`StringName` constants in one `stat_ids.gd` per consuming feature), not an enum, so new stats need no pipeline change.
-- Non-numeric boon effects (e.g. Gök Kalkanı "Erlik yayılma hızı −%20", an interval) are expressed as a `PERCENT` modifier on stat `erlik_spread_rate`; how the consumer interprets it is that GDD's job (open item C-31).
+- Interval-type boon effects are ordinary stats: Gök Kalkanı is `FLAT +GOK_KALKANI_INTERVAL_BONUS` on `erlik_spread_interval` (C-31, `spirit-system.md` §3.5/§4.6). Clamps (e.g. `min(k, GOK_KALKANI_MAX_STACKS)` on the effect) remain the caller's job; the resolver never clamps.
+- **Stack caps:** `ModifierSource` has `max_stacks: int` (0 = unlimited). `ModifierController.add_source()` rejects (returns `false`) a re-add that would exceed it. Boon catalog metadata (`boon_id`, name key, `requires`) lives in the spirit feature's `BoonDefinition` content resource, which references a `ModifierSource`; the pipeline knows only effects.
+- **Persistence — save choices, derive effects (C-53):** `GameState.modifiers` is **derived state**. The saved choices (`GameState.boons`: picked `boon_id`s in order; later the council state) are the single source of truth; on load `ModifierController` rebuilds the records by re-adding each choice's source. This removes the "picks (`n`) vs stacks" double bookkeeping and lets rebalanced content apply to old saves.
 - Multipliers that are **not** player-sourced (corruption `M_c`) stay outside the pipeline — they are per-region game rules, not accumulated bonuses.
 
 ## Alternatives Considered
@@ -185,7 +192,7 @@ func remove_source(source_id: StringName) -> void
 - Double-counting is prevented by the `(source_id, stat_id, kind)` uniqueness invariant plus `exclusive_group`.
 - Single audit point: filtering `GameState.modifiers` by stat explains every bonus (UI tooltip, debug).
 - Pure resolver → trivially unit-testable; matches resource F2 and spirit stacking text exactly.
-- Data-only list serializes cleanly with the save/load migration (ADR-0007: `StatModifier` is serialized to JSON by `SaveSerializer`; sources are content and not saved).
+- Save/load stays trivial: the modifier list is rebuilt from saved choices (ADR-0007 amended 2026-10-19); `StatModifier` never needs a serializer.
 
 ### Negative
 
@@ -223,7 +230,7 @@ func remove_source(source_id: StringName) -> void
 
 1. Add `StatModifier`, `StatResolver`, `ModifierSource`, `ModifierController` under `game/features/modifiers/` with unit tests.
 2. Replace `GameState.bozkurt_bonuses` with `modifiers`; remove `get_total_bozkurt_bonus()`; update `game_state.gd` and its tests (no production caller exists today).
-3. Wire `ResourceController` F2 (`B_add`, `M_g`) when C-37 lands.
+3. Wire `ResourceController` F2 (`B_add`, `M_g`) with the M1 boons (C-39; pipeline itself = C-55).
 4. Register ownership/forbidden pattern in `docs/registry/architecture.yaml`.
 
 **Rollback**: modifiers are additive to the codebase; reverting means restoring `bozkurt_bonuses`.
@@ -235,9 +242,11 @@ func remove_source(source_id: StringName) -> void
 - [ ] Unit test: `resolve()` accepts a typed array built from a `.filter()` result via `Array[StatModifier]` conversion.
 - [ ] Unit test: `resolve(base=5, flat=+1, pct=+0.2)` → `7.2`, and caller floor gives resource AC `floor(6 × 1.2) = 7`.
 - [ ] No consumer iterates `GameState.modifiers` outside `features/modifiers/`.
+- [ ] Unit test: a source with `max_stacks = 3` accepts 3 adds and rejects the 4th.
+- [ ] Unit test: rebuilding modifiers from `GameState.boons = [bereket, bereket, gok_kalkani]` yields `gold_income` flat 2 and `erlik_spread_interval` flat 1.
 
 ## Related Decisions
 
 - ADR-0003 (DI), ADR-0004 (state segregation).
 - `design/gdd/spirit-system.md` §3.4–3.5, §4, §6; `design/gdd/resource-system.md` F2.
-- Open follow-ups: C-16 (save/load serializes `modifiers`), C-31 (boon timing/MVP subset).
+- Follow-ups: C-16 ✅ (ADR-0007), C-31 ✅ (boon timing/MVP subset), C-53 ✅ (this amendment); implementation C-55.

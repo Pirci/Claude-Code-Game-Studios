@@ -8,6 +8,7 @@
 > Mevcut kodu belgeler. MVP'de ordu tek bir soyut sayıdır (`army_count`) — birim
 > tipleri (süvari/okçu/piyade) ve kahramanlar henüz kodda yok (§7).
 > **Planlı (kodda yok):** §3.3'teki 2. dal (arındırma) C-30 kararıdır; uygulama C-38.
+> Sahip-bağımsız kurallar (§3.1) ve boş kalan bölgenin nötrleşmesi (§3.3): C-19 / C-52.
 
 ---
 
@@ -96,19 +97,20 @@ ve varışını etkilemez, düşman arındıramaz ve bozulma düşmanın aldığ
 ```
 moving_army = source.army_count − 1
 ```
-Barışçıl birleşme (hedef oyuncunun):
+Barışçıl birleşme (hedef hamle yapanın; oyuncu hamlesinde hedef bozulmamış):
 ```
 target.army_count = target.army_count + moving_army
 ```
-Barışçıl işgal (boş/nötr, army=0):
+Barışçıl işgal (yabancı garnizon yok, army=0; oyuncu hamlesinde hedef bozulmamış):
 ```
-target.owner = PLAYER
+target.owner = mover
 target.army_count = moving_army
 ```
 Savaş sonucu Savaş Çözümü GDD'sindeki formüllerle belirlenir; kalan ordu oradan gelir.
 
 Arındırma (2. dal; `S` = `corruption_strength = corruption_level × CORR_STR_PER_LEVEL`,
-`spirit-system.md` §4.1):
+`spirit-system.md` §4.1; M2'de Kurt Gücü ile karşılaştırma `P_eff` üzerinden yapılır —
+savaş §4 "Etkin güç"; M1'de `P_eff = P`):
 ```
 P = moving_army
 başarı        ⇔ P > S
@@ -140,8 +142,10 @@ beraberlik (Dal 3): iki taraf da 1 kayıp → hedefte 0 birlik → hedef `NEUTRA
 - **army_count == 1**: hareket edilemez (`can_move` reddeder) — garnizon korunur.
 - **Komşu olmayan hedef**: reddedilir.
 - **Aksiyon kalmadı**: reddedilir (tur bitmeli).
-- **Hedef boş nötr (army=0)**: savaş yok, barışçıl işgal.
-- **Kendi bölgene hareket**: barışçıl birleşme (takviye).
+- **Hedef boş nötr (army=0)**: savaş yok; bozulmamışsa barışçıl işgal, bozuksa
+  arındırma (2. dal — ör. Prolog'daki Canavarın İni).
+- **Kendi bölgene hareket**: bozulmamışsa barışçıl birleşme (takviye); bozuksa
+  arındırma girişimi (aşağıda).
 - **Seçili kaynak yokken hareket denemesi**: Harita akışı bunu engeller
   (`attempt_move` seçili bölge yoksa `false` döner).
 - **Bozulmuş + yabancı garnizonlu hedef**: 1. dal (savaş). Kazanılırsa oyuncu bölgeyi
@@ -149,8 +153,10 @@ beraberlik (Dal 3): iki taraf da 1 kayıp → hedefte 0 birlik → hedef `NEUTRA
   sonraki bir hamlede bölgeye kuvvet gönderir (2. dal, kendi bölgesi). İki katman =
   iki hamle.
 - **Kendi bozuk bölgene takviye**: 2. dal — takviye bir arındırma girişimidir;
-  `P ≤ S` ise gelen kuvvet kaybolur, garnizon değişmez. Bilgi paneli seviyeyi ve
-  direnci gösterir (`spirit-system.md` §3.2), sonuç hamleden önce hesaplanabilir.
+  `P ≤ S` ise gelen kuvvet kaybolur, garnizon değişmez. Hamle önizlemesi sonucu
+  gösterir ve başarısız girişim ikinci onay ister (`spirit-system.md` §3.2). Bozuk
+  bölgedeki garnizonu güçlendirmenin güvenli yolu **yerinde üretimdir**
+  (`resource-system.md` §3.1 R4, §5) — üretim arındırma girişimi değildir.
 - **Başarısız arındırma**: aksiyon harcanır, kuvvet kaybolur, kaynakta garnizon (1) kalır.
 - **Beraberlikte iki taraf da tükenirse**: bölge sahipsiz olur (§3.3, W3); bozuksa bir
   sonraki oyuncu hamlesi 2. dala (arındırma) gider.
@@ -194,8 +200,8 @@ kahraman birimleri, hareket menzili/maliyeti — konseptte var, kodda yok. Ordu
 2. Komşu olmayan hedefe hareket **reddedilir**. *(Test)*
 3. `actions_remaining == 0` iken hareket **reddedilir**. *(Test)*
 4. Geçerli harekette kaynak `army_count = 1` olur, taşınan = eski−1. *(Test)*
-5. Boş nötr bölgeye hareket → bölge oyuncunun, army = taşınan. *(Test)*
-6. Oyuncunun bölgesine hareket → takviye (army += taşınan). *(Test)*
+5. Boş, bozulmamış nötr bölgeye hareket → bölge oyuncunun, army = taşınan. *(Test)*
+6. Oyuncunun bozulmamış bölgesine hareket → takviye (army += taşınan). *(Test)*
 7. Düşman bölgeye hareket → savaş tetiklenir ve sonuç uygulanır. *(Test)*
 8. Garnizonsuz nötr, seviye 2 (S=8) bölgeye P=9 → bölge oyuncunun, army=5,
    `corruption_level=0`, Ruh +20. *(Test — BLOCKING, C-38)*

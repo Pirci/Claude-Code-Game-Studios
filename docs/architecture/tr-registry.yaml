@@ -25,7 +25,7 @@
 # STATUS VALUES: active | deprecated | superseded-by: TR-[system]-NNN
 
 version: 2
-last_updated: "2026-10-18"
+last_updated: "2026-10-19"
 
 requirements:
   # --- region-map-system (slug: map) ---
@@ -155,9 +155,9 @@ requirements:
   - id: TR-spirit-005
     system: spirit
     gdd: design/gdd/spirit-system.md
-    requirement: "Erlik spread AI: deterministic periodic corruption spread (second AI behavior alongside enemy AI)"
+    requirement: "Erlik spread AI: deterministic counter-based corruption spread (current_turn - last_erlik_spread_turn >= effective interval incl. Gok Kalkani; min-army candidate, region_id tie-break) as a second AI behavior alongside enemy AI"
     created: 2026-08-13
-    revised: ""
+    revised: "2026-10-19"
     status: active
 
   - id: TR-spirit-006

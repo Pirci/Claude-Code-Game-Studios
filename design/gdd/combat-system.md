@@ -2,7 +2,7 @@
 
 *Oyun: ULUS: Blood of the Sky Wolf*
 *Oluşturulma: 2026-07-14*
-*Durum: Belgelenmiş (kod mevcut — `game/features/combat/combat_resolver.gd`)*
+*Durum: Belgelenmiş (kod mevcut — `game/features/combat/combat_resolver.gd`) + planlı: "Etkin güç" (M2)*
 *Katman: Core*
 
 > Bu doküman mevcut kodu belgeler (reverse-document). MVP savaş çözümü kompozisyon
@@ -116,11 +116,13 @@ berabere (savunan kazanır) olurdu.
 - **Yuvarlama**: tüm kayıplar `ceil` ile hesaplanır → en az 1 kayıp garantisi
   (D≥1 veya A≥1 iken). Küçük ordularda bile kayıpsız zafer olmaz.
 - **Kalan negatif**: `max(0, …)` ile engellenir.
-- **Arındırma çağrısı** (`spirit-system.md` §3.2, C-30): resolver `A = P` (gelen
-  kuvvet), `D = corruption_strength` ile çağrılır; başarı = `attacker_won`.
-  Başarıda kalan `attacker_remaining`'dir; başarısızlıkta gelen kuvvet **tamamen**
-  kaybolur (Dal 3'ün kalanı kullanılmaz) ve `defender_remaining` yok sayılır —
-  bozulma kısmen azalmaz.
+- **Arındırma çağrısı** (`spirit-system.md` §3.2, C-30): resolver `A = P_eff` (gelen
+  kuvvetin etkin gücü; M1'de `P`), `D = corruption_strength` ile çağrılır. Başarı
+  **yalnızca** `A > D` (Dal 1) ile tanımlıdır; eşitlik her zaman başarısızlıktır —
+  `draw_favors_defender` arındırmaya uygulanmaz (C-53). Başarıda kalan
+  `attacker_remaining`'dir (kayıp Dal 1: `ceil(D × attacker_win_loss_ratio)`);
+  başarısızlıkta gelen kuvvet **tamamen** kaybolur (Dal 3'ün kalanı kullanılmaz) ve
+  `defender_remaining` yok sayılır — bozulma kısmen azalmaz.
 - **Fetih ve bozulma**: savaş sonucu yalnızca sahipliği ve orduyu değiştirir;
   hedefin `corruption_level`'ı korunur (çapraz inceleme B5, `army-system.md` §3.3).
 

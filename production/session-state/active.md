@@ -129,3 +129,8 @@
 - Recommended next: C-17 is next in queue but now depends on C-53 (fix W-A…W-I, S1-a, N7/N11c + ADR amendments) → do C-53 first
 - Report: design/gdd/gdd-cross-review-2026-10-19.md
 - Also: Godot 4.7.1 Linux downloaded to scratchpad/godot (session-only); `GODOT=<that> tools/ci/run-tests.sh` → 80/80 pass, palette 0 violations.
+
+## Session Extract — C-53 çapraz inceleme düzeltmeleri (2026-10-19, gece modu)
+- Rapor uyarıları kapatıldı (çözüm günlüğü raporun sonunda). Önemli kararlar: aynı tur ikinci lütuf seçimi HUD'dan serbest (otomatik modal tur başı ≤1); "seçimi sakla, etkiyi türet" — `GameState.boons` tek kaynak, modifikatörler yüklemede yeniden kurulur (ADR-0006/0007 amendment), `ModifierSource.max_stacks`; `turn_ended` kontrol sonrası + yalnızca ONGOING, 1. adım sonrası erken kayıp; ADR-0005 `SpreadDecision`; arındırma `draw_favors_defender`'dan bağımsız; hamle önizlemesi + yayılım göstergesi gereksinimi (başarısız arındırma ikinci onay).
+- Kalanlar sahipli: C-49 (N1–N4, N9, W-B), C-36 (S1-e, beast tamga), C-44, C-54, C-35.
+- NEXT: C-17 `/architecture-review` (ADR'leri Accepted yap). Not: kendi yazdığım ADR değişiklikleri taze gözle incelenmeli — C-17 bağımsız ajanlarla yapılacak.

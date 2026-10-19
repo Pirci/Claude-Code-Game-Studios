@@ -61,13 +61,14 @@ state_ownership:
     status: active
     owner_system: modifier-system
     adr: docs/architecture/adr-0006-additive-modifier-stat-pipeline.md
-    interface: "GameState.modifiers: Array[StatModifier] (data-only; one record per (source_id, stat_id, kind)). Read only through StatResolver."
+    interface: "GameState.modifiers: Array[StatModifier] (data-only, DERIVED: rebuilt from saved choices such as GameState.boons on load, never serialized; one record per (source_id, stat_id, kind); ModifierSource.max_stacks enforced). Read only through StatResolver."
     write_access: modifier-controller-only   # ModifierController.add_source()/remove_source()
     referenced_by:
       - docs/architecture/adr-0006-additive-modifier-stat-pipeline.md
       - docs/architecture/adr-0004-state-segregation.md   # data-only shape
+      - docs/architecture/adr-0007-save-load-persistence.md   # not saved; rebuilt from boons
     added: 2026-10-18
-    revised: ""
+    revised: 2026-10-19   # C-53: derived state + max_stacks (cross-review W-F)
 
   - state: save_files
     status: active

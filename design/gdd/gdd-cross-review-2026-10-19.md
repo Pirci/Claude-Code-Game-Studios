@@ -356,3 +356,31 @@ N10 to a narrative task.
 - **C-49** — scope extended with N1–N4, N9, S1-e (teaching tile, loss condition, spread steering).
 - **C-54** — narrative voice for combat/purification reports and Kök Böri framing (D7/N10).
 - **C-55 / C-56** — ADR-0006 and ADR-0007 implementation tasks (missing from the queue).
+
+---
+
+## Resolution log (C-53, 2026-10-19)
+
+| Item | Status | Where |
+| --- | --- | --- |
+| W-A | ✅ marked "ESKİMİŞ — C-49'a dek" (§4 table, 1. tur + F6 examples, §5, AC15, Q7) | resource-system.md |
+| W-B | → C-49 (user decision: loss condition / pressure) | continuation C-49 |
+| W-C | ✅ auto-modal max 1 per turn start; HUD may chain picks in the same turn; offer recomputed when opened (S3-d) | spirit §3.4, AC15 |
+| W-D | ✅ `turn_ended` after step 5 and only while ONGOING; early LOST exit after step 1 (S2-b); victory persistence → scene-flow | region-map §3.4, AC8/AC12; ADR-0007 amendment; code C-51 |
+| W-E | ✅ `decide(map_state, effective_interval) -> SpreadDecision`; sequential planning note | ADR-0005 amendment |
+| W-F | ✅ Gök Kalkanı FLAT on `erlik_spread_interval`; `ModifierSource.max_stacks`; `BoonDefinition`; "save choices, derive effects" (`boons` single source, modifiers rebuilt on load) | ADR-0006/0007 amendments, spirit §3.4/§3.5, architecture registry |
+| W-G | ✅ field ownership list for `RegionData` / `MapState` / `ChapterMapDefinition`; `current_turn` starts at 1 | region-map §3.1 |
+| W-H | ✅ concept MVP #4 + tier table; C-39 done criterion | game-concept.md, continuation |
+| W-I | ✅ AC10 → art bible layer rule (C-50) | spirit AC10 |
+| S1-a / S1-c | ✅ all move results committed before `game_won`; boon picks exempt from the lock | region-map §3.3/§3.7, spirit §3.2, spirit AC20 |
+| S1-e | → C-36 data AC (lair garrison 0) | spirit §3.2, continuation C-36 |
+| N7 | ✅ requirement: move-outcome preview (+ second confirm for a failing purification) and spread telegraph; spec C-41/C-45 | spirit §3.2/§3.6, AC21 |
+| N11c | ✅ recruit-in-place note | army §5, resource §5 |
+| Info: purification vs `draw_favors_defender` | ✅ decoupled (success ⇔ `P_eff > S`, Dal 1 losses) | combat §5, spirit §3.2, army §4 |
+| Info: stale citations / wording / headers / ranges | ✅ | all GDDs |
+| Info: registry gaps | ✅ +4 constants (`attacker_win_loss_ratio`, `ruh_per_level`, `base_boon_cost`, `erlik_spread_interval`), TR-spirit-005 revised; `resource` TR slug → C-17 | registries |
+| Info: art bible beast tamga | → C-36 | continuation C-36 |
+| N1–N4, N9 | → C-49 | continuation C-49 |
+| N5, N6, N8 | → C-44 (balance) / Perde 1 design | — |
+| N10 | → C-54 | continuation |
+| N12 | = W-A + C-35 | — |

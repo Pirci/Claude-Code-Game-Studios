@@ -37,7 +37,7 @@
 #   Each entry: name, status, source, referenced_by[], attributes{}, added, revised
 
 version: 1
-last_updated: "2026-10-18"
+last_updated: "2026-10-19"
 
 # ─── ENTITIES ────────────────────────────────────────────────────────────────
 # Named game-world objects: enemies, NPCs, characters, factions, bosses.
@@ -148,11 +148,11 @@ formulas:
     variables:
       - R_min
       - G_eff
-    output_range: [1, 5]
+    output_range: [0, 5]   # 2026-10-19 (C-53): was [1, 5]; 0 only if R_min = 0 (MVP R_min = 1 → 1–5)
     expression: "max(R_min, G_eff)"
-    notes: "HUD/bilgi paneli kalan tavanı gösterir."
+    notes: "HUD/bilgi paneli kalan tavanı gösterir. G_eff bozulma çarpanını içerir (spirit M_c)."
     added: 2026-10-08
-    revised: ""
+    revised: 2026-10-19
 
   - name: corruption_strength
     status: active
@@ -312,6 +312,52 @@ constants:
     value: 1
     unit: gold per turn per Bereket stack (flat, B_add)
     added: 2026-10-18
+    revised: ""
+
+  - name: attacker_win_loss_ratio
+    status: active
+    source: design/gdd/combat-system.md
+    referenced_by:
+      - design/gdd/combat-system.md   # Dal 1, §7 CombatConfig
+      - design/gdd/army-system.md     # §4 arındırma kayıp tablosu (2/4/6)
+      - design/gdd/spirit-system.md   # §3.2/§4.1 arındırma kaybı → Ruh ekonomisi
+    value: 0.5
+    unit: attacker losses as fraction of defender (or corruption_strength) on a win
+    added: 2026-10-19
+    revised: ""
+
+  - name: ruh_per_level
+    status: active
+    source: design/gdd/spirit-system.md
+    referenced_by:
+      - design/gdd/spirit-system.md   # §4.2
+      - design/gdd/army-system.md     # AC8 (Ruh +20)
+    value: 10
+    unit: Ruh per corruption level purified
+    notes: "Gizli bağ: Canavarın İni (seviye 3) = 30 Ruh = base_boon_cost. Biri değişirse 'canavar ilk lütfu öder' tasarımı bozulur."
+    added: 2026-10-19
+    revised: ""
+
+  - name: base_boon_cost
+    status: active
+    source: design/gdd/spirit-system.md
+    referenced_by:
+      - design/gdd/spirit-system.md   # §4.4 boon_cost(n) = base + n × step
+    value: 30
+    unit: Ruh (first boon)
+    notes: "boon_cost_step = 20. Bkz. ruh_per_level notu."
+    added: 2026-10-19
+    revised: ""
+
+  - name: erlik_spread_interval
+    status: active
+    source: design/gdd/spirit-system.md
+    referenced_by:
+      - design/gdd/spirit-system.md      # §3.6, §4.6
+      - design/gdd/region-map-system.md  # §3.1 ChapterMapDefinition sahne override'ı
+    value: 4
+    unit: turns between spreads (default; Prolog scene override 3; + Gök Kalkanı stacks, max 3)
+    added: 2026-10-19
     revised: ""
 
 # Example:

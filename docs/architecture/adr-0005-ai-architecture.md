@@ -3,6 +3,11 @@
 ## Status
 Proposed
 
+> **Amendment 2026-10-19 (C-53, cross-review W-E):** `ErlikSpreadController.decide()`
+> takes the effective interval and returns a `SpreadDecision` (spread-turn flag + target),
+> so the counter-based spread of `spirit-system.md` §3.6/§4.6 is expressible; batch vs
+> sequential planning for `enemy_actions_per_turn > 1` is specified below.
+
 ## Date
 2026-08-13
 
@@ -77,17 +82,25 @@ AI decision logic lives in **dedicated, injected, pure decision services** under
 ```
 game/features/ai/                     ← LEAF decision services (pure, no mutation)
 ├── enemy_ai_controller.gd            decide(map_state) -> Array[MoveIntent]
-└── erlik_spread_controller.gd        decide(map_state) -> Array[StringName]
+└── erlik_spread_controller.gd        decide(map_state, effective_interval) -> SpreadDecision
 
 MapController.end_turn():             ← ORCHESTRATOR (mutates + signals)
    for intent in _enemy_ai.decide(_map_state):
        apply via _army_controller / _combat_resolver ; emit signals
-   for region_id in _erlik.decide(_map_state):
-       increment corruption via controller
+   var spread := _erlik.decide(_map_state, effective_interval)   # interval: caller resolves
+   if spread.is_spread_turn:                                     # (base + Gök Kalkanı, clamped)
+       _map_state.last_erlik_spread_turn = _map_state.current_turn
+       if spread.target_id != &"": increment corruption via controller
 
 Data flow:  MapController ──reads via──▶ AI service ──returns intents──▶ MapController applies
             (AI never writes state, never emits gameplay signals)
 ```
+
+**Sequential semantics (C-53):** the GDD rule processes enemy regions one after another,
+each seeing the result of the previous move. With `enemy_actions_per_turn > 1`,
+`EnemyAIController.decide()` must plan against a scratch copy of the map (apply each
+chosen intent to the copy before choosing the next) so that its output equals the
+sequential rule. At the MVP value 1 batch and sequential planning are identical.
 
 ### Key Interfaces
 ```gdscript
@@ -104,8 +117,14 @@ class MoveIntent:
 func decide(map_state: MapState) -> Array[MoveIntent]
 
 class_name ErlikSpreadController extends RefCounted
-func bind_config(config: SpiritConfig) -> void   # spread interval etc.
-func decide(map_state: MapState) -> Array[StringName]   # region_ids to corrupt
+func bind_config(config: SpiritConfig) -> void   # base interval, levels, etc.
+## effective_interval = scene base interval + min(k, GOK_KALKANI_MAX_STACKS) × bonus,
+## resolved by the caller via StatResolver (ADR-0006) — this service does not read modifiers.
+func decide(map_state: MapState, effective_interval: int) -> SpreadDecision
+
+class SpreadDecision extends RefCounted:
+    var is_spread_turn: bool = false   # current_turn − last_erlik_spread_turn ≥ effective_interval
+    var target_id: StringName = &""    # empty on a spread turn with no candidate (counter still resets)
 ```
 
 ## Alternatives Considered

@@ -367,7 +367,8 @@ tatmin edici buluyor."
 1. Prolog (Doğuş) tam çalışır — öğretici
 2. Bölge fethi + kaynak (altın) + ordu üretimi + hareket
 3. 1 savaş + ayrıntılı rapor
-4. Temel arındırma + ruh kazanımı (Kök Böri sistemi çekirdeği)
+4. Temel arındırma + ruh kazanımı + ilk Kök Böri lütuf sunumu (3 lütuflu M1 havuzu —
+   `spirit-system.md` §3.8)
 5. Sahne intro/outro anlatı ekranları (Kök Böri sahnesi dahil)
 
 **MVP'de Açıkça OLMAYAN** (sonraya ertelenen):
@@ -381,8 +382,8 @@ tatmin edici buluyor."
 
 | Kademe | İçerik | Özellikler | Süre |
 | ---- | ---- | ---- | ---- |
-| **MVP** | Prolog (Doğuş) | Fetih + kaynak + ordu + savaş + temel arındırma | 6-8 hafta |
-| **Vertical Slice** | Prolog + Perde 1 | + ruh lütuf sistemi + Erlik katmanı | 3-4 ay |
+| **MVP** | Prolog (Doğuş) | Fetih + kaynak + ordu + savaş + temel arındırma + temel Kök Böri sunumu (3 lütuf) | 6-8 hafta |
+| **Vertical Slice** | Prolog + Perde 1 | + ruh lütuf sistemi tam (askeri lütuflar, sahneler arası taşıma) + Erlik katmanı | 3-4 ay |
 | **Alpha** | 6 sahne, placeholder sanat | Tüm mekanikler + konsey + mevsim | 8-12 ay |
 | **Tam Vizyon** | 6 sahne, son sanat | Tüm özellikler, cilalanmış | 12-18 ay |
 

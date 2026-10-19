@@ -2,7 +2,7 @@
 
 *Oyun: ULUS: Blood of the Sky Wolf*
 *Oluşturulma: 2026-07-14*
-*Durum: Belgelenmiş (kod mevcut — `game/features/grid/`, `game/state/`)*
+*Durum: Belgelenmiş (kod mevcut — `game/features/grid/`, `game/state/`) + planlı bölümler (§3.4 yayılım adımı, §3.6–3.7 oyun sonu: C-38, C-51)*
 *Katman: Core*
 
 > Mevcut kodu belgeler. Harita bir **bölge grafiğidir** (tile-grid değil):
@@ -30,13 +30,26 @@ Oyuncu tüm bozkırı tek bakışta okur: kim nerede güçlü, hangi sınır zay
 ## 3. Detailed Rules
 
 ### 3.1 Veri Yapısı
+Alanların **sahibi** (anlamını tanımlayan GDD) parantez içinde; state yalnızca veri
+tutar (ADR-0004). *planlı* = kodda henüz yok.
 - **RegionData**: `region_id`, `display_name_key`, `owner` (NEUTRAL/PLAYER/ENEMY),
-  `army_count`, `gold_per_turn`, `position`, `polygon_points`, `adjacent_regions`.
-- **MapState**: `regions` (id→RegionData), `current_turn`, `actions_remaining`,
-  `actions_per_turn`, `enemy_actions_per_turn`, `selected_region_id`, `chapter_id`,
-  `player_tamga_id`, `enemy_tamga_id` (planlı: `last_erlik_spread_turn` — yayılım
-  sayacı, `spirit-system.md` §3.6, C-31; `game_result` — §3.7, C-32).
+  `army_count`, `gold_per_turn` (resource F1 `G_base`), `position`, `polygon_points`,
+  `adjacent_regions`; *planlı:* `corruption_level` (spirit §3.1, C-38),
+  `recruited_this_turn` — üretim sayacı (resource §3.2, C-37), `herd_per_turn` (resource
+  §3.1, pasif).
+- **MapState**: `regions` (id→RegionData), `current_turn` (sahne başında **1**),
+  `actions_remaining`, `actions_per_turn`, `enemy_actions_per_turn`,
+  `selected_region_id`, `chapter_id`, `player_tamga_id`, `enemy_tamga_id`;
+  *planlı:* `last_erlik_spread_turn` (spirit §3.6, başlangıç 0), `erlik_spread_interval`
+  (sahnenin taban aralığı, spirit §4), `game_result` (§3.7, C-51).
 - Harita tanımı `ChapterMapDefinition` Resource'undan üretilir (`create_map_state()`).
+  **İçerik alanları** (bölüm başına, kaydedilmez — ADR-0007): bölge tanımları
+  (`RegionDefinition`: yukarıdaki statik alanlar + başlangıç `owner`/`army_count` +
+  *planlı* başlangıç `corruption_level` = `initial_owner` kaynağı), `actions_per_turn`,
+  `enemy_actions_per_turn`, `player_tamga_id`/`enemy_tamga_id`, `starting_gold` ve
+  `enemy_reinforcement_per_turn` (resource §7), `win_condition` (§3.6, `erlik_foci`
+  dahil), *planlı* `erlik_spread_interval` (spirit — Prolog 3) ve lütuf havuzu
+  override'ı (spirit §7, MVP'de yok).
 
 ### 3.2 Bölge Seçimi (`select_region`)
 - Boş alandan farklı bir bölgeye tıklama → o bölge seçilir (bilgi paneli açılır).
@@ -50,11 +63,21 @@ Oyuncu tüm bozkırı tek bakışta okur: kim nerede güçlü, hangi sınır zay
   yayılır, kalan aksiyonlar geçersizdir, `end_turn` çalışmaz.
 
 ### 3.4 Tur Bitişi (`end_turn`)
-Sıra: **(1)** düşman AI oynar → **(2)** Erlik yayılımı (`spirit-system.md` §3.6;
+Oyun `ONGOING` değilse hiçbir adım çalışmaz (§3.7). Sıra: **(1)** düşman AI oynar → **(2)** Erlik yayılımı (`spirit-system.md` §3.6;
 yalnızca yayılım turunda, aksi halde atlanır) → **(3)** ekonomi adımı: oyuncu
 geliri + düşman takviyesi + bakım (`resource-system.md` §3.1) → **(4)**
 `current_turn+=1`, `actions_remaining = actions_per_turn`, bölge üretim sayaçları
 sıfırlanır → **(5)** oyun sonu kontrolü: önce kaybetme, sonra kazanma (§3.6–3.7).
+
+- **Erken çıkış (C-53, S2-b):** 1. adımdan sonra oyuncunun hiç bölgesi kalmamışsa sonuç
+  hemen `LOST` olur; 2–4. adımlar çalışmaz (ölü oyunda olay yayılmaz).
+- **Sinyal ve kayıt sırası (C-53, W-D):** 5. adımda sonuç değişirse yalnızca `game_lost`
+  / `game_won` yayılır. Oyun sürüyorsa `turn_ended(new_turn)` **5. adımdan sonra**
+  yayılır; tur sonu otomatik kayıt (ADR-0007) ve HUD yenilemesi bu sinyali dinler —
+  böylece kaybedilmiş ya da bitmiş bir durum asla kaydedilmez. Ardından oyuncu turu
+  başlar (bekleyen Kök Böri sunumu — `spirit-system.md` §3.4). Zaferin kalıcılığı
+  (`chapters_completed`, lütuf seçimleri → kayıt sırası) `scene-flow.md`'ye (C-35) aittir.
+  *Bugünkü kod `turn_ended`'ı kontrolden önce yayıyor → C-51.*
 
 > **Neden yayılım gelirden önce (C-29, 2026-10-18):** yayılan bozulmanın üretim
 > cezası (`M_c`) o turun gelirine hemen yansır — oyuncu çürümenin bedelini aynı
@@ -73,6 +96,9 @@ sinyal yaymaz. `MapController.end_turn()` intent'leri `ArmyController`/`CombatRe
 üzerinden **uygular** ve mevcut sinyalleri yayar.
 
 - Düşman bölgeleri `region_id` artan (alfabetik) sırayla işlenir (C-33, W6).
+  **İçerik notu:** `enemy_actions_per_turn = 1` iken hamle yapabilen ilk düşman bölgesi
+  (alfabetik) turun tek hamlesini yapar — `region_id` fiilen AI önceliğidir; bölüm
+  verisi yazarları bunu bilerek adlandırır.
 - Her düşman bölgesi için (army > 1):
   - Komşular arasında düşman-olmayan, `army_count`'u en düşük hedefi seç; eşitlikte
     `region_id` alfabetik ilk (W6 — Erlik yayılımı ve ADR-0005 ile aynı kural).
@@ -103,7 +129,11 @@ sinyal yaymaz. `MapController.end_turn()` intent'leri `ArmyController`/`CombatRe
 - Sonuç `ONGOING` dışına çıktığında **bir kez** ilgili sinyal yayılır (`game_won` /
   `game_lost`) ve oyun kilitlenir: `attempt_move` `false` döner, `end_turn` hiçbir adımı
   çalıştırmaz (AI, yayılım, gelir, tur artışı yok), üretim reddedilir. Bölge seçimi
-  (bilgi paneli) okuma amaçlı serbesttir.
+  (bilgi paneli) okuma amaçlı serbesttir. **Lütuf seçimi kilitten muaftır** (C-53, S1-c):
+  zafer sonrası bekleyen Kök Böri sunumları kilit altında yapılır.
+- **İşleme sırası (S1-a):** `game_won` yalnızca hamlenin bütün sonuçları (sahiplik,
+  ordu, bozulma, Ruh, aksiyon) işlendikten sonra yayılır; dinleyiciler tutarlı son
+  durumu görür.
 - Tur ortası zaferde kalan aksiyonlar ve o turun geliri kaybolur — zafer anında sahne
   biter. Ardından sahne akışı devralır: bekleyen Kök Böri sunumları
   (`spirit-system.md` §3.4) → outro (`scene-flow.md`, C-35).
@@ -147,8 +177,8 @@ işlem sırası = düşman bölgeleri region_id artan; bütçe enemy_actions_per
 
 - **Aynı bölgeye çift tık**: seçim toggle (aç/kapa).
 - **Aksiyon bitti**: hareket reddedilir; oyuncu tur bitirmeli.
-- **Düşman hareket edecek hedef yok** (tüm komşular düşman veya army≤1): o düşman
-  atlanır.
+- **Düşman hareket edemiyor** (kaynak düşman bölgesinin ordusu ≤ 1, ya da tüm
+  komşuları düşman): o düşman bölgesi atlanır, bütçeden harcamaz.
 - **Kazanma tur ortasında** (`attempt_move` sonrası): oyun anında biter (§3.7);
   `game_won` bir kez, `end_turn` artık çalışmaz — o turun düşman AI'ı, yayılımı ve
   geliri olmaz.
@@ -160,12 +190,13 @@ işlem sırası = düşman bölgeleri region_id artan; bütçe enemy_actions_per
 - **Odak arındırıldı, sonra yayılımla yeniden bozuldu**: odak koşulu kontrol anındaki
   duruma bakar → yeniden arındırılana kadar zafer yok.
 - **Ele geçirilen düşman bölgesi**: genişleme sayımına girmez (siyasi koşulun parçasıdır).
-- **Beraberlikte boşalan bölge** (çapraz inceleme W3, C-33): 0 birlikle kalan bölge
-  sahipsiz olur (`army-system.md` §3.3) → 0 ordulu `ENEMY` bölgesi siyasi koşulu,
-  0 ordulu `PLAYER` bölgesi `game_lost`'u engellemez; böyle bölge oluşmaz.
+- **Beraberlikte boşalan bölge** (çapraz inceleme W3, C-33): savaştan sonra 0 birlikle
+  kalan bölge sahipsiz olur (`army-system.md` §3.3). Bu yüzden 0 ordulu `ENEMY` ya da
+  `PLAYER` bölgesi hiç oluşmaz: siyasi koşulu veya `game_lost`'u yapay olarak
+  engelleyen "hayalet" bölge kalmaz.
 - **Prolog kazanma kriteri**: `required_neutral_conquests = 3` + Canavarın İni
   **arındırılmalı** (C-29: canavar siyasi düşman değil, bozulmuş nötr bölgedir —
-  `spirit-system.md` §3.7). Veri/zafer koşulu güncellemesi C-32 / C-49 / C-36.
+  `spirit-system.md` §3.7). Kural C-32'de tanımlandı; kod C-51, veri C-36 / C-49.
 
 ---
 
@@ -219,12 +250,16 @@ işlem sırası = düşman bölgeleri region_id artan; bütçe enemy_actions_per
    *(Test — eşitlik bozma kodu C-52)*
 7. 3 nötr (odak hariç) ele geçirilip düşman kalmayınca ve odaklar temizken, hamleden
    hemen sonra `game_won` **bir kez** tetiklenir; ardından `end_turn` çağrılsa da AI,
-   yayılım, gelir ve tur artışı çalışmaz. *(Test)*
-8. Oyuncunun bölgesi kalmazsa `game_lost` tetiklenir; sonra `attempt_move` `false` döner. *(Test)*
+   yayılım, gelir ve tur artışı çalışmaz. *(Test — kod C-51)*
+8. Oyuncunun bölgesi kalmazsa `game_lost` tetiklenir; sonra `attempt_move` `false` döner.
+   Düşman AI son bölgeyi 1. adımda alırsa 2–4. adımlar çalışmaz ve `turn_ended`
+   yayılmaz. *(Test — kod C-51)*
 9. Seçili bölgenin merkez ekseninde sahibinin tamgası görünür (nötrde yok); fetihten
    sonra tamga yeni sahibinkine geçer. Renk Körlüğü Modu açıkken tamga seçimden
    bağımsız olarak her sahipli bölgede görünür (C-07). *(Test)*
 10. Başlangıç bölgesi kaybedilmiş, 3 başlangıçta-nötr bölge oyuncudaysa genişleme
-    koşulu sağlanır (eski `−1` formülünün hatası yok). *(Test)*
+    koşulu sağlanır (eski `−1` formülünün hatası yok). *(Test — kod C-51)*
+12. Oyun sürerken `turn_ended`, 5. adımdaki kontrolden sonra yayılır; tur sonu otomatik
+    kayıt yalnızca bu sinyalle ve `ONGOING` iken çalışır. *(Test — kod C-51 / C-56)*
 11. Odak bölge bozukken diğer koşullar sağlansa da zafer yok; odak arındırılınca o
     hamlenin sonunda zafer. *(Test — bozulma C-38 ile gelir)*

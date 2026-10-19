@@ -2,7 +2,7 @@
 
 *Oyun: ULUS: Blood of the Sky Wolf*
 *Oluşturulma: 2026-07-14*
-*Durum: Taslak (kod henüz yok — tasarım spesifikasyonu)*
+*Durum: Designed (kod henüz yok — uygulama C-38 / C-39 / C-55; çapraz inceleme 2026-10-19 CONCERNS → C-53)*
 *Katman: Feature (imza sistem)*
 
 ---
@@ -52,15 +52,23 @@ geçmeliyim" baskısı hisseder; arındırdıkça "kutsandım" tatmini yaşar.
 - **Ne zaman arındırma olur:** hedefte yabancı garnizon yoksa (hedef oyuncunun ya
   da `army_count == 0`) **ve** `corruption_level ≥ 1` ise. Yabancı garnizon varsa
   hamle **savaştır** (1. dal) ve bozulmaya o hamlede dokunulmaz.
-- **Çözüm:** `CombatResolver.resolve(P, corruption_strength)`; `P` = gelen kuvvet
-  (`kaynak.army_count − 1`). Hedefte zaten duran oyuncu garnizonu katılmaz.
-- **Başarı** (`P > corruption_strength`): `corruption_level = 0`, üretim geri döner,
+- **Çözüm:** `CombatResolver.resolve(P_eff, corruption_strength)`; `P` = gelen kuvvet
+  (`kaynak.army_count − 1`), `P_eff` = Kurt Gücü dahil etkin güç (§4.1; M1'de `P_eff = P`).
+  Hedefte zaten duran oyuncu garnizonu katılmaz. Başarı **yalnızca** `P_eff > S` ile
+  belirlenir ve kayıp her zaman Dal 1 formülüdür — `draw_favors_defender` knob'u
+  arındırmayı etkilemez (C-53).
+- **Başarı** (`P_eff > corruption_strength`): `corruption_level = 0`, üretim geri döner,
   oyuncu `ruh_gain` (§4.2, arındırma *öncesi* seviyeyle) kadar Ruh kazanır. Hayatta
   kalanlar (`P − ceil(S × attacker_win_loss_ratio)`) bölgeye yerleşir: bölge
   oyuncunun değilse `owner = PLAYER` olur; oyuncununsa garnizona eklenir.
-- **Başarısızlık** (`P ≤ corruption_strength`, eşitlik dahil): gelen kuvvetin
+- **Başarısızlık** (`P_eff ≤ corruption_strength`, eşitlik dahil): gelen kuvvetin
   **tamamı kaybolur** ("Erlik yuttu"); bölgenin sahibi, ordusu ve bozulması
-  değişmez; Ruh kazanılmaz. (Savaş §7 "kaybeden taraf tamamen yok olur" kuralıyla aynı.)
+  değişmez; Ruh kazanılmaz. (Savaşta kaybedenin hayatta kalanlarının dağılması
+  kuralının uç hali — savaş §3/§7; burada Dal 3'ün kalanı da kaybolur.)
+- **İşleme sırası (C-53, S1-a):** Hamlenin tüm sonuçları — sahiplik, ordu, bozulma,
+  Ruh ve aksiyon — işlendikten **sonra** kazanma kontrol edilir ve `game_won`
+  yayılır (`region-map-system.md` §3.3). Böylece canavarı yenen son hamlede Ruh,
+  sahne sonu sunumunu türetmeden önce hazineye girmiş olur.
 - Bir bölge tek arındırmada tamamen temizlenir (kısmi arındırma yok — MVP sadeliği).
 - **Fetih arındırmaz (B5):** Bozulmuş bir bölgeyi savaşla ele geçirmek
   `corruption_level`'ı değiştirmez ve Ruh vermez. Oyuncu bölgeyi bozulmasıyla
@@ -73,10 +81,17 @@ geçmeliyim" baskısı hisseder; arındırdıkça "kutsandım" tatmini yaşar.
 - **Görünürlük:** Bölge bilgi paneli bozulmuş bölgede seviyeyi ve
   `corruption_strength`'i gösterir; çözüm deterministik olduğundan sonuç hamleden
   önce hesaplanabilir (Epik Ama Erişilebilir).
+- **Hamle önizlemesi (gereksinim, C-53 / N7):** Oyuncu kaynak seçiliyken bir hedefin
+  üzerine geldiğinde hamlenin **deterministik sonucu** gösterilir: dal (savaş /
+  arındırma / barışçıl), kayıp, kalan ve — arındırmada — başarı/başarısızlık ile Ruh.
+  Başarısız olacak bir arındırma (kuvvetin tamamı kaybolur) onaysız yapılamaz:
+  önizleme uyarı verir, ikinci tık onaylar. Spec: UX görevleri (C-41 / C-45).
 - **Prolog canavarı:** Canavarın İni (seviye 3) `S = 12` → en az 13'lük kuvvet
   (kaynakta ≥ 14 ordu) gerekir; başarı 30 Ruh verir = ilk lütuf eşiği
   (`BASE_BOON_COST`). Önerilen garnizon 0 (canavar = bozulma direncinin kendisi);
-  kesin veri ve kazanılabilirlik hesabı **C-49**'da; lütuf sunum zamanı §3.4.
+  kesin veri ve kazanılabilirlik hesabı **C-49**'da; lütuf sunum zamanı §3.4. İnin
+  garnizonu 0'dan büyük verilirse son hamle savaşa döner (arındırma ve zafer o hamlede
+  olmaz) — C-36 verisinde garnizon 0 bir veri kabul kriteriyle korunur.
 
 ### 3.3 Ruh Kaynağı
 - Ruh, `GameState` içinde tutulan kalıcı bir kaynaktır (altın/sürüden ayrı).
@@ -96,19 +111,29 @@ geçmeliyim" baskısı hisseder; arındırdıkça "kutsandım" tatmini yaşar.
      (Ruh bir sonraki eşiğin altına inene ya da havuz boşalana kadar) devam eder.
   Arındırma hamlesinin hemen ardından tur ortasında kendiliğinden açılmaz — hamle
   akışı kesilmez (dikkat bütçesi, çapraz inceleme D6).
-- **Erteleme:** Oyuncu tur başı modalını "Ertele" ile kapatabilir. Sunum aynı 3
-  lütufla bekler (§4.5 girdileri değişmez); oyuncu kendi turunda HUD'daki Kök Böri
-  düğmesinden istediği an açıp seçebilir; seçilmezse her yeni tur başında yeniden
-  gösterilir. Sahne sonundaki sunum ertelenemez. Kaybedilen sahnede sunum gösterilmez
-  (Ruh korunur; kampanya kaybının akışı C-32 / C-35).
+- **Erteleme:** Oyuncu tur başı modalını "Ertele" ile kapatabilir. Sunum §4.5
+  girdileri (`chapter_id`, `n`, uygun havuz) değişmediği sürece aynı 3 lütufla bekler;
+  oyuncu kendi turunda HUD'daki Kök Böri düğmesinden istediği an açıp seçebilir;
+  seçilmezse her yeni tur başında yeniden gösterilir. Sunum **açıldığı anda yeniden
+  hesaplanır** — uygun havuz değişmişse (M2'de bir `requires` kilidi açılırsa) 3'lü de
+  değişebilir. Sahne sonundaki sunum ertelenemez. Kaybedilen sahnede sunum gösterilmez
+  (Ruh korunur; kampanya kaybının akışı C-35).
 - **Seçim:** uygun havuzdan **3 lütuf** gösterilir, oyuncu **1** seçer; maliyeti
-  Ruh'tan düşülür, seçilmeyen 2'si kaybolur. Seçimden sonra koşul hâlâ sağlanıyorsa
-  bir sonraki sunum *bir sonraki* tur başında gelir (sahne sonundaysa hemen).
+  Ruh'tan düşülür, seçilmeyen 2'si kaybolur. Seçimden sonra koşul hâlâ sağlanıyorsa:
+  **otomatik modal** bir sonraki tur başında açılır (sahne sonundaysa hemen), ama
+  **HUD düğmesi** bekleyen sunumu hemen gösterir — oyuncu aynı tur içinde art arda
+  seçebilir. "Tur başı en fazla 1" kuralı yalnızca kendiliğinden açılan modalı sınırlar
+  (dikkat bütçesi); güç sınırı Ruh ve artan maliyettir (C-53, W-C). Ek durum alanı
+  tutulmaz.
 - **Etkinin başlangıcı:** seçildiği an. Lütuf `ModifierController.add_source()` ile
   `GameState.modifiers`'a işlenir (ADR-0006); o andan sonraki her hesap — aynı turun
   kalan hamleleri ve sonraki `end_turn` ekonomisi — etkiyi görür. Geriye dönük etki
   yoktur (ör. Bereket, seçildiği turun sonundaki gelire yansır).
-- Lütuflar `GameState.boons` listesinde birikir, sahneler arası taşınır.
+- Lütuflar `GameState.boons` listesinde (seçim sırasıyla `boon_id`'ler) birikir,
+  sahneler arası taşınır. **Tek doğruluk kaynağı `boons`'tur** (C-53, W-F): `n` buradan
+  sayılır ve kayıtta yalnızca `ruh` + `boons` saklanır; lütufların `StatModifier`
+  kayıtları yüklemede `boons`'tan yeniden kurulur (ADR-0006/0007 "seçimi sakla, etkiyi
+  türet").
 - Lütuf etkileri pasif ve toplamsaldır: aynı lütuf yeniden alınınca kaydın `stacks`
   değeri artar (ADR-0006 tekillik değişmezi). Yığılma sınırı olan lütuf sınıra
   ulaşınca uygun havuzdan çıkar.
@@ -116,7 +141,10 @@ geçmeliyim" baskısı hisseder; arındırdıkça "kutsandım" tatmini yaşar.
 
 ### 3.5 Lütuf Kataloğu (Başlangıç Havuzu) — C-31 revizyonu
 Etkiler ADR-0006 modifikatör hattından geçer (`stat_id`, `FLAT`/`PERCENT`, yığın
-başına değer). **Uygun havuz** = katalog − gerektirdiği sistemi etkin olmayanlar −
+başına değer). Tablodaki sayılar §4/§7 knob'larının varsayılanlarıdır — değerin sahibi
+knob'dur, katalog onu gösterir (C-53). Katalog içeriği spirit feature'ının
+`BoonDefinition` kaynağıdır (`boon_id`, ad key'i, `requires`, `max_stacks`,
+`ModifierSource`); `ModifierSource` yalnızca etkiyi taşır (ADR-0006). **Uygun havuz** = katalog − gerektirdiği sistemi etkin olmayanlar −
 yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı.
 
 | Lütuf (`boon_id`) | Etki (yığın başına) | Stat / tür | Gerektirir | Yığılma sınırı | İlk kademe |
@@ -124,7 +152,7 @@ yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı.
 | Arınma Ustalığı (`arinma_ustaligi`) | Arındırma başına Ruh +%20 | `ruh_gain` / PERCENT +0.20 | — | — | M1 |
 | Bereket (`bereket`) | Tur geliri +1 altın | `gold_income` / FLAT +1 (→ resource `B_add`) | — | — | M1 |
 | Demir Post (`demir_post`) | Savunan oyuncu bölgesine +1 etkin güç | `army_defense` / FLAT +1 | Savaş etkin gücü (`combat-system.md` §4 "Etkin güç") | — | M2 |
-| Gök Kalkanı (`gok_kalkani`) | Erlik yayılım aralığı +1 tur | `erlik_spread_interval` / FLAT +1 | — | 3 | M1 |
+| Gök Kalkanı (`gok_kalkani`) | Erlik yayılım aralığı +`GOK_KALKANI_INTERVAL_BONUS` (1) tur | `erlik_spread_interval` / FLAT +`GOK_KALKANI_INTERVAL_BONUS` | — | `GOK_KALKANI_MAX_STACKS` (3) | M1 |
 | Kurt Gücü (`kurt_gucu`) | Oyuncunun saldıran ve arındıran kuvvetine +1 etkin güç | `army_attack` / FLAT +1 | Savaş etkin gücü (`combat-system.md` §4 "Etkin güç") | — | M2 |
 | Sürü Kutsaması (`suru_kutsamasi`) | Sürü geliri +%10 | `herd_income` / PERCENT +0.10 | Sürü etkin (`resource-system.md` §3.1) | — | kilitli |
 | Yiğit Ruhu (`yigit_ruhu`) | Kahraman birim gücü +%10 | `hero_strength` / PERCENT +0.10 | Kahraman birimleri (`hero-units.md`) | — | kilitli |
@@ -139,6 +167,10 @@ yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı.
 - Her `I_eff` turda bir, Erlik yayılır (bkz. Formüller §4.6; `I_eff` = sahnenin
   `ERLIK_SPREAD_INTERVAL` değeri + Gök Kalkanı).
 - Yayılım deterministiktir: kurallı hedef seçimi (rastgele değil).
+- **Yayılım göstergesi (gereksinim, C-53 / N7):** HUD bir sonraki yayılıma kalan tur
+  sayısını ve — hedef deterministik olduğundan — o anki duruma göre bir sonraki hedef
+  bölgeyi gösterir (hedef tur sonundaki AI hamleleriyle değişebilir; gösterge "şu an
+  olsa" bilgisidir). Spec: C-41 / C-45.
 - **Tur sonundaki yeri (C-29):** `end_turn` sırasının **2. adımı** — düşman AI'dan
   sonra, ekonomi adımından önce (`region-map-system.md` §3.4). Yayılan bozulma o
   turun gelirine hemen yansır. Yayılım turu: son yayılımdan bu yana geçen tur sayısı
@@ -162,7 +194,7 @@ yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı.
 - **Prolog baskısı (D3):** Canavarın İni seviye 3'te başlar (üretimi durur, arındırması
   öğretici hedeftir); `ERLIK_SPREAD_INTERVAL` Prolog sahnesinde **3** tura iner
   (sahne override, bkz. Edge Cases "Final sahnesi" ile aynı mekanizma). Kesin değerler
-  `/balance-check` ile doğrulanacak (C-33 / C-49).
+  `/balance-check` ile doğrulanacak (C-49).
 - **Zafer kapsamı (D4) — ✅ C-32:** zafer = siyasi koşul + nötr genişleme + bölümün
   `erlik_foci` listesindeki odakların arındırılması (`region-map-system.md` §3.6);
   odak dışı bozulma zaferi engellemez. Prolog: 3 nötr (odak hariç) + Canavarın İni.
@@ -172,7 +204,8 @@ yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı.
 > **Etki uyarısı:** Canavarın İni nötr olduğundan Prolog'da `ENEMY` bölgesi kalmaz →
 > düşman AI ve düşman takviyesi (`resource-system.md` F6) Prolog'da boşta kalır,
 > `game_lost` (oyuncunun bölgesi kalmaz) tetiklenemez ve Prolog'un denge hesabı
-> (resource-system §4, canavar eşiği "A ≥ 7") yeniden doğrulanmalıdır. Takip: **C-49**.
+> (resource-system §4 "Prolog doğrulaması" eski modelle hesaplandı — C-53'te "eskimiş"
+> işaretlendi) yeniden doğrulanmalıdır. Takip: **C-49**.
 
 ### 3.8 MVP Alt Kümesi (C-31)
 - **M1 — Prolog Demo** (C-38, C-39): `corruption_level`, arındırma (§3.2), Ruh kazanımı
@@ -180,7 +213,8 @@ yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı.
   **M1 uygun havuzu = Arınma Ustalığı, Bereket, Gök Kalkanı** (gerektirdiği sistem
   M1'de olmayan lütuflar havuza girmez). Etkiler ADR-0006 hattıyla uygulanır.
 - **M2 — Vertical Slice** (C-44, C-47): savaş etkin gücü (`combat-system.md` §4 "Etkin güç") ile
-  Kurt Gücü + Demir Post, sahneler arası taşıma (AC6), lütuf dengesi `/balance-check`.
+  Kurt Gücü + Demir Post, sahneler arası taşıma (AC6), lütuf dengesi (C-44 kapsamında
+  `/balance-check` — C-53 ile C-44 bitti kriterine eklendi).
 - **Kilitli:** Sürü Kutsaması (sürü etkinleşince), Yiğit Ruhu (kahraman birimleri
   GDD'siyle).
 
@@ -304,7 +338,8 @@ Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
 - **Sunum bekliyorken sahne kaybedilirse**: sunum gösterilmez; Ruh korunur.
 - **Arındırma sahneyi kazandırırsa** (ör. Prolog'un son hamlesi Canavarın İni): sunum
   tur başını beklemez, sahne sonu sunumu olarak outro'dan önce gösterilir — Kök
-  Böri'nin ilk görünüşü bu ana denk gelebilir (C-35).
+  Böri'nin **ilk lütuf sunumu** bu ana denk gelebilir (Kök Böri'nin "genesis" görünüşü
+  ise sahne açılışındadır — `scene-flow.md`, C-35).
 - **Gök Kalkanı yığılma sınırı**: 3 yığından sonra sunulmaz; sınır knob'u düşürülürse
   mevcut fazla yığınlar korunur ama etkileri `min(k, sınır)` ile kırpılır.
 - **Arındırma başarısız olursa** (`P ≤ S`): gelen kuvvet tamamen kaybolur; bölge
@@ -340,20 +375,26 @@ Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
 - **Ordu Sistemi** (`army-system.md` §3.3) — arındırma, varış çözümünün 2. dalıdır;
   dal seçimi ve kuvvetin yerleşmesi orada, arındırma kuralları ve Ruh burada.
 - **Savaş Çözümü** (`combat-system.md`, kod: `combat_resolver.gd`) — arındırma
-  çözümü `CombatResolver.resolve(P, corruption_strength)`'ı yeniden kullanır;
-  başarısızlıkta kalan kuvvet bu sistemin kuralıyla 0'dır.
+  çözümü `CombatResolver.resolve(P_eff, corruption_strength)`'ı yeniden kullanır;
+  başarısızlıkta kalan kuvvet bu sistemin kuralıyla 0'dır. Kurt Gücü / Demir Post
+  lütufları savaşın "Etkin güç" bölümünü besler (combat §4, M2).
 - **Kaynak Yönetimi** (`resource-system.md`) — gelir formülü (F1, F2) bu sistemin
-  bozulma çarpanını (`M_c`, §4.3) ve ekonomi lütuflarını (`B_add` / `M_g`:
-  Bereket, Sürü Kutsaması) uygular. Ruh bu sisteme aittir; Kaynak Yönetimi Ruh'u
+  bozulma çarpanını (`M_c`, §4.3) ve ekonomi lütfunu (Bereket → `B_add`) uygular;
+  `M_c` aynı zamanda üretim tavanını da küçültür (F3 `G_eff` üzerinden) — çarpan
+  tablosu değişirse Prolog üretim tavanları da değişir. Sürü Kutsaması kilitli (sürü
+  formülü yok). Ruh bu sisteme aittir; Kaynak Yönetimi Ruh'u
   okumaz ve yazmaz.
-- **Oyun Durumu** (`game_state.gd`) — kalıcı `boons` listesi + `ruh` alanı.
+- **Oyun Durumu** (`game_state.gd`) — kalıcı `boons` listesi + `ruh` alanı;
+  `MapState.last_erlik_spread_turn` (§3.6).
+- **Kayıt / Yükleme** (ADR-0007) — `ruh` + `boons` kaydedilir; bekleyen sunum ve lütuf
+  modifikatörleri türetilir (§3.4).
 - **Konsey (Altı Oğul)** (`council-system.md`) — konsey bonusları lütuflarla
   aynı toplamsal modifikatör hattını paylaşmalı (çift sayım önlenmeli).
 - **Katmanlı Düşman** (`enemy-layers.md`) — yalnızca *siyasi* krallar; Erlik
   yayılımı/bozulması bu GDD'nin sorumluluğundadır (§3.7), `enemy-layers.md`'ye taşınmaz.
 
-> Karşılıklı bağımlılık notu: yukarıdaki dokümanlar yazıldığında bu sisteme
-> geri referans vermeli (Ruh alanı, corruption_level, CombatResolver kullanımı).
+> Karşılıklı bağımlılık notu: ✅ yazılmış GDD'lerin (harita, ordu, savaş, kaynak) geri
+> referansları tamam (C-28…C-33); konsey ve katmanlı düşman yazıldığında eklenecek.
 
 ---
 
@@ -396,8 +437,9 @@ Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
    sonra uygun havuzda yer almaz; hiçbir yığın sayısında bölme/sıfıra bölme yoktur.
    Aralık sahne ortasında uzarsa bir sonraki yayılım `last_erlik_spread_turn`'den
    itibaren sayılır. *(Test)*
-10. Bozulmuş bölge görsel olarak temiz bölgeden ayırt edilebilir (seviyeye göre
-    renk). *(Görsel — screenshot + lead onayı, ADVISORY)*
+10. Bozulmuş bölge görsel olarak temiz bölgeden ayırt edilebilir; seviye 1–3 art
+    bible'daki bozulma katmanı kuralıyla (dither yoğunluğu / leke — C-50) ayırt edilir,
+    sahiplik rengi gizlenmez. *(Görsel — screenshot + lead onayı, ADVISORY)*
 11. Seviye 2, garnizonsuz bozuk bölgeye P=9 → arındırma başarılı: `corruption_level 0`,
     bölge oyuncunun, army 5, Ruh +20; P=8 → kuvvet kaybolur, bölge ve bozulma aynı
     kalır, Ruh +0. *(Test — BLOCKING)*
@@ -407,7 +449,9 @@ Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
 14. Bilgi paneli bozuk bölgede seviyeyi ve `corruption_strength`'i gösterir; temiz
     bölgede bu satır yoktur. *(UI — walkthrough/ekran görüntüsü, ADVISORY)*
 15. Ertelenen sunum aynı 3 lütufla bir sonraki tur başında yeniden açılır; oyuncu
-    kendi turunda HUD düğmesinden açıp seçebilir. *(Test + UI walkthrough)*
+    kendi turunda HUD düğmesinden açıp seçebilir; seçimden sonra Ruh bir sonraki eşiği
+    de karşılıyorsa HUD düğmesi aynı tur ikinci sunumu açar, otomatik modal ise ancak
+    bir sonraki tur başında açılır. *(Test + UI walkthrough)*
 16. Sahne zaferle biterken sunum bekliyorsa outro'dan önce gösterilir ve ertelenemez;
     seçimden sonra Ruh hâlâ eşiği karşılıyorsa ikinci sunum hemen gelir. *(Test)*
 17. Bereket seçildikten sonraki ekonomi adımında tur geliri tam **+1** artar
@@ -415,4 +459,10 @@ Yığılma sınırına (3) ulaşınca Gök Kalkanı uygun havuzdan çıkar.
 18. M1'de gerektirdiği sistem olmayan lütuflar (Kurt Gücü, Demir Post, Sürü
     Kutsaması, Yiğit Ruhu) hiçbir sunumda yer almaz. *(Test)*
 19. Sunum durumu kayıttan türetilir: `ruh` ve `boons` yüklendikten sonra bekleyen
-    sunum aynı 3 lütufla yeniden oluşur (ADR-0007). *(Test)*
+    sunum aynı 3 lütufla yeniden oluşur ve lütuf modifikatörleri `boons`'tan yeniden
+    kurulur (ADR-0006/0007). *(Test)*
+20. Canavarın İni'ni arındıran son hamle sahneyi kazandırdığında `game_won`
+    yayıldığı anda Ruh +30 işlenmiştir ve sahne sonu sunumu bekler durumdadır. *(Test)*
+21. Hedef üzerine gelince hamle önizlemesi dalı, kaybı, kalanı ve (arındırmada)
+    başarı/Ruh'u gösterir; başarısız olacak arındırma ikinci onay ister. Yayılım
+    göstergesi kalan tur ve olası hedefi gösterir. *(UI — walkthrough, ADVISORY; C-41/C-45)*

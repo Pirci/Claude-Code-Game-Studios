@@ -4,6 +4,11 @@
 
 Proposed
 
+> **Amendment 2026-10-19 (C-53, cross-review W-D/W-F):** the `game` block saves `ruh` and
+> `boons` (choices); `modifiers` are derived on load (ADR-0006 amended) and not saved.
+> Autosave listens to `turn_ended`, which is emitted only after the end check and only while
+> `ONGOING`; victory persistence is owned by `scene-flow.md` (C-35).
+
 ## Date
 
 2026-10-18
@@ -80,7 +85,7 @@ Persist as **versioned JSON text**.
   "game": {                                  // GameState
     "current_chapter": 1, "gold": 6,
     "chapters_completed": [],
-    "modifiers": [ { "source_id": "boon:bereket", "stat_id": "gold_income", "kind": 0, "value": 1.0, "stacks": 1 } ],  // C-31: Bereket = FLAT +1
+    "ruh": 10, "boons": ["bereket"],         // choices; modifiers are rebuilt from boons on load (C-53)
     "map": { "current_turn": 4, "chapter_id": 1, "last_erlik_spread_turn": 3, "player_tamga_id": "...", "enemy_tamga_id": "...",
              "regions": { "r1": { "owner": 1, "army_count": 3, "corruption_level": 0, "...": 0 } } }
   }
@@ -89,7 +94,7 @@ Persist as **versioned JSON text**.
 
 - Only **saved game state** is written. Derived/static data (region geometry, adjacency, polygons, names) is **not** saved: it is reconstructed from `ChapterMapDefinition` content by `chapter_id` and only the **mutable fields** of each region are stored.
 - Enums are stored as ints with a documented table; ids as strings.
-- `modifiers` store `StatModifier` records (ADR-0006), **not** sources; sources are content.
+- `modifiers` are **not** saved: they are derived from saved choices (`boons`, later council state) on load (ADR-0006 amendment, C-53).
 - The pending Kök Böri boon offer is **not** saved: it is derived from `ruh` and the boon list on load (`spirit-system.md` §3.4, TR-spirit-008, C-31).
 - `MapState.game_result` (C-32) is **not** saved: the end-of-turn autosave only runs while the result is `ONGOING`; a won/lost scene is handed to the scene flow (`scene-flow.md`, C-35), which owns how scene completion is persisted.
 
@@ -120,11 +125,11 @@ SaveStore (I/O; @abstract base + FileSaveStore impl + in-memory test double):
 
 ### Save timing and scope (decision: turn-end autosave, one slot)
 
-- Autosave **once per turn end, after the full end-of-turn pipeline** (income, enemy AI, Erlik spread) has finished and `turn_ended` is emitted. At that point there is no in-flight state: `actions_remaining` is reset, `selected_region_id` is empty and is **not saved**.
-- Resource-system open question #6 resolved: gold and production counters are saved as they are at turn end; **no mid-turn saves** in this scope.
+- Autosave **once per turn end, after the full end-of-turn pipeline** (enemy AI, Erlik spread, income, turn++, end check) has finished and `turn_ended` is emitted — `turn_ended` fires only after the end check and only while the result is `ONGOING` (`region-map-system.md` §3.4, C-53). At that point there is no in-flight state: `actions_remaining` is reset, `selected_region_id` is empty and is **not saved**.
+- Resource-system open question #6 resolved: gold is saved as it is at turn end; production counters are always 0 at that point (reset in step 4) and are initialised to 0 on load; **no mid-turn saves** in this scope.
 - One active campaign slot. The format and `SaveStore` take a `slot` id so multi-slot / manual save can be added without a format change.
 - "Continue" in the main menu is enabled iff `read()` + `from_dict()` succeed.
-- When a chapter ends (victory), the autosave records it in `chapters_completed` and writes `map: null`, so Continue opens chapter selection rather than a finished map. Defeat leaves the last turn-end autosave untouched (the player may reload it). Neither deletes the file.
+- When a chapter ends (victory) there is no turn end (mid-turn win latch, `region-map-system.md` §3.7). The **scene flow** (`scene-flow.md`, C-35) persists it after the mandatory boon picks: it records `chapters_completed` and writes `map: null`, so Continue opens chapter selection rather than a finished map. Defeat leaves the last turn-end autosave untouched (the player may reload it). Neither deletes the file.
 
 ### Settings persistence
 
@@ -217,7 +222,7 @@ func has_campaign() -> bool
 | GDD System | Requirement | How This ADR Addresses It |
 |------------|-------------|--------------------------|
 | `game-concept.md` / TR-concept-002 | Campaign progress persists between sessions | Turn-end autosave + Continue |
-| `game-concept.md` / TR-concept-004 | Boons accumulate across scenes within a run | `modifiers` saved in `GameState` |
+| `game-concept.md` / TR-concept-004 | Boons accumulate across scenes within a run | `boons` saved in `GameState`; modifiers rebuilt on load |
 | `resource-system.md` Open Q #6 | Where mid-scene gold / production counters live | Saved at turn end only; no mid-turn saves |
 | `spirit-system.md` §3.3–3.4 | Persistent `ruh` and boon list across scenes | Fields included in `game` block (added with C-39) |
 | `region-map-system.md` | Per-region owner/army persisted | Mutable region fields saved; geometry rebuilt from content |
@@ -232,10 +237,10 @@ func has_campaign() -> bool
 ## Migration Plan
 
 1. Add `game/features/save/` (`save_serializer.gd`, `save_store.gd`, `file_save_store.gd`, `save_controller.gd`) with unit tests and an in-memory `SaveStore` double.
-2. Implement `to_dict`/`from_dict` for `GameState`, `MapState`, `RegionData`, `StatModifier`; write the round-trip + corruption + version tests.
+2. Implement `to_dict`/`from_dict` for `GameState` (incl. `ruh`, `boons`), `MapState`, `RegionData`; rebuild modifiers from `boons` on load (ADR-0006); write the round-trip + corruption + version tests.
 3. Wire `SaveController` into `GameContext` (autosave on `turn_ended`) and `MenuContext` (Continue).
 4. Persist `AccessibilitySettings` through the same pair.
-5. Update ADR-0004 status note (migration plan superseded) and ADR-0006 (`StatModifier` serialized by dict, not `Resource`).
+5. Update ADR-0004 status note (migration plan superseded). (ADR-0006 already amended: modifiers are derived, not serialized — C-53.)
 
 **Rollback**: Persistence is additive; removing it leaves state classes unchanged.
 
