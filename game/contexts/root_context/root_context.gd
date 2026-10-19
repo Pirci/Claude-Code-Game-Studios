@@ -17,11 +17,16 @@ const SFX_LIBRARY_PATH: String = "res://features/audio/data/sfx_library.tres"
 @export var arabic_font: Font = null
 @export var arabic_font_size: int = 16
 
+## Kayıt deposu; ağaca eklenmeden önce verilebilir (testler bellek içi depo verir).
+## Boşsa `user://saves` üzerinde [FileSaveStore] kullanılır.
+var save_store: SaveStore = null
+
 var _current_context: Node = null
 var _game_state: GameState = null
 var _accessibility: AccessibilitySettings = AccessibilitySettings.new()
 var _locale_fonts: LocaleFontController = null
 var _audio: AudioController = null
+var _save: SaveController = null
 
 
 func _ready() -> void:
@@ -30,6 +35,9 @@ func _ready() -> void:
 	_audio.name = "AudioController"
 	_audio.bind_services(load(SFX_LIBRARY_PATH) as SfxLibrary)
 	add_child(_audio)
+	# Kampanya kaydı (ADR-0007): RootContext sahiplenir, GameContext'e enjekte eder (C-17 D4).
+	_save = SaveController.new()
+	_save.bind_services(save_store if save_store != null else FileSaveStore.new(), _create_map_state)
 
 	_locale_fonts = LocaleFontController.new(ThemeDB.get_project_theme())
 	if arabic_font:
@@ -59,15 +67,16 @@ func _switch_to(context_name: StringName) -> void:
 	match context_name:
 		&"menu":
 			var menu: MenuContext = (load(MENU_SCENE_PATH) as PackedScene).instantiate() as MenuContext
-			menu.bind_services(_accessibility)
+			menu.bind_services(_accessibility, _save.has_campaign())
 			menu.new_campaign_requested.connect(_on_new_campaign)
+			menu.continue_requested.connect(_on_continue)
 			menu.quit_requested.connect(_on_quit)
 			_current_context = menu
 
 		&"game":
-			_game_state = GameState.new()
+			# Durumu çağıran hazırlar: yeni kampanya (boş) ya da yüklenen kayıt.
 			var game: GameContext = (load(GAME_SCENE_PATH) as PackedScene).instantiate() as GameContext
-			game.bind_services(_game_state, _accessibility, _audio)
+			game.bind_services(_game_state, _accessibility, _audio, _save)
 			game.return_to_menu_requested.connect(_on_return_to_menu)
 			_current_context = game
 
@@ -77,7 +86,27 @@ func _switch_to(context_name: StringName) -> void:
 
 
 func _on_new_campaign() -> void:
+	_game_state = GameState.new()
 	_switch_to(&"game")
+
+
+func _on_continue() -> void:
+	var result: LoadResult = _save.load_campaign()
+	if result.code != LoadResult.Code.OK:
+		push_warning("Kayıt yüklenemedi (%s): %s" % [LoadResult.Code.keys()[result.code], result.detail])
+		(_current_context as MenuContext).set_continue_available(false)
+		return
+	_game_state = result.state
+	_switch_to(&"game")
+
+
+## Kayıt yüklemesi için içerikten taze bölüm haritası (ADR-0007 map_factory); yoksa null.
+func _create_map_state(chapter_id: int) -> MapState:
+	var path: String = GameContext.CHAPTER_MAP_PATH_FORMAT % chapter_id
+	if not ResourceLoader.exists(path):
+		return null
+	var definition: ChapterMapDefinition = load(path) as ChapterMapDefinition
+	return definition.create_map_state() if definition != null else null
 
 
 func _on_return_to_menu() -> void:

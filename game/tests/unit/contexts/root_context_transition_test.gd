@@ -9,6 +9,7 @@ const GAME_SCENE: String = "res://contexts/game_context/game_context.tscn"
 
 func _root() -> RootContext:
 	var root_ctx: RootContext = auto_free((load(ROOT_SCENE) as PackedScene).instantiate()) as RootContext
+	root_ctx.save_store = MemorySaveStore.new()
 	add_child(root_ctx)
 	return root_ctx
 

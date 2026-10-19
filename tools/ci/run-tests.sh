@@ -6,7 +6,7 @@
 #
 # GODOT ayarlı değilse sırayla denenir: /Applications, ~/Applications,
 # ~/Downloads/Applications (macOS), ardından PATH'teki `godot`.
-# Test yolu verilmezse tüm birim testleri çalışır (res://tests/unit).
+# Test yolu verilmezse birim ve entegrasyon testleri çalışır (res://tests/unit, res://tests/integration).
 # Testlerden sonra palet doğrulayıcı çalışır (tools/asset-pipeline/validate_palette.gd)
 # ve GameState.modifiers erişim denetimi (ADR-0006) yapılır.
 #
@@ -29,7 +29,12 @@ if [[ -z "${GODOT:-}" ]]; then
 fi
 GODOT="${GODOT:-}"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../game" && pwd)"
-TEST_PATH="${1:-res://tests/unit}"
+# Yol verilmezse birim + entegrasyon testleri (entegrasyon: gerçek user:// dosyaları — C-56).
+if [[ -n "${1:-}" ]]; then
+  TEST_ARGS=(-a "$1")
+else
+  TEST_ARGS=(-a res://tests/unit -a res://tests/integration)
+fi
 
 if [[ ! -x "$GODOT" ]]; then
   echo "HATA: Godot bulunamadı${GODOT:+: $GODOT} (GODOT ortam değişkenini ayarla)" >&2
@@ -52,7 +57,7 @@ set +e
 "$GODOT" --headless \
   -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd \
   --ignoreHeadlessMode \
-  -a "$TEST_PATH"
+  "${TEST_ARGS[@]}"
 TEST_EXIT=$?
 
 # Palet doğrulama (art bible §8): game/assets/art altındaki PNG'ler global palette uymalı.
@@ -71,6 +76,16 @@ if [[ -n "$MODIFIER_HITS" ]]; then
   echo "$MODIFIER_HITS" >&2
   MODIFIER_EXIT=1
 fi
+
+# ADR-0007: kayıt kodu kullanıcı dosyasını asla nesne/kaynak olarak yüklemez (kod çalıştırma riski).
+SAVE_EXIT=0
+SAVE_HITS="$(grep -rnE '(^|[^_.A-Za-z])load\(|ResourceLoader|str_to_var|bytes_to_var|get_var\(' \
+  --include='*.gd' features/save | grep -vE '^[^:]+:[0-9]+:[[:space:]]*#' || true)"
+if [[ -n "$SAVE_HITS" ]]; then
+  echo "HATA: features/save/ içinde yasak yükleme çağrısı (ADR-0007):" >&2
+  echo "$SAVE_HITS" >&2
+  SAVE_EXIT=1
+fi
 set -e
 
 if [[ $TEST_EXIT -ne 0 ]]; then
@@ -83,4 +98,7 @@ if [[ $PALETTE_EXIT -ne 0 ]]; then
 fi
 if [[ $MODIFIER_EXIT -ne 0 ]]; then
   exit "$MODIFIER_EXIT"
+fi
+if [[ $SAVE_EXIT -ne 0 ]]; then
+  exit "$SAVE_EXIT"
 fi

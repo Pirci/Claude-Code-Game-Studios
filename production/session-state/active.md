@@ -275,3 +275,9 @@
 ## Session Extract — C-38 kapandı (2026-10-19 ~07:35)
 - Info panel rows (CORRUPTION, ERLIK_HOLD keys ×11; ↓-X penalty in #E87A7A; values #A86BC4); GameContext._show_region_info computes S/max/effective gold. Beast test S=12. Tests 212/212. Evidence production/qa/evidence/c38-info-panel-corruption-en-de-ar.png.
 - NEXT: C-56 (save/load; consider ADR-0007 C-35 amendment S2 scene_entry as proposed).
+
+## Session Extract — C-56 kayıt/yükleme (2026-10-19 ~07:50)
+- features/save/: LoadResult (+CONTENT_MISSING), SaveSerializer (to_dict/to_text/from_text/from_dict/migrate; _as_int validation), SaveStore (@abstract write/read_candidates), FileSaveStore (tmp→.bak rotation, overridable _write_text/_rename/_remove), MemorySaveStore, SaveController (CAMPAIGN_SLOT, save_failed, newer-save guard).
+- RootContext owns SaveController (public `save_store` injectable for tests), _on_continue, _create_map_state; MenuContext ContinueButton (primary when available); GameContext bind_services(..., save) + autosave in _on_turn_ended + keeps loaded map.
+- run-tests.sh: runs tests/unit + tests/integration; grep guard for loaders in features/save (comments excluded). Tests 234/234.
+- New task C-65 (settings persistence). ADR-0007 checklist 8/10.

@@ -81,6 +81,7 @@ func test_settings_opens_with_hidden_focus_on_language() -> void:
 
 func test_root_context_accept_reveals_instead_of_pressing() -> void:
 	var root_ctx: RootContext = auto_free((load(ROOT_SCENE) as PackedScene).instantiate()) as RootContext
+	root_ctx.save_store = MemorySaveStore.new()
 	add_child(root_ctx)
 	var started: Array[bool] = [false]
 	root_ctx.context_changed.connect(func(name: StringName) -> void: started[0] = started[0] or name == &"game")

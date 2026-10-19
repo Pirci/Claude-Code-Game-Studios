@@ -21,6 +21,14 @@ Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-revi
 > (4) defeat and "leave scene" write nothing. Open: whether the snapshot is a second slot (recommended) or a
 > schema field — decided in the scene-flow ADR (C-62).
 
+> **Implementation note 2026-10-19 (C-56):** built in `game/features/save/`. Two as-built refinements:
+> (1) `SaveStore.read(slot) -> String` became `read_candidates(slot) -> PackedStringArray` (final → `.bak` →
+> `.tmp`) so `SaveController` can validate each candidate and fall back — the store stays content-agnostic;
+> (2) `LoadResult.Code.CONTENT_MISSING` (C-35 amendment) is returned when `map_factory(chapter_id)` yields no
+> content. `chapters_completed` prefix validation is in; S2/S3 slots wait for the scene flow (C-40/C-62).
+> Settings persistence (step 4) is split into task C-65. A newer-version save is never overwritten
+> (`save_failed(&"newer_save_present")`).
+
 ## Date
 
 2026-10-18
@@ -258,16 +266,18 @@ func has_campaign() -> bool
 
 ## Validation Criteria
 
-- [ ] Round trip: `from_dict(to_dict(s))` equals `s` for a fully populated fixture.
-- [ ] Corrupt JSON, wrong types, unknown region id, negative counts → `LoadResult.Code.CORRUPT`, no crash, no partial state (also NaN/INF).
-- [ ] `schema_version` > build → `VERSION_TOO_NEW`; save not overwritten.
-- [ ] v1 fixture loads through the migration chain once a v2 exists.
-- [ ] Simulated failure at each step of the write sequence (failing `SaveStore` double) leaves a loadable `final`, `.bak` or `.tmp`.
-- [ ] Same state serializes to byte-identical text twice (sorted keys).
-- [ ] No use of `load()`, `ResourceLoader`, `str_to_var`, `bytes_to_var`, `get_var(true)` on `user://` content (grep check).
-- [ ] `map: null` loads as "chapter selection"; `current_chapter != map.chapter_id` → `CORRUPT`.
-- [ ] BOM-prefixed and `1e999`-containing files → `CORRUPT` (no INT64_MIN values reach state).
-- [ ] Loading the same save twice into a fresh `GameContext` yields identical modifiers (no double stacks).
+Status after C-56 (2026-10-19) — `tests/unit/save/`, `tests/integration/save/`, `tests/unit/contexts/save_flow_test.gd`:
+
+- [x] Round trip: `from_dict(to_dict(s))` equals `s` for a fully populated fixture; a reflection test fails when a new state field is neither saved nor listed as derived/content.
+- [x] Corrupt JSON, wrong types, unknown/missing region id, negative counts, out-of-range enums, owned region with 0 army → `LoadResult.Code.CORRUPT`, no crash, no partial state (also `1e999`).
+- [x] `schema_version` > build → `VERSION_TOO_NEW`; save not overwritten.
+- [ ] v1 fixture loads through the migration chain once a v2 exists (no v2 yet).
+- [x] Simulated failure at each step of the write sequence (failing `FileSaveStore` subclass, real files) leaves a loadable `final`, `.bak` or `.tmp`; a corrupt `final` loads from `.bak`.
+- [x] Same state serializes to byte-identical text twice (sorted keys).
+- [x] No use of `load()`, `ResourceLoader`, `str_to_var`, `bytes_to_var`, `get_var(` in `features/save/` (grep step in `tools/ci/run-tests.sh`).
+- [x] `map: null` loads as "chapter selection"; `current_chapter != map.chapter_id` → `CORRUPT`.
+- [x] `1e999` → `CORRUPT` (no INT64_MIN reaches state); a BOM-prefixed **valid** file loads (the BOM is stripped — wording clarified).
+- [ ] Loading the same save twice into a fresh `GameContext` yields identical modifiers — needs the boon catalog (C-39) to call `ModifierController.rebuild()` on load.
 
 ## Related Decisions
 

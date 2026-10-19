@@ -22,6 +22,7 @@ const SPIRIT_CONFIG: SpiritConfig = preload("res://features/bozkurt/data/spirit_
 var _game_state: GameState
 var _accessibility: AccessibilitySettings
 var _audio: AudioController = null
+var _save: SaveController = null
 var _map_def: ChapterMapDefinition
 var _map_controller: MapController
 var _army_controller: ArmyController
@@ -35,14 +36,17 @@ var _send_from_id: StringName = &""
 
 
 ## [param audio] isteğe bağlıdır (null → sessiz; testler ve sessiz başlatma için).
+## [param save] verilirse her tur sonunda kampanya otomatik kaydedilir (ADR-0007).
 func bind_services(
 	game_state: GameState,
 	accessibility: AccessibilitySettings,
 	audio: AudioController = null,
+	save: SaveController = null,
 ) -> void:
 	_game_state = game_state
 	_accessibility = accessibility
 	_audio = audio
+	_save = save
 
 
 func _ready() -> void:
@@ -60,8 +64,12 @@ func _setup_controllers() -> void:
 	var map_def: ChapterMapDefinition = load(map_path) as ChapterMapDefinition
 	assert(map_def != null, "Bölüm haritası yüklenemedi: %s" % map_path)
 	_map_def = map_def
-	_game_state.map_state = map_def.create_map_state()
-	_game_state.gold = 100
+	# Yüklenen kayıt bu bölümün haritasını taşıyorsa onunla devam edilir (ADR-0007);
+	# yoksa bölüm içerikten başlar.
+	var loaded: MapState = _game_state.map_state
+	if loaded == null or loaded.chapter_id != map_def.chapter_id:
+		_game_state.map_state = map_def.create_map_state()
+		_game_state.gold = 100
 
 	_spirit_rules = SpiritRules.new()
 	_spirit_rules.bind_config(SPIRIT_CONFIG)
@@ -214,7 +222,10 @@ func _on_end_turn_pressed() -> void:
 	_map_controller.end_turn()
 
 
+## `turn_ended` yalnızca oyun sürerken ve tur sonu kontrolünden sonra gelir — kayıt anı (ADR-0007).
 func _on_turn_ended(_new_turn: int) -> void:
+	if _save:
+		_save.save_campaign(_game_state)
 	_refresh_map()
 
 
