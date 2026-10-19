@@ -52,6 +52,10 @@ fark etmez) şu adımlar **sırayla** uygulanır:
 - Kullanıcı başka bir iş isterse o yapılır; bitince bu dosyaya "Tamamlananlar"
   olarak işlenir, kuyruk sırası bozulmaz.
 - Her commit'ten sonra push edilir; push başarısız olursa sebebiyle birlikte kullanıcıya bildirilir.
+- **Temel amaç (kullanıcı, 2026-10-19): Demo (M1) ve Vertical Slice (M2).** Sıra:
+  C-42 kapanışı → C-66 → C-43…C-48. Diğer işler (C-67, C-68, K-03, ses cihaz
+  kontrolü) yalnız playtest gerektirirse ya da M2 cilasında öne alınır. Kullanıcıya
+  seçenek listesi değil, tek öneri sunulur.
 - **Kilometre taşı görevleri (M1: C-35…C-42, M2: C-43…C-48) korunur:** kullanıcı
   açıkça onaylamadan `[-]` ertelenemez, birleştirilemez veya kuyruktan
   çıkarılamaz. Her "devam"da 1. adımda "Kilometre Taşları" tablosuna bakılır;
