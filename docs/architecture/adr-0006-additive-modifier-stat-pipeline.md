@@ -22,7 +22,7 @@ Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-revi
 | **Knowledge Risk** | LOW — plain GDScript data classes and pure functions; no rendering/physics/post-cutoff APIs |
 | **References Consulted** | `docs/engine-reference/godot/VERSION.md`, `docs/engine-reference/godot/current-best-practices.md` |
 | **Post-Cutoff APIs Used** | None |
-| **Verification Required** | ✅ Verified on 4.7.1 (C-17, 2026-10-19): typed arrays are invariant at **runtime** (an untyped array passed to `Array[StatModifier]` errors at call time, not parse time); `.filter()` on a **typed** array returns a typed array, on an untyped array an untyped one; the cast syntax `Array[StatModifier](x)` does not compile — convert with `typed.assign(src)`. Remaining: `ModifierSource` `.tres` load path |
+| **Verification Required** | ✅ Verified on 4.7.1 (C-17, 2026-10-19): typed arrays are invariant at **runtime** (an untyped array passed to `Array[StatModifier]` errors at call time, not parse time); `.filter()` on a **typed** array returns a typed array, on an untyped array an untyped one; the cast syntax `Array[StatModifier](x)` does not compile — convert with `typed.assign(src)`. ✅ C-55: a `ModifierSource` `.tres` saved by `ResourceSaver` round-trips with its typed `Array[ModifierEffect]` (`effects = Array[ExtResource(...)]([...])`) and an exported `StatModifier.Kind` enum |
 
 ## ADR Dependencies
 
@@ -243,8 +243,8 @@ func rebuild(sources: Array[ModifierSource]) -> void   # clear + re-add (load / 
 
 ## Migration Plan
 
-1. Add `StatModifier`, `StatResolver`, `ModifierSource`, `ModifierController` under `game/features/modifiers/` with unit tests.
-2. Replace `GameState.bozkurt_bonuses` with `modifiers`; remove `get_total_bozkurt_bonus()`; update `game_state.gd` and its tests (no production caller exists today).
+1. ✅ (C-55) Add `StatModifier`, `StatResolver`, `ModifierSource` (+ `ModifierEffect`), `ModifierController` under `game/features/modifiers/` with unit tests.
+2. ✅ (C-55) Replace `GameState.bozkurt_bonuses` with `modifiers` (+ `boons: Array[StringName]`, the saved choices); remove `get_total_bozkurt_bonus()` (no production caller existed).
 3. Wire `ResourceController` F2 (`B_add`, `M_g`) with the M1 boons (C-39; pipeline itself = C-55).
 4. Register ownership/forbidden pattern in `docs/registry/architecture.yaml`.
 
@@ -252,17 +252,19 @@ func rebuild(sources: Array[ModifierSource]) -> void   # clear + re-add (load / 
 
 ## Validation Criteria
 
-- [ ] Unit test: same source added twice → one record, `stacks == 2`.
-- [ ] Unit test: boon + council on the same stat sum once each; duplicate effect under another source in the same `exclusive_group` is rejected.
-- [ ] Unit test: `resolve()` accepts the `.filter()` result of a typed `Array[StatModifier]` directly, and an untyped source after `assign()` conversion.
-- [ ] Unit test: `resolve(base=5, flat=+1, pct=+0.2)` → `7.2`, and caller floor gives resource AC `floor(6 × 1.2) = 7`.
-- [ ] No consumer iterates `GameState.modifiers` outside `features/modifiers/`.
-- [ ] Unit test: a source with `max_stacks = 3` accepts 3 adds and rejects the 4th; `can_add()` reports it.
-- [ ] Unit test: `rebuild()` twice with the same sources leaves identical records (no double stacks).
-- [ ] Unit test: rebuilding modifiers from `GameState.boons = [bereket, bereket, gok_kalkani]` yields `gold_income` flat 2 and `erlik_spread_interval` flat 1.
+All verified in C-55 (2026-10-19) — `game/tests/unit/modifiers/modifier_pipeline_test.gd` (16 tests):
+
+- [x] Unit test: same source added twice → one record, `stacks == 2`.
+- [x] Unit test: boon + council on the same stat sum once each; duplicate effect under another source in the same `exclusive_group` is rejected.
+- [x] Unit test: `resolve()` accepts the `.filter()` result of a typed `Array[StatModifier]` directly, and an untyped source after `assign()` conversion.
+- [x] Unit test: `resolve(base=5, flat=+1, pct=+0.2)` → `7.2`, and caller floor gives resource AC `floor(6 × 1.2) = 7`.
+- [x] No consumer iterates `GameState.modifiers` outside `features/modifiers/` — enforced by a grep step in `tools/ci/run-tests.sh` (fails CI).
+- [x] Unit test: a source with `max_stacks = 3` accepts 3 adds and rejects the 4th; `can_add()` reports it.
+- [x] Unit test: `rebuild()` twice with the same sources leaves identical records (no double stacks).
+- [x] Unit test: rebuilding modifiers from `GameState.boons = [bereket, bereket, gok_kalkani]` yields `gold_income` flat 2 and `erlik_spread_interval` flat 1.
 
 ## Related Decisions
 
 - ADR-0003 (DI), ADR-0004 (state segregation).
 - `design/gdd/spirit-system.md` §3.4–3.5, §4, §6; `design/gdd/resource-system.md` F2.
-- Follow-ups: C-16 ✅ (ADR-0007), C-31 ✅ (boon timing/MVP subset), C-53 ✅ (this amendment); implementation C-55.
+- Follow-ups: C-16 ✅ (ADR-0007), C-31 ✅ (boon timing/MVP subset), C-53 ✅ (this amendment); implementation C-55 ✅ (2026-10-19). Consumer wiring (F2 `B_add`/`M_g`, boon catalog) — C-39.

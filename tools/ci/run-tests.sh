@@ -7,7 +7,8 @@
 # GODOT ayarlı değilse sırayla denenir: /Applications, ~/Applications,
 # ~/Downloads/Applications (macOS), ardından PATH'teki `godot`.
 # Test yolu verilmezse tüm birim testleri çalışır (res://tests/unit).
-# Testlerden sonra palet doğrulayıcı çalışır (tools/asset-pipeline/validate_palette.gd).
+# Testlerden sonra palet doğrulayıcı çalışır (tools/asset-pipeline/validate_palette.gd)
+# ve GameState.modifiers erişim denetimi (ADR-0006) yapılır.
 #
 # Not: Godot 4.7 + GDUnit4 v6.x. Headless'ta InputEvent gerektiren testler
 # çalışmaz; saf mantık testleri için --ignoreHeadlessMode kullanılır.
@@ -59,6 +60,17 @@ TEST_EXIT=$?
   --script ../tools/asset-pipeline/validate_palette.gd \
   -- "$PROJECT_DIR/../art-source/global_palette_ulus.gpl" res://assets/art
 PALETTE_EXIT=$?
+
+# ADR-0006: GameState.modifiers yalnızca features/modifiers/ içinden okunur/yazılır —
+# tüketiciler StatResolver kullanır (çift sayım engeli). Testler ve addon'lar hariç.
+MODIFIER_EXIT=0
+MODIFIER_HITS="$(grep -rnE '\.modifiers([^A-Za-z0-9_]|$)' --include='*.gd' . \
+  | grep -vE '^\./(features/modifiers|tests|addons)/' || true)"
+if [[ -n "$MODIFIER_HITS" ]]; then
+  echo "HATA: GameState.modifiers features/modifiers/ dışında kullanılıyor (ADR-0006):" >&2
+  echo "$MODIFIER_HITS" >&2
+  MODIFIER_EXIT=1
+fi
 set -e
 
 if [[ $TEST_EXIT -ne 0 ]]; then
@@ -68,4 +80,7 @@ fi
 if [[ $PALETTE_EXIT -ne 0 ]]; then
   echo "HATA: palet doğrulama başarısız (exit $PALETTE_EXIT)" >&2
   exit "$PALETTE_EXIT"
+fi
+if [[ $MODIFIER_EXIT -ne 0 ]]; then
+  exit "$MODIFIER_EXIT"
 fi

@@ -210,3 +210,9 @@
 - ArmyController.apply_combat_result: target army 0 after combat → owner NEUTRAL (corruption kept). EnemyAIController: enemies sorted by region_id; target tie → alphabetical region_id (`_id_less`).
 - Tests 141/141 (army +4, combat +1, AI +2 / −1 superseded "first adjacent", map +1). GDD AC annotations untouched (C-49 agent editing GDDs).
 - NEXT: integrate C-49 when the agent reports; then C-51.
+
+## Session Extract — C-55 ADR-0006 değiştirici hattı (2026-10-19)
+- game/features/modifiers/: StatModifier (Kind FLAT/PERCENT), ModifierEffect + ModifierSource (Resource; exclusive_group, max_stacks, effects: Array[ModifierEffect]), StatResolver (static resolve/flat_sum/percent_sum), ModifierController (bind_services(game_state), can_add, add_source, remove_source, rebuild; signal modifiers_changed(stat_id); caches _active_sources/_source_stacks rebuilt by rebuild()).
+- GameState: bozkurt_bonuses/get_total_bozkurt_bonus removed → boons: Array[StringName] + modifiers: Array[StatModifier]. Fixture: tests/unit/modifiers/fixtures/fixture_gok_kalkani_source.tres (ResourceSaver output).
+- run-tests.sh: grep guard for `.modifiers` outside features/modifiers|tests|addons (probe verified). Tests 157/157.
+- Consumers (F2 B_add/M_g, boon catalog, GameContext rebuild call) → C-39.

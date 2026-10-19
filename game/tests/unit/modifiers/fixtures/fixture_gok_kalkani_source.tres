@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ModifierSource" format=3]
+
+[ext_resource type="Script" path="res://features/modifiers/modifier_effect.gd" id="1_daqc1"]
+[ext_resource type="Script" path="res://features/modifiers/modifier_source.gd" id="2_li1vp"]
+
+[sub_resource type="Resource" id="Resource_p2wu6"]
+script = ExtResource("1_daqc1")
+stat_id = &"erlik_spread_interval"
+value = 1.0
+
+[resource]
+script = ExtResource("2_li1vp")
+source_id = &"boon:gok_kalkani"
+max_stacks = 3
+effects = Array[ExtResource("1_daqc1")]([SubResource("Resource_p2wu6")])

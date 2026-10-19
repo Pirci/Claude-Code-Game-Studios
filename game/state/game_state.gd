@@ -5,7 +5,12 @@ extends RefCounted
 
 var current_chapter: int = 1
 var gold: int = 0
-var bozkurt_bonuses: Array[float] = []
+## Kaydedilmiş lütuf seçimleri (sırayla `boon_id`) — lütuf etkilerinin tek kaynağı;
+## yazarı SpiritController (C-38/C-39), kaydı ADR-0007.
+var boons: Array[StringName] = []
+## Türetilmiş: [member boons] (ve ileride konsey) seçimlerinden [ModifierController.rebuild]
+## ile kurulur, kaydedilmez. Yalnızca [StatResolver] ile okunur (ADR-0006).
+var modifiers: Array[StatModifier] = []
 var chapters_completed: Array[int] = []
 var map_state: MapState = null
 
@@ -16,16 +21,10 @@ func is_chapter_unlocked(chapter: int) -> bool:
 	return (chapter - 1) in chapters_completed
 
 
-func get_total_bozkurt_bonus() -> float:
-	var total: float = 0.0
-	for bonus: float in bozkurt_bonuses:
-		total += bonus
-	return total
-
-
 func reset() -> void:
 	current_chapter = 1
 	gold = 0
-	bozkurt_bonuses.clear()
+	boons.clear()
+	modifiers.clear()
 	chapters_completed.clear()
 	map_state = null

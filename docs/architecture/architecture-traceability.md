@@ -37,11 +37,11 @@ History: 2026-08-13 — 24 TRs, 13 covered (54 %), 5 partial, 6 gaps.
 | TR-resource-005 | resource | Economy knobs data-driven | 0002, 0003 | ✅ | Config file name → C-18 |
 | TR-resource-006 | resource | HUD income forecast = F2 (same pure function) | 0006 | ⚠️ | Shared pure income function → Move Resolution ADR |
 | TR-spirit-001 | spirit | `corruption_level` field | 0004, 0007 | ✅ | |
-| TR-spirit-002 | spirit | `ruh` + ordered `boons` (single source of truth) | 0004, 0006, 0007 | ✅ | Code still has `bozkurt_bonuses` (C-55) |
+| TR-spirit-002 | spirit | `ruh` + ordered `boons` (single source of truth) | 0004, 0006, 0007 | ✅ | Code: `GameState.boons` + derived `modifiers` (C-55); `ruh` with C-38 |
 | TR-spirit-003 | spirit | Purification reuses CombatResolver; knob-independent | 0002, 0003 | ✅ | |
 | TR-spirit-004 | spirit | Deterministic boon offer | 0003, 0004, 0005 | ✅ | Pattern coverage, no RNG |
 | TR-spirit-005 | spirit | Counter-based Erlik spread | 0005 | ✅ | `SpreadDecision` |
-| TR-spirit-006 | spirit | Shared additive modifier pipeline, derived records | 0006 | ✅ | `rebuild()` |
+| TR-spirit-006 | spirit | Shared additive modifier pipeline, derived records | 0006 | ✅ | `rebuild()`; implemented `features/modifiers/` (C-55) |
 | TR-spirit-007 | spirit | Corruption visual layer | — | ❌ | Art bible C-50 + shader spec (no ADR) |
 | TR-spirit-008 | spirit | Boon offer derived state, auto-modal ≤ 1, HUD chaining | 0006, 0007 | ⚠️ | Source of the `requires` "system active" flag undefined |
 | TR-spirit-009 | spirit | Ruh gain + commit before `game_won`; sole writer | 0006 + registry `spirit_state` | ✅ | D3 |
