@@ -168,3 +168,10 @@
 - ChapterMapDefinition.ground_color (#1A2614) + adjacency_line_color (#436129, opaque); AdjacencyLineDrawer.line_color; CampaignMap.set_line_color; GameContext Background (%Background) from chapter. Rule in bible §4: line = ground ramp +2 tones.
 - Pixel check on Xvfb render: map area 0 off-palette colours. Tests 116/116 (map_palette_test 4).
 - NEXT: C-23 (selection click SFX — needs audio ADR/design first; likely decision task).
+
+## Session Extract — C-23 seçim sesi + ADR-0008 (2026-10-19)
+- ADR-0008 Audio (Accepted): RootContext-owned persistent AudioController (Node; pool of 4 AudioStreamPlayer on SFX bus), default_bus_layout.tres (Music/SFX → Master), SfxLibrary resource (Dictionary[StringName, AudioStream]) at features/audio/data/sfx_library.tres.
+- Placeholder SFX synthesized: game/assets/audio/sfx/sfx_ui_region_select.wav (45 ms, 620 Hz thock + noise tick, seeded).
+- GameContext.bind_services(game_state, accessibility, audio = null) plays region_select on MapController.region_selected. Settings sliders now affect real buses.
+- Tests 123/123 (audio_controller_test 7). Real-device audibility = manual check for the user.
+- NEXT: C-24 (.uid git policy — decision task).

@@ -167,6 +167,20 @@ interfaces:
     added: 2026-10-18
     revised: 2026-10-19
 
+  - contract: audio_playback
+    status: active
+    pattern: direct_call     # contexts call down on gameplay signals; services never touch audio
+    producer: audio-system (AudioController, persistent child of RootContext)
+    consumers:
+      - game-context         # region_select on MapController.region_selected
+      - settings-screen      # writes Master/Music/SFX bus volumes via AudioServer
+    adr: docs/architecture/adr-0008-audio-architecture.md
+    signal_signature: "AudioController.play_sfx(id: StringName) -> bool (false: no library / unknown id); buses Master -> Music, SFX (default_bus_layout.tres); ids map to streams in SfxLibrary.streams: Dictionary[StringName, AudioStream]"
+    referenced_by:
+      - docs/architecture/adr-0008-audio-architecture.md
+    added: 2026-10-19
+    revised: ""
+
   - contract: save_load
     status: active
     pattern: direct_call     # SaveSerializer is pure; SaveController orchestrates; failures signal up

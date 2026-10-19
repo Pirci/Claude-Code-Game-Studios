@@ -17,6 +17,7 @@ const COMBAT_CONFIG: CombatConfig = preload("res://features/combat/data/combat_c
 
 var _game_state: GameState
 var _accessibility: AccessibilitySettings
+var _audio: AudioController = null
 var _map_def: ChapterMapDefinition
 var _map_controller: MapController
 var _army_controller: ArmyController
@@ -28,9 +29,15 @@ var _awaiting_target: bool = false
 var _send_from_id: StringName = &""
 
 
-func bind_services(game_state: GameState, accessibility: AccessibilitySettings) -> void:
+## [param audio] isteğe bağlıdır (null → sessiz; testler ve sessiz başlatma için).
+func bind_services(
+	game_state: GameState,
+	accessibility: AccessibilitySettings,
+	audio: AudioController = null,
+) -> void:
 	_game_state = game_state
 	_accessibility = accessibility
+	_audio = audio
 
 
 func _ready() -> void:
@@ -146,6 +153,8 @@ func _on_send_army_pressed(from_id: StringName) -> void:
 
 
 func _on_controller_region_selected(region_id: StringName) -> void:
+	if _audio:
+		_audio.play_sfx(AudioController.SFX_REGION_SELECT)
 	_campaign_map.set_selected(region_id)
 	var data: RegionData = _game_state.map_state.get_region(region_id)
 	if data:

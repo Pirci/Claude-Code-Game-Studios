@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="SfxLibrary" format=3]
+
+[ext_resource type="Script" path="res://features/audio/sfx_library.gd" id="1_nh351"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_ui_region_select.wav" id="2_3vvnj"]
+
+[resource]
+script = ExtResource("1_nh351")
+streams = Dictionary[StringName, AudioStream]({
+&"region_select": ExtResource("2_3vvnj")
+})

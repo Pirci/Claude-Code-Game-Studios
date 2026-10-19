@@ -5,9 +5,9 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-19
-- **Son commit:** `ffbf2b5` (C-22: harita zemini + çizgi paleti)
+- **Son commit:** `__H__` (C-23: seçim sesi + ADR-0008)
 - **Proje evresi:** Concept (`production/stage.txt`)
-- **Aktif görev:** — (yok; sıradaki: C-23)
+- **Aktif görev:** — (yok; sıradaki: C-24)
 
 ---
 
@@ -90,6 +90,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 
 | Görev | Karar | Reddedilen alternatifler | Geri alma maliyeti |
 | --- | --- | --- | --- |
+| C-23 | Ses mimarisi ADR-0008: RootContext'in kalıcı `AudioController`'ı (bind_services ile enjekte), `Master → Music/SFX` bus düzeni, `SfxLibrary` (typed dictionary); yer tutucu "tık" sentezlendi (deterministik); ses yalnızca seçimde (seçim kaldırmada yok) | Autoload ses; bağlam başına oyuncular; sinyal hub'ı; hazır ücretsiz SFX indirme (lisans takibi) | Düşük — ADR + küçük modül |
 | C-22 | Prolog zemini `#1A2614` (Bozkır Yeşili 2), çizgi `#436129` (Bozkır Yeşili 4); kural "çizgi = zemin rampasında iki ton açık" | Gri çizgi (Keçe Grisi 3); mevcut `#222A18` (palet dışı) | Düşük — bölüm verisinde iki renk |
 | C-21 | Koçboynuzu 5×5 biçimi: köşegen gövde + iki kıvrık kol (köşegen simetrik); Yeni Sefer butonu da birincil (bible "ana menü: birincil buton süslü") | Halka biçimli köşe; yalnızca Tur Bitir/Saldır | Düşük — üretici script'te tek sabit |
 | C-18 | `architecture.md` v1.0: 5 katman, modül sahiplik tabloları, 6 veri akışı, API sınırları, 5 ilke, 8 açık soru; TD öz-inceleme CONCERNS (koşullu onay); LP-FEASIBILITY lean modda atlandı | Bölüm bölüm kullanıcı onayı (gece modu: önerilen kabul) | Düşük — doküman |
@@ -127,7 +128,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-20 | [x] `5371770` | `tools/ci/run-tests.sh` varsayılan Godot yolu eskimiş (`~/Downloads/Applications`); Godot artık `/Applications/Godot.app` → yaygın konumları sırayla dene | C-01 sırasında keşfedildi (script `GODOT` olmadan çalışmıyor) | — | `GODOT` ayarlamadan `run-tests.sh` testleri çalıştırır |
 | C-21 | [x] `21a9735` | Birincil buton (Tur Bitir, Saldır) ve modal panel (ayarlar, savaş raporu) çerçeveleri: 5×5 koçboynuzu köşe + 2px kilim şevron bandı → üretici script + 9-slice `StyleBoxTexture`, `PrimaryButton` / `ModalPanel` tema varyasyonları; ayarlar ekranı modal panele alınır | Art bible §3, §7 (C-04 sırasında keşfedildi) | C-04 | Ekran görüntüsü + tema testi |
 | C-22 | [x] `ffbf2b5` | Harita zemini (`#222A18`) ve komşuluk çizgileri (%30 saydam gri — palet dışı ton üretir) palete bağlanır: opak çizgi rengi + bölüm zemin tonu (bible §4 "Yön Başına Sıcaklık"), data-driven | Art bible §4 (C-04 sırasında keşfedildi) | — | Ekran görüntüsü + piksel kontrolü |
-| C-23 | [ ] | Bölge seçim "tık" sesi (bible: seçimin renk körlüğü yedeği) — ses altyapısı (`features/audio`, SFX bus) henüz yok; önce ses yönetimi tasarımı/ADR gerekir | Art bible §4 (C-05 sırasında keşfedildi) | — | Seçimde ses çalar; ses ayarı (SFX) ile ölçeklenir |
+| C-23 | [x] `__H__` | Bölge seçim "tık" sesi (bible: seçimin renk körlüğü yedeği) — ses altyapısı (`features/audio`, SFX bus) henüz yok; önce ses yönetimi tasarımı/ADR gerekir | Art bible §4 (C-05 sırasında keşfedildi) | — | Seçimde ses çalar; ses ayarı (SFX) ile ölçeklenir |
 | C-24 | [ ] | **Karar:** `.uid` dosyaları `game/.gitignore` ile yok sayılıyor (repoda 0 adet); Godot 4.4+ bunların commit'lenmesini öneriyor (UID referansları klonlar arasında tutarlı kalsın). Politikayı seç → gerekiyorsa ignore'dan çıkar + mevcutları ekle | C-06 sırasında keşfedildi | — | Karar kaydı + (seçilirse) tüm `.uid`'ler takipte |
 | C-25 | [ ] | **Karar + uygulama:** ekran açılışında başlangıç odağı yok (menü, ayarlar, oyun) → klavye kullanıcısı gezinmeye başlayamıyor. Fare kullanıcısına sürekli altın odak çerçevesi göstermeden çözüm seç (ör. ilk yön tuşunda odak ver / Godot 4.7 odak görünürlüğü ayarını araştır) | C-08 sırasında keşfedildi | — | Her ekranda ilk ok/Tab tuşu bir butona odaklanır; fareyle açılışta çerçeve yok |
 | C-26 | [ ] | Bilgi panelinde `tr("TURN").to_lower()` → Almancada "2 / runde" (isimler büyük harf olmalı); bible programatik büyük/küçük harf dönüşümünü yasaklıyor. `PER_TURN` gibi ayrı çeviri key'i (11 dil) + kodda başka `to_lower()/to_upper()` kalmadığını doğrula | C-09 sırasında keşfedildi | — | grep `to_lower\|to_upper` oyuncuya görünen metinde yok; de ekran görüntüsü |
@@ -216,3 +217,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-19 | C-19: ADR-0005 uygulaması — `EnemyAIController.decide(map, acted)` + `ErlikSpreadController.decide(map, interval) -> SpreadDecision` (saf), `MapController` karar → uygula döngüsü (ele geçirilen bölge aynı tur hareket etmez), `ArmyController` `mover` parametresi; `RegionData.corruption_level`, `MapState.erlik_spread_interval/last_erlik_spread_turn` alanları; 104/104 test (24 yeni) | `278760f` |
 | 2026-10-19 | C-21: koçboynuzu köşe + kilim şevron bandı 9-slice çerçeveleri (`generate_ui_frames.gd`, 5 PNG), `PrimaryButton` / `ModalPanel` tema varyasyonları; Tur Bitir, Ordu Gönder, Yeni Sefer birincil; ayarlar ekranı modal panelde; 112/112 test (8 yeni), palet 0 ihlal; en/de ekran görüntüleri (Xvfb) *(gece modu)* | `21a9735` |
 | 2026-10-19 | C-22: harita zemini ve komşuluk çizgisi palete bağlandı ve data-driven (`ChapterMapDefinition.ground_color` / `adjacency_line_color`, opak); Prolog `#1A2614` / `#436129`; render piksel kontrolü: harita alanında palet dışı renk 0; 116/116 test *(gece modu)* | `ffbf2b5` |
+| 2026-10-19 | C-23: bölge seçim "tık"ı + ses altyapısı — ADR-0008 (Accepted), `default_bus_layout.tres` (Music/SFX → Master; ayar kaydırıcıları artık çalışıyor), `AudioController` (havuz 4, SFX bus), `SfxLibrary` + `sfx_ui_region_select.wav` (sentez yer tutucu); 123/123 test (7 yeni); Xvfb çalıştırması hatasız *(gece modu)* | `__H__` |

@@ -8,7 +8,7 @@
 - **GDDs Covered:** `game-concept.md`, `systems-index.md`, `region-map-system.md`,
   `army-system.md`, `combat-system.md`, `resource-system.md`, `spirit-system.md`
   (cross-review 2026-10-19: CONCERNS, resolved in C-53)
-- **ADRs Referenced:** ADR-0001 … ADR-0007 (all **Accepted** 2026-10-19 —
+- **ADRs Referenced:** ADR-0001 … ADR-0008 (all **Accepted** 2026-10-19; ADR-0008 audio added by C-23 —
   [architecture-review-2026-10-19.md](architecture-review-2026-10-19.md))
 - **Requirements baseline:** [tr-registry.yaml](tr-registry.yaml) v3 — 36 TRs; coverage in
   [architecture-traceability.md](architecture-traceability.md)
@@ -103,13 +103,14 @@ are declared on the node/service that owns them ("call down, signal up").
 
 | Module | Owns | Exposes | Consumes | Engine APIs |
 | --- | --- | --- | --- | --- |
-| `RootContext` (`contexts/root_context`) | `GameState` lifecycle, `AccessibilitySettings`, `SaveController` (D4), `LocaleFontController`, the active context | `context_changed(name)`; `bind_services` calls down | Context request signals (`new_campaign_requested`, `continue_requested`, `quit_requested`, `return_to_menu_requested`) | `Node`, `load()` of context scenes on transition (ADR-0001 amendment), `add_child`/`remove_child`/`queue_free` |
+| `RootContext` (`contexts/root_context`) | `GameState` lifecycle, `AccessibilitySettings`, `SaveController` (D4), `LocaleFontController`, `AudioController` (ADR-0008), the active context | `context_changed(name)`; `bind_services` calls down | Context request signals (`new_campaign_requested`, `continue_requested`, `quit_requested`, `return_to_menu_requested`) | `Node`, `load()` of context scenes on transition (ADR-0001 amendment), `add_child`/`remove_child`/`queue_free` |
 | `MenuContext` | Menu UI state | Request signals | `AccessibilitySettings` | `Control` |
 | `GameContext` | All in-game services (creates + wires them), view-node wiring | `return_to_menu_requested` | `GameState`, `AccessibilitySettings`, `SaveController`, chapter content | `Control`, `load()` chapter by `chapter_id` |
 | `game/state` | Field data only (no logic) | Fields + pure getters | — | `RefCounted` |
 | `features/modifiers` | `GameState.modifiers` (**derived**, sole writer `ModifierController`) | `StatResolver.resolve()`, `ModifierController.add_source/can_add/remove_source/rebuild`, `modifiers_changed` | `ModifierSource` content | `RefCounted`, `Resource` (content), typed arrays |
 | `features/save` | Save files in `user://saves/` and `user://settings.json` | `SaveController.save_campaign/load_campaign/has_campaign`, `save_failed` | `GameState` (to/from dict), chapter content via `map_factory` | `FileAccess`, `DirAccess`, `JSON` (never `ResourceLoader` on `user://`) |
 | `features/localization` | Active font theme per locale, number formatting | `LocaleFontController`, `NumberFormatter.format_int()` | `TranslationServer` locale | `TranslationServer`, `Theme`, TextServer |
+| `features/audio` (ADR-0008) | SFX player pool, bus usage | `AudioController.play_sfx(id)` | `SfxLibrary` content | `AudioStreamPlayer`, `AudioServer` buses (`default_bus_layout.tres`) |
 | Content (`.tres`) | Static definitions: `ChapterMapDefinition`, `RegionDefinition`, `WinCondition`, `CombatConfig`, economy config (C-37), `ModifierSource`, `BoonDefinition` (C-39) | Read-only resources | — | `Resource` from `res://` only |
 
 ### Core
@@ -387,7 +388,7 @@ Decisions made in this document that are not yet ADRs are listed in §7.
 4. **Localization & Pixel-Font Pipeline** (C-61) → TR-concept-006 (as built).
 
 **Can defer to implementation:**
-- Audio architecture (bus layout, SFX for selection — C-23).
+- ~~Audio architecture~~ — done: ADR-0008 (C-23).
 - Corruption overlay rendering technique (shader spec with C-50).
 - Debug tools (god mode, time scale) — a small tools spec when the first debug build is needed.
 - Spirit `requires` gating source (QQ-02) — can live in ADR C-59 or the C-39 story.
