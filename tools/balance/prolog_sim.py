@@ -5,8 +5,9 @@ Written by the C-49 game-designer subagent (no shell): the tables in
 design/balance/prolog-balance-2026-10-19.md were computed by hand and this script re-plays
 them with assertions. Executed 2026-10-19: 12/12 lines match. Run from the repo root:
   python3 -I tools/balance/prolog_sim.py
-A re-implementation of the GDD rules, not the game code — C-64 replays the lines on the real
-controllers.
+A re-implementation of the GDD rules, not the game code. C-64 (done) replays the same lines on the
+real controllers: game/tests/integration/balance/prolog_balance_test.gd — keep both in sync when a
+line or a balance value changes.
 
 Rules (GDD sections):
   resource-system F1 (G_eff = floor(G_base * M_c)), F2 (income), F3 (cap = max(1, G_eff)),

@@ -213,7 +213,7 @@ a spread). The rush line still has one consolidation turn (T4).
 
 | Priority | Issue | Suggested Fix | Impact |
 | --- | --- | --- | --- |
-| 1 | Numbers checked by a rule replay script only (12/12), not by game code | **C-64**: deterministic replay of lines A/E1/E3/C/P(w) on the real controllers + a T4 search; resource AC15 | Makes the table a regression test |
+| 1 | ~~Numbers checked by a rule replay script only (12/12), not by game code~~ **Done (C-64):** all 12 lines replayed on the real controllers match; exhaustive pruned search finds no T4 win (`tests/integration/balance/prolog_balance_test.gd`) | **C-64** ✅ | The table is now a regression test |
 | 2 | Erlik loss not implemented | **C-63**: `WinCondition.erlik_loss_threshold` + `erlik_power` + `end_turn` step 5 | Without it the Prolog has no loss |
 | 3 | Data still on the old model | **C-36**: the §3 table + region-map AC14 | Fastest line and loss depend on it |
 | 4 | Meter and warning invisible | C-41 / C-45 spec, C-60 contract, C-54 text | Pillar 3 only works if it can be read |

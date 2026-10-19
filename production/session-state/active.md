@@ -311,3 +311,6 @@
 
 ## Session Extract — C-69 (2026-10-19)
 - NumberFormatter.ltr/fraction (LRI/PDI) everywhere numeric; ERLIK_SHADOW_VALUE single %s; ADR-0009 amendment. ui/panel_placement.gd + ModalQueue Placement (CENTER/TOP/BOTTOM, place, rect_for); objective panel bottom→top; hint bubble corners. icon_objective_marker_0/1.png via tools/asset-pipeline/generate_objective_marker.gd; RegionNode draws texture 1 fps. Tests 316/316.
+
+## Session Extract — C-64 (2026-10-19)
+- tests/integration/balance/prolog_replay.gd + prolog_balance_test.gd (12 lines, AC15 extras, pruned T4 search ~14s). Tests 322/322. resource Q2 closed. NEXT: C-42 (kullanıcıya sor).

@@ -481,7 +481,7 @@ Test tipi her grubun başında; birim ve entegrasyon testleri BLOCKING.
 ### Sistem / simülasyon (ADVISORY)
 
 - **AC15** (C-49 — §4 verisi ve [balance raporu](../balance/prolog-balance-2026-10-19.md)
-  referans çizgileri; otomatik tekrar C-64):
+  referans çizgileri; otomatik: `tests/integration/balance/prolog_balance_test.gd`, C-64):
   - **GIVEN** §4 Prolog verisi, **WHEN** A çizgisi oynanır, **THEN** `game_won` 5. turun
     hamlesinde gelir, Ruh = 30 ve sahne sonu sunumu bekler; hiçbir hamle dizisi 4. turda
     zafer üretmez (C-64 arama).
@@ -557,7 +557,7 @@ Tamamı art bible'a bağlıdır.
 | # | Soru | Sahibi | Hedef |
 | --- | --- | --- | --- |
 | 1 | ~~Bereket lütfu düz bonus mu (+1 altın/tur), yüzde mi (%10)?~~ **Çözüldü (C-31, 2026-10-18):** düz +1 altın/tur, yığın başına (`B_add`). | Kullanıcı / game-designer | C-31 ✅ |
-| 2 | Prolog simülasyonu (§4) repoya alınsın mı (ör. `tools/balance/`), AC15 otomatik testle mi kontrol edilsin? *(C-49 önerisi: evet — gerçek controller'larla deterministik oynatıcı, görev C-64; kullanıcı onayı bekliyor)* | Kullanıcı | C-64 |
+| 2 | ~~Prolog simülasyonu (§4) repoya alınsın mı, AC15 otomatik testle mi kontrol edilsin?~~ **Çözüldü (C-64, kullanıcı onayı 2026-10-19):** `tools/balance/prolog_sim.py` (kural tekrarı) repoda kalır; AC15 gerçek controller'larla `tests/integration/balance/prolog_balance_test.gd` (12 çizgi + T4 araması) | Kullanıcı | C-64 ✅ |
 | 3 | Sürü ne zaman etkinleşir ve neyi besler/tüketir? Konsept "nüfus ve ordu büyümesi" diyor. | game-designer | Perde 1 tasarımı |
 | 4 | Katmanlı Düşman GDD'si takviyeyi devraldığında düşman ekonomisi simetrik mi olacak? | game-designer | `enemy-layers.md` |
 | 5 | Toparlanma mekanizması ve bakım gideri (çapraz inceleme D1/D2): `I_floor` ve `U` açılsın mı? | Kullanıcı | İlk Prolog playtesti |
