@@ -43,6 +43,10 @@ Sources: migration guide / changelog / release notes (see `breaking-changes.md`)
   stays typed, `Array[T](x)` does not compile (build the array and use `assign()`), typed `Dictionary` exports round-trip in `.tres`,
   `ResourceSaver` writes typed custom-resource arrays as `Array[ExtResource("id")]([...])`.
 - `@abstract` (4.5+) is verified working: see the GDScript (4.5+) section above.
+- **Quirk (project-verified on 4.7.1, C-38): don't index a `const` typed array of packed arrays with variables.**
+  With `const M: Array[PackedInt32Array] = [[0, 8], [12, 4]]`, `M[r][c]` with runtime `r`, `c` returns `0` inside a
+  function (static or instance, also via a temp `var row: PackedInt32Array = M[r]`), while literal indices `M[1][0]`
+  and an untyped `const U: Array` return `12`. Use a flat `PackedInt32Array` (`M[r * w + c]`) or an untyped const.
 - New warning `CONFUSABLE_TEMPORARY_MODIFICATION` (default WARN) - read it when it appears; trigger conditions not verified.
 - `ResourceLoader.load_threaded_request/get` deadlock and race fixes (changelog) - threaded loading is safer than on 4.6.
 

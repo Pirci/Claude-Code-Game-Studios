@@ -35,6 +35,8 @@ const LABEL_HEIGHT: int = 16
 ## (merkezde etiketlerle çakışırdı). Kutunun alt boş satırları metinle arasında
 ## ~2px bırakır; 0 boşlukla tamga ile alt kontur arasında da 1px dolgu kalır.
 const TAMGA_GAP: int = 0
+## Erlik lekesi kare hızı (art bible §2/§4: 2–4 kare/sn, kesin geçiş).
+const STAIN_FPS: float = 3.0
 
 var region_id: StringName = &""
 var is_selected: bool = false:
@@ -59,6 +61,11 @@ var show_name_label: bool = true:
 		if _label:
 			_label.visible = value
 		_layout_army_and_tamga()
+## Hareketi Azalt (art bible §7): leke animasyonu durur, sabit orta kare gösterilir.
+var reduce_motion: bool = false:
+	set(value):
+		reduce_motion = value
+		_update_stain_animation()
 
 var _points: PackedVector2Array = PackedVector2Array()
 var _inner_points: PackedVector2Array = PackedVector2Array()
@@ -70,6 +77,23 @@ var _army_label: Label
 var _tamga: Sprite2D
 var _anchor: Vector2 = Vector2.ZERO
 var _is_hovered: bool = false
+var _stain: CorruptionStain = null
+var _stain_textures: Array[ImageTexture] = []
+var _stain_frame: int = CorruptionStain.STATIC_FRAME
+var _stain_time: float = 0.0
+
+
+func _ready() -> void:
+	# _process tanımlı olduğu için Godot işlemeyi otomatik açar; yalnızca leke varken çalışsın.
+	_update_stain_animation()
+
+
+func _process(delta: float) -> void:
+	_stain_time += delta
+	var frame: int = int(_stain_time * STAIN_FPS) % CorruptionStain.FRAME_COUNT
+	if frame != _stain_frame:
+		_stain_frame = frame
+		queue_redraw()
 
 
 func _draw() -> void:
@@ -84,6 +108,9 @@ func _draw() -> void:
 		var inner: PackedVector2Array = _inner_points.duplicate()
 		inner.append(_inner_points[0])
 		draw_polyline(inner, get_inner_outline_color(), -1.0)
+	# Leke sahiplik dolgusunun üstünde, seçim işaretlerinin altında (art bible §4 katman sırası).
+	if not _stain_textures.is_empty():
+		draw_texture(_stain_textures[_stain_frame], Vector2(_stain.origin))
 	if is_selected:
 		for point: Vector2 in _points:
 			var center: Vector2i = Vector2i(point.round()) + OUTLINE_PIXEL_OFFSET
@@ -145,6 +172,7 @@ func setup(data: RegionData) -> void:
 
 func update_display(data: RegionData) -> void:
 	_owner = data.owner
+	_set_corruption_level(data.corruption_level)
 	queue_redraw()
 	if _army_label:
 		_army_label.text = "%s: %s" % [tr("ARMY"), NumberFormatter.format_int(data.army_count)]
@@ -159,6 +187,16 @@ func set_tamga(texture: Texture2D) -> void:
 	_tamga.texture = texture
 	_layout_army_and_tamga()
 	_update_tamga_visibility()
+
+
+## Çizilen bozulma seviyesi (0 = leke yok).
+func get_corruption_level() -> int:
+	return _stain.level if _stain else 0
+
+
+## Şu an çizilen leke karesi (null = leke yok) — testler ve hata ayıklama için.
+func get_stain_image() -> Image:
+	return _stain.frames[_stain_frame] if _stain and not _stain.frames.is_empty() else null
 
 
 ## Tamga şu an çiziliyor mu: dokusu var ve (seçili veya Renk Körlüğü Modu).
@@ -207,6 +245,25 @@ func get_outline_color() -> Color:
 	if is_selected or _is_hovered:
 		return COLOR_HIGHLIGHT_OUTLINE
 	return get_owner_ramp(_owner)[RAMP_DARK]
+
+
+func _set_corruption_level(level: int) -> void:
+	if level == get_corruption_level():
+		return
+	_stain = CorruptionStain.new(_points, level) if level > 0 else null
+	_stain_textures.clear()
+	if _stain:
+		for image: Image in _stain.frames:
+			_stain_textures.append(ImageTexture.create_from_image(image))
+	_update_stain_animation()
+
+
+func _update_stain_animation() -> void:
+	var animate: bool = not _stain_textures.is_empty() and not reduce_motion
+	set_process(animate)
+	if not animate:
+		_stain_frame = CorruptionStain.STATIC_FRAME
+		queue_redraw()
 
 
 func _update_tamga_visibility() -> void:

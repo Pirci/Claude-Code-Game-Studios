@@ -56,6 +56,7 @@ func apply_accessibility(settings: AccessibilitySettings) -> void:
 	for node: RegionNode in _region_nodes.values():
 		node.color_blind_mode = settings.color_blind_mode
 		node.show_name_label = settings.show_region_names
+		node.reduce_motion = settings.reduce_motion
 
 
 func clear_selection() -> void:

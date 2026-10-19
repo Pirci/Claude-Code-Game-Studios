@@ -948,13 +948,14 @@ orta pikseli); Godot'ta `Sprite2D.offset` / `centered=false` ile ayarlanır.
   kaydırma yok).
 - Körmös süzülmesi tween ile; piksel snap açık olduğundan adım adım hareket
   kabul edilir (doğal olmayan hareket karaktere uyar).
-- **Seviye yoğunluğu (C-50):** paylaşılan shader'a bölge başına `instance uniform int
-  level` (1–3) verilir; piksel, 4×4 Bayer değeri `< level × 4` ise lekedir (seviye
-  tablosu Bölüm 4). Bayer indeksi ekran pikseli değil **640×360 tuval pikseli** ile
-  alınır (tam kat ölçeklemede desen bozulmaz). Temiz 2px kenar bandı için leke
-  poligonu `Geometry2D.offset_polygon(polygon, -2.0)` ile içeri kaydırılır; iç kenar
-  çizgisi bu poligonun 1px konturu (2 çiz / 1 boşluk). Seviye değişimi (yayılım +1,
-  arındırma → 0) kare geçişiyle anında; ara harmanlama yok.
+- **Seviye yoğunluğu — uygulama (C-38, 2026-10-19):** shader yerine bölge başına önbellekli
+  piksel dokuları: `features/grid/corruption_stain.gd` lekeyi 640×360 tuval pikseli
+  ölçeğinde 4 kare olarak `Image`'a çizer (4×4 Bayer, eşik `seviye × 4`; temiz bant için
+  poligon `Geometry2D.offset_polygon(polygon, -3.0)` = 1px kontur + 2px bant; iç kenar 2 çiz /
+  1 boşluk), `RegionNode` kareyi `draw_texture` ile çizer ve 3 kare/sn değiştirir (Hareketi
+  Azalt → sabit kare 2). Gerekçe: yalnız palet renkleri ve alfa 0/255 garanti (render'da palet
+  dışı renk 0), `gl_compatibility`'de shader derleme riski yok, bölge sayısı küçük (≤ 15);
+  yukarıdaki "tek paylaşılan ShaderMaterial" kuralı leke shader'a geçerse geçerlidir.
 
 ### Palet Doğrulama
 

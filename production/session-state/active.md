@@ -247,3 +247,8 @@
 - Agent decisions (recommended): Erlik loss erlik_power = Σ corruption ≥ 9 (end_turn step 5), no ENEMY in Prolog, tutorial L1 at dogu_bozkir (garrison 0), lair garrison 0 + data AC (region-map AC14), interval 3 kept. Fastest win T5, neglect loss T15, mid-scene boon T7 (E3).
 - tools/balance/prolog_sim.py replays 12/12 lines (executed). New tasks C-63 (Erlik loss code; deps C-51, C-38), C-64 (balance replay on real controllers). C-36, C-42 now depend on C-63.
 - spirit §3.1 / AC10 now point to art bible "Bozulma Seviyeleri" (C-50).
+
+## Session Extract — C-38 adım 2: bozulma lekesi görseli (2026-10-19)
+- features/grid/corruption_stain.gd: CPU-built 4 frames per region (Bayer 4×4 flat PackedInt32Array; inset −3 = outline + 2px band; dashed edge 2/1; glint 1/16), RegionNode draws texture, 3 fps, reduce_motion → frame 2; CampaignMap passes reduce_motion. Evidence: production/qa/evidence/c38-corruption-stain-{levels,zoom}.png; map render 0 off-palette colours.
+- Engine quirk: `const X: Array[PackedInt32Array]` indexed with variables returns 0 (4.7.1) → documented in engine-reference current-best-practices.
+- Tests 181/181 (corruption_stain_test 9). Remaining C-38: purification branch + SpiritController/SpiritRules + spread application + M_c + info panel rows.
