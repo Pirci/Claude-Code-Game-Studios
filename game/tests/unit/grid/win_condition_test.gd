@@ -102,3 +102,25 @@ func test_region_definition_sets_initial_owner() -> void:
 	definition.region_id = &"otag"
 	definition.owner = RegionData.Owner.PLAYER
 	assert_int(definition.create_region_data().initial_owner).is_equal(RegionData.Owner.PLAYER)
+
+
+# --- spirit §4.7 / AC22: erlik_power ve kayıp nedeni (C-63) ---
+func test_erlik_power_sums_corruption_levels() -> void:
+	var a: RegionData = _region(&"a", RegionData.Owner.PLAYER, RegionData.Owner.PLAYER)
+	var b: RegionData = _region(&"b", RegionData.Owner.NEUTRAL)
+	var c: RegionData = _region(&"c", RegionData.Owner.NEUTRAL)
+	b.corruption_level = 3
+	c.corruption_level = 1
+	assert_int(WinCondition.erlik_power(_map([a, b, c] as Array[RegionData]))).is_equal(4)
+
+
+func test_loss_reason_prefers_no_regions_then_erlik() -> void:
+	var w: WinCondition = _win(0, false)
+	w.erlik_loss_threshold = 3
+	var b: RegionData = _region(&"b", RegionData.Owner.NEUTRAL)
+	b.corruption_level = 3
+	assert_int(w.loss_reason(_map([b] as Array[RegionData]))).is_equal(MapState.LossReason.NO_REGIONS)
+	var a: RegionData = _region(&"a", RegionData.Owner.PLAYER, RegionData.Owner.PLAYER)
+	assert_int(w.loss_reason(_map([a, b] as Array[RegionData]))).is_equal(MapState.LossReason.ERLIK)
+	b.corruption_level = 2
+	assert_int(w.loss_reason(_map([a, b] as Array[RegionData]))).is_equal(MapState.LossReason.NONE)

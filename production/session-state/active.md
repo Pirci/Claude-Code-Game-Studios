@@ -257,3 +257,7 @@
 - MapState.GameResult {ONGOING, WON, LOST} + game_result; RegionData.initial_owner (from RegionDefinition, unsaved). WinCondition: erlik_foci, conquered_neutral_count, foci_cleansed, is_met requires ≥1 player region.
 - MapController: attempt_move rejects when not ONGOING; apply → actions/selection → emit → win check → _finish(); end_turn: AI → early loss exit → income → turn++ → lose → win → else turn_ended. _is_lost() = no player regions (C-63 adds Erlik). GameContext HUD derived from game_result.
 - Tests 190/190. NEXT: C-56 (ADR-0007 save/load; deps C-17 ✓, C-51 ✓) or continue C-38.
+
+## Session Extract — C-63 Erlik kaybı (2026-10-19, ~07:15 UTC; session resumed after rate-limit pause 01:47→07:06)
+- WinCondition.erlik_loss_threshold + static erlik_power() + loss_reason(); MapState.LossReason {NONE, NO_REGIONS, ERLIK} + loss_reason; MapController._lose(reason). Tests 196/196.
+- C-35 agent resumed (scene-flow.md written, 892 lines) to apply cross-doc edits + report. When done: systems-index row, design review, scene-flow §3.7 wording → reason from MapState.loss_reason.

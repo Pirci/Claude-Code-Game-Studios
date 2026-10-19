@@ -285,3 +285,65 @@ func test_end_of_turn_victory_emits_no_turn_ended() -> void:
 	c.turn_ended.connect(func(_turn: int) -> void: events.append("turn"))
 	c.end_turn()
 	assert_array(events).contains_exactly(["won"])
+
+
+# --- region-map AC13 / spirit AC22: Erlik'in Gölgesi kaybı (C-63) ---
+func _erlik_map(power: int) -> MapState:
+	var corrupted: RegionData = _region(&"c", RegionData.Owner.NEUTRAL, 0, [] as Array[StringName])
+	corrupted.corruption_level = power
+	return _map([
+		_region(&"a", RegionData.Owner.PLAYER, 5, [&"b"] as Array[StringName]),
+		_region(&"b", RegionData.Owner.NEUTRAL, 0, [&"a"] as Array[StringName]),
+		corrupted,
+	] as Array[RegionData])
+
+
+func _erlik_win(threshold: int) -> WinCondition:
+	var w: WinCondition = _win(99, true)
+	w.erlik_loss_threshold = threshold
+	return w
+
+
+func test_erlik_power_at_threshold_loses_at_end_of_turn() -> void:
+	var m: MapState = _erlik_map(9)
+	var c: MapController = _controller(m, _erlik_win(9))
+	var events: Array[String] = []
+	c.game_lost.connect(func() -> void: events.append("lost"))
+	c.turn_ended.connect(func(_turn: int) -> void: events.append("turn"))
+	c.income_collected.connect(func(_amount: int) -> void: events.append("income"))
+	c.end_turn()
+	# Ekonomi ve tur artışı çalışır, kontrol 5. adımda: kayıp, turn_ended yok.
+	assert_array(events).contains_exactly(["income", "lost"])
+	assert_int(m.game_result).is_equal(MapState.GameResult.LOST)
+	assert_int(m.loss_reason).is_equal(MapState.LossReason.ERLIK)
+	c.select_region(&"a")
+	assert_bool(c.attempt_move(&"b")).is_false()
+	c.end_turn()
+	assert_int(m.current_turn).is_equal(2)
+	assert_array(events).contains_exactly(["income", "lost"])
+
+
+func test_erlik_power_below_threshold_or_disabled_continues() -> void:
+	for setup: Array in [[8, 9], [12, 0]]:
+		var m: MapState = _erlik_map(setup[0])
+		var c: MapController = _controller(m, _erlik_win(setup[1]))
+		c.end_turn()
+		assert_int(m.game_result).override_failure_message(str(setup)).is_equal(MapState.GameResult.ONGOING)
+
+
+func test_player_move_never_triggers_erlik_loss() -> void:
+	var m: MapState = _erlik_map(9)
+	var c: MapController = _controller(m, _erlik_win(9))
+	c.select_region(&"a")
+	assert_bool(c.attempt_move(&"b")).is_true()
+	assert_int(m.game_result).is_equal(MapState.GameResult.ONGOING)
+
+
+func test_losing_last_region_reports_no_regions_reason() -> void:
+	var m: MapState = _map([
+		_region(&"e", RegionData.Owner.ENEMY, 9, [&"p"] as Array[StringName]),
+		_region(&"p", RegionData.Owner.PLAYER, 1, [&"e"] as Array[StringName]),
+	] as Array[RegionData])
+	var c: MapController = _controller(m, _erlik_win(9))
+	c.end_turn()
+	assert_int(m.loss_reason).is_equal(MapState.LossReason.NO_REGIONS)

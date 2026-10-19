@@ -22,7 +22,7 @@ History: 2026-08-13 — 24 TRs, 13 covered (54 %), 5 partial, 6 gaps.
 | TR-map-003 | region-map | `end_turn` pipeline, early exit, `turn_ended` after check | 0003, 0005, 0007 | ✅ | Order is a GDD rule in MapController; code C-51 |
 | TR-map-004 | region-map | Clickable polygons; visual layer separate | 0002, 0004, 0011 | ✅ | Passive views + `GameContext._refresh_views()` contract |
 | TR-map-005 | region-map | Enemy AI target selection, sequential, budget | 0005 | ✅ | decide → apply loop |
-| TR-map-006 | region-map | WinCondition (+ `erlik_foci`), `game_result` latch | 0004, 0007 | ✅ | C-51: `RegionData.initial_owner` copied from content at map creation (not saved, ADR-0007 rebuilds from `ChapterMapDefinition`); `WinCondition` = content `Resource` with pure checks; Erlik loss C-63 |
+| TR-map-006 | region-map | WinCondition (+ `erlik_foci`), `game_result` latch | 0004, 0007 | ✅ | C-51: `RegionData.initial_owner` copied from content at map creation (not saved, ADR-0007 rebuilds from `ChapterMapDefinition`); `WinCondition` = content `Resource` with pure checks; Erlik loss + `MapState.loss_reason` C-63 |
 | TR-army-001 | army | Owner-agnostic move validation, garrison, action, empty → NEUTRAL | 0003, 0004, 0005 | ✅ | Pattern coverage; intents via `can_move(…, mover)` |
 | TR-army-002 | army | Arrival routing combat → purification → peaceful | 0002, 0005 + registry `spirit_state` | ✅ | Spirit state written only by `SpiritController` (D3) |
 | TR-army-003 | army | Move-outcome preview from the same pure rules | 0010 | ✅ | `preview_move` = `MoveResolver.resolve`; code with C-38 |

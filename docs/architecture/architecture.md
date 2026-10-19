@@ -205,12 +205,13 @@ if game_result != ONGOING: return
                              if d.target_id: SpiritController.apply_spread(d.target_id)
 (3) economy: ResourceController (income F2 → gold; reinforcement F6; upkeep F7) → income_collected
 (4) current_turn += 1 ; actions_remaining reset ; recruit counters reset
-(5) lose check → win check → (changed) game_lost / game_won
+(5) lose check (no regions ∨ Erlik: erlik_power ≥ erlik_loss_threshold, C-49) → win check
+    → (changed) game_lost / game_won ; MapState.loss_reason = NO_REGIONS | ERLIK (C-63)
     else turn_ended(new_turn)  → GameContext → SaveController.save_campaign(game_state)
                                → HUD refresh → player turn start: SpiritController offer (auto-modal ≤ 1)
 ```
-Current code differs in (1) early exit, (5) `turn_ended` ordering and the latch → **C-51**;
-AI extraction → **C-19**; spread step → **C-38**.
+Implemented: early exit, latch and `turn_ended` ordering (**C-51**), Erlik loss + `loss_reason`
+(**C-63**), AI extraction (**C-19**); still open: spread step (2) → **C-38**.
 
 ### 4.3 Signal path (no event bus)
 

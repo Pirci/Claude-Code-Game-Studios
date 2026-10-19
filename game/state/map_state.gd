@@ -4,10 +4,14 @@ extends RefCounted
 
 
 enum GameResult { ONGOING, WON, LOST }
+## Kaybın nedeni — yenilgi ekranı metni için (region-map §3.6, scene-flow §3.7).
+enum LossReason { NONE, NO_REGIONS, ERLIK }
 
 var regions: Dictionary = {}  # StringName -> RegionData
 ## Oyun sonucu; ONGOING dışına bir kez çıkar ve oyunu kilitler (region-map §3.7).
 var game_result: GameResult = GameResult.ONGOING
+## `game_result == LOST` iken nedeni; aksi halde NONE. Bitmiş durum kaydedilmez (ADR-0007).
+var loss_reason: LossReason = LossReason.NONE
 var current_turn: int = 1
 var actions_remaining: int = 1
 var actions_per_turn: int = 1

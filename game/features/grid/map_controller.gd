@@ -85,14 +85,15 @@ func attempt_move(target_id: StringName) -> bool:
 
 
 ## Tur sonu (region-map §3.4): (1) düşman AI → erken kayıp çıkışı → (2) Erlik yayılımı
-## (C-38) → (3) ekonomi → (4) tur artışı → (5) önce kaybetme, sonra kazanma; oyun
+## (C-38) → (3) ekonomi → (4) tur artışı → (5) önce kaybetme (bölgesiz ∨ Erlik), sonra kazanma; oyun
 ## sürüyorsa `turn_ended` en sonda. Oyun bitmişse hiçbir adım çalışmaz.
 func end_turn() -> void:
 	if _map_state.game_result != MapState.GameResult.ONGOING:
 		return
 	_run_enemy_ai()
-	if _is_lost():
-		_finish(MapState.GameResult.LOST)
+	# Erken çıkış yalnızca siyasi kayıpta (ölü oyunda olay yayılmaz — §3.4, S2-b).
+	if _map_state.get_player_regions().is_empty():
+		_lose(MapState.LossReason.NO_REGIONS)
 		return
 
 	var income: int = _resource_controller.collect_turn_income(_map_state, _game_state)
@@ -101,8 +102,9 @@ func end_turn() -> void:
 	_map_state.current_turn += 1
 	_map_state.actions_remaining = _map_state.actions_per_turn
 
-	if _is_lost():
-		_finish(MapState.GameResult.LOST)
+	var loss: MapState.LossReason = _win_condition.loss_reason(_map_state)
+	if loss != MapState.LossReason.NONE:
+		_lose(loss)
 	elif _win_condition.is_met(_map_state):
 		_finish(MapState.GameResult.WON)
 	else:
@@ -134,9 +136,11 @@ func _apply_enemy_move(intent: EnemyAIController.MoveIntent) -> void:
 	_emit_move(outcome)
 
 
-## Kaybetme: oyuncunun bölgesi kalmadı (Erlik kaybı C-63 ile eklenir — region-map §3.6).
-func _is_lost() -> bool:
-	return _map_state.get_player_regions().is_empty()
+func _lose(reason: MapState.LossReason) -> void:
+	if _map_state.game_result != MapState.GameResult.ONGOING:
+		return
+	_map_state.loss_reason = reason
+	_finish(MapState.GameResult.LOST)
 
 
 ## Sonucu bir kez yazar ve sinyali bir kez yayar; sonrası kilitlidir (§3.7).
