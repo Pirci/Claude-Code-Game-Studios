@@ -5,7 +5,7 @@
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
 - **Son güncelleme:** 2026-10-19
-- **Son commit:** `__H__` (C-19: AI karar servisleri)
+- **Son commit:** `278760f` (C-19: AI karar servisleri)
 - **Proje evresi:** Concept (`production/stage.txt`)
 - **Aktif görev:** — (yok; sıradaki: C-21)
 
@@ -121,7 +121,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-16 | [x] `bf4f2ff` | ADR: Save/Load Persistence (`/architecture-decision`) | Arch. review 2026-08-13 | — | ADR dosyası |
 | C-17 | [x] `815e07c` | `/architecture-review` yeniden → ADR'leri Accepted yap | Arch. review | C-15, C-16, K-02, C-34, C-53 | Rapor + ADR durumları |
 | C-18 | [x] `bf6932f` | `/create-architecture` | Technical Setup | C-17 | Mimari doküman |
-| C-19 | [x] `__H__` | ADR-0005 uygulaması: `game/features/ai/` altında `EnemyAIController` + `ErlikSpreadController` (saf `decide()`), `MapController` intent'leri uygular; `_run_enemy_ai()` taşınır | ADR-0005 (K-02 sırasında keşfedildi) | C-17 | Davranış aynı kalır; mevcut testler yeşil + `decide()` için izole testler |
+| C-19 | [x] `278760f` | ADR-0005 uygulaması: `game/features/ai/` altında `EnemyAIController` + `ErlikSpreadController` (saf `decide()`), `MapController` intent'leri uygular; `_run_enemy_ai()` taşınır | ADR-0005 (K-02 sırasında keşfedildi) | C-17 | Davranış aynı kalır; mevcut testler yeşil + `decide()` için izole testler |
 | C-20 | [x] `5371770` | `tools/ci/run-tests.sh` varsayılan Godot yolu eskimiş (`~/Downloads/Applications`); Godot artık `/Applications/Godot.app` → yaygın konumları sırayla dene | C-01 sırasında keşfedildi (script `GODOT` olmadan çalışmıyor) | — | `GODOT` ayarlamadan `run-tests.sh` testleri çalıştırır |
 | C-21 | [ ] | Birincil buton (Tur Bitir, Saldır) ve modal panel (ayarlar, savaş raporu) çerçeveleri: 5×5 koçboynuzu köşe + 2px kilim şevron bandı → üretici script + 9-slice `StyleBoxTexture`, `PrimaryButton` / `ModalPanel` tema varyasyonları; ayarlar ekranı modal panele alınır | Art bible §3, §7 (C-04 sırasında keşfedildi) | C-04 | Ekran görüntüsü + tema testi |
 | C-22 | [ ] | Harita zemini (`#222A18`) ve komşuluk çizgileri (%30 saydam gri — palet dışı ton üretir) palete bağlanır: opak çizgi rengi + bölüm zemin tonu (bible §4 "Yön Başına Sıcaklık"), data-driven | Art bible §4 (C-04 sırasında keşfedildi) | — | Ekran görüntüsü + piksel kontrolü |
@@ -211,4 +211,4 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-19 | C-53: çapraz inceleme düzeltmeleri — resource §4/AC15 "eskimiş" işaretleri + aralıklar; spirit aynı tur lütuf kuralı, `P_eff`, işleme sırası (S1-a), hamle önizlemesi + yayılım göstergesi gereksinimleri (N7), `boons` tek kaynak; region-map veri modeli sahipliği (W-G), `turn_ended`/erken çıkış (W-D, S2-b), kilitte lütuf seçimi (S1-c); army 'barışçıl' nitelemeleri + yerinde üretim (N11c); combat arındırma ↔ knob ayrımı; konsept kademe tablosu (W-H); ADR-0005/0006/0007 değişiklik notları; registry +4 sabit, TR-spirit-005 revised; C-39/C-44/C-51/C-36 kriterleri güncellendi *(gece modu: önerilen seçenek)* | `62f8b96` |
 | 2026-10-19 | C-17: `/architecture-review` → CONCERNS (36 TR: 23 ✅ / 9 ⚠️ / 4 ❌); bağımsız technical-director + godot-specialist (4.7.1 deneyleri); 4 metin çakışması (B1–B4) + W1–W11 düzeltildi; 7 ADR **Accepted**; TR registry v3 (+11 TR, `resource` slug'ı, 15 revizyon); mimari registry (`spirit_state`, Continue, AI imzası); yeni görevler C-57…C-62 *(gece modu: önerilen seçenekler D1–D4)* | `815e07c` |
 | 2026-10-19 | C-18: `docs/architecture/architecture.md` v1.0 — katman haritası, modül sahipliği, veri akışları (hamle, tur sonu, kayıt/yükleme, başlatma, zafer), API sınırları, ADR denetimi, gerekli ADR'ler (C-59…C-62), ilkeler, açık sorular QQ-01…08; TD öz-inceleme CONCERNS *(gece modu)* | `bf6932f` |
-| 2026-10-19 | C-19: ADR-0005 uygulaması — `EnemyAIController.decide(map, acted)` + `ErlikSpreadController.decide(map, interval) -> SpreadDecision` (saf), `MapController` karar → uygula döngüsü (ele geçirilen bölge aynı tur hareket etmez), `ArmyController` `mover` parametresi; `RegionData.corruption_level`, `MapState.erlik_spread_interval/last_erlik_spread_turn` alanları; 104/104 test (24 yeni) | `__H__` |
+| 2026-10-19 | C-19: ADR-0005 uygulaması — `EnemyAIController.decide(map, acted)` + `ErlikSpreadController.decide(map, interval) -> SpreadDecision` (saf), `MapController` karar → uygula döngüsü (ele geçirilen bölge aynı tur hareket etmez), `ArmyController` `mover` parametresi; `RegionData.corruption_level`, `MapState.erlik_spread_interval/last_erlik_spread_turn` alanları; 104/104 test (24 yeni) | `278760f` |
