@@ -149,6 +149,16 @@ Tur sonu = **gece** (`TURN_SUMMARY_HEADING` "Gece Çökerken"), lütuf sunumu = 
    Ruh — en Spirit, de Geist, fr Esprit, es/pt Espíritu/Espírito, zh 灵魂, ja 魂, ko 영혼, ru Дух, ar الروح.
    Lütuf — en blessing (C-39 aynı terimi kullanmalı). Kağan — zh 可汗, ar خاقان, ru каган.
 6. **Arapça:** ünlem yok; hareke yalnız gerekiyorsa; RTL'yi motor çözer (ADR-0009 §6).
+7. **Cürcet / Jurchen (C-43, 2026-10-20 — [`perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md) §2):**
+   Ad sözlüğüne girer: Cürcet (tr) / Jurchen (en); zh/ja 女真, ko 여진 (diğer dillerde çevriyazı; Arapça adı
+   Perde 1 anahtarlarında belirlenir). Çeviriler tarihsel Jurchen'i karşılar; **kaynak nüshası doğrulanmamıştır**,
+   destandan doğrudan alıntı yapılmaz ve "tarihsel Cürcet" iddiası kurulmaz. Cürcet Kağan'ın adı da bu
+   adlandırmaya bağlıdır (yukarıdaki "Yazılmayanlar" notu).
+8. **Perde 1 dil kuralları (C-43):** arındırma **"şifa"** olarak anlatılır, "av" olarak değil (bu, §5.2'nin
+   Prolog ritüel çerçevesindeki "av" dilinden Perde 1 için ayrılır); körmös **hiç konuşmaz**, yalnız betimlenir;
+   Cürcet Kağan **doğrudan konuşmaz** — ozan aktarır, en çok 1 kısa cümle ("Cürcet Kağan dedi: Boyun eğmem.");
+   yenilgisi ağırbaşlıdır ("diz çöktü"), baş kesme yok. Kağan kötü değil, "karşı saf"tır; Erlik ile iş birliği
+   yoktur. `DEFEAT_REASON_ERLIK` sahneden bağımsız yazılır (11 dil).
 
 ## 7. "Kuru Hesap Yok" Denetimi (Kabul Ölçütleri)
 

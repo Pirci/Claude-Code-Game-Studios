@@ -48,7 +48,44 @@ last_updated: "2026-10-19"
 # Attribute fields: any key stats that could appear in another GDD
 #   (health, damage, drops, faction, etc.)
 
-entities: []
+entities:
+  # C-43 (2026-10-20): Perde 1 düşman bölgeleri — design/levels/perde1-dogu-curcet.md §3.1 / §4.1
+  - name: kurt_ini_ormani
+    status: active
+    source: design/levels/perde1-dogu-curcet.md
+    referenced_by:
+      - design/levels/perde1-dogu-curcet.md
+    owner: ENEMY
+    garrison: 2
+    corruption_level: 1
+    notes: "E-01, zorluk 3/10; takviye almaz."
+    added: 2026-10-20
+    revised: ""
+
+  - name: curcet_oba
+    status: active
+    source: design/levels/perde1-dogu-curcet.md
+    referenced_by:
+      - design/levels/perde1-dogu-curcet.md
+    owner: ENEMY
+    garrison: 4
+    corruption_level: 0
+    notes: "E-02, zorluk 5/10; ön karakol; takviye almaz."
+    added: 2026-10-20
+    revised: ""
+
+  - name: curcet_otagi
+    status: active
+    source: design/levels/perde1-dogu-curcet.md
+    referenced_by:
+      - design/levels/perde1-dogu-curcet.md
+      - design/gdd/resource-system.md   # F6 takviye listesi
+    owner: ENEMY
+    garrison: 4
+    corruption_level: 0
+    notes: "E-03, zorluk 7/10; düşman başkenti (objective_region_ids); E_r=1/tur YALNIZ burada."
+    added: 2026-10-20
+    revised: ""
 
 # Example (remove when first real entry is added):
 #
@@ -248,9 +285,58 @@ constants:
       - design/gdd/region-map-system.md   # ekonomi adımı, ChapterMapDefinition
     value: 1
     unit: army per enemy region per turn
-    notes: "C-49: Prolog'da ENEMY bölgesi yok → değer boşta (durumu değiştirmez); düşmanlı bölümlerde etkin."
+    notes: "C-49: Prolog'da ENEMY bölgesi yok → değer boşta (durumu değiştirmez); düşmanlı bölümlerde etkin. C-43: Perde 1'de 1/tur, yalnız enemy_reinforcement_region_ids."
     added: 2026-10-08
-    revised: 2026-10-19
+    revised: 2026-10-20
+
+  - name: enemy_reinforcement_region_ids
+    status: active
+    source: design/gdd/resource-system.md
+    referenced_by:
+      - design/gdd/resource-system.md
+      - design/gdd/region-map-system.md
+      - design/gdd/scene-flow.md
+      - design/levels/perde1-dogu-curcet.md
+    value: "[] (Prolog / eski davranış: boş = tüm düşman bölgeleri); Perde 1: [curcet_otagi]"
+    unit: ChapterMapDefinition region_id list
+    notes: "C-43. Başkent geri alınırsa takviye yeniden başlar."
+    added: 2026-10-20
+    revised: ""
+
+  - name: EnemyAIProfile
+    status: active
+    source: docs/architecture/adr-0005-ai-architecture.md
+    referenced_by:
+      - docs/architecture/adr-0005-ai-architecture.md
+      - design/gdd/region-map-system.md   # §3.5 Perde 1 AI kuralları
+      - design/levels/perde1-dogu-curcet.md
+    value: "veri kaynağı (Resource); varsayılan profil eski davranışı korur"
+    unit: AI parameter resource
+    notes: "C-43. Alanlar: attack_start_turn, karşı vuruş oranı. MoveIntent.reason = &\"strike\"."
+    added: 2026-10-20
+    revised: ""
+
+  - name: attack_start_turn
+    status: active
+    source: design/levels/perde1-dogu-curcet.md
+    referenced_by:
+      - docs/architecture/adr-0005-ai-architecture.md
+      - design/gdd/region-map-system.md
+    value: 5
+    unit: turn (Perde 1 EnemyAIProfile; AI tur < 5 saldırmaz)
+    added: 2026-10-20
+    revised: ""
+
+  - name: ai_counterstrike_ratio
+    status: active
+    source: design/levels/perde1-dogu-curcet.md
+    referenced_by:
+      - docs/architecture/adr-0005-ai-architecture.md
+      - design/gdd/region-map-system.md
+    value: "3/2 (2A >= 3*P, A = E.army - 1, ayrıca A > P)"
+    unit: attacker/defender army ratio
+    added: 2026-10-20
+    revised: ""
 
   - name: prod_penalty_per_level
     status: deprecated   # 2026-10-08: replaced by corruption_production_multipliers (K1)
