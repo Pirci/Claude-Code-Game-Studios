@@ -326,3 +326,7 @@
 ## Session Extract — C-66 (2026-10-20)
 - Kullanıcı önceliği: Demo (M1) + Vertical Slice (M2); sıra C-42 kapanışı → C-66 → C-43…C-48; tek öneri sun.
 - ui/value_feedback.gd (ValueFeedback), RegionNode ordu etiketi (_army_feedback, nesil korumalı timer), GameContext _gold_feedback/_render_gold, AudioController SFX_RECRUIT/SFX_INCOME, sfx_library.tres, tools/asset-pipeline/generate_sfx.py. Testler 338/338. NEXT: C-43 (kullanıcı onayıyla) / C-42 playtest raporu.
+
+## Session Extract — C-43 (2026-10-20)
+- /team-level 5 adım, her adım kullanıcı onaylı. design/levels/perde1-dogu-curcet.md (0086685); GDD/ADR yayılımı (00c2da3 + narrative/registry). Simülasyon scratchpad/c43/perde1_sim.py (+ c43tools/perde1_sim_capital.py: takviye yalnız başkent). Seçilen: garnizon 2/4/4, E_r 1 yalnız curcet_otagi, AI R1 tur≥5 oran 3/2, R2 kapalı.
+- Uygulama C-47'ye bağlandı (§13, 13 adım). NEXT: C-44 (lütuf tam kapsam + Erlik katmanı GDD) / C-42 playtest raporu.
