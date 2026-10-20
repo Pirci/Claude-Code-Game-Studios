@@ -47,7 +47,8 @@ tutar (ADR-0004). *planlı* = kodda henüz yok.
   (`RegionDefinition`: yukarıdaki statik alanlar + başlangıç `owner`/`army_count` +
   *planlı* başlangıç `corruption_level` = `initial_owner` kaynağı), `actions_per_turn`,
   `enemy_actions_per_turn`, `player_tamga_id`/`enemy_tamga_id`, `starting_gold` ve
-  `enemy_reinforcement_per_turn` (resource §7), `win_condition` (§3.6, `erlik_foci` ve
+  `enemy_reinforcement_per_turn` ve *C-43:* `enemy_reinforcement_region_ids` (resource F6; boş = tüm
+  düşman bölgeleri), `win_condition` (§3.6, `erlik_foci` ve
   *planlı* `erlik_loss_threshold` dahil — C-49), *planlı* `erlik_spread_interval` (spirit —
   Prolog 3) ve lütuf havuzu override'ı (spirit §7, MVP'de yok). `erlik_power` hiçbir yerde
   saklanmaz; bölgelerin `corruption_level`'larından türetilir (spirit §4.7).
@@ -110,6 +111,20 @@ sinyal yaymaz. `MapController.end_turn()` intent'leri `ArmyController`/`CombatRe
 - Düşman tur başına en fazla `enemy_actions_per_turn` aksiyon yapar (data-driven,
   `MapState.enemy_actions_per_turn`; her düşman bölgesi en fazla 1 hamle). MVP: 1.
 
+> **Perde 1 AI kuralları (C-43, 2026-10-20 — [`perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md) §4.2):**
+> Yukarıdaki "en düşük ordulu komşuya saldır" varsayılan davranıştır (Prolog: düşman yok);
+> Perde 1 `EnemyAIProfile` veri kaynağıyla (`attack_start_turn = 5`, oran 3/2) şu kuralları kullanır
+> (deterministik, tur başına en çok 1 hamle; varsayılan profil eski davranışı korur):
+> - **R1 Karşı vuruş:** tur ≥ `attack_start_turn` (5). Kaynak E (ordu ≥ 2), hedef komşu OYUNCU bölgesi P;
+>   A = E.ordu − 1; koşul A > P.ordu **ve** 2A ≥ 3·P.ordu (oran ≥ 1.5). Sıra: en zayıf P, en büyük A,
+>   alfabetik `from`, alfabetik `to`.
+> - **Savunma tutma:** E'nin başka oyuncu komşusu (ordu−1 ≥ 2) varsa E saldırmaz.
+> - **R2 savunma kaydırması:** KAPALI.
+> - **Bekle:** başka hamle yoksa `null`. **Kapsam dışı:** nötr bölgelere (çürük koru dahil) girmez,
+>   bozulmayı yok sayar (`spirit-system.md` §3.7).
+> - **`MoveIntent.reason`:** AI hamlesi `&"strike"` gerekçesi taşır; rapor modalı bununla
+>   `BATTLE_HELD_DEFENSE` / `BATTLE_LOST_DEFENSE` metnini seçer.
+
 ### 3.6 Kazanma / Kaybetme — C-32 kararı (2026-10-18)
 - **Kazanma** (`WinCondition.is_met`) üç koşulun **hepsi** sağlanınca:
   1. **Siyasi:** `must_defeat_all_enemies` ise hiç `ENEMY` bölgesi kalmamış.
@@ -126,6 +141,13 @@ sinyal yaymaz. `MapController.end_turn()` intent'leri `ArmyController`/`CombatRe
      Eşik bölüm verisidir (`WinCondition`); **Prolog 9** (başlangıç `erlik_power` 4); 0 =
      kapalı. Prolog'da `ENEMY` olmadığından (spirit §3.7) Prolog'un tek gerçekçi kayıp yolu
      budur: hiç arındırmayan oyuncu 15. turun sonunda kaybeder (`resource-system.md` §4).
+- **Perde 1 `WinCondition` (C-43, 2026-10-20 — [`perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md) §6):**
+  `required_neutral_conquests = 2`, `must_defeat_all_enemies = true` (3 `ENEMY` bölge: `kurt_ini_ormani`,
+  `curcet_oba`, `curcet_otagi`; son düşman bölgesi alınmadan zafer yok), `erlik_foci = [curuk_koru]`
+  (başkent odak değil), `erlik_loss_threshold = 9` (başlangıç `erlik_power` 4), `objective_region_ids =
+  [curcet_otagi]`. Aynı turda zafer + Erlik kaybı: mevcut "önce kaybetme" kuralı geçerli (KARAR).
+  Bölgesiz kalma = mevcut `NO_REGIONS` (yeni enum yok); Erlik kaybı metni `DEFEAT_REASON_ERLIK` sahneden
+  bağımsızdır (bkz. `scene-flow.md` §3.7).
 - **Öncelik:** İkisi aynı anda sağlanamaz: kazanma en az bir oyuncu bölgesi ister ve tur
   sonunda zafer oluşmaz (Erlik eşiği yalnızca yayılımla aşılır, yayılım zafer üretemez).
   Savunmacı kural: bir kontrol noktasında önce kaybetme, sonra kazanma değerlendirilir.
@@ -265,14 +287,14 @@ işlem sırası = düşman bölgeleri region_id artan; bütçe enemy_actions_per
 | Knob | Kaynak | Not |
 | ---- | ---- | ---- |
 | `actions_per_turn` | ChapterMapDefinition | MVP: 1 |
-| Bölge sayısı / layout | `.tres` (veri-güdümlü) | Prolog: 6 |
-| `required_neutral_conquests` | WinCondition | Prolog: 3 |
-| `must_defeat_all_enemies` | WinCondition | Prolog: true (C-49 kararı: Prolog'da `ENEMY` yok, siyasi katman nötr boylar → koşul kendiliğinden sağlanır) |
+| Bölge sayısı / layout | `.tres` (veri-güdümlü) | Prolog: 6; Perde 1: 8 bölge / 9 komşuluk (C-43, [`perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md)) |
+| `required_neutral_conquests` | WinCondition | Prolog: 3; Perde 1: 2 (C-43) |
+| `must_defeat_all_enemies` | WinCondition | Prolog: true (C-49 kararı: Prolog'da `ENEMY` yok, siyasi katman nötr boylar → koşul kendiliğinden sağlanır); Perde 1: true (3 `ENEMY` bölge, C-43) |
 | `erlik_foci` | WinCondition | Arındırılması zorunlu Erlik odakları (region_id listesi). Prolog: [`sinir_bolge`] (C-36), garnizon 0 (AC14) |
 | `erlik_loss_threshold` | WinCondition | Erlik kaybı eşiği (`erlik_power`, spirit §4.7); 0 = kapalı. **Prolog 9** (C-49) — güvenli aralık: başlangıç `erlik_power` + 3 … 3 × bölge sayısı. 8 → ihmal kaybı T12 (sert), 10 → T18 (baskı zayıf). Değişirse `resource-system.md` §4 tablosu yeniden üretilir |
 | Bölge `army_count` / `gold_per_turn` | `.tres` | Denge |
 | `enemy_actions_per_turn` | ChapterMapDefinition / MapState | Düşmanın tur başına toplam aksiyonu (data-driven; MVP: 1) |
-| `player_tamga_id` / `enemy_tamga_id` | ChapterMapDefinition → MapState | Sahiplik tamgası (`icon_tamga_<id>.png`, art bible §5/§7). Prolog: `oguz` / boş *(C-36: canavar nötr bir bozuk bölge; Erlik görseli tamga değil bozulma katmanıdır — `erlik_beast` tamgası kaldırıldı)*. Bölgenin tamgası sahibinden türetilir → fetihte değişir; nötr tamgasız |
+| `player_tamga_id` / `enemy_tamga_id` | ChapterMapDefinition → MapState | Sahiplik tamgası (`icon_tamga_<id>.png`, art bible §5/§7). Prolog: `oguz` / boş *(C-36: canavar nötr bir bozuk bölge; Erlik görseli tamga değil bozulma katmanıdır — `erlik_beast` tamgası kaldırıldı)*. Bölgenin tamgası sahibinden türetilir → fetihte değişir; nötr tamgasız. **Perde 1 (C-43):** `oguz` / `curcet`; `ENEMY` bölgelerde owner tamgası HER ZAMAN görünür (Renk Körlüğü Modundan bağımsız — protanopi düşman–nötr ayrımı), nötrde tamga yok; Prolog etkilenmez ([`perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md) §7.8) |
 
 ---
 
@@ -300,6 +322,7 @@ işlem sırası = düşman bölgeleri region_id artan; bütçe enemy_actions_per
 9. Seçili bölgenin merkez ekseninde sahibinin tamgası görünür (nötrde yok); fetihten
    sonra tamga yeni sahibinkine geçer. Renk Körlüğü Modu açıkken tamga seçimden
    bağımsız olarak her sahipli bölgede görünür (C-07). *(Test)*
+   *(C-43, Perde 1: `ENEMY` bölgede tamga her zaman görünür, nötrde yok; kontrast ≥ 3:1 — `perde1-dogu-curcet.md` §7.8.)*
 10. Başlangıç bölgesi kaybedilmiş, 3 başlangıçta-nötr bölge oyuncudaysa genişleme
     koşulu sağlanır (eski `−1` formülünün hatası yok). *(Test — kod C-51)*
 12. Oyun sürerken `turn_ended`, 5. adımdaki kontrolden sonra yayılır; tur sonu otomatik

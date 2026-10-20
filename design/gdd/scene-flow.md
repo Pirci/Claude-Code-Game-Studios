@@ -83,6 +83,16 @@ haritada işaretli, HUD'da kalıcı; anlatı en çok iki basışla geçilir.
 
 Pozlar art bible §5 "Kök Böri": profil (varsayılan), iniş (Prolog), cephe (Final).
 
+> **Perde 1 girişi (C-43, 2026-10-20 — [`perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md)):** `chapter_id = 2`,
+> slug `perde1_dogu` (`campaign.tres` kimliği), 8 bölge, `PROFILE` (Kök Böri G-3). Anlatı: giriş G-1 (başlıklı,
+> buyruk dört yöne), G-2 ("Boyun eğmem" + doğu ormanlarından kara sis), G-3 (Kök Böri,
+> `CHAPTER_2_KOKBORI_1` + `CHAPTER_2_KOKBORI_LINE`); çıkış O-1 (orman nefes alır), O-2 (başlıklı "Kanglı",
+> Cürcet diz çöker; teaser: batıda Urum). Önkoşul: Prolog kazanılmış (F1). Sahne verisi `map_path` ile
+> Perde 1 `ChapterMapDefinition` `.tres`'ine bağlanır; takviye listesi `enemy_reinforcement_region_ids =
+> [curcet_otagi]` o haritanın verisidir (resource F6), `SceneDefinition`'da değil.
+> **Perde 2 bağlantısı:** yalnız Perde 1 zaferi → O-2 → sefer haritasında sonraki sahnenin açılması (F1);
+> Perde 2 yerleşimi/kimliği Perde 1 belgesinde tanımlanmaz (UNRESOLVED, `perde1-dogu-curcet.md` §14).
+
 1. **Doğrusal ve sabit sıra.** `chapter_id` aynı zamanda oynanış sırasıdır (1…K, K ≤ 6). Ayrı bir "unlock
    order" alanı yoktur; kimlikler 1'den başlayıp boşluksuz artar (içerik değişmezi, §3.10).
 2. **Kampanya uzunluğu K** = derlemedeki `CampaignDefinition` içindeki sahne sayısıdır: M1'de K=1,
@@ -320,6 +330,11 @@ siyasi düşman yoktur; tek gerçekçi kayıp yolu Erlik'tir (arındırmayan oyu
 | `NO_REGIONS` | Oyuncunun hiç bölgesi kalmadı | `DEFEAT_REASON_NO_REGIONS` | "Your last land has fallen." |
 | `NONE` / eşlemesiz | Sebep üretilmedi ya da metin eşlemesinde karşılığı yok (ör. gelecekteki enum değeri) | `DEFEAT_REASON_GENERIC` | "The campaign ends here." |
 
+**Perde 1 (C-43, 2026-10-20 — [`perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md) §2/§6):** Perde 1'de
+siyasi düşman vardır ama tüm bölgelerin kaybı mevcut `NO_REGIONS`'a eşlenir (yeni enum yok); Erlik kaybı eşiği 9.
+`DEFEAT_REASON_ERLIK` metni **sahneden bağımsızdır** ("Erlik'in gölgesi bozkırı yuttu" benzeri; Prolog'a özgü
+"homeland" ifadesi kalmaz), 11 dilde yeniden yazılır. Aynı turda zafer + Erlik kaybı: önce kaybetme.
+
 Sebep C-63'te kodlandı: `MapState.loss_reason` enum'u `MapState.LossReason` { `NONE`, `NO_REGIONS`, `ERLIK` }
 (`LOST` değilken `NONE`); `game_lost` sinyali **argümansızdır**, yenilgi ekranı sebebi durumdan okur
 (ADR-0011 pasif görünüm). Metin anahtarı yukarıdaki tablodan eşlenir (`DEFEAT_REASON_` + enum adı). İki sebep aynı kontrolde sağlanırsa gösterilen
@@ -436,6 +451,14 @@ metin yazarı haritaya dokunmadan anlatıyı düzenler (Modüler İnşa).
 `objective_region_ids = []` (Canavarın İni `erlik_foci`'den gelir); `outro_pages` =
 [`ill_prolog_beast_purified.png` + `CHAPTER_1_OUTRO_1`; `ill_prolog_kagan.png` + `CHAPTER_1_OUTRO_2` +
 başlık `CHAPTER_1_KAGAN_TITLE`]; `teaser_key = CHAPTER_1_TEASER`.
+
+**Perde 1 örnek veri (C-43, [`perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md) §2/§6):** `chapter_id = 2`;
+`title_key = CHAPTER_2_TITLE`; `map_path` = Perde 1 haritası; `intro_pages` = G-1 (`CHAPTER_2_INTRO_1`, başlık
+`CHAPTER_2_TITLE`), G-2 (`CHAPTER_2_INTRO_2`); `kok_bori_pose = PROFILE`; `kok_bori_pages` = G-3
+(`CHAPTER_2_KOKBORI_1`); `kok_bori_line_key = CHAPTER_2_KOKBORI_LINE`; `objective_region_ids = [curcet_otagi]`;
+`outro_pages` = O-1 (`CHAPTER_2_OUTRO_1`), O-2 (`CHAPTER_2_OUTRO_2`, başlık `CHAPTER_2_KANGLI_TITLE`);
+`teaser_key = CHAPTER_2_TEASER`. Harita verisi: `enemy_reinforcement_region_ids = [curcet_otagi]`. (Prolog'un
+`CHAPTER_1_TEASER` ve `CAMPAIGN_END_DEMO_1` içerikleri C-43'te güncellenir.)
 
 **İçerik doğrulama (CI testi, "lint"):**
 

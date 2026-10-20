@@ -8,6 +8,21 @@ Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-revi
 > so the counter-based spread of `spirit-system.md` §3.6/§4.6 is expressible; batch vs
 > sequential planning for `enemy_actions_per_turn > 1` is specified below.
 
+> **Amendment 2026-10-20 (C-43, Perde 1 level — [`design/levels/perde1-dogu-curcet.md`](../../design/levels/perde1-dogu-curcet.md) §4.2):**
+> `EnemyAIController.decide()` gains the **R1 counter-strike rule**, driven by a data resource
+> `EnemyAIProfile` (`attack_start_turn = 5`, ratio 3/2; the default profile keeps the previous
+> lowest-army behaviour, so the Prolog is unchanged). Contract stays pure and deterministic
+> (no mutation, no signals, no randomness; at most 1 move per turn):
+> - **R1:** turn ≥ `attack_start_turn`; source E (army ≥ 2), target an adjacent PLAYER region P;
+>   A = E.army − 1; strike only if A > P.army **and** 2A ≥ 3·P.army (ratio ≥ 1.5, integer math).
+>   Order: weakest P, largest A, alphabetical `from`, alphabetical `to`.
+> - **Defence hold:** if E has another adjacent player region (and E.army − 1 ≥ 2), E does not strike.
+> - **R2 defence shifting:** disabled. **Otherwise:** `null` (wait).
+> - The AI never enters NEUTRAL regions and ignores `corruption_level` (spirit-system §3.7).
+> - `MoveIntent` gains `reason: StringName` (Perde 1: `&"strike"`); the presentation layer
+>   (ADR-0011 battle report) uses it to pick `BATTLE_HELD_DEFENSE` / `BATTLE_LOST_DEFENSE`.
+> - Determinism is a tested property (`test_..._is_deterministic_across_runs`).
+
 ## Date
 2026-08-13
 

@@ -218,7 +218,13 @@ yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı.
   eşik` olarak ve eşiğe 1 kala uyarıyla gösterir (gereksinim; spec C-41 / C-45).
 - **Prolog'da siyasi düşman yok (C-49):** siyasi katman nötr boy garnizonlarıdır (konsept
   "dağınık boylar"); düşman AI ve takviye (`resource-system.md` F6) Prolog'da bilinçli
-  olarak boştadır, ilk kez Perde 1'de çalışır (C-43). Prolog'un kayıp yolu Erlik'tir.
+  olarak boştadır; Perde 1'de çalışır (C-43, aşağıdaki not). Prolog'un kayıp yolu Erlik'tir.
+- **Perde 1'de Cürcet AI (C-43, 2026-10-20 — [`perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md) §4.2/§4.4):**
+  Düşman AI bozulmayı yok sayar ve nötr bölgelere (odak `curuk_koru` dahil) girmez; Erlik ile siyasi
+  katman ayrıdır (Kağan ile Erlik arasında iş birliği yok). Perde 1 odağı `erlik_foci = [curuk_koru]`
+  (başkent odak değil, başlangıç `erlik_power` 4, `ERLIK_SPREAD_INTERVAL` 3 — arındırma aralığı
+  sıfırlamaz, `erlik_loss_threshold` 9); `curuk_koru` arındırması P ≥ 13 ister (+30 Ruh, erlik −3).
+  Körmös ayrı birim değil, bozulma direncidir.
 - **Zafer kapsamı (D4) — ✅ C-32:** zafer = siyasi koşul + nötr genişleme + bölümün
   `erlik_foci` listesindeki odakların arındırılması (`region-map-system.md` §3.6);
   odak dışı bozulma zaferi engellemez. Prolog: 3 nötr (odak hariç) + Canavarın İni.
@@ -316,6 +322,11 @@ finalde **6–8 lütuf** — 6 sahnede toplam
 ~600–800 Ruh arzı. Çapraz incelemedeki "18 lütuf = 3 600 Ruh" hedefi geçersizdir;
 katalogda 5 uygun lütuf olduğundan 6–8 yığın, "finalde tümü aktif" vaadini karşılar.
 Arz tahmini Perde 1 verisiyle M2'de doğrulanır (C-44 `/balance-check`).
+
+**Perde 1 Ruh arzı (C-43, 2026-10-20 — [`perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md) §6):**
+`curuk_koru` L3 arındırması **+30** (zorunlu; ilk lütuf garanti), `kurt_ini_ormani` L1 arındırması **+10**
+(isteğe bağlı), yayılımla oluşan L1 arındırma **+10** (duruma bağlı); Perde 1 toplamı **~40–60** (ilgili
+oyuncu). Perde 1'in Ruh çıktısı ve zorunlu lütuf seçimi C-44 kararına bağlıdır.
 
 ### 4.5 Deterministik 3'lü sunum
 ```

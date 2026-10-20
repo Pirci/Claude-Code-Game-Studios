@@ -90,6 +90,8 @@ Biriktirmek de gerçek bir seçenek olmalı.
    - Sayaç her yeni oyuncu turunun başında sıfırlanır (tur sonunun 4. adımı).
 6. **Düşman takviyesi** (geçici sözleşme): Ekonomi adımında her düşman bölgesine
    `+enemy_reinforcement_per_turn` ordu eklenir. Değer bölüm verisinden gelir.
+   - **C-43 (2026-10-20):** Takviye alan bölgeler bölüm verisindeki `enemy_reinforcement_region_ids`
+     listesiyle sınırlanabilir; **boş liste = tüm düşman bölgeleri** (Prolog / eski davranış). Bkz. F6.
    - Düşmanın hazinesi yoktur.
    - Katmanlı Düşman GDD'si (`enemy-layers.md`) yazıldığında bu kuralı devralır.
 7. **Bakım gideri:** `upkeep_per_army` ayarı tanımlıdır; **MVP değeri 0**, yani
@@ -124,7 +126,7 @@ Biriktirmek de gerçek bir seçenek olmalı.
 | Kök Böri / Ruh (`spirit-system.md`) | Bölge başına üretim çarpanı (bozulma), lütuf gelir bonusları (`B_add`, `M_g`) | — (Ruh'a dokunmaz) | Çarpanlar: Ruh · Uygulama: Kaynak |
 | Savaş (`combat-system.md`) | — | — (dolaylı: üretilen ordu savaşa girer) | — |
 | Oyun Durumu (`GameState`) | — | `gold` (yalnızca veri) | Kaynak |
-| Bölüm verisi (`ChapterMapDefinition`) | `starting_gold`, `enemy_reinforcement_per_turn` | — | Kaynak (ayar) |
+| Bölüm verisi (`ChapterMapDefinition`) | `starting_gold`, `enemy_reinforcement_per_turn`, `enemy_reinforcement_region_ids` (C-43; Perde 1 `starting_gold = 6`) | — | Kaynak (ayar) |
 | Katmanlı Düşman (`enemy-layers.md`, yazılmadı) | — | Düşman takviyesini devralır (geçici) | Gelecekte: Katmanlı Düşman |
 | HUD / Bilgi paneli | — | Altın, tahmini gelir (+X/tur), Ordu Topla (maliyet, kalan tavan) | UI (§10) |
 
@@ -209,13 +211,21 @@ sınırına takılmadan üç birliklik bir başlangıç demek.
 
 ### F6 — Düşman takviyesi
 
-Ekonomi adımında her düşman bölgesi `i` için: `army_i += E_r`. **Prolog'da E_r = 1,
+Ekonomi adımında takviye alan her düşman bölgesi `i` için: `army_i += E_r`. Takviye alan
+bölgeler: `enemy_reinforcement_region_ids` boşsa **tüm** düşman bölgeleri (Prolog / eski davranış),
+doluysa listede olan **ve** o an `ENEMY` olan bölgeler (C-43). **Prolog'da E_r = 1,
 ama boştadır:** Prolog'da `ENEMY` bölgesi yoktur (C-49 kararı — siyasi katman nötr boy
-garnizonlarıdır; takviye ilk kez Perde 1'de çalışır).
+garnizonlarıdır).
+
+**Perde 1 (C-43, 2026-10-20 — [`perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md) §4.3):**
+`E_r = 1/tur`, `enemy_reinforcement_region_ids = [curcet_otagi]` — takviye yalnız başkente gider
+(`kurt_ini_ormani` ve `curcet_oba` takviye almaz). Başkent oyuncudan geri alınırsa takviye yeniden başlar;
+listedeki ama `ENEMY` olmayan bölge hiçbir şey almaz.
 
 | Değişken | Sembol | Tip | Aralık | Açıklama |
 | --- | --- | --- | --- | --- |
 | Takviye | `E_r` | int | 0–3 | `enemy_reinforcement_per_turn` (bölüm verisi) |
+| Takviye bölgeleri | — | `Array[StringName]` | boş = tüm düşman bölgeleri | `enemy_reinforcement_region_ids` (bölüm verisi, C-43) |
 
 **Örnek (genel, Prolog dışı):** orduları 1 ve 3 olan iki düşman bölgesi, `E_r = 1` ile
 ekonomi adımından sonra 2 ve 4 ordu olur (AC10).
@@ -322,6 +332,9 @@ hazine 6. *Alternatif:* aynı 6'lık kuvvet Doğu Obası'na → arındırma 6 > 
   sayılır.
 - **Düşmansız bölüm (Prolog):** `ENEMY` bölgesi yokken F6 hiçbir şey eklemez;
   `enemy_reinforcement_per_turn` değeri durumu değiştirmez (C-49).
+- **Takviye bölge listesi (C-43, Perde 1):** Liste boşsa eski davranış (tüm düşman bölgeleri);
+  listede olup `ENEMY` olmayan bölge hiçbir şey almaz; başkent geri alınırsa takviye yeniden başlar
+  (`perde1-dogu-curcet.md` §11).
 - **Sahne sonu:** Harcanmamış altın silinir (§3.1 R8). Sonraki sahne kendi
   `starting_gold` değeriyle açılır.
 - **Düşman turunda üretim:** Mümkün değildir. Üretim yalnızca oyuncunun turunda
@@ -397,7 +410,7 @@ kararıdır (→ ADR / uygulama).
 | Ayar | Prolog | Güvenli aralık | Çok düşükse | Çok yüksekse | Etkileşim |
 | --- | --- | --- | --- | --- | --- |
 | `starting_gold` | 6 | 0–20 | T1 üretimi küçülür, en hızlı zafer T5'ten geç kalır (C-64 ile ölçülmeli); < 2 → T1'de üretim yok, Doğu Obası T1'de arındırılamaz (4 ≤ 4); 0 → ilk tur üretimsiz | Erken turların geliri değersizleşir | Erlik eşiği ve yayılım aralığıyla birlikte affediciliği belirler (§4 doğrulaması) |
-| `enemy_reinforcement_per_turn` | 1 (**boşta** — Prolog'da `ENEMY` yok, C-49) | 0–3 | 0 → siyasi baskı yok | 2+ → birkaç tur boşa harcanınca kazanılamaz (kontrol edilmeli) | Düşmanlı bölümlerde (Perde 1+) yayılım hızıyla birlikte baskıyı belirler |
+| `enemy_reinforcement_per_turn` | 1 (Prolog'da **boşta** — `ENEMY` yok, C-49; Perde 1'de 1/tur, yalnız `enemy_reinforcement_region_ids = [curcet_otagi]`, C-43) | 0–3 | 0 → siyasi baskı yok | 2+ → birkaç tur boşa harcanınca kazanılamaz (kontrol edilmeli) | Düşmanlı bölümlerde (Perde 1+) yayılım hızıyla birlikte baskıyı belirler |
 
 ### Başka sistemlerin sahip olduğu değerler (burada tekrar tanımlanmaz)
 

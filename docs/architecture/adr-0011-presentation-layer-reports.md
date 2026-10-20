@@ -6,6 +6,22 @@ Accepted (2026-10-19 — C-60; night-mode decision, recommended option accepted 
 instruction; re-validate at the next `/architecture-review`. Screen-level UX is specified by
 the UX tasks C-41 / C-45.)
 
+> **Amendment 2026-10-20 (C-43, Perde 1 level — [`design/levels/perde1-dogu-curcet.md`](../../design/levels/perde1-dogu-curcet.md) §7):**
+> Presentation additions, all passive views fed by state (no new rules in views):
+> - **Map decor:** `MapDecorLayer` (Node2D, `features/grid`) renders a `MapDecor` resource
+>   (`ChapterMapDefinition.decor`, null = unchanged behaviour; `CampaignMap.set_decor()` before `build_map`).
+>   Each `MapDecorItem` (Resource: texture/frames, foot position, layer {GROUND, PROP, OVERLAY},
+>   `bound_region_id`, `min_corruption`, `max_corruption` (-1 = unbounded), fps) exposes a pure
+>   `is_visible(level)`.
+> - **Corruption-bound visibility:** `apply_corruption` runs inside the `refresh()` chain
+>   (`_refresh_views()`), so rotten trees show for corruption >= 1 and hide when purified; decor is derived
+>   from corruption, never saved (identical after load).
+> - **HUD:** `HudModel` / `HudPresenter` add the "Spread: N turns" counter (counts down, zero on a spread
+>   turn), from the same pure rule as the spread telegraph.
+> - **Owner tamga visibility rule:** ENEMY regions always show the owner tamga regardless of colour-blind
+>   mode; NEUTRAL regions show none; adjacency line colour `#5C8F5C` (contrast >= 3:1, locked by test).
+> - Motion: `_process` runs only while a visible animated decor item exists; Reduce Motion stops it (frame 0).
+
 ## Date
 
 2026-10-19

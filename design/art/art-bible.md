@@ -815,7 +815,7 @@ palet dışı renk üretir).
 
 | Ayar | Etki |
 | --- | --- |
-| **Renk Körlüğü Modu** | Tamgalar hep görünür, sahiplik bölgeleri ek 1px kontur (Bölüm 4) |
+| **Renk Körlüğü Modu** | Tamgalar hep görünür, sahiplik bölgeleri ek 1px kontur (Bölüm 4). *C-43 (Perde 1): `ENEMY` bölgelerde owner tamgası bu moddan bağımsız HER ZAMAN görünür, nötrde tamga yok — `perde1-dogu-curcet.md` §7.8* |
 | **Hareketi Azalt** | Erlik lekesi ve Kök Böri animasyonları durur (orta kare sabit), arındırma anında tamamlanır, UI geçişleri düz kesme |
 | **Bölge Adlarını Göster/Gizle** | Varsayılan: göster |
 
@@ -892,6 +892,19 @@ orta pikseli); Godot'ta `Sprite2D.offset` / `centered=false` ile ayarlanır.
 | Kök Böri (illüstrasyon) | ≥128 | sahneye özel | — |
 | Portre | 24×32 | 28×36 | — (panel içinde hizalanır) |
 | Otağ / yurt | 24×24 / 16×12 | 28×28 / 20×16 | ayak |
+| Cürcet otağı (`env_otag_curcet_01`, Perde 1 — C-43) | 28×24 | 32×28 | ayak (haritada (584,90), poligonun ÜSTÜNDE) |
+| Orman dekoru (Perde 1 — C-43) | ağaç sağlıklı 12×20 / 12×18; çürük ağaç 10×16 | 16×24 / 16×22; 14×20 | ayak |
+| Köprü (`env_bridge_wood_01`, Perde 1 — C-43) | 16×10 | 20×14 | ayak (haritada (386,98)) |
+| Orman ruhu (`char_spirit_forest_idle_01/_02`, Perde 1 — C-43) | 12×14 | 16×18 | körmös kuralı (yukarıda) |
+
+> **C-43 (2026-10-20) — Perde 1 varlıkları:** Tam liste ve ayak noktaları
+> [`design/levels/perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md) §7.5–7.7 (`env_tree_healthy_01/_02`,
+> `env_tree_rotten_01/_02`, `env_bridge_wood_01`, `env_otag_curcet_01`, `char_spirit_forest_idle_01/_02`;
+> `tools/asset-pipeline/generate_env_forest.gd`, palet doğrulayıcıdan geçer). Orman rampası ve nehir
+> renkleri (`#1F2B52 #2E4761`, kıyı çizgisi `#476B8F`) küresel palette zaten vardır; `#A86BC4` Erlik Moru
+> rampasının açık ucudur — çürük ağaç kırık-taç vurgusunda yalnız Erlik anlamıyla kullanılır, "yalnızca
+> Erlik" kuralı ihlal edilmez. Perde 1 `adjacency_line_color` = `#5C8F5C` (zemine 4.72:1; `#294726` 1.72:1
+> reddedildi). Yasak: pas turuncusu ışık, gök mavisi su, Ülgen altını süs, Erlik moru gölge, palet dışı alfa.
 | Balbal / ongun | 8×12 / 6×16 | 12×16 / 10×20 | ayak |
 | İkon | 7×7 / 9×9 / 16×16 / 24×24 | aynı (dolgusuz) | merkez |
 | Kilim tile | 8×8 / 16×16 | aynı (kesintisiz) | — |
