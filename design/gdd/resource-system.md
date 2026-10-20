@@ -524,6 +524,12 @@ Tamamı art bible'a bağlıdır.
   animasyonu olmaz.
 - **Ses** (ses altyapısı C-23 sonrası): Üretim onayında kısa bir davul vuruşu,
   gelirde sikke sesi. İkisi de SFX ses ayarıyla ölçeklenir.
+- **Uygulama (C-66, 2026-10-20):** "2 kare" = art bible §7 UI karesi (0.05 sn) × 2 = 0.1 sn renk
+  vurgusu (`ValueFeedback.FLASH_SEC`). Rengin tek başına anlam taşımaması için fark metni
+  (`↑+X` / `↓-X`) vurgudan uzun, 1.5 sn görünür (`DELTA_HOLD_SEC`); HUD'da altın değerinin hemen
+  ardından, gelir tahmininden önce. Haritada yalnız ordu **artışı** bildirilir (düşman takviyesi
+  dahil: `Ordu: 4 ↑+1`); azalış hareket/savaş sonucudur, vurgulanmaz. İlk çizim (bağlam açılışı,
+  kayıt yüklemesi) geri bildirim üretmez. SFX kimlikleri `recruit` / `income` (`SfxLibrary`).
 - **Font notu:** Kayıp işareti `−` (U+2212) pixel fontta yok (C-09 notu); azalmalar
   `↓` ikonuyla gösterilir.
 

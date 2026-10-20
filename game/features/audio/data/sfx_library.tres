@@ -2,9 +2,13 @@
 
 [ext_resource type="Script" path="res://features/audio/sfx_library.gd" id="1_nh351"]
 [ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_ui_region_select.wav" id="2_3vvnj"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_economy_recruit_drum.wav" id="3_drum"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_economy_income_coin.wav" id="4_coin"]
 
 [resource]
 script = ExtResource("1_nh351")
 streams = Dictionary[StringName, AudioStream]({
+&"income": ExtResource("4_coin"),
+&"recruit": ExtResource("3_drum"),
 &"region_select": ExtResource("2_3vvnj")
 })

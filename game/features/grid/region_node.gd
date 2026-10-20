@@ -82,6 +82,7 @@ var is_objective_marked: bool = false:
 var reduce_motion: bool = false:
 	set(value):
 		reduce_motion = value
+		_army_feedback.reduce_motion = value
 		_update_stain_animation()
 
 var _points: PackedVector2Array = PackedVector2Array()
@@ -99,6 +100,11 @@ var _stain_textures: Array[ImageTexture] = []
 var _stain_frame: int = CorruptionStain.STATIC_FRAME
 var _stain_time: float = 0.0
 var _mark_frame: int = 0
+## Ordu artışı geri bildirimi (resource §9): yeşil vurgu + `↑+N` (düşman takviyesi dahil).
+var _army_feedback: ValueFeedback = _new_army_feedback()
+var _army_count: int = 0
+## Her yeni değişim yeni nesil; eski zamanlayıcılar yeni vurguyu erken söndürmez.
+var _army_feedback_generation: int = 0
 
 
 func _ready() -> void:
@@ -216,10 +222,25 @@ func update_display(data: RegionData) -> void:
 	_owner = data.owner
 	_set_corruption_level(data.corruption_level)
 	queue_redraw()
-	if _army_label:
-		_army_label.text = "%s: %s" % [tr("ARMY"), NumberFormatter.format_int(data.army_count)]
+	_army_count = data.army_count
+	if _army_feedback.observe(data.army_count) and is_inside_tree():
+		_army_feedback_generation += 1
+		get_tree().create_timer(ValueFeedback.FLASH_SEC).timeout.connect(
+			_on_army_flash_expired.bind(_army_feedback_generation))
+		get_tree().create_timer(ValueFeedback.DELTA_HOLD_SEC).timeout.connect(
+			_on_army_delta_expired.bind(_army_feedback_generation))
+	_render_army_label()
 	if _label:
 		_label.text = tr(String(data.display_name_key))
+
+
+## Testler için: ordu etiketinin geri bildirimi (vurgu / fark metni).
+func get_army_feedback() -> ValueFeedback:
+	return _army_feedback
+
+
+func get_army_label() -> Label:
+	return _army_label
 
 
 ## Sahibin tamga dokusu (null = tamgasız, ör. nötr bölge). Sahiplik değişince yeniden çağrılır.
@@ -326,6 +347,38 @@ func _layout_army_and_tamga() -> void:
 	if _tamga and _tamga.texture:
 		var size: Vector2i = Vector2i(_tamga.texture.get_size())
 		_tamga.position = Vector2(center.x - size.x / 2, army_top + LABEL_HEIGHT + TAMGA_GAP)
+
+
+static func _new_army_feedback() -> ValueFeedback:
+	var feedback: ValueFeedback = ValueFeedback.new()
+	feedback.increases_only = true
+	return feedback
+
+
+func _render_army_label() -> void:
+	if _army_label == null:
+		return
+	var text: String = "%s: %s" % [tr("ARMY"), NumberFormatter.format_int(_army_count)]
+	var delta: String = _army_feedback.delta_text()
+	_army_label.text = text + " " + delta if not delta.is_empty() else text
+	if _army_feedback.is_flashing():
+		_army_label.add_theme_color_override(&"font_color", _army_feedback.flash_color(Color.WHITE))
+	else:
+		_army_label.remove_theme_color_override(&"font_color")
+
+
+func _on_army_flash_expired(generation: int) -> void:
+	if generation != _army_feedback_generation:
+		return
+	_army_feedback.expire_flash()
+	_render_army_label()
+
+
+func _on_army_delta_expired(generation: int) -> void:
+	if generation != _army_feedback_generation:
+		return
+	_army_feedback.expire_delta()
+	_render_army_label()
 
 
 func _create_map_label() -> Label:

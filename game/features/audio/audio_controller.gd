@@ -13,6 +13,10 @@ const SFX_POOL_SIZE: int = 4
 
 ## Bölge seçimi "tık"ı — seçimin renk körlüğü yedeği (art bible §4).
 const SFX_REGION_SELECT: StringName = &"region_select"
+## Ordu Topla onayı — kısa davul vuruşu (resource §9).
+const SFX_RECRUIT: StringName = &"recruit"
+## Tur sonu geliri — sikke sesi (resource §9).
+const SFX_INCOME: StringName = &"income"
 
 var _library: SfxLibrary = null
 var _pool: Array[AudioStreamPlayer] = []

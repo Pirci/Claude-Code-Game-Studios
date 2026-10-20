@@ -59,6 +59,11 @@ var _campaign_map: CampaignMap
 var _info_panel: RegionInfoPanel
 var _awaiting_target: bool = false
 var _send_from_id: StringName = &""
+## HUD altın değişimi (resource §9): gelir yeşil `↑+X`, harcama kırmızı `↓-X`.
+var _gold_feedback: ValueFeedback = ValueFeedback.new()
+var _gold_feedback_generation: int = 0
+var _gold_text: String = ""
+var _income_text: String = ""
 
 
 ## [param audio] isteğe bağlıdır (null → sessiz; testler ve sessiz başlatma için).
@@ -86,6 +91,7 @@ func bind_services(
 func _ready() -> void:
 	# Area2D bölge tıklamalarının çalışması için 2D fiziksel nesne seçimini aç.
 	get_viewport().physics_object_picking = true
+	_gold_feedback.reduce_motion = _accessibility != null and _accessibility.reduce_motion
 	_setup_controllers()
 	_setup_map_visuals()
 	_connect_signals()
@@ -208,14 +214,51 @@ func _render_hud(model: HudModel) -> void:
 			_chapter_label.text = tr("DEFEAT")
 		_:
 			_chapter_label.text = tr(String(_scene.title_key))
-	_gold_label.text = "%s: %s" % [tr("GOLD"), NumberFormatter.format_int(model.gold)]
-	if ongoing:
-		_gold_label.text += " " + NumberFormatter.ltr(tr("INCOME_PER_TURN") % NumberFormatter.format_int(model.income_forecast))
+	_gold_text = "%s: %s" % [tr("GOLD"), NumberFormatter.format_int(model.gold)]
+	_income_text = NumberFormatter.ltr(tr("INCOME_PER_TURN") % NumberFormatter.format_int(model.income_forecast)) \
+		if ongoing else ""
+	if _gold_feedback.observe(model.gold) and is_inside_tree():
+		_gold_feedback_generation += 1
+		get_tree().create_timer(ValueFeedback.FLASH_SEC).timeout.connect(
+			_on_gold_flash_expired.bind(_gold_feedback_generation))
+		get_tree().create_timer(ValueFeedback.DELTA_HOLD_SEC).timeout.connect(
+			_on_gold_delta_expired.bind(_gold_feedback_generation))
+	_render_gold()
 	_spirit_label.text = "%s: %s" % [tr("SPIRIT"), NumberFormatter.format_int(model.ruh)]
 	_render_objective(model)
 	_turn_label.text = "%s: %s" % [tr("TURN"), NumberFormatter.format_int(model.turn)]
 	_end_turn_button.disabled = not ongoing
 	_kok_bori_button.visible = model.boon_offer_available
+
+
+## Altın + değişim farkı (`Altın: 25 ↑+5 (+5 / tur)`) ve 2 karelik renk vurgusu.
+func _render_gold() -> void:
+	var parts: PackedStringArray = [_gold_text]
+	for part: String in [_gold_feedback.delta_text(), _income_text]:
+		if not part.is_empty():
+			parts.append(part)
+	_gold_label.text = " ".join(parts)
+	if _gold_feedback.is_flashing():
+		_gold_label.add_theme_color_override(&"font_color", _gold_feedback.flash_color(Color.WHITE))
+	else:
+		_gold_label.remove_theme_color_override(&"font_color")
+
+
+func _on_gold_flash_expired(generation: int) -> void:
+	if generation == _gold_feedback_generation:
+		_gold_feedback.expire_flash()
+		_render_gold()
+
+
+func _on_gold_delta_expired(generation: int) -> void:
+	if generation == _gold_feedback_generation:
+		_gold_feedback.expire_delta()
+		_render_gold()
+
+
+## Testler için: HUD altın geri bildirimi.
+func get_gold_feedback() -> ValueFeedback:
+	return _gold_feedback
 
 
 ## Üst HUD çubuğunun yüksekliği (2 satır; dile göre font boyu değişir).
@@ -377,6 +420,8 @@ func _on_hint_dismissed(hint_id: StringName) -> void:
 ## Ordu Topla aksiyon harcamaz (resource R4); sonuç panel ve HUD yenilenince görünür.
 func _on_recruit_pressed(region_id: StringName, count: int) -> void:
 	if _map_controller.recruit(region_id, count):
+		if _audio:
+			_audio.play_sfx(AudioController.SFX_RECRUIT)
 		_refresh_views()
 
 
@@ -401,7 +446,9 @@ func _on_turn_ended(_new_turn: int) -> void:
 	_push_boon_offer(false)
 
 
-func _on_income_collected(_amount: int) -> void:
+func _on_income_collected(amount: int) -> void:
+	if _audio and amount > 0:
+		_audio.play_sfx(AudioController.SFX_INCOME)
 	_refresh_views()
 
 

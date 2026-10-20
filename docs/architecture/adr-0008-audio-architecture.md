@@ -83,7 +83,9 @@ singleton (forbidden: autoloads, event bus).
 4. **Who plays what** — contexts call down on gameplay signals (e.g. `GameContext` plays
    `region_select` on `MapController.region_selected`). Controllers/services never touch audio.
 5. **Assets** — `assets/audio/sfx/sfx_<category>_<name>.wav` (16-bit mono 44.1 kHz for SFX).
-   M1 uses generated placeholders (`sfx_ui_region_select.wav`, synthesized, deterministic).
+   M1 uses generated placeholders (`sfx_ui_region_select.wav`, synthesized, deterministic; C-66 adds
+   `recruit` → `sfx_economy_recruit_drum.wav` and `income` → `sfx_economy_income_coin.wav`, produced by
+   `tools/asset-pipeline/generate_sfx.py`).
 
 ### Architecture
 

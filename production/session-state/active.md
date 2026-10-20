@@ -322,3 +322,7 @@
 - HATA: SaveSerializer.UTF8_BOM çıplak U+FEFF → export'ta silinip "" oluyordu → kayıt/ayar ilk karakteri kesiliyordu. Düzeltme "﻿" + strip_bom(); regresyon testi; run-tests.sh çıplak BOM bekçisi. Testler 324/324.
 - production/qa/smoke-2026-10-19.md (PASS), production/qa/playtest-c42-protocol.md. Build'ler build/ (gitignored) kullanıcıya gönderildi.
 - NEXT: kullanıcının playtest raporu → /playtest-report analyze → C-42 kapanışı.
+
+## Session Extract — C-66 (2026-10-20)
+- Kullanıcı önceliği: Demo (M1) + Vertical Slice (M2); sıra C-42 kapanışı → C-66 → C-43…C-48; tek öneri sun.
+- ui/value_feedback.gd (ValueFeedback), RegionNode ordu etiketi (_army_feedback, nesil korumalı timer), GameContext _gold_feedback/_render_gold, AudioController SFX_RECRUIT/SFX_INCOME, sfx_library.tres, tools/asset-pipeline/generate_sfx.py. Testler 338/338. NEXT: C-43 (kullanıcı onayıyla) / C-42 playtest raporu.
