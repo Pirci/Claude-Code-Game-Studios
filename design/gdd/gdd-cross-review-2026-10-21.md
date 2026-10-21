@@ -68,7 +68,7 @@
 
 - **D1 (H1):** C-47 denge replay'ine **BLOCKING** kabul kriteri: "S-purify (önce arındır) ≤ T16". Sağlanmazsa seviye verisi ayarlanır (ör. `attack_start_turn`, başkent takviyesi, garnizon); Kök Böri'nin sözü değişmez.
 - **D2 (W-3):** `DEMIR_POST_MAX_STACKS = 3` (Gök Kalkanı / Kurt Gücü kalıbı).
-- **D3 (W-6, H5):** Oyuncu bölgesinin bilgi panelinde kural bilgisi satırı: "Kağan bu bölgeyi en az N orduyla vurabilir (lütuflar dahil)" — `P_eff` ve F-E1'den türetilir; niyet önizlemesi değildir (K8 korunur). M2 HUD gereksinimi; spec C-45.
+- **D3 (W-6, H5):** Oyuncu bölgesinin bilgi panelinde kural bilgisi satırı: "Kağan bu bölgeyi en az N orduyla vurabilir (lütuflar dahil)" — `P_eff` ve F-E1'den türetilir; niyet önizlemesi değildir (K8 korunur). M2 HUD gereksinimi; spec C-45. **Uygulama (C-45):** `design/ux/hud.md` — satır 1. turdan itibaren her tur, key `ENEMY_STRIKE_THRESHOLD`; "lütuflar dahil" açıklaması `HINT_ENEMY_KING`'de.
 - **D4 (H6):** Yeni Sefer'de üretilip kampanya kaydına yazılan **kampanya tohumu** lütuf sunum seed'ine eklenir; yeniden denemede sabit kalır (C-44 #8 determinizmi korunur), testte enjekte edilir.
 - **D5 (W-7, H2, H3, H4, H7):** C-47 replay ölçüm maddeleri: T5 sonrası AI adayı tur oranı (H2); "felç + yeniden arındırma" çizgisi Ruh/tur (H3 → ×0.5 yedeğinin tetiği); GK1 / Bereket1 giriş varyantları (H4 → pasif + GK1 > T18 ise Perde 1 eşiği 9 → 8); N4/N5/N6/N8/N9 Perde 1 için ölçülür ve kabul / erteleme kaydı yazılır.
 - **D6 (W-15):** `EnemyAIProfile` bölüm başına `bind_config` ile enjekte; imza `decide(map_state, acted, defense_modifiers)`.

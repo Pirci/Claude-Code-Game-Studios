@@ -335,3 +335,8 @@
 - enemy-layers.md (yeni GDD), boon-balance-2026-10-21.md, gdd-cross-review-2026-10-21.md (CONCERNS; kararlar D1–D6, tümü uygulandı). Simülasyon: c43tools/boon_run.py (onaylı Perde 1 yapılandırması; container yeniden başladıysa scratchpad gitmiş olabilir).
 - Önemli: güney "önce arındır" W20 (W14 değil) → C-47 BLOCKING ≤ T16. Demir Post/Kurt Gücü ≤ 3. Kampanya tohumu. decide(map_state, acted, defense_modifiers).
 - NEXT: C-45 (M2 UX spec'leri; D3 vuruş eşiği satırı, Odak tehlikede, yayılım sayacı dahil) / C-42 playtest raporu.
+
+## Session Extract — C-45 (2026-10-21)
+- design/ux/hud.md, battle-report.md, boon-selection.md, scene-screens.md (Approved). Kararlar K1 yayılım sade, K2 vuruş eşiği her tur, K3 Cürcet x/3, K4 klavye bölge seçimi M2.
+- Bulgu: savaş/arındırma raporu + tur özeti modalları kodda yok (Prolog demosunda da). Uygulama C-47'de.
+- NEXT: C-46 (M2 sanat) / C-42 playtest raporu.
