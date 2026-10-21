@@ -184,7 +184,7 @@ karakter. Diğer diller bu sınırın ~%130'una kadar çıkabilir (de/fr/ru); F4
 | `BATTLE_REPORT_HEADING` | BattleReport başlığı (mevcut `BATTLE_REPORT` değişmedi) | — | 24 | Word from the Field |
 | `BATTLE_WON_ATTACK` | Oyuncu saldırdı, kazandı | — | 64 | Our riders broke their line. The land is ours. |
 | `BATTLE_LOST_ATTACK` | Oyuncu saldırdı, savunan dayandı (beraberlik dahil) | — | 64 | They held. Our charge broke against them. |
-| `BATTLE_HELD_DEFENSE` | Düşman saldırdı, oyuncu dayandı (tur özeti, Perde 1+) | — | 64 | The foe came, and our camp held. |
+| `BATTLE_HELD_DEFENSE` | Düşman saldırdı, oyuncu dayandı (tur özeti, Perde 1+); yalnız `A ≤ P_eff` saldırıları için ayrılmıştır, Perde 1 R1'i üretmez — anahtar korunur *(C-44 inceleme (2026-10-21), W-5)* | — | 64 | The foe came, and our camp held. |
 | `BATTLE_LOST_DEFENSE` | Düşman saldırdı, toprağı aldı | — | 64 | The foe took the land. Our warriors fell. |
 | `BATTLE_BOTH_FELL` | İki tarafın kalanı 0 (bölge sahipsiz, W3) — önce denetlenir | — | 64 | Both hosts fell. The land stands empty. |
 | `REPORT_OUR_FALLEN` | Oyuncu kaybı (savaş + başarılı arındırma) | sayı | 28 | Our fallen: %s |

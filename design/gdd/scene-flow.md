@@ -114,6 +114,7 @@ Pozlar art bible §5 "Kök Böri": profil (varsayılan), iniş (Prolog), cephe (
 | `current_chapter` | `min(c+1, K)` | seçilen sahne | F7 |
 | `ruh` | seçimlerden sonraki bakiye taşınır | taşınır | `spirit` §3.3 |
 | `boons` (seçim listesi) | taşınır (`n` = `boons.size()` artar) | taşınır | `spirit` §3.4 |
+| `campaign_seed` *(C-44 inceleme, D4)* | taşınır (sefer boyunca sabit) | taşınır; Yeniden Dene'de değişmez | `spirit` §4.5, §3.4 |
 | `modifiers` (türetilmiş) | — | `ModifierController.rebuild()` ile `boons`'tan kurulur | ADR-0006 |
 | `gold` | 0'lanır (taşınmaz) | `starting_gold` (bölüm verisi) | `resource` §3.1 R8 |
 | `map_state` (sahipler, ordular, bozulma, `current_turn`, `actions_remaining`, `last_erlik_spread_turn`, `erlik_spread_interval`, üretim sayaçları, `selected_region_id`, `game_result`, `loss_reason`; Erlik'in Gölgesi `erlik_power` bozulmalardan türetilir, ayrıca saklanmaz — `spirit` §4.7) | `null` | `ChapterMapDefinition.create_map_state()`; `current_turn = 1` | `region-map` §3.1, `spirit` §5 |
@@ -162,7 +163,7 @@ ignored <olay> in <durum>` yazılır).
 
 | # | Durum | Olay [koşul] | Eylem | Sonraki durum |
 | ---- | ---- | ---- | ---- | ---- |
-| T1 | `MAIN_MENU` | `new_campaign_requested` [kayıt yok] | Yeni `GameState`: `current_chapter=1`, `chapters_completed=[]`, `ruh=0`, `boons=[]` | `INTRO_NARRATIVE`(1) |
+| T1 | `MAIN_MENU` | `new_campaign_requested` [kayıt yok] | Yeni `GameState`: `current_chapter=1`, `chapters_completed=[]`, `ruh=0`, `boons=[]`, `campaign_seed` üretilir (C-44 inceleme, D4; §3.4) | `INTRO_NARRATIVE`(1) |
 | T2 | `MAIN_MENU` | `new_campaign_requested` [kayıt var] | Onay modalı `CONFIRM_NEW_CAMPAIGN`; Evet → T1 eylemi, Hayır → kayda dokunulmaz | `INTRO_NARRATIVE`(1) / `MAIN_MENU` |
 | T3 | `MAIN_MENU` | `continue_requested` [`LoadResult` OK, `map ≠ null`] | Durumu benimse; `ModifierController.rebuild()`; sahne tanımını `current_chapter`'dan bul | `PLAYING`(c, devam) |
 | T4 | `MAIN_MENU` | `continue_requested` [OK, `map == null`] | Durumu benimse | `CHAPTER_SELECT` |
@@ -203,6 +204,11 @@ Ek kurallar:
 | **S3** | T18: son zorunlu seçimden sonra, ilk anlatı sayfasından önce | `campaign` | `chapters_completed ∪ {c}`, `current_chapter`, `map = null`, `gold = 0`, `ruh`, `boons` | ADR-0007'de var; sırası burada kesinleşir |
 | yok | T14 (yenilgi), T15, T23, işletim sistemi kapatma | — | Kayıt yazılmaz; son kayıt aynen korunur | — |
 
+- **Kampanya tohumu (C-44 inceleme (2026-10-21), D4 / H6):** Yeni Sefer'de (T1) üretilen `campaign_seed`
+  kampanya kaydına (`campaign` yuvası, `GameState`) yazılır; `spirit-system.md` §4.5 lütuf sunum
+  seed'ine eklenir. Sefer boyunca sabittir: S1–S3 ile korunur, Yeniden Dene'de (T22) ve Devam Et'te
+  değişmez; yalnızca yeni Yeni Sefer (T1/T2) yenisini üretir. Testte enjekte edilir. Kayıt biçimi
+  alanı ADR-0007 sürümüne işlenir (uygulama C-47; ADR bu işin kapsamı dışında).
 - **S2 gerekçesi:** (a) Yeni Sefer ve Yeniden Dene'den sonra eski sahneden kalma bir kayıt "Devam Et"i
   yanıltmasın; (b) sahne girişi anlık görüntüsü kalıcı olsun, Devam Et'ten sonra bile Yeniden Dene
   çalışsın. 1. tur başı, ADR-0007'nin "tutarlı durum tur sınırlarında vardır" ilkesine uyar; tur ortası
@@ -438,6 +444,7 @@ metin yazarı haritaya dokunmadan anlatıyı düzenler (Modüler İnşa).
 | `outro_pages` | `Array[NarrativePage]` | 1–4 sayfa |
 | `teaser_key` | `StringName` | Sefer haritasında bir sonraki sahnenin 1 satırlık ipucu (sahne **bu sahne tamamlanınca açılan** sahneyi anlatır) |
 | `defeat_text_key` | `StringName` | İsteğe bağlı sahneye özel yenilgi metni (boş → neden/genel) |
+| `boon_pool_ids` | `Array[StringName]` | *(C-44 inceleme (2026-10-21), W-12)* Sahne lütuf havuzu: uygun havuz bu listeyle de kesişir (`spirit-system.md` §3.5, §7). **Boş = tüm katalog.** Kimlikler katalogdaki `boon_id`'lerdir |
 
 **`NarrativePage`:** `illustration_path: String` (boş = önceki), `text_key: StringName` (zorunlu),
 `title_key: StringName` (isteğe bağlı), `sfx_id: StringName` (isteğe bağlı).
@@ -448,7 +455,8 @@ metin yazarı haritaya dokunmadan anlatıyı düzenler (Modüler İnşa).
 `intro_pages` = [`ill_prolog_intro.png` + `CHAPTER_1_INTRO_1` + başlık `CHAPTER_1_TITLE`;
 `ill_prolog_tribes.png` + `CHAPTER_1_INTRO_2`]; `kok_bori_pose = DESCENT`; `kok_bori_pages` =
 [`ill_prolog_genesis.png` + `CHAPTER_1_KOKBORI_1`]; `kok_bori_line_key = CHAPTER_1_KOKBORI_LINE`;
-`objective_region_ids = []` (Canavarın İni `erlik_foci`'den gelir); `outro_pages` =
+`objective_region_ids = []` (Canavarın İni `erlik_foci`'den gelir); `boon_pool_ids = [arinma_ustaligi, bereket, gok_kalkani]`
+(M1 üçlüsü; C-44 inceleme, W-12); `outro_pages` =
 [`ill_prolog_beast_purified.png` + `CHAPTER_1_OUTRO_1`; `ill_prolog_kagan.png` + `CHAPTER_1_OUTRO_2` +
 başlık `CHAPTER_1_KAGAN_TITLE`]; `teaser_key = CHAPTER_1_TEASER`.
 
@@ -473,6 +481,7 @@ başlık `CHAPTER_1_KAGAN_TITLE`]; `teaser_key = CHAPTER_1_TEASER`.
 | L7 | Her illüstrasyon dosyası var; 640×360; alfa yalnızca 0/255; ≤ 32 renk; palet doğrulayıcıdan geçer |
 | L8 | `Σ` `en` karakter bütçeleri (F5) aşılmaz |
 | L9 | `Prolog.kok_bori_pose = DESCENT`; `kok_bori_pages ≥ 1` (genesis zorunlu) |
+| L10 | *(C-44 inceleme, W-12)* `boon_pool_ids` içindeki her kimlik katalogda bir `boon_id`'dir ve tekrarsızdır; liste doluysa katalogdan süzülen havuz (`requires` etkin olanlar) en az 3 lütuf içerir (aksi halde sunum slotları tekrar eder, `spirit` §5). Prolog listesi tam olarak `[arinma_ustaligi, bereket, gok_kalkani]` |
 
 ---
 
@@ -730,7 +739,7 @@ Knob'lar `SceneFlowConfig` kaynağındadır (kodda sabit yok; `res://features/ca
 | `text_reveal_cps` | Feel | 45 | 0 (anında) ya da 20–120 | < 20: oyuncu bekler, sıkılır | > 120 pratikte anında; 0 Hareketi Azalt'ta zorlanır |
 | `screen_input_guard_s` | Feel | 0.4 | 0.2–1.0 | < 0.2: kazandıran tık sonraki ekranı geçer, çift basış atlama kaçar | > 1.0: ekranlar "yapışkan" hisseder |
 | `auto_advance_delay_s` | Feel | 0 (kapalı) | 0 ya da 3–20 | < 3: okumaya yetmez | Kapalı varsayılan: oyuncu kontrolü; ayarlardan erişilebilirlik seçeneği olarak açılabilir |
-| `VICTORY_PICK_CAP` | Curve | 8 | 3–12 | < 3: normal zaferde (k ≤ 3) kısıtlar | > 12: patolojik durumda uzun zorunlu dizi. Spirit hedefi finalde 6–8 toplam lütuf |
+| `VICTORY_PICK_CAP` | Curve | 8 | 3–12 | < 3: normal zaferde (k ≤ 3) kısıtlar | > 12: patolojik durumda uzun zorunlu dizi. Spirit hedefi finalde 5 lütuf (kilitliler açılınca 7) *(C-44 inceleme, W-11)* |
 | `retry_restores_entry_snapshot` | Gate | true | true / false | false: yenilgide sahne içi Ruh/lütuf korunur (kasıtlı yenilgiyle Ruh çiftçiliği açılır) | R3 kararının geri alma düğmesi (§12) |
 | `confirm_leave_scene` | Gate | true | true / false | false: kazara Ana Menü son kayıttan sonraki tüm hamleleri sessizce siler | — |
 | `illustration_load_timeout_s` | Gate | 3 | 1–10 | < 1: yavaş diskte gereksiz düz zemin | > 10: takılı hissi |
@@ -829,6 +838,10 @@ Test türü her maddede; birim ve entegrasyon testleri **BLOCKING**. `T#` = §3.
 - **AC26 (Prolog verisi):** **THEN** `intro_pages = 2`, `kok_bori_pages = 1`, `outro_pages = 2`,
   `kok_bori_pose = DESCENT`, son çıkış sayfasında `title_key = CHAPTER_1_KAGAN_TITLE`, K=1 derlemesinde
   `CampaignDefinition.end_pages ≥ 1`.
+- **AC25b (sahne havuzu verisi, C-44 inceleme, W-12):** L10 yeşildir; Prolog `boon_pool_ids` tam olarak
+  `[arinma_ustaligi, bereket, gok_kalkani]`; var olmayan `boon_id` ya da 3'ten küçük süzülmüş havuz CI'ı kırar.
+- **AC25c (kampanya tohumu, C-44 inceleme, D4):** Yeni Sefer `campaign_seed` üretir ve kayda yazar; S1–S3,
+  Devam Et ve Yeniden Dene sonrası aynı değer okunur; yeni Yeni Sefer değeri yeniden üretir. Testte tohum enjekte edilir.
 - **AC27 (alfa/fade yasağı):** `features/campaign/` içinde ve anlatı ekranı betiklerinde `modulate` /
   `self_modulate` alfa tween'i bulunmaz (`run-tests.sh` grep denetimi; ihlalde CI kırmızı).
 

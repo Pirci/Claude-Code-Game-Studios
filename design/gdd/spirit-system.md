@@ -194,6 +194,10 @@ doldurmuşsa uygun havuz bu listeyle de kesişir (boş = tüm katalog; §7 "Havu
   sayısını ve — hedef deterministik olduğundan — o anki duruma göre bir sonraki hedef
   bölgeyi gösterir (hedef tur sonundaki AI hamleleriyle değişebilir; gösterge "şu an
   olsa" bilgisidir). Spec: C-41 / C-45.
+  **"Odak tehlikede" uyarısı (C-44 inceleme (2026-10-21), S2-a):** yayılım hedefi bir
+  `erlik_foci` bölgesiyse HUD ek olarak "Odak tehlikede" uyarısı gösterir (tek hamlede üç
+  ceza — geri alma, odağın yeniden bozulması, odağın düşmana geçmesi — okunabilir olsun).
+  Kural değişmez, yalnızca sunum; spec C-45.
 - **Tur sonundaki yeri (C-29):** `end_turn` sırasının **2. adımı** — düşman AI'dan
   sonra, ekonomi adımından önce (`region-map-system.md` §3.4). Yayılan bozulma o
   turun gelirine hemen yansır. Yayılım turu: son yayılımdan bu yana geçen tur sayısı
@@ -248,6 +252,8 @@ doldurmuşsa uygun havuz bu listeyle de kesişir (boş = tüm katalog; §7 "Havu
 > Çapraz inceleme N4 (yayılım yönlendirme / olgunlaştırma) ve N9 (fetih Erlik'i büyütmüyor)
 > Prolog için kural değişikliği olmadan kapatıldı, kampanya ölçeğindeki karar C-44'e
 > devredildi (§5 "Ruh çiftçiliği", "Yayılımı yönlendirme").
+> **C-44 inceleme (2026-10-21), W-7 / D5:** N4 ve N9 C-44'te karara bağlanmadı; Perde 1 için
+> ölçüm maddesi olarak **C-47 replay sonrası**na taşındı (kabul / erteleme kaydı orada yazılır).
 
 ### 3.8 MVP Alt Kümesi (C-31)
 - **M1 — Prolog Demo** (C-38, C-39): `corruption_level`, arındırma (§3.2), Ruh kazanımı
@@ -282,7 +288,9 @@ Değişkenler ve varsayılan (tuning) değerleri:
 | `ERLIK_SPREAD_INTERVAL` | Yayılma periyodu (tur; sahne override'ı — Prolog 3) | 4 | 2–8 |
 | `GOK_KALKANI_INTERVAL_BONUS` | Gök Kalkanı yığını başına aralık artışı (tur) | 1 | 1–2 |
 | `KURT_GUCU_MAX_STACKS` | Kurt Gücü yığılma sınırı (C-44) | 3 | 1–5 |
+| `DEMIR_POST_MAX_STACKS` | Demir Post yığılma sınırı (C-44 inceleme, D2) | 3 | 1–5 |
 | `GOK_KALKANI_MAX_STACKS` | Gök Kalkanı yığılma sınırı | 3 | 1–5 |
+| `campaign_seed` | Sunum seed'ine eklenen kampanya tohumu (C-44 inceleme, D4; Yeni Sefer'de üretilir, kayıtta durur) | 0 (testte) / Yeni Sefer'de üretilir | int ≥ 0 |
 | `erlik_loss_threshold` | Erlik kaybı eşiği (§4.7); bölüm verisi `WinCondition`, sahibi `region-map-system.md` §3.6 | 0 (kapalı); Prolog 9 | 0 veya başlangıç `erlik_power` + 3 … 3 × bölge sayısı |
 
 ### 4.1 Arınma direnci
@@ -459,7 +467,10 @@ aynı yol T20). Uyarı eşiği: `erlik_power = eşik − 1` (Prolog 8 — ihmal 
   sahne içi bölge başına arındırma sayacı, sahne Ruh tavanı, sahne tur sınırı).
   **C-44 kararı (2026-10-21):** Perde 1 için **yeni kural yok**. İzleme eşiği: playtestte zafer
   turu > T18 çıkarsa yedek düğme devreye girer — "aynı bölgenin tekrar arındırması ×0.5"
-  (§7, "yedek, kapalı"). Gerekçe: Perde 1'de Erlik'in Gölgesi ve AI baskısı bekleyen oyuncuyu
+  (§7, "yedek, kapalı"). **C-44 inceleme (2026-10-21), H3 / D5:** yedeğin tetiği yalnız zafer
+  turuna bağlı değildir; **"felç + yeniden arındırma" çizgisi** (odağı L3 bırakıp komşu
+  yayılımları yeniden arındırarak, AI felçliyken risksiz Ruh/tur kazanma) C-47 replay'inde
+  ölçülür ve ×0.5 yedeği bu çizgi aşılırsa açılır. Gerekçe: Perde 1'de Erlik'in Gölgesi ve AI baskısı bekleyen oyuncuyu
   zaten cezalandırır; T12 medyanlı sahnede çiftçilik getirisi (~10 Ruh / 3 tur) lütuf başına
   ~15 ek tur eder.
 - **Zayıf oyuncu ve seçimsiz Perde 1 (C-44):** Perde 1'i hiç lütuf seçmeden bitirmek kabul
@@ -473,12 +484,14 @@ aynı yol T20). Uyarı eşiği: `erlik_power = eşik − 1` (Prolog 8 — ihmal 
   olduğundan bu ihmalin bedelini kaldırmaz; hangi bölgenin acı çekeceğini seçmek
   deterministik ve göstergede görünür olduğu için **sağlıklı ustalık** sayılır. Prolog'da
   Doğu Obası (garnizon 0) bu rolü kendiliğinden üstlenir: o boşken Otağ aday olsa da
-  hedeflenmez. Hedef kuralının değişmesi (değerli bölgeyi seçmek, yinelenen tohum) C-44.
+  hedeflenmez. Hedef kuralının değişmesi (değerli bölgeyi seçmek, yinelenen tohum)
+  **C-47 replay sonrası** (C-44 inceleme (2026-10-21), W-7 / D5; Perde 1 için ölçülür).
 - **Fetih Erlik'i büyütmüyor (N9, C-49):** Prolog'da yayılım yalnızca saate bağlıdır; tek
   dolaylı bağ, fethedilen bölgelerin garnizon 1'le kalıp bozulmaya komşuysa yayılım hedefi
   olmasıdır. Konseptin "imparatorluk büyüdükçe Erlik'in gölgesi uzar" mekaniği (aralığın
   ya da yayılım sayısının toprakla ölçeklenmesi) kampanya ölçeğinde C-44'te tasarlanır —
-  öğreticiye 7. bağlı kural eklenmez (dikkat bütçesi, N7).
+  öğreticiye 7. bağlı kural eklenmez (dikkat bütçesi, N7). Perde 1 ölçümü ve karar:
+  **C-47 replay sonrası** (C-44 inceleme (2026-10-21), W-7 / D5).
 - **Öğretici bölge arındırılmazsa** (C-49): Doğu Obası T3'te L2, T6'da L3 olur; L3'te aday
   değildir, yayılım komşulara (Otağ, Bereket) geçer. Her olgunlaşma Erlik'in Gölgesi'ni
   +1 artırır.
@@ -555,7 +568,9 @@ aynı yol T20). Uyarı eşiği: `erlik_power = eşik − 1` (Prolog 8 — ihmal 
 | `GOK_KALKANI_INTERVAL_BONUS` | Yığın başına aralık artışı | 1–2 tur (varsayılan 1) | — |
 | Havuz kompozisyonu | Build çeşitliliği | — | Sahne bazlı havuz: `SceneDefinition.boon_pool_ids` (boş = tüm katalog; C-44). Prolog = M1 üçlüsü; uygulama C-47 |
 | `KURT_GUCU_MAX_STACKS` | Mono-build riski (C-44) | 1–5 (varsayılan 3) | 3 yığın Perde 1 kuzey yolunu T12 → T9 indiriyor; Perde 1'de ≤ 2 lütuf erişilir, M2'de etkisiz |
-| Tekrar arındırma çarpanı (C-44, **yedek, kapalı**) | Ruh çiftçiliği | ×1.0 (kapalı); açılırsa ×0.5 | Aynı bölgenin ikinci ve sonraki arındırmasında `ruh_gain` çarpanı. Açma tetiği: Perde 1 playtestinde zafer turu > T18 |
+| `DEMIR_POST_MAX_STACKS` | Savunma mono-build riski (C-44 inceleme, D2 / W-3) | 1–5 (varsayılan 3) | Kurt Gücü kalıbı; sınırsız yığın AI'nın hiç vuramadığı hattı açardı |
+| `campaign_seed` | Sunum çeşitliliği (C-44 inceleme, D4 / H6) | Yeni Sefer'de üretilir | Sefer boyunca sabit; yeniden denemede değişmez, testte enjekte edilir |
+| Tekrar arındırma çarpanı (C-44, **yedek, kapalı**) | Ruh çiftçiliği | ×1.0 (kapalı); açılırsa ×0.5 | Aynı bölgenin ikinci ve sonraki arındırmasında `ruh_gain` çarpanı. Açma tetiği: Perde 1 playtestinde zafer turu > T18 **veya "felç + yeniden arındırma" çizgisi aşılırsa** (Ruh/tur, C-47; C-44 inceleme, H3 / D5) |
 
 ---
 
@@ -628,7 +643,15 @@ aynı yol T20). Uyarı eşiği: `erlik_power = eşik − 1` (Prolog 8 — ihmal 
     kaybedildi, WHEN "Sahneyi Yeniden Dene", THEN `n = 1` döner ve aynı `(chapter_id, n, havuz)`
     için sunum öncekiyle birebir aynı 3 lütuftur. *(Test — BLOCKING, M2)*
 26. **(C-44) Sahne havuzu.** `boon_pool_ids` doluyken sunum yalnızca listedekilerden gelir;
-    Prolog'da Demir Post hiçbir sunumda yer almaz; boş liste tüm katalogu kullanır. *(Test, kod C-47)*
+    Prolog'da M1 üçlüsü (`arinma_ustaligi`, `bereket`, `gok_kalkani`) dışındaki hiçbir lütuf hiçbir
+    sunumda yer almaz *(C-44 inceleme, W-12)*; boş liste tüm katalogu kullanır. *(Test, kod C-47)*
 27. **(C-44) Kurt Gücü sınırı.** 3 yığından sonra Kurt Gücü uygun havuzdan çıkar (`can_add()`).
     Sınır düşürülmüş eski kayıtta `n = boons.size()` değişmez, `rebuild()` en çok sınır kadar yığın
     kurar. *(Test — M2)*
+28. **(C-44 inceleme, D2 / W-3) Demir Post sınırı.** 3 yığından (`DEMIR_POST_MAX_STACKS`) sonra Demir
+    Post uygun havuzdan çıkar (`can_add()`); sınır düşürülmüş eski kayıtta `n = boons.size()`
+    değişmez, `rebuild()` en çok sınır kadar yığın kurar. *(Test — M2)*
+29. **(C-44 inceleme, D4 / H6) Kampanya tohumu.** Aynı `(chapter_id, n, havuz)` için `campaign_seed`
+    farklıysa sunum farklı olabilir; aynı `campaign_seed` ile (yeniden deneme dahil) sunum birebir
+    aynıdır; `campaign_seed = 0` AC4'ün çıktısını verir; tohum kayıttan geri yüklenir. *(Test, tohum
+    enjekte edilir — BLOCKING, M2)*

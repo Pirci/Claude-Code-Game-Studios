@@ -1,7 +1,7 @@
 # Sistem GDD İndeksi — ULUS: Blood of the Sky Wolf
 
 *Türkçe alt-başlık: Gökkurt'un Kanı*
-*Son Güncelleme: 2026-10-19* — son çapraz inceleme: [gdd-cross-review-2026-10-19.md](gdd-cross-review-2026-10-19.md) (**CONCERNS**, 0 engelleyici; uyarılar C-53 / C-49). Önceki: [2026-10-08](gdd-cross-review-2026-10-08.md) (FAIL)
+*Son Güncelleme: 2026-10-21* — son çapraz inceleme: [gdd-cross-review-2026-10-21.md](gdd-cross-review-2026-10-21.md) (**CONCERNS**, C-44). Önceki: [2026-10-19](gdd-cross-review-2026-10-19.md) (**CONCERNS**, 0 engelleyici; uyarılar C-53 / C-49); önceki: [2026-10-08](gdd-cross-review-2026-10-08.md) (FAIL)
 
 Bu indeks tüm sistem GDD'lerini ve durumlarını takip eder. Yeni bir GDD
 eklendiğinde buraya bir satır eklenmeli. Kaynak konsept: [game-concept.md](game-concept.md).
@@ -21,14 +21,14 @@ Foundation → Core → Feature → Presentation → Polish
 | **Ordu & Birim Sistemi** | Core | [army-system.md](army-system.md) | Designed | 1 | Savaş, Harita, Kaynak, Ruh |
 | **Savaş Çözümü** (otomatik + rapor) | Core | [combat-system.md](combat-system.md) | Designed | 1 | Ordu, Harita, Ruh |
 | **Kök Böri / Ruh Sistemi** (imza) | Feature | [spirit-system.md](spirit-system.md) | Designed | 2 | Harita, Ordu, Savaş, Kaynak, Oyun Durumu |
-| **Katmanlı Düşman** (siyasi krallar; Erlik burada değil — C-29) | Feature | [enemy-layers.md](enemy-layers.md) | Designed (C-44) | 2 | Harita, Ordu, Kaynak, Savaş, Ruh (okuma: savunma lütufları), Sahne Akışı |
+| **Katmanlı Düşman** (siyasi krallar; Erlik burada değil — C-29) | Feature | [enemy-layers.md](enemy-layers.md) | Designed (C-44) | 2 | Harita, Ordu, Kaynak, Savaş, Ruh (okuma: savunma lütufları) |
 | **Erlik Bozgunu & Arındırma** (MVP'de `spirit-system.md` §3.1–3.2, §3.6–3.7 kapsar; ayrı GDD planlı değil — C-29) | Feature | [spirit-system.md](spirit-system.md) | Designed (spirit içinde) | 2 | Ruh |
 | **Konsey (Altı Oğul)** | Feature | `council-system.md` | Yazılmadı | 3 | Ruh (ADR-0006 hattı) |
 | **Diplomasi** (ittifak/fetih) | Feature | `diplomacy-system.md` | Yazılmadı | 3 | Katmanlı Düşman |
 | **Mevsim / Çevre Etkisi** | Feature | `season-system.md` | Yazılmadı | 3 | Kaynak |
 | **Kahraman Birimleri** | Feature | `hero-units.md` | Yazılmadı | 3 | Ordu, Savaş (Yiğit Ruhu lütfu kilidi) |
 | **Miras / Bölünme** (final) | Feature | `legacy-division.md` | Yazılmadı | 4 | Konsey |
-| **Sahne Akışı & İlerleme** | Presentation | [scene-flow.md](scene-flow.md) | Designed (C-35; `/design-review` APPROVED 2026-10-19 — 6 uyarı) | 4 | Harita (oyun sonu §3.7), Ruh (sahne sonu sunumu), Kaynak (sahne başı altın), Kayıt (ADR-0007) |
+| **Sahne Akışı & İlerleme** | Presentation | [scene-flow.md](scene-flow.md) | Designed (C-35; `/design-review` APPROVED 2026-10-19 — 6 uyarı) | 4 | Harita (oyun sonu §3.7), Ruh (sahne sonu sunumu), Kaynak (sahne başı altın), Kayıt (ADR-0007), Katmanlı Düşman (yumuşak) *(C-44 inceleme (2026-10-21), W-2)* |
 | **Erişilebilirlik ayarları** (renk körlüğü, bölge adları, hareketi azalt) | Presentation | art bible §7 + kod (C-07); ayrı GDD yok | Belgelenmiş (kod) | — | Harita |
 | **Yerelleştirme** (11 dil, `LocaleFontController`) | Presentation | coding standards + kod; ayrı GDD yok | Belgelenmiş (kod) | — | — |
 | **Tamga ikonları** (sahiplik işareti) | Presentation | art bible §5/§7 + region-map §7 | Belgelenmiş (kod, C-06) | — | Harita |

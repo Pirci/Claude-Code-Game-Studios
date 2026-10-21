@@ -50,7 +50,7 @@
 | Tetikleyici | Metin key'i |
 | ---- | ---- |
 | İlk tur düşman görünür | `HINT_ENEMY_KING` |
-| Düşman ilk saldırı | `BATTLE_HELD_DEFENSE` / `BATTLE_LOST_DEFENSE` (`MoveIntent.reason = &"strike"`) |
+| Düşman ilk saldırı | `BATTLE_LOST_DEFENSE` (`MoveIntent.reason = &"strike"`). *(C-44 inceleme (2026-10-21), W-5:)* `BATTLE_HELD_DEFENSE` yalnız `A ≤ P_eff` saldırıları için ayrılmıştır; Perde 1 R1'i üretmez (anahtar korunur) |
 | Odak önizleme | `CHAPTER_2_HUNT_READY` / `_NOT_READY` |
 | Arındırma | `CHAPTER_2_CLEANSED_HEADING/LINE` / `CHAPTER_2_HUNT_FAILED` |
 | Yayılım | mevcut `TURN_SUMMARY_*` |
@@ -383,7 +383,7 @@ Uygulanmaz — ULUS'ta toplanabilir/gizli alan yoktur. İsteğe bağlı ödülle
 | 6 | İçerik | `generate_env_forest.gd` üreticisi + varlıklar (§7.7), palet doğrulayıcı güncellemesi | — |
 | 7 | İçerik | Perde 1 `.tres` harita + WinCondition + `decor` + sahne tanımı; `campaign.tres`'e `perde1_dogu` | 1–3, 6 |
 | 8 | İçerik | `translations.csv` anahtarları (11 dil) | 7 |
-| 9 | Test | Birim: AI (10), F6 (3), win_condition (4), map_decor_item, map_decor_geometry, ui kontrast, hud_presenter | 1–5, 7 |
+| 9 | Test | Birim: AI (13; C-44 inceleme, bilgi notu), F6 (3), win_condition (4), map_decor_item, map_decor_geometry, ui kontrast, hud_presenter | 1–5, 7 |
 | 10 | Test | `integration/balance/perde1_balance_test` (gerçek controller replay): N-fast W12, S-purify **W20** (C-44: eski W14 yanlıştı; RİSK notu §5), Mixed W14, no-purify L18, pasif L15, 3 boş tur 15'ten önce zafer yok. Fark çıkarsa replay esas alınır, belge güncellenir; S-purify T20 ise `attack_start_turn` / başkent takviyesi ayarı değerlendirilir | 1, 2, 7 |
 | 11 | Test | `integration/campaign/perde1_playthrough_test`: UI ile intro → zafer → outro → menü | 7, 8 |
 | 12 | Doğrulama | Ekran görüntüsü (nehir `_top_bar_height()+4`), 12 maddelik playtest | 7 |
@@ -403,6 +403,8 @@ Uygulanmaz — ULUS'ta toplanabilir/gizli alan yoktur. İsteğe bağlı ödülle
 | 8 | Ekran görüntüsü kanıtı | ADVISORY |
 | 9 | Playtest 12 madde | ADVISORY |
 | 10 | Medyan T10–15 bandı playtest verisiyle | ADVISORY |
+| 11 | *(C-44 inceleme (2026-10-21), D1 / H1)* Replay'de **S-purify (önce arındır) ≤ T16**. Sağlanmazsa seviye verisi ayarlanır (ör. `attack_start_turn`, başkent takviyesi, garnizon); Kök Böri'nin sözü değişmez | BLOCKING |
+| 12 | *(C-44 inceleme, D5 / H2, H3, H4, W-7)* C-47 replay ölçüm maddeleri yapılmıştır (aşağıdaki "C-47 ölçüm maddeleri" listesi); sonuçlar kabul / erteleme kaydıyla yazılır | BLOCKING (ölçüm yapılmış olması) |
 
 **Birim test adları:** `unit/ai` — `test_counterattack_before_turn_five_never_strikes`, `_at_turn_five_strikes_when_ratio_met`,
 `_ratio_exactly_one_and_half_strikes` (2A=3P), `_ratio_just_below_threshold_holds`, `_requires_attacker_greater_than_defender`,
@@ -418,7 +420,7 @@ nötrde tamga yok. `unit/ui/hud_presenter`: yayılım sayacı geri sayar, yayıl
 ### Playtest listesi (12)
 
 1 Prolog→Perde 1 geçişi, G-1..G-3 · 2 ilk tur `HINT_ENEMY_KING` · 3 nehir HUD altında, köprüden geçiliyor · 4 ağaç yoğunluğu batı seyrek / doğu sık, çürük ağaçlar Erlik bölgesinde ·
-5 düşman tamgası hep görünür · 6 komşuluk çizgileri okunur · 7 "Yayılım: N tur" azalıyor · 8 ilk düşman saldırısı T5–7, `BATTLE_*_DEFENSE` ·
+5 düşman tamgası hep görünür · 6 komşuluk çizgileri okunur · 7 "Yayılım: N tur" azalıyor · 8 ilk düşman saldırısı T5–7, `BATTLE_LOST_DEFENSE` (HELD değil; C-44 inceleme, W-5) ·
 9 koru arındırma → CLEANSED + Ruh +30 · 10 `HINT_CAPITAL` bir kez · 11 zafer/kayıp T10–18 · 12 kayıt/yükleme dekor + sahiplik aynı.
 
 ## 14. Açık Bağımlılıklar

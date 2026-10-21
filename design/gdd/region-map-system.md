@@ -48,7 +48,8 @@ tutar (ADR-0004). *planlı* = kodda henüz yok.
   *planlı* başlangıç `corruption_level` = `initial_owner` kaynağı), `actions_per_turn`,
   `enemy_actions_per_turn`, `player_tamga_id`/`enemy_tamga_id`, `starting_gold` ve
   `enemy_reinforcement_per_turn` ve *C-43:* `enemy_reinforcement_region_ids` (resource F6; boş = tüm
-  düşman bölgeleri), `win_condition` (§3.6, `erlik_foci` ve
+  düşman bölgeleri), *C-44 inceleme (2026-10-21, W-8):* `enemy_ai_profile` (`EnemyAIProfile`, `enemy-layers.md`
+  §3.2; bölüm başına `bind_config` ile enjekte — D6), `win_condition` (§3.6, `erlik_foci` ve
   *planlı* `erlik_loss_threshold` dahil — C-49), *planlı* `erlik_spread_interval` (spirit —
   Prolog 3) ve lütuf havuzu override'ı (spirit §7, MVP'de yok). `erlik_power` hiçbir yerde
   saklanmaz; bölgelerin `corruption_level`'larından türetilir (spirit §4.7).
@@ -117,17 +118,14 @@ Siyasi düşmanın tam kuralları: [`enemy-layers.md`](enemy-layers.md) (C-44).
 
 > **Perde 1 AI kuralları (C-43, 2026-10-20 — [`perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md) §4.2):**
 > Yukarıdaki "en düşük ordulu komşuya saldır" varsayılan davranıştır (Prolog: düşman yok);
-> Perde 1 `EnemyAIProfile` veri kaynağıyla (`attack_start_turn = 5`, oran 3/2) şu kuralları kullanır
-> (deterministik, tur başına en çok 1 hamle; varsayılan profil eski davranışı korur):
-> - **R1 Karşı vuruş:** tur ≥ `attack_start_turn` (5). Kaynak E (ordu ≥ 2), hedef komşu OYUNCU bölgesi P;
->   A = E.ordu − 1; koşul A > P.ordu **ve** 2A ≥ 3·P.ordu (oran ≥ 1.5). Sıra: en zayıf P, en büyük A,
->   alfabetik `from`, alfabetik `to`.
-> - **Savunma tutma:** E'nin başka oyuncu komşusu (ordu−1 ≥ 2) varsa E saldırmaz.
-> - **R2 savunma kaydırması:** KAPALI.
-> - **Bekle:** başka hamle yoksa `null`. **Kapsam dışı:** nötr bölgelere (çürük koru dahil) girmez,
->   bozulmayı yok sayar (`spirit-system.md` §3.7).
+> Perde 1 `EnemyAIProfile` veri kaynağıyla (`attack_start_turn = 5`, oran 3/2) R1 kurallarını kullanır
+> (deterministik, tur başına en çok 1 hamle; varsayılan profil eski davranışı korur).
+> **Kural sahibi: [`enemy-layers.md`](enemy-layers.md) §3.3** (R1 Karşı vuruş, savunma tutma F-E2, R2 KAPALI,
+> küresel seçim sırası, `P_eff` okuması). *(C-44 inceleme (2026-10-21), W-8: önceki ham `P.ordu` ve eski
+> savunma tutma özeti kaldırıldı; tek kaynak enemy-layers.)*
 > - **`MoveIntent.reason`:** AI hamlesi `&"strike"` gerekçesi taşır; rapor modalı bununla
->   `BATTLE_HELD_DEFENSE` / `BATTLE_LOST_DEFENSE` metnini seçer.
+>   `BATTLE_LOST_DEFENSE` metnini seçer. *(C-44 inceleme (2026-10-21), W-5:)* `BATTLE_HELD_DEFENSE` yalnız
+>   `A ≤ P_eff` saldırıları için ayrılmıştır; Perde 1 R1'i bunu üretmez — anahtar korunur.
 
 ### 3.6 Kazanma / Kaybetme — C-32 kararı (2026-10-18)
 - **Kazanma** (`WinCondition.is_met`) üç koşulun **hepsi** sağlanınca:
@@ -149,7 +147,8 @@ Siyasi düşmanın tam kuralları: [`enemy-layers.md`](enemy-layers.md) (C-44).
   `required_neutral_conquests = 2`, `must_defeat_all_enemies = true` (3 `ENEMY` bölge: `kurt_ini_ormani`,
   `curcet_oba`, `curcet_otagi`; son düşman bölgesi alınmadan zafer yok), `erlik_foci = [curuk_koru]`
   (başkent odak değil), `erlik_loss_threshold = 9` (başlangıç `erlik_power` 4), `objective_region_ids =
-  [curcet_otagi]`. Aynı turda zafer + Erlik kaybı: mevcut "önce kaybetme" kuralı geçerli (KARAR).
+  [curcet_otagi]` *(C-44 inceleme (2026-10-21), W-14: bu alan `WinCondition`'da değil, `SceneDefinition`'dadır —
+  `scene-flow.md` §3.10)*. Aynı turda zafer + Erlik kaybı: mevcut "önce kaybetme" kuralı geçerli (KARAR).
   Bölgesiz kalma = mevcut `NO_REGIONS` (yeni enum yok); Erlik kaybı metni `DEFEAT_REASON_ERLIK` sahneden
   bağımsızdır (bkz. `scene-flow.md` §3.7).
 - **Öncelik:** İkisi aynı anda sağlanamaz: kazanma en az bir oyuncu bölgesi ister ve tur
@@ -213,7 +212,7 @@ kaybetti     = siyasi_kayıp OR erlik_kaybı            # yalnızca end_turn 5. 
 sonlarında 5/6/7/8/9 → T15'in 5. adımında `LOST`. Oyuncu T13'te seviye 2 bir bölgeyi
 arındırırsa 8 → 6 olur ve T15 sonunda 7'de kalır.
 
-### Düşman AI hedef seçimi
+### Düşman AI hedef seçimi (varsayılan profil)
 ```
 hedef = argmin(army_count) over { komşular : owner ≠ ENEMY }
         eşitlikte region_id alfabetik ilk          # C-33, W6 (eski: "ilk bulunan")
@@ -317,8 +316,9 @@ işlem sırası = düşman bölgeleri region_id artan; bütçe enemy_actions_per
 4. `end_turn` sırası: AI → Erlik yayılımı → gelir → tur artışı → kontrol. *(Test)*
 5. Tur geliri `resource-system.md` F2'ye eşittir (bozulma ve lütuf yokken oyuncu
    bölgelerinin `gold_per_turn` toplamı). *(Test)*
-6. Düşman AI en düşük ordulu düşman-olmayan komşuya saldırır; eşit ordulu iki komşuda
-   `region_id` alfabetik ilkini seçer; düşman bölgeleri `region_id` sırasıyla işlenir.
+6. Düşman AI (varsayılan profil) en düşük ordulu düşman-olmayan komşuya saldırır; eşit ordulu iki komşuda
+   `region_id` alfabetik ilkini seçer; düşman bölgeleri `region_id` sırasıyla işlenir. *(R1 profili:
+   `enemy-layers.md` AC1–AC20; C-44 inceleme (2026-10-21), W-8.)*
    *(Test — eşitlik bozma kodu C-52)*
 7. 3 nötr (odak hariç) ele geçirilip düşman kalmayınca ve odaklar temizken, hamleden
    hemen sonra `game_won` **bir kez** tetiklenir; ardından `end_turn` çağrılsa da AI,

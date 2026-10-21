@@ -89,7 +89,7 @@ Biriktirmek de gerçek bir seçenek olmalı.
    Tavan, bölgenin efektif üretiminden türer (§4); büyük obalar daha çok yiğit verir.
    - Sayaç her yeni oyuncu turunun başında sıfırlanır (tur sonunun 4. adımı).
 6. **Düşman takviyesi** (kural sahibi: [`enemy-layers.md`](enemy-layers.md) §3.5, C-44; **yürütme bu belgede**, F6):
-   Ekonomi adımında her düşman bölgesine
+   Ekonomi adımında takviye listesindeki düşman bölgelerine (liste boşsa **tüm** düşman bölgelerine; W-16)
    `+enemy_reinforcement_per_turn` ordu eklenir. Değer bölüm verisinden gelir.
    - **C-43 (2026-10-20):** Takviye alan bölgeler bölüm verisindeki `enemy_reinforcement_region_ids`
      listesiyle sınırlanabilir; **boş liste = tüm düşman bölgeleri** (Prolog / eski davranış). Bkz. F6.
@@ -321,7 +321,8 @@ hazine 6. *Alternatif:* aynı 6'lık kuvvet Doğu Obası'na → arındırma 6 > 
 - **`G_base = 0` olan bölge:** Gelir 0, tavan `R_min` (1).
 - **Seviye 3 bozulma:** Gelir 0 olur, tavan 1'de kalır ("her obada birkaç yiğit").
 - **Düşman tur sonunda yeni bir bölge ele geçirirse:** Takviye ekonomi adımında,
-  düşman AI'dan sonra uygulandığı için yeni bölge de aynı tur +E_r alır.
+  düşman AI'dan sonra uygulandığı için yeni bölge de aynı tur +E_r alır — **takviye listesindeyse
+  (boş liste = tüm düşman bölgeleri)** (C-44 inceleme, W-16).
 - **Ordusu 0 olan düşman bölgesi:** Oluşmaz — beraberlikte boşalan bölge sahipsiz
   olur (`army-system.md` §3.3, C-33/W3); sahipsiz bölge takviye almaz.
 - **Nötr bölgeler:** Gelir de takviye de almaz. Oyuncu ele geçirene kadar ordusu
@@ -414,6 +415,10 @@ kararıdır (→ ADR / uygulama).
 | `starting_gold` | 6 | 0–20 | T1 üretimi küçülür, en hızlı zafer T5'ten geç kalır (C-64 ile ölçülmeli); < 2 → T1'de üretim yok, Doğu Obası T1'de arındırılamaz (4 ≤ 4); 0 → ilk tur üretimsiz | Erken turların geliri değersizleşir | Erlik eşiği ve yayılım aralığıyla birlikte affediciliği belirler (§4 doğrulaması) |
 | `enemy_reinforcement_per_turn` | 1 (Prolog'da **boşta** — `ENEMY` yok, C-49; Perde 1'de 1/tur, yalnız `enemy_reinforcement_region_ids = [curcet_otagi]`, C-43) | 0–3 | 0 → siyasi baskı yok | 2+ → birkaç tur boşa harcanınca kazanılamaz (kontrol edilmeli) | Düşmanlı bölümlerde (Perde 1+) yayılım hızıyla birlikte baskıyı belirler |
 
+> **Sahiplik (C-44 inceleme (2026-10-21), W-13):** AI/takviye değerleri — **değerler:** bölüm verisi
+> (seviye belgesi → `.tres`); **kural:** [`enemy-layers.md`](enemy-layers.md); **yürütme:** bu belgenin F6'sı.
+> Yukarıdaki `enemy_reinforcement_*` satırları bölüm başına ayarın yeridir, kural sahibi değildir.
+
 ### Başka sistemlerin sahip olduğu değerler (burada tekrar tanımlanmaz)
 
 | Değer | Sahibi | Bu sisteme etkisi |
@@ -457,8 +462,8 @@ Test tipi her grubun başında; birim ve entegrasyon testleri BLOCKING.
   başlangıcı) tamamlanır, **THEN** oyuncunun tüm bölgelerinde sayaç 0 olur.
 - **AC9:** **GIVEN** efektif geliri 0 olan bölge (`G_base` 0 veya seviye 3 bozulma),
   **THEN** `recruit_cap = 1`.
-- **AC10:** **GIVEN** orduları 1 ve 3 olan iki düşman bölgesi ve
-  `enemy_reinforcement_per_turn = 1`, **WHEN** ekonomi adımı çalışır, **THEN**
+- **AC10:** **GIVEN** orduları 1 ve 3 olan iki düşman bölgesi, `enemy_reinforcement_per_turn = 1`
+  ve boş takviye listesi (= tüm düşman bölgeleri; C-44 inceleme, W-16), **WHEN** ekonomi adımı çalışır, **THEN**
   ordular 2 ve 4 olur.
 - **AC12:**
   - **GIVEN** `U=0`, **WHEN** ekonomi adımı çalışır, **THEN** ordu büyüklüğü ne
@@ -479,7 +484,8 @@ Test tipi her grubun başında; birim ve entegrasyon testleri BLOCKING.
 ### Entegrasyon (BLOCKING)
 
 - **AC11:** **GIVEN** düşman AI `end_turn`'ün 1. adımında bir bölge ele geçirmiş,
-  **WHEN** ekonomi adımı (3. adım) çalışır, **THEN** o bölge de +1 takviye alır.
+  **WHEN** ekonomi adımı (3. adım) çalışır, **THEN** o bölge takviye listesindeyse (boş liste = tüm
+  düşman bölgeleri) de +1 takviye alır; listede değilse almaz (C-44 inceleme, W-16).
 - **AC13:** **GIVEN** oyuncu bir bölgede üretip aynı tur oradan hareket ediyor,
   **THEN** hareket eden kuvvet yeni birlikler dahil `army_count − 1`'dir.
 - **AC19:** **GIVEN** oyuncu bu tur bir bölge ele geçirmiş, **WHEN** orada üretim
@@ -562,7 +568,8 @@ Tamamı art bible'a bağlıdır.
   - Tavan satırı: `kullanılan / R_cap`.
   - Onayla butonu.
   - Pasif durumlarda ipucu (AC17).
-- **Bilgi paneli, düşman bölgesi:** `Takviye: +E_r / tur` bilgi satırı.
+- **Bilgi paneli, düşman bölgesi:** `Takviye: +E_r / tur` bilgi satırı — yalnız takviye listesindeki
+  bölgede (boş liste = tüm düşman bölgeleri; C-44 inceleme, W-16).
 - **Odak zinciri:** Yeni kontroller C-08'deki zincire eklenir: Ordu Gönder ↕ Ordu
   Topla ↕ Tur Bitir. Zinciri ebeveyn (`GameContext`) kurar.
 - **Yerleşim:** Panel 136px genişliğinde. Almanca ve Rusçada sığmalı; sığmayan metin

@@ -331,7 +331,8 @@ Final    ██████████  Final: Miras (zirve + bölünme)
 ### Katmanlı Düşman Sistemi
 - **Siyasi (krallar)**: fethedilir, toprak kazandırır, diplomasi mümkün (ittifak/fetih)
 - **Doğaüstü (Erlik)**: arındırılır, ruh kazandırır, PvE — pazarlık yok
-- Erlik ihmal edilirse yayılır (bölge cezası artar); krallar ihmal edilirse saldırır
+- Erlik ihmal edilirse yayılır (bölge cezası artar); kral, zayıf bırakılan sınırı vurur; ihmal edilirse başkenti büyür
+  *(C-44 inceleme (2026-10-21), H8; ayrıntı: [enemy-layers.md](enemy-layers.md))*
 
 ### Savaş Sistemi (Basitleştirilmiş Otomatik Çözüm)
 - İki ordu karşılaşınca: güç karşılaştırması (sayı × kompozisyon × taktik × arazi)
@@ -428,7 +429,7 @@ tatmin edici buluyor."
 - [x] Konsepti sistemlere ayır (`/map-systems`) — [systems-index.md](systems-index.md)
 - [x] İmza sistem GDD'si: Kök Böri / Ruh Sistemi — [spirit-system.md](spirit-system.md) (2026-07-14; C-29…C-33 revizyonları)
 - [x] Sahne akışı GDD'si — [scene-flow.md](scene-flow.md) (C-35; sunum: intro/outro, Kök Böri genesis, Kağan ilanı, bölüm açılışı)
-- [ ] Katmanlı düşman GDD'si (`/design-system enemy-layers`)
+- [x] Katmanlı düşman GDD'si — [enemy-layers.md](enemy-layers.md) (C-44; *C-44 inceleme (2026-10-21)*)
 - [ ] Mevcut Prolog haritasını destana uyarla (Ötüken → Oğuz ata yurdu)
 - [ ] Prototip: çift katmanlı düşman hipotezini test et (`/prototype`)
 - [ ] Mimari: modülerlik + grand-strategy genişleme noktalarını planla (`/create-architecture`)

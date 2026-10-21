@@ -40,6 +40,15 @@ Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-revi
 > - **Tests:** `_reads_effective_defense_from_modifiers`, `_empty_target_ignores_modifiers`,
 >   `_does_not_mutate_inputs` (enemy-layers AC19–AC20).
 
+> **Amendment 2026-10-21 (C-44 review, [`gdd-cross-review-2026-10-21.md`](../../design/gdd/gdd-cross-review-2026-10-21.md) W-5, W-15 / D6):**
+> - **Input contract (D6):** the `EnemyAIProfile` is injected per chapter via `bind_config` (not a `decide()`
+>   argument). The signature is `decide(map_state, acted, defense_modifiers) -> MoveIntent`; the caller
+>   (`MapController`) supplies the player's defence modifiers as an explicit input. This supersedes the
+>   earlier phrase that the profile and modifiers are both "explicit input" and the "inverse of the
+>   `ErlikSpreadController` pattern" wording; the purity contract is unchanged.
+> - **`BATTLE_HELD_DEFENSE` (W-5):** the 2026-10-20 amendment's HELD/LOST wording is narrowed: HELD is reserved
+>   for `A ≤ P_eff` attacks only; the Perde 1 R1 rule never produces it (the key is kept).
+
 ## Date
 2026-08-13
 

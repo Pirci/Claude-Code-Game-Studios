@@ -65,9 +65,11 @@ Kağan'ın Erlik'le iş birliği yaptığı izlenimi.
 ### 3.1 Çekirdek kavramlar
 
 1. **Siyasi düşman = `owner = ENEMY` bölgeleri.** `ERLIK` sahip türü yoktur (`spirit-system.md` §3.7).
-2. **Kral AI'ı saf karar servisidir:** `EnemyAIController.decide(map_state, acted) -> MoveIntent`
-   (ADR-0005 + C-43/C-44 ekleri; imza `region-map-system.md` §3.5 ile aynı). `EnemyAIProfile` ve oyuncunun
-   savunma modifikatörleri **açık girdi** olarak verilir (servis kendisi durum okumaz/yazmaz). `MapState`'i
+2. **Kral AI'ı saf karar servisidir:** `EnemyAIController.decide(map_state, acted, defense_modifiers) -> MoveIntent`
+   (ADR-0005 + C-43/C-44 ekleri). `EnemyAIProfile` bölüm başına `bind_config` ile enjekte edilir; oyuncunun
+   savunma modifikatörleri `defense_modifiers` parametresiyle **açık girdi** olarak verilir (servis kendisi
+   durum okumaz/yazmaz). *(C-44 inceleme (2026-10-21), W-15 / D6; `region-map-system.md` §3.5 imzası bu karara
+   göre güncellenir.)* `MapState`'i
    yalnızca okur; durumu değiştirmez, sinyal yaymaz, rastgelelik kullanmaz. Uygulamayı `MapController`
    yapar (karar → uygula döngüsü; her hamle öncekinin sonucunu görür).
 3. **Düşman bölgesi hamle kuralları oyuncuyla aynıdır** (`army-system.md` §3, `mover = ENEMY`): kaynakta
@@ -121,8 +123,8 @@ Girdi: `current_turn`, `acted`, profil, oyuncu savunma modifikatörleri. Çıkt�
 
 **Etkin güç okuması (C-44 kararı, kullanıcı onaylı):** AI, "oyuncuya uygulanan kural AI'ya da" ilkesiyle
 P'nin **etkin** savunmasını görür. Saflık korunur: `decide()` durum değiştirmez; modifikatörler çağıran
-(MapController) tarafından girdi olarak verilir ve `decide()` saf `StatResolver`'ı (ADR-0006) çağırır —
-`ErlikSpreadController`'daki "efektif aralık çağıranda çözülür" kalıbının tersi değil, aynı saflık sözleşmesi.
+(MapController) `defense_modifiers` girdisi olarak verilir ve `decide()` saf `StatResolver`'ı (ADR-0006)
+çağırır. *(C-44 inceleme (2026-10-21), W-15 / D6: önceki "kalıbın tersi değil" ifadesi kaldırıldı.)*
 Gerekçe: C-44 lütuf denge analizi — ham `P.army` okunursa Demir Post gibi savunma lütufları AI kararını
 etkilemez, lütuf cezasız bir "tuzak" (AI uygunsuz vuruş yapar) ya da etkisiz kalır; etkin okumayla lütuf
 gerçek bir caydırıcıdır ve AI'nın başarısız vuruşa sürüklenmesi (tahmin edilebilir kaybeden AI) önlenir.
@@ -133,6 +135,8 @@ gerçek bir caydırıcıdır ve AI'nın başarısız vuruşa sürüklenmesi (tah
   metnini seçer: `BATTLE_LOST_DEFENSE` (oyuncu savunmayı kaybetti). **Not:** AI yalnız `A > P_eff` iken
   vurduğu için (`combat-system.md` Dal 1) R1 vuruşu her zaman başarılıdır; `BATTLE_HELD_DEFENSE` R1
   vuruşundan **üretilmez** (yalnız varsayılan profil / ileride `A ≤ P_eff` saldırıları için ayrılmıştır).
+  *(C-44 inceleme (2026-10-21), W-5:)* HELD yalnız `A ≤ P_eff` saldırıları için ayrılmıştır; Perde 1 R1'i
+  üretmez — anahtar korunur.
 - İlk tur düşman görünürlüğü: `HINT_ENEMY_KING` (bir kez). Başkent ilk önizlemesi: `HINT_CAPITAL` (bir kez).
   Metinlerin sahibi `narrative-voice.md`; bu belge yalnız tetikleyicileri tanımlar.
 - AI niyeti oyuncuya **önceden gösterilmez** (K8): hamle sonrası rapor + kural ipucu; okunabilirlik kural
@@ -177,7 +181,8 @@ modifikatör yok. `resource-system.md` Açık Soru 4 bu karar ile kapanmıştır
 ### 3.7 Zafer bağı
 
 Zafer koşulunu `WinCondition` yürütür (`region-map-system.md` §3.6). Perde 1: `must_defeat_all_enemies =
-true`, `objective_region_ids = [curcet_otagi]`, 2 nötr fetih, odak (`curuk_koru`) bozulmamış. Bu belgenin
+true`, `objective_region_ids = [curcet_otagi]` (`SceneDefinition` alanı, `scene-flow.md` §3.10 — W-14, C-44
+inceleme (2026-10-21)), 2 nötr fetih, odak (`curuk_koru`) bozulmamış. Bu belgenin
 sorumluluğu: düşman bölgelerinin sahipliğini bozmak (AI ele geçirme) ya da oyuncunun almasına izin vermek;
 koşul mantığı bu belgede **yoktur**.
 
@@ -206,7 +211,8 @@ Tam sayı aritmetiği (float yok; `ceil` yalnız `P_eff` çözümünde, `combat-
 
 ```
 A        = E.army − 1
-P_eff    = 0                                              , P.army = 0   (barışçıl işgal, savaş yok)
+P_eff    = 0                                              , P.army = 0   (barışçıl işgal, savaş yok;
+                                                                         PLAYER hedef için ulaşılamaz — savunmacı dal)
          = ceil(resolve(&"army_defense", P.army))         , P.army ≥ 1   (combat-system §4 "Etkin güç")
 koşul_1  = A > P_eff
 koşul_2  = strike_ratio_den · A ≥ strike_ratio_num · P_eff        # Perde 1: 2A ≥ 3·P_eff
@@ -227,12 +233,14 @@ uygun    = strike_enabled AND (current_turn ≥ attack_start_turn)
 | Başlangıç turu | `attack_start_turn` | int | 1 – 20 | Perde 1: 5 |
 
 **Çıktı:** bool. **Örnekler (Perde 1, lütufsuz):** E.army = 8 → A = 7; P = 4 → 14 ≥ 12 → **uygun**; P = 5 → 14 ≥ 15
-değil → uygun değil. E.army = 2 → A = 1; P = 1 → 2 ≥ 3 değil → uygun değil (başlangıç `kurt_ini_ormani` 2 ordu ile
-yalnız P = 0 bölgeye saldırabilir). **Örnek (Demir Post, P.army = 4 → P_eff = 6):** A = 7 → 14 ≥ 18 değil → AI
+değil → uygun değil. E.army = 2 → A = 1; P = 1 → 2 ≥ 3 değil → uygun değil (başlangıç `kurt_ini_ormani` (A = 1)
+hiçbir koşulda vuramaz; sahipli bir bölge 0 orduyla kalmadığından `P.army = 0` dalı PLAYER hedef için ulaşılamaz —
+`army-system.md` §3.3, `region-map-system.md` §5). *(C-44 inceleme (2026-10-21), W-4)* **Örnek (Demir Post, P.army = 4 → P_eff = 6):** A = 7 → 14 ≥ 18 değil → AI
 vurmaz; lütufsuz aynı durumda (P_eff = 4) vururdu.
 
-> **Not (fazlalık):** `P_eff ≥ 1` iken `koşul_2 ⇒ koşul_1`; `koşul_1` yalnız okunabilirlik içindir ve
-> `P_eff = 0` durumunda `A ≥ 1` ile sağlanır. Test iki koşulu da ayrı doğrular (seviye belgesindeki
+> **Not (fazlalık):** `P_eff ≥ 1` iken `koşul_2 ⇒ koşul_1` (yalnız oran > 1 ise; `1/1` oranında `A = P_eff`
+> için `koşul_2` sağlanır, `koşul_1` sağlanmaz — C-44 inceleme (2026-10-21), bilgi notu); `koşul_1` yalnız
+> okunabilirlik içindir ve `P_eff = 0` durumunda `A ≥ 1` ile sağlanır. Test iki koşulu da ayrı doğrular (seviye belgesindeki
 > `_requires_attacker_greater_than_defender`).
 
 ### F-E2 — Savunma tutma (tek tanım)
@@ -255,7 +263,7 @@ capital_army(t) = capital_army(1) + (t − 1) · E_r          # Perde 1: 4 + (t 
 | --- | --- | --- |
 | `capital_army(1)` | 4 | Başlangıç garnizonu (seviye §3.1) |
 | `E_r` | 1 | Tur başı takviye |
-| `t` | 1 – 18 | Sahne turu (hedef T10–15, medyan T12) |
+| `t` | 1 – 20 | Sahne turu (hedef T10–15, medyan T12; T20 gerçekleşir — C-44 inceleme (2026-10-21), bilgi notu) |
 
 **Örnek:** T5'te 8 (A = 7: P_eff ≤ 4 olan komşu oyuncu bölgesine uygun); T12'de 15. Oyuncu başkenti ne kadar
 geç saldırırsa o kadar büyük ordu gerekir: baskı doğrusaldır, patlayıcı değil. Üst sınır yoktur (K3, §5).
@@ -306,11 +314,14 @@ saldıran kalan 5, P bölgesi düşer, `owner = ENEMY`. **Örnek (D_eff = 8):** 
   bırakırsa vuruş uygun olur. Bu bir hata değil, kural: savunmayı ihmal eden cezalanır.
 - **Dejenere strateji — "iki komşu ile AI'ı felç etme":** savunma tutma nedeniyle iki oyuncu komşusu
   olan kaynak saldırmaz; oyuncu bunu kasıtlı kullanabilir. Kabul edilen strateji (Sirlin: sağlıklı ustalık);
-  başkent komşuları (`kurt_ini_ormani`, `curcet_oba`) farklı kaynak olduğundan her ikisi de aynı anda
-  tutulamaz. Replay ile doğrulanacak (§8 AC).
+  *(C-44 inceleme (2026-10-21), H2:)* başkent komşuları (`kurt_ini_ormani`, `curcet_oba`) ikisi de zafer için
+  zorunludur; oyuncu ikisini birden tutarsa başkent kalıcı olarak felç olur (F-E2). Bu, kabul edilen strateji
+  kapsamındadır ama "ikisi aynı anda tutulamaz" değildir. **D5 metriği (C-47 replay):** "T5 sonrası uygun AI
+  adayı olan tur oranı" ölçülür; düşükse başkent F-E2'den muaf tutulması kullanıcıya sorulur (karar verilmedi).
+  Replay ile doğrulanacak (§8 AC).
 - **Dejenere strateji — "Demir Post ile AI'ı kilitleme":** savunma lütufu yığılırsa `P_eff` eşiği aşar ve AI hiç
-  vurmaz. Bu, lütfun amaçlanan değeridir (caydırma); fakat lütuf yığın tavanı (`ModifierSource.max_stacks`) ve
-  lütuf maliyeti zaten sınırlar. Perde 1 replay'inde "savunma lütufu + pasif oyun" hattı ölçülür (AC15).
+  vurmaz. Bu, lütfun amaçlanan değeridir (caydırma); fakat lütuf yığın tavanı (`ModifierSource.max_stacks`; Demir Post için
+  `DEMIR_POST_MAX_STACKS = 3` — C-44 inceleme (2026-10-21), W-3 / D2) ve lütuf maliyeti zaten sınırlar. Perde 1 replay'inde "savunma lütufu + pasif oyun" hattı ölçülür (AC15).
 - **Etkin güç AI'ya sızıntısı yok:** `P_eff` yalnız **savunma** için hesaplanır; AI kendi `A` değerine modifikatör
   uygulamaz.
 
@@ -342,13 +353,14 @@ saldıran kalan 5, P bölgesi düşer, `owner = ENEMY`. **Örnek (D_eff = 8):** 
 1. `resource-system.md`: §3.1 kural 6 sahibi bu belge; Açık Soru 4 kapandı — **yapıldı**.
 2. `region-map-system.md` §3.5: `decide(map_state, acted) -> MoveIntent`, R1 küresel sıra notu — **yapıldı**.
 3. `spirit-system.md` §6: `enemy-layers.md` zaten "Erlik burada değil" notunu içerir; çapraz referans geçerli.
-   Lütuf modifikatörlerinin AI tarafından okunması (`P_eff`) spirit §3.5 tarafında not edilmeli — **açık, ayrı görev**.
+   Lütuf modifikatörlerinin AI tarafından okunması (`P_eff`) spirit §3.5 tarafında not edilmeli — **yapıldı ✅**
+   *(C-44 inceleme (2026-10-21), W-9)*.
 4. `scene-flow.md` §6 satırı: "yeni `loss_reason`" ifadesi düzeltildi — **yapıldı**.
 5. `systems-index.md`: Katmanlı Düşman satırı — **yapıldı**.
 6. `adr-0005-ai-architecture.md`: `EnemyAIProfile` alan listesi + `P_eff` eki — **yapıldı**.
 7. `design/levels/perde1-dogu-curcet.md` §4.2 (savunma tutma parantezi → F-E2, `P_eff`) ve §3.4 madde 3 (§7→§6)
-   — **açık, ayrı görev** (bu görevin dosya kapsamı dışı).
-8. `combat-system.md` §4 "Etkin güç": "AI savunma etkin gücünü okur" notu — **açık, ayrı görev**.
+   — **yapıldı ✅** *(C-44 inceleme (2026-10-21), W-9)*.
+8. `combat-system.md` §4 "Etkin güç": "AI savunma etkin gücünü okur" notu — **yapıldı ✅** *(W-9)*.
 
 ---
 
@@ -366,6 +378,8 @@ saldıran kalan 5, P bölgesi düşer, `owner = ENEMY`. **Örnek (D_eff = 8):** 
 | R2 savunma kaydırması | KAPALI | — | (sabit karar) | — | — | Simülasyonda tempoyu bozdu (seviye §4.2) |
 
 Hiçbir değer koda gömülmez: profil `EnemyAIProfile` `.tres`, takviye değerleri `ChapterMapDefinition` verisi.
+**Sahiplik (C-44 inceleme (2026-10-21), W-13):** değerler: bölüm verisi (seviye belgesi → `.tres`); kural:
+bu belge; yürütme: `resource-system.md` F6.
 Kural değişirse (özellikle `P_eff` okuması sonrası) seviye belgesi §5 simülasyon tablosu yeniden üretilir
 (C-47 replay).
 
@@ -410,9 +424,16 @@ Kural değişirse (özellikle `P_eff` okuması sonrası) seviye belgesi §5 sim�
 - **AC13:** GIVEN T5+, uygun hedef, WHEN `end_turn`, THEN `battle_resolved` raporu `reason = &"strike"` taşır, bölge
   düşer ve sunum katmanı `BATTLE_LOST_DEFENSE` seçer (R1 vuruşu `A > P_eff` olduğundan `BATTLE_HELD_DEFENSE` üretilmez).
 - **AC14:** GIVEN düşman AI tur sonunda bir bölge aldı ve bölge takviye listesindeyse, THEN aynı tur +E_r alır.
-- **AC15:** `integration/balance/perde1_balance_test` (gerçek controller replay): N-fast W12, S-purify W14,
+- **AC15:** `integration/balance/perde1_balance_test` (gerçek controller replay): N-fast W12, S-purify W20,
   Mixed W14, no-purify L18, pasif L15, 3 boş tur 15'ten önce zafer yok; ilk AI vuruşu T5–7 aralığında
   (seviye §13 #10; fark çıkarsa replay esas alınır). `P_eff` okuması sonrası tablo yeniden üretilir (C-47).
+  *(C-44 inceleme (2026-10-21), R-1: S-purify W14 → W20, seviye §13 #10 ve boon-balance ile hizalı.)*
+- **AC21 (BLOCKING, C-47 — D1 / H1):** S-purify (önce arındır) hattı ≤ T16'da kazanır. Sağlanmazsa seviye verisi
+  ayarlanır (ör. `attack_start_turn`, başkent takviyesi, garnizon); Kök Böri'nin sözü değişmez.
+- **AC22 (C-47 ölçüm maddeleri — D5):** replay şunları ölçer ve kabul / erteleme kaydı yazar: T5 sonrası AI adayı
+  tur oranı (H2); "felç + yeniden arındırma" çizgisi Ruh/tur (H3 → ×0.5 yedeğinin tetiği); GK1 / Bereket1 giriş
+  varyantları (H4 → pasif + GK1 > T18 ise Perde 1 `erlik_loss_threshold` 9 → 8); N4/N5/N6/N8/N9 Perde 1 için
+  (W-7; işaretçiler "C-47 replay sonrası"na taşınır).
 
 ### Sistem / deneyim (ADVISORY)
 
@@ -441,6 +462,9 @@ Görsel ve ses yönü art bible / seviye belgesine bağlıdır; bu belge yeni va
 
 - **Bilgi paneli, düşman bölgesi:** `Takviye: +E_r / tur` satırı yalnız takviye alan bölgelerde (başkent);
   `curcet_oba` / `kurt_ini_ormani` satırı göstermez.
+- **Bilgi paneli, oyuncu bölgesi — kural bilgisi satırı (C-44 inceleme (2026-10-21), D3 / W-6, H5):** "Kağan bu
+  bölgeyi en az N orduyla vurabilir (lütuflar dahil)"; N, `P_eff` ve F-E1'den türetilir. Niyet önizlemesi
+  değildir (K8 korunur). M2 HUD gereksinimi; spec C-45.
 - **Kural ipucu (kalıcı bilgi):** `HINT_ENEMY_KING` (ilk tur, bir kez): "Kağan T5'ten sonra açık üstünlükle vurur;
   yalnız başkent büyür." `HINT_CAPITAL` (başkent ilk önizlemesi, bir kez). AI niyet önizlemesi **yoktur** (K8).
 - **Savaş raporu:** `BATTLE_LOST_DEFENSE` (ADR-0011 `ModalQueue`; tek seferde bir modal).
@@ -476,11 +500,11 @@ bu metni yalnız `A ≤ P_eff` saldırıları (şu an yok) için saklar. Perde 1
 
 | # | Çelişki | Durum |
 | --- | --- | --- |
-| C1 | Seviye §4.2 savunma tutma parantezi ↔ ADR-0005 eki (K1) | **Çözüldü (C-44):** ADR esas (F-E2). Seviye belgesi metni düzeltmesi ayrı görev (bu görevin kapsamı dışı) |
+| C1 | Seviye §4.2 savunma tutma parantezi ↔ ADR-0005 eki (K1) | **Çözüldü (C-44):** ADR esas (F-E2). Seviye belgesi metni düzeltmesi **yapıldı ✅** (C-44 inceleme (2026-10-21), W-9) |
 | C2 | `scene-flow.md` bağımlılık satırı ("yeni loss_reason") ↔ seviye §6/§12 ("yeni enum yok") (K4) | **Çözüldü (C-44):** seviye esas; `scene-flow.md` düzeltildi |
 | C3 | `region-map-system.md` §3.5 imzası `decide(map_state) -> Array[MoveIntent]` ↔ ADR-0005 / kod `decide(map_state, acted) -> MoveIntent` | **Çözüldü (C-44):** kod + ADR esas; GDD düzeltildi |
 | C4 | Mevcut kod `decide()` R1 / `EnemyAIProfile` / `reason` / `P_eff` içermiyor; GDD'ler Perde 1 kurallarını "onaylı" sayıyor | **Açık — uygulama:** C-44 uygulama görevi (seviye §13 #1); test AC1–AC20 |
 | C5 | `region-map-system.md` §3.5 "region_id fiilen AI önceliği" ↔ R1 sırası (küresel) | **Çözüldü (C-44):** not yalnız varsayılan profil için; R1 küresel sıra (§3.3 madde 4) |
-| C6 | Seviye §3.4 madde 3 "(§7)" ↔ koşul §6'da | **Açık — yazım:** seviye belgesinde düzeltme (kapsam dışı) |
+| C6 | Seviye §3.4 madde 3 "(§7)" ↔ koşul §6'da | **Çözüldü ✅** (C-44 inceleme (2026-10-21), W-9): seviye belgesinde düzeltildi |
 | C7 | `systems-index.md` Katmanlı Düşman bağımlılıkları eksik (Savaş, Ruh, Sahne Akışı) | **Çözüldü (C-44):** index güncellendi |
 | C8 | Seviye §5 simülasyon tablosu ham `P.army` okumasıyla üretildi; `P_eff` okuması (K10) sonuçları değiştirebilir | **Açık — replay:** C-47'de yeniden üretilir; savunma lütuflu hat eklenir |
