@@ -897,11 +897,11 @@ orta pikseli); Godot'ta `Sprite2D.offset` / `centered=false` ile ayarlanır.
 | Cürcet otağı (`env_otag_curcet_01`, Perde 1 — C-43) | 28×24 | 32×28 | ayak (haritada (584,90), poligonun ÜSTÜNDE) |
 | Orman dekoru (Perde 1 — C-43) | ağaç sağlıklı 12×20 / 12×18; çürük ağaç 10×16 | 16×24 / 16×22; 14×20 | ayak |
 | Köprü (`env_bridge_wood_01`, Perde 1 — C-43) | 16×10 | 20×14 | ayak (haritada (386,98)) |
-| Orman ruhu (`char_spirit_forest_idle_01/_02`, Perde 1 — C-43) | 12×14 | 16×18 | körmös kuralı (yukarıda) |
+| Orman ruhu (`unit_kormos_forest_idle_0/_1`, Perde 1 — C-43) | 12×14 | 16×18 | körmös kuralı (yukarıda) |
 
 > **C-43 (2026-10-20) — Perde 1 varlıkları:** Tam liste ve ayak noktaları
 > [`design/levels/perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md) §7.5–7.7 (`env_tree_healthy_01/_02`,
-> `env_tree_rotten_01/_02`, `env_bridge_wood_01`, `env_otag_curcet_01`, `char_spirit_forest_idle_01/_02`;
+> `env_tree_rotten_01/_02`, `env_bridge_wood_01`, `env_otag_curcet_01`, `unit_kormos_forest_idle_0/_1`;
 > `tools/asset-pipeline/generate_env_forest.gd`, palet doğrulayıcıdan geçer). Orman rampası ve nehir
 > renkleri (`#1F2B52 #2E4761`, kıyı çizgisi `#476B8F`) küresel palette zaten vardır; `#A86BC4` Erlik Moru
 > rampasının açık ucudur — çürük ağaç kırık-taç vurgusunda yalnız Erlik anlamıyla kullanılır, "yalnızca

@@ -340,3 +340,7 @@
 - design/ux/hud.md, battle-report.md, boon-selection.md, scene-screens.md (Approved). Kararlar K1 yayılım sade, K2 vuruş eşiği her tur, K3 Cürcet x/3, K4 klavye bölge seçimi M2.
 - Bulgu: savaş/arındırma raporu + tur özeti modalları kodda yok (Prolog demosunda da). Uygulama C-47'de.
 - NEXT: C-46 (M2 sanat) / C-42 playtest raporu.
+
+## Session Extract — C-46 ilerleme (2026-10-21)
+- Kullanıcı: MCP ile pixel art aracı sordu → öneri Retro Diffusion MCP (palet zorlamalı, barındırılan); Aseprite MCP'leri yerel Aseprite ister, bulut oturumdan erişilemez. Karar: önce küçük varlıklar, illüstrasyonlara sonra bakılacak.
+- tools/asset-pipeline/generate_env_forest.gd → maps/env/env_tree_healthy_01/02, env_tree_rotten_01/02, env_bridge_wood_01, env_otag_curcet_01; units/unit_kormos_forest_idle_0/1. tests/unit/art/env_forest_assets_test.gd. Testler 341/341, palet 46 PNG 0 ihlal.

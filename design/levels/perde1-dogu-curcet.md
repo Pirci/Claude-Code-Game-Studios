@@ -311,8 +311,10 @@ kurt_ini x395–495 y72–128; curuk_koru x280–390 y212–268; curcet_oba x410
 | env_tree_rotten_01, _02 | 10×16 / 14×20 |
 | env_bridge_wood_01 | 16×10 / 20×14 |
 | env_otag_curcet_01 | 28×24 / 32×28 |
-| char_spirit_forest_idle_01/_02 | 12×14 / 16×18 |
+| unit_kormos_forest_idle_0/_1 | 12×14 / 16×18 |
 | Nehir | Kodla çizilir (varlık yok) |
+
+> **C-46 (2026-10-21):** Üretildi — `game/assets/art/maps/env/env_*.png`, `game/assets/art/units/unit_kormos_forest_idle_0/_1.png` (art bible adlandırması: `unit_` kategorisi; eski taslak adı `char_spirit_forest_idle`). Test: `tests/unit/art/env_forest_assets_test.gd` (tuval boyutu, ikili alfa, boş dolgu, körmös 1px süzülme); kanıt `production/qa/evidence/c46-env-forest-sheet.png`.
 
 ### 7.8 Erişilebilirlik (BLOCKING çözümleri)
 
