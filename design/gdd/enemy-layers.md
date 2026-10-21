@@ -462,13 +462,15 @@ Görsel ve ses yönü art bible / seviye belgesine bağlıdır; bu belge yeni va
 
 - **Bilgi paneli, düşman bölgesi:** `Takviye: +E_r / tur` satırı yalnız takviye alan bölgelerde (başkent);
   `curcet_oba` / `kurt_ini_ormani` satırı göstermez.
-- **Bilgi paneli, oyuncu bölgesi — kural bilgisi satırı (C-44 inceleme (2026-10-21), D3 / W-6, H5):** "Kağan bu
-  bölgeyi en az N orduyla vurabilir (lütuflar dahil)"; N, `P_eff` ve F-E1'den türetilir. Niyet önizlemesi
-  değildir (K8 korunur). M2 HUD gereksinimi; spec C-45.
+- **Bilgi paneli, oyuncu bölgesi — kural bilgisi satırı (C-44 inceleme (2026-10-21), D3 / W-6, H5; C-45 (2026-10-21) K2):**
+  Düşmana komşu oyuncu bölgesinin panelinde, `strike_enabled` iken **1. turdan itibaren her tur** görünür;
+  yeni key `ENEMY_STRIKE_THRESHOLD` (kısa metin, `%s` = N). `N = max(P_eff+1, ceil(num·P_eff/den))`
+  (`P_eff = 0` → 1; lütuflar dahil), F-E1'den türetilir. "Lütuflar dahil / T5'ten itibaren" açıklaması
+  satırda değil `HINT_ENEMY_KING` ipucundadır. Niyet önizlemesi değildir (K8 korunur). Tam spec: `design/ux/hud.md` §5.3.
 - **Kural ipucu (kalıcı bilgi):** `HINT_ENEMY_KING` (ilk tur, bir kez): "Kağan T5'ten sonra açık üstünlükle vurur;
   yalnız başkent büyür." `HINT_CAPITAL` (başkent ilk önizlemesi, bir kez). AI niyet önizlemesi **yoktur** (K8).
 - **Savaş raporu:** `BATTLE_LOST_DEFENSE` (ADR-0011 `ModalQueue`; tek seferde bir modal).
-- Yeni çeviri anahtarı **eklenmez** (tümü seviye belgesi §2'de listeli). Biçim kuralları ADR-0009'a uyar;
+- Yeni çeviri anahtarı: **yalnız `ENEMY_STRIKE_THRESHOLD`** (C-45 (2026-10-21), K2; `translations.csv`'ye önce `en`); diğerleri seviye belgesi §2'de listeli. Biçim kuralları ADR-0009'a uyar;
   glif kapsamı için `−` `⚠` `✕` `✓` kullanılmaz.
 
 ---

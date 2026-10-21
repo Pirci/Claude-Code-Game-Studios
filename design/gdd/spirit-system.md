@@ -190,14 +190,14 @@ doldurmuşsa uygun havuz bu listeyle de kesişir (boş = tüm katalog; §7 "Havu
 - Her `I_eff` turda bir, Erlik yayılır (bkz. Formüller §4.6; `I_eff` = sahnenin
   `ERLIK_SPREAD_INTERVAL` değeri + Gök Kalkanı).
 - Yayılım deterministiktir: kurallı hedef seçimi (rastgele değil).
-- **Yayılım göstergesi (gereksinim, C-53 / N7):** HUD bir sonraki yayılıma kalan tur
-  sayısını ve — hedef deterministik olduğundan — o anki duruma göre bir sonraki hedef
-  bölgeyi gösterir (hedef tur sonundaki AI hamleleriyle değişebilir; gösterge "şu an
-  olsa" bilgisidir). Spec: C-41 / C-45.
-  **"Odak tehlikede" uyarısı (C-44 inceleme (2026-10-21), S2-a):** yayılım hedefi bir
-  `erlik_foci` bölgesiyse HUD ek olarak "Odak tehlikede" uyarısı gösterir (tek hamlede üç
-  ceza — geri alma, odağın yeniden bozulması, odağın düşmana geçmesi — okunabilir olsun).
-  Kural değişmez, yalnızca sunum; spec C-45.
+- **Yayılım göstergesi (gereksinim, C-53 / N7; C-45 (2026-10-21) kararıyla daraltıldı — K1 "Sade"):**
+  HUD her an `Yayılım: N tur` gösterir (`N = max(0, I_eff − (current_turn − last_erlik_spread_turn))`;
+  `N = 0` → "bu tur sonu"). Sayaç, Erlik'in Gölgesi hücresinin **ikinci segmentidir** (ayrı hücre
+  değil): `Erlik'in Gölgesi: p / eşik  Yayılım: N tur`.
+  **"Odak tehlikede" (S2-a):** yalnız `N = 0` **ve** yayılım hedefi ("şu an olsa") bir `erlik_foci`
+  bölgesiyse, `Yayılım` segmentinin yerini `Odak tehlikede: <bölge>` (piksel ikon + metin) alır;
+  `p / eşik` hep görünür. Başka durumda hedef bölge HUD'da **gösterilmez**; haritada hedef işareti
+  cilaya ertelendi. Kural değişmez, yalnızca sunum. Tam spec: `design/ux/hud.md` §5.1–5.2.
 - **Tur sonundaki yeri (C-29):** `end_turn` sırasının **2. adımı** — düşman AI'dan
   sonra, ekonomi adımından önce (`region-map-system.md` §3.4). Yayılan bozulma o
   turun gelirine hemen yansır. Yayılım turu: son yayılımdan bu yana geçen tur sayısı
