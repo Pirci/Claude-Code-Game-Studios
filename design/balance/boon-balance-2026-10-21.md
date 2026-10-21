@@ -113,6 +113,18 @@ Okuma:
 | 8 | Yeniden deneme | Sunum determinizmi `(chapter_id, n)`; spirit §4.5 + AC25. Yığılma sınırı düşürülürse eski kayıt `n = boons.size()` (AC27, M2) |
 | 9 | Seviye belgesi düzeltmeleri | "İlk lütuf garanti" kaldırıldı (sıradaki lütuf 50 Ruh); S-purify W14 → **W20** + RİSK notu; test listesi (§13 #10) güncellendi |
 
+## 6. C-44 inceleme sonrası (2026-10-21)
+
+Kaynak: [`gdd-cross-review-2026-10-21.md`](../gdd/gdd-cross-review-2026-10-21.md). Yukarıdaki sayılar değişmedi; eklenenler:
+
+| Karar | Etki |
+| --- | --- |
+| **D2 (W-3)** | Demir Post `max_stacks = 3` (`DEMIR_POST_MAX_STACKS`, Kurt Gücü kalıbı). Sınırsız yığın "AI hiç vurmaz" hattını açardı; mono-build riski kapanır. Registry `demir_post_max_stacks`, spirit AC28 |
+| **D4 (H6)** | Kampanya tohumu (`campaign_seed`) sunum seed'ine eklenir; sefer boyunca sabit, yeniden denemede değişmez (karar #8 determinizmi korunur), testte enjekte edilir. Deterministik "herkes aynı üçlü" sorununu yumuşatır. Spirit §4.5 + AC29, scene-flow §3.4 |
+| **D5 (W-7, H2, H3, H4, H7)** | C-47 replay ölçümleri: T5 sonrası AI adayı tur oranı; "felç + yeniden arındırma" Ruh/tur çizgisi (×0.5 yedeğinin tetiği artık bu çizgiye de bağlı); N4/N5/N6/N8/N9 Perde 1 için ölçülür, kabul / erteleme kaydı yazılır. Seviye belgesi §13 "C-47 ölçüm maddeleri" |
+| **H4** | Prolog'dan taşınan Gök Kalkanı ×1 pasif kaybı T15 → T20'ye itebilir. GK1 / Bereket1 giriş varyantları ölçülür; **pasif + GK1 > T18 ise Perde 1 `erlik_loss_threshold` 9 → 8** |
+| **D1 (H1)** | S-purify ≤ T16 BLOCKING kabul kriteri (seviye belgesi §13 #11); sağlanmazsa seviye verisi ayarlanır, Kök Böri'nin sözü değişmez |
+
 ## İzlenecek Açık Noktalar
 
 | Konu | Sahibi | Not |
