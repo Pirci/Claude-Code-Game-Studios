@@ -117,7 +117,7 @@ Kalın değerler Adım 3 son değerleridir (Adım 2: 3 / 6 / 7).
 
 1. **Kuzey yolu:** orman_agzi → kuzey_aksu → tahta_kopru → kurt_ini_ormani → curcet_otagi.
 2. **Güney yolu:** orman_agzi → kayin_koruluk → curuk_koru (arındırma; +30 Ruh, erlik −3) → curcet_oba → curcet_otagi.
-3. Zafer: en az 2 nötr fetih + tüm düşman bölgeleri alınmış + başkent alınmış + odak (curuk_koru) bozulmamış (§7).
+3. Zafer: en az 2 nötr fetih + tüm düşman bölgeleri alınmış + başkent alınmış + odak (curuk_koru) bozulmamış (§6).
 4. İlk Erlik yayılımı T3 (büyük olasılıkla kayin_koruluk).
 
 ### 3.5 İsteğe bağlı yollar ve ödüller
@@ -152,8 +152,8 @@ Gizli alan yoktur (Uygulanmaz: gizli/toplanabilir; Ruh arzı için bkz. §6).
 
 | Kural | Tanım |
 | ---- | ---- |
-| R1 Karşı vuruş | tur ≥ `attack_start_turn` (5). Kaynak E (ordu ≥ 2), hedef komşu OYUNCU bölgesi P; A = E.ordu − 1; koşul A > P.ordu **ve** 2A ≥ 3·P.ordu (oran ≥ 1.5). Sıra: en zayıf P, en büyük A, alfabetik `from`, alfabetik `to` |
-| Savunma tutma | E'nin başka oyuncu komşusu (ordu−1 ≥ 2) varsa E saldırmaz |
+| R1 Karşı vuruş | tur ≥ `attack_start_turn` (5). Kaynak E (ordu ≥ 2), hedef komşu OYUNCU bölgesi P; A = E.ordu − 1; koşul A > P_eff **ve** 2A ≥ 3·P_eff (oran ≥ 1.5; `P_eff` = oyuncunun etkin savunması, Demir Post dahil — C-44, [`enemy-layers.md`](../gdd/enemy-layers.md) F-E1). Sıra: en zayıf P_eff, en büyük A, alfabetik `from`, alfabetik `to` |
+| Savunma tutma | [`enemy-layers.md`](../gdd/enemy-layers.md) F-E2 (tek tanım, C-44): E'nin iki veya daha fazla oyuncu komşusu varsa ve A ≥ 2 ise E saldırmaz |
 | R2 savunma kaydırması | KAPALI (simülasyonda tempoyu bozdu) |
 | Bekle | Başka hamle yoksa `null` |
 | Kapsam dışı | Nötr bölgelere (çürük koru dahil) girmez; bozulmayı yok sayar (`spirit-system.md` §3.7) |

@@ -23,6 +23,23 @@ Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-revi
 >   (ADR-0011 battle report) uses it to pick `BATTLE_HELD_DEFENSE` / `BATTLE_LOST_DEFENSE`.
 > - Determinism is a tested property (`test_..._is_deterministic_across_runs`).
 
+> **Amendment 2026-10-21 (C-44, [`design/gdd/enemy-layers.md`](../../design/gdd/enemy-layers.md)):**
+> - **`EnemyAIProfile` fields (final):** `attack_start_turn: int` (Perde 1: 5), `strike_ratio_num: int` (3),
+>   `strike_ratio_den: int` (2), `strike_enabled: bool` (Perde 1: true; default profile: false = legacy
+>   lowest-army behaviour). No other fields; reinforcement values stay in `ChapterMapDefinition`.
+> - **Defence hold (single definition):** E holds iff it has **two or more** adjacent PLAYER regions **and**
+>   `E.army − 1 ≥ 2` (the second clause belongs to the source).
+> - **Effective defence input:** the AI reads the player's **effective** defence, not raw army: in R1 every
+>   `P.army` is replaced by `P_eff = ceil(resolve(&"army_defense", P.army))` (`P_eff = 0` when `P.army = 0`),
+>   i.e. the same value `CombatResolver.resolve_effective` uses for the defender (combat-system §4 "Etkin güç").
+>   `decide()` stays **pure**: the caller (`MapController`) passes the player's defence modifiers as an explicit
+>   input and `decide()` calls the pure `StatResolver` (ADR-0006); no service lookup, no mutation, no signals.
+>   The enemy itself still receives no modifiers (`A_eff = A`). Consequence: an R1 strike always satisfies
+>   `A > D_eff`, so it always wins (Dal 1). Order key uses `P_eff` (weakest `P_eff`, largest `A`, alphabetical
+>   `from`, alphabetical `to`).
+> - **Tests:** `_reads_effective_defense_from_modifiers`, `_empty_target_ignores_modifiers`,
+>   `_does_not_mutate_inputs` (enemy-layers AC19–AC20).
+
 ## Date
 2026-08-13
 

@@ -95,15 +95,19 @@ sıfırlanır → **(5)** oyun sonu kontrolü: önce kaybetme (bölgesiz **veya*
 > döngüsüyle uygular (ADR-0005, Accepted). Alfabetik eşitlik bozma ve işlem sırası C-52.
 
 Hedef mimaride düşman AI saf bir karar servisidir (bkz. [ADR-0005](../../docs/architecture/adr-0005-ai-architecture.md)):
-`EnemyAIController.decide(map_state) -> Array[MoveIntent]` yalnızca `MapState`'i
-**okur** ve deterministik bir hamle listesi (intent) döndürür — state'i değiştirmez,
-sinyal yaymaz. `MapController.end_turn()` intent'leri `ArmyController`/`CombatResolver`
-üzerinden **uygular** ve mevcut sinyalleri yayar.
+`EnemyAIController.decide(map_state, acted) -> MoveIntent` (ADR-0005 ve koddaki imza; `null` = hamle yok)
+yalnızca `MapState`'i **okur** ve deterministik tek bir hamle niyeti (intent) döndürür — state'i değiştirmez,
+sinyal yaymaz. `EnemyAIProfile` ve oyuncu savunma modifikatörleri açık girdidir (C-44, ADR-0005 eki).
+`MapController.end_turn()` her çağrıdan sonra intent'i `ArmyController`/`CombatResolver`
+üzerinden **uygular** ve mevcut sinyalleri yayar; `enemy_actions_per_turn > 1` ise güncel `acted` ile yeniden çağırır.
+Siyasi düşmanın tam kuralları: [`enemy-layers.md`](enemy-layers.md) (C-44).
 
-- Düşman bölgeleri `region_id` artan (alfabetik) sırayla işlenir (C-33, W6).
-  **İçerik notu:** `enemy_actions_per_turn = 1` iken hamle yapabilen ilk düşman bölgesi
+- Düşman bölgeleri `region_id` artan (alfabetik) sırayla işlenir (C-33, W6) — **varsayılan profilde**.
+  **İçerik notu (varsayılan profil):** `enemy_actions_per_turn = 1` iken hamle yapabilen ilk düşman bölgesi
   (alfabetik) turun tek hamlesini yapar — `region_id` fiilen AI önceliğidir; bölüm
-  verisi yazarları bunu bilerek adlandırır.
+  verisi yazarları bunu bilerek adlandırır. **R1 profilinde (`strike_enabled`, Perde 1+)** seçim
+  **küreseldir**: en zayıf P_eff, en büyük A, alfabetik `from`, alfabetik `to` (`enemy-layers.md` §3.3 madde 4);
+  `region_id` yalnız son eşitlik bozucudur, AI önceliği değildir.
 - Her düşman bölgesi için (army > 1):
   - Komşular arasında düşman-olmayan, `army_count`'u en düşük hedefi seç; eşitlikte
     `region_id` alfabetik ilk (W6 — Erlik yayılımı ve ADR-0005 ile aynı kural).
@@ -264,6 +268,9 @@ işlem sırası = düşman bölgeleri region_id artan; bütçe enemy_actions_per
   ekonomi adımı (gelir F2, düşman takviyesi F6, bakım F7), üretim sayaçları;
   `ChapterMapDefinition` bu sistemin `starting_gold` ve
   `enemy_reinforcement_per_turn` ayarlarını taşır.
+- **Katmanlı Düşman** (`enemy-layers.md`, C-44) — siyasi kral AI'ının kural sahibi: `EnemyAIProfile`
+  (R1 karşı vuruş, savunma tutma, `P_eff` okuması), düşman takviye kuralı (§3.5; yürütme resource F6).
+  Bu sistem `end_turn` sırasını, `MapState` verisini ve `decide(map_state, acted)` çağrı döngüsünü sağlar.
 - **Oyun Durumu** (`game_state.gd`) — `map_state`, `gold`, (planlı: `ruh`, `boons`).
 - **Ruh Sistemi** (`spirit-system.md`) — `RegionData`'ya `corruption_level`
   eklenecek; Erlik yayılımı `end_turn` 2. adımında çalışır (§3.4). Erlik modeli,

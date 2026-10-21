@@ -88,12 +88,14 @@ Biriktirmek de gerçek bir seçenek olmalı.
 5. **Bölge tavanı:** Her bölge bir turda en fazla `recruit_cap` birlik çıkarabilir.
    Tavan, bölgenin efektif üretiminden türer (§4); büyük obalar daha çok yiğit verir.
    - Sayaç her yeni oyuncu turunun başında sıfırlanır (tur sonunun 4. adımı).
-6. **Düşman takviyesi** (geçici sözleşme): Ekonomi adımında her düşman bölgesine
+6. **Düşman takviyesi** (kural sahibi: [`enemy-layers.md`](enemy-layers.md) §3.5, C-44; **yürütme bu belgede**, F6):
+   Ekonomi adımında her düşman bölgesine
    `+enemy_reinforcement_per_turn` ordu eklenir. Değer bölüm verisinden gelir.
    - **C-43 (2026-10-20):** Takviye alan bölgeler bölüm verisindeki `enemy_reinforcement_region_ids`
      listesiyle sınırlanabilir; **boş liste = tüm düşman bölgeleri** (Prolog / eski davranış). Bkz. F6.
    - Düşmanın hazinesi yoktur.
-   - Katmanlı Düşman GDD'si (`enemy-layers.md`) yazıldığında bu kuralı devralır.
+   - **C-44 (2026-10-21):** Kuralın sahibi artık `enemy-layers.md` §3.5'tir (değerler, bölge listesi, asimetrik
+     ekonomi kararı); bu belge ekonomi adımında çağrıyı ve F6 formülünü yürütür. Açık Soru 4 kapandı.
 7. **Bakım gideri:** `upkeep_per_army` ayarı tanımlıdır; **MVP değeri 0**, yani
    bakım yoktur. 0'dan büyük olduğunda ekonomi adımında, gelirden sonra ödenir;
    altın yetmezse ne olacağı §5'te tanımlanır.
@@ -127,7 +129,7 @@ Biriktirmek de gerçek bir seçenek olmalı.
 | Savaş (`combat-system.md`) | — | — (dolaylı: üretilen ordu savaşa girer) | — |
 | Oyun Durumu (`GameState`) | — | `gold` (yalnızca veri) | Kaynak |
 | Bölüm verisi (`ChapterMapDefinition`) | `starting_gold`, `enemy_reinforcement_per_turn`, `enemy_reinforcement_region_ids` (C-43; Perde 1 `starting_gold = 6`) | — | Kaynak (ayar) |
-| Katmanlı Düşman (`enemy-layers.md`, yazılmadı) | — | Düşman takviyesini devralır (geçici) | Gelecekte: Katmanlı Düşman |
+| Katmanlı Düşman ([`enemy-layers.md`](enemy-layers.md), C-44) | Takviye kuralı (değerler, bölge listesi, asimetrik ekonomi) | Takviye yürütmesi (F6) | Katmanlı Düşman kural sahibi; Kaynak yürütür |
 | HUD / Bilgi paneli | — | Altın, tahmini gelir (+X/tur), Ordu Topla (maliyet, kalan tavan) | UI (§10) |
 
 ---
@@ -369,7 +371,7 @@ hazine 6. *Alternatif:* aynı 6'lık kuvvet Doğu Obası'na → arındırma 6 > 
 | HUD / Bilgi paneli | Sert | Altın, tahmini gelir, Ordu Topla kontrolü (§10). |
 | Kayıt / Yükleme (ADR-0007) | Sert | Tur sonu otomatik kayıt: `gold` saklanır; bölge üretim sayaçları 4. adımda sıfırlandığı için kayıt anında hep 0'dır (yüklemede 0 başlatılır); tur ortası kayıt yok. |
 | Sahne Akışı (`scene-flow.md`, C-35) | Sert | Her sahne başında `gold = starting_gold` kurar (R8), sahne sonunda (COMMIT) altın 0'lanır, taşınmaz; Yeniden Dene aynı `starting_gold` ile sıfırdan başlar (AC16). |
-| Katmanlı Düşman (`enemy-layers.md`, yazılmadı) | Gelecek | Düşman takviyesini devralacak (geçici sözleşme). |
+| Katmanlı Düşman ([`enemy-layers.md`](enemy-layers.md), C-44) | Sert | Takviye kuralının sahibi (§3.5); bu belge F6'yı ekonomi adımında yürütür. Geçici sözleşme sona erdi. |
 
 ### Diğer GDD'lerde gereken karşı güncellemeler
 
@@ -578,7 +580,7 @@ Tamamı art bible'a bağlıdır.
 | 1 | ~~Bereket lütfu düz bonus mu (+1 altın/tur), yüzde mi (%10)?~~ **Çözüldü (C-31, 2026-10-18):** düz +1 altın/tur, yığın başına (`B_add`). | Kullanıcı / game-designer | C-31 ✅ |
 | 2 | ~~Prolog simülasyonu (§4) repoya alınsın mı, AC15 otomatik testle mi kontrol edilsin?~~ **Çözüldü (C-64, kullanıcı onayı 2026-10-19):** `tools/balance/prolog_sim.py` (kural tekrarı) repoda kalır; AC15 gerçek controller'larla `tests/integration/balance/prolog_balance_test.gd` (12 çizgi + T4 araması) | Kullanıcı | C-64 ✅ |
 | 3 | Sürü ne zaman etkinleşir ve neyi besler/tüketir? Konsept "nüfus ve ordu büyümesi" diyor. | game-designer | Perde 1 tasarımı |
-| 4 | Katmanlı Düşman GDD'si takviyeyi devraldığında düşman ekonomisi simetrik mi olacak? | game-designer | `enemy-layers.md` |
+| 4 | ~~Katmanlı Düşman GDD'si takviyeyi devraldığında düşman ekonomisi simetrik mi olacak?~~ **Çözüldü (C-44, 2026-10-21):** asimetrik — hazine yok, sabit takviye, düşman modifikatör almaz; kural sahibi [`enemy-layers.md`](enemy-layers.md) §3.5 / K7 | game-designer | C-44 ✅ |
 | 5 | Toparlanma mekanizması ve bakım gideri (çapraz inceleme D1/D2): `I_floor` ve `U` açılsın mı? | Kullanıcı | İlk Prolog playtesti |
 | 6 | ~~Sahne ortası kayıtta altın ve üretim sayaçları nasıl saklanacak?~~ **Çözüldü (ADR-0007, 2026-10-18):** yalnızca tur sonu otomatik kayıt; altın ve üretim sayaçları tur sonunda oturmuş haliyle JSON'a yazılır, tur ortası kayıt yok. | technical-director | C-16 ✅ |
 | 7 | ~~Kusursuz oyunla 4 turda zafer öğretici için fazla hızlı mı?~~ **C-49 (2026-10-19):** en hızlı T5, Erlik'le ilgilenen oyun T7–T8, tipik 8–12 tur; ihmal T15'te kaybettirir. Kalan soru playtestte: tipik ilk oyuncu gerçekten 10–18 turda mı bitiriyor? | Kullanıcı | C-42 playtesti |

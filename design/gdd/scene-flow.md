@@ -690,7 +690,7 @@ Tamamlama (COMMIT): `chapters_completed' = chapters_completed ∪ {c}` ; `curren
 | Art bible (§2, §4, §5, §7, §8) | Sert | Oyun durumu atmosferleri, Kök Böri pozları, panel ve ekran kuralları, illüstrasyon standartları |
 | Erişilebilirlik ayarları (`AccessibilitySettings`) | Yumuşak | Hareketi Azalt davranışı |
 | Ordu / Savaş (`army-system.md`, `combat-system.md`) | Yok | Doğrudan bağ yok; sonuçları harita üzerinden gelir |
-| Katmanlı Düşman (`enemy-layers.md`, yazılmadı) | Gelecek | Perde 1+ siyasi yenilgi nedenleri için yeni `loss_reason` değerleri (tabloya satır eklenir, §3.7) |
+| Katmanlı Düşman ([`enemy-layers.md`](enemy-layers.md), C-44) | Yumuşak | Siyasi düşman **yeni `loss_reason` değeri eklemez** (K4): Perde 1+ siyasi yenilgi mevcut `NO_REGIONS` ile (bölgesiz kalma) ve `ERLIK` ile ifade edilir; tabloya satır eklenmez (§3.7) |
 | Konsey (`council-system.md`, yazılmadı) | Gelecek | Perde 2'de konsey ekranı sefer haritasına eklenebilir |
 | Miras / Bölünme (`legacy-division.md`, yazılmadı) | Gelecek | Final çıkışı (§11-Q5) |
 

@@ -21,7 +21,7 @@ Foundation → Core → Feature → Presentation → Polish
 | **Ordu & Birim Sistemi** | Core | [army-system.md](army-system.md) | Designed | 1 | Savaş, Harita, Kaynak, Ruh |
 | **Savaş Çözümü** (otomatik + rapor) | Core | [combat-system.md](combat-system.md) | Designed | 1 | Ordu, Harita, Ruh |
 | **Kök Böri / Ruh Sistemi** (imza) | Feature | [spirit-system.md](spirit-system.md) | Designed | 2 | Harita, Ordu, Savaş, Kaynak, Oyun Durumu |
-| **Katmanlı Düşman** (siyasi krallar; Erlik burada değil — C-29) | Feature | `enemy-layers.md` | Yazılmadı | 2 | Harita, Ordu, Kaynak |
+| **Katmanlı Düşman** (siyasi krallar; Erlik burada değil — C-29) | Feature | [enemy-layers.md](enemy-layers.md) | Designed (C-44) | 2 | Harita, Ordu, Kaynak, Savaş, Ruh (okuma: savunma lütufları), Sahne Akışı |
 | **Erlik Bozgunu & Arındırma** (MVP'de `spirit-system.md` §3.1–3.2, §3.6–3.7 kapsar; ayrı GDD planlı değil — C-29) | Feature | [spirit-system.md](spirit-system.md) | Designed (spirit içinde) | 2 | Ruh |
 | **Konsey (Altı Oğul)** | Feature | `council-system.md` | Yazılmadı | 3 | Ruh (ADR-0006 hattı) |
 | **Diplomasi** (ittifak/fetih) | Feature | `diplomacy-system.md` | Yazılmadı | 3 | Katmanlı Düşman |

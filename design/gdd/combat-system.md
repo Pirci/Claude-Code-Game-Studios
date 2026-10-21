@@ -87,7 +87,8 @@ attacker_remaining=1, defender_remaining=2, savunan kazanır.
 ### Etkin güç (lütuf modifikatörleri) — *planlı, M2 (C-31 kararı)*
 Kurt Gücü / Demir Post lütufları (`spirit-system.md` §3.5) **etkin gücü** değiştirir;
 birlik sayısı değişmez. Modifikatörler yalnızca **oyuncunun** tarafına uygulanır
-(ADR-0006 `StatResolver`, yuvarlama `ceil`):
+(ADR-0006 `StatResolver`, yuvarlama `ceil`). **C-44 (2026-10-21):** düşman AI saldırı kararında
+oyuncunun `D_eff` değerini okur (`enemy-layers.md` F-E1 `P_eff`):
 ```
 A_eff = ceil(resolve(&"army_attack",  A))   # saldıran oyuncuysa; değilse A_eff = A
 D_eff = ceil(resolve(&"army_defense", D))   # savunan oyuncuysa; değilse D_eff = D
