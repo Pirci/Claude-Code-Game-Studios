@@ -417,6 +417,17 @@ görünür; sağlıklı ağaç 1'de gizli (`max=0`); sınırsız max (-1). `unit
 nehir y150 üstü; overlay bağlı bölge içinde; bölge başına ≤5 prop. `unit/ui`: kontrast `#5C8F5C` ≥ 3:1; düşman tamgası renksiz görünür;
 nötrde tamga yok. `unit/ui/hud_presenter`: yayılım sayacı geri sayar, yayılım turunda sıfır.
 
+### C-47 ölçüm maddeleri (C-44 inceleme (2026-10-21), D5)
+
+Replay'de ölçülür; sonuçlar için kabul / erteleme kaydı yazılır:
+
+| Madde | Ölçüm | Kaynak |
+| ---- | ---- | ---- |
+| T5 sonrası AI adayı | "T5 sonrası uygun AI adayı olan tur oranı" (H2). Düşükse başkent F-E2'den muaf tutulması **kullanıcıya sorulur** | H2 |
+| Felç + yeniden arındırma | Ruh/tur çizgisi (odağı L3 bırak, komşu yayılımları yeniden arındır); aşılırsa `spirit-system.md` ×0.5 yedeği açılır | H3 |
+| Giriş varyantları | GK1 (Gök Kalkanı ×1) ve Bereket1 ile girişte replay (lütufsuz giriş kabul #3'ü yalnız tek başına geçer). **Pasif + GK1 oyuncusunun kaybı > T18 ise Perde 1 `erlik_loss_threshold` 9 → 8** | H4 |
+| N4 / N5 / N6 / N8 / N9 | Perde 1 için ölçülür, kabul / erteleme kaydı yazılır (`spirit-system.md` §3.7, §5 işaretçileri "C-47 replay sonrası") | W-7 / D5 |
+
 ### Playtest listesi (12)
 
 1 Prolog→Perde 1 geçişi, G-1..G-3 · 2 ilk tur `HINT_ENEMY_KING` · 3 nehir HUD altında, köprüden geçiliyor · 4 ağaç yoğunluğu batı seyrek / doğu sık, çürük ağaçlar Erlik bölgesinde ·
@@ -429,6 +440,6 @@ nötrde tamga yok. `unit/ui/hud_presenter`: yayılım sayacı geri sayar, yayıl
 | ---- | ---- | ---- |
 | Perde 2 | UNRESOLVED — `design/levels/` altında belge yok | Yalnız sahne akışı bağlantısı: Perde 1 zaferi → anlatı çıkışı (O-2, teaser: batıda Urum) → sefer haritasında sonraki sahnenin açılması (`scene-flow.md` F1). Perde 2 yerleşimi/kimliği bu belgede tanımlanmaz |
 | C-44 | Çözüldü (2026-10-21) | Perde 1 Ruh çıktısı ~40–60; lütuf seçimi zorunlu değil (zayıf oyuncu seçimsiz bitirebilir, Ruh taşınır). Bkz. [denge raporu](../balance/boon-balance-2026-10-21.md), `spirit-system.md` §4.4 |
-| Denge | Açık | Simülasyon değerleri gerçek controller replay ile doğrulanacak (§13 #10); S-purify T20 riski (§5) C-47'de izlenir |
+| Denge | Açık | Simülasyon değerleri gerçek controller replay ile doğrulanacak (§13 #10); S-purify T20 riski (§5) C-47'de izlenir. C-44 inceleme (2026-10-21): S-purify ≤ T16 BLOCKING kriteri (D1, §13 kabul #11); D5 ölçüm maddeleri (§13 "C-47 ölçüm maddeleri"); H4 — pasif + GK1 > T18 ise `erlik_loss_threshold` 9 → 8 |
 | Ses | Açık | `audio-director` girdisi yok (§8) |
 | Nehir üst sınırı | Açık | `_top_bar_height()` ölçümü (§7.3) |
