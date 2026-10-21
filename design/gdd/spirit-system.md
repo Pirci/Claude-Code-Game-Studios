@@ -155,9 +155,10 @@ başına değer). Tablodaki sayılar §4/§7 knob'larının varsayılanlarıdır
 knob'dur, katalog onu gösterir (C-53). Katalog içeriği spirit feature'ının
 `BoonDefinition` kaynağıdır (`boon_id`, ad key'i, `requires`, `ModifierSource`);
 yığılma sınırının **tek sahibi** `ModifierSource.max_stacks`'tir (Gök Kalkanı `.tres`'i
-`GOK_KALKANI_MAX_STACKS` değerini taşır) ve uygunluk `ModifierController.can_add()` ile
+`GOK_KALKANI_MAX_STACKS`, Kurt Gücü `.tres`'i `KURT_GUCU_MAX_STACKS` değerini taşır) ve uygunluk `ModifierController.can_add()` ile
 sorulur (ADR-0006, mimari inceleme 2026-10-19 D2). **Uygun havuz** = katalog − gerektirdiği sistemi etkin olmayanlar −
-yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı.
+yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı. **Sahne havuzu (C-44, 2026-10-21):** sahne `SceneDefinition.boon_pool_ids`
+doldurmuşsa uygun havuz bu listeyle de kesişir (boş = tüm katalog; §7 "Havuz kompozisyonu").
 
 | Lütuf (`boon_id`) | Etki (yığın başına) | Stat / tür | Gerektirir | Yığılma sınırı | İlk kademe |
 | ---- | ---- | ---- | ---- | ---- | ---- |
@@ -165,9 +166,16 @@ yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı.
 | Bereket (`bereket`) | Tur geliri +1 altın | `gold_income` / FLAT +1 (→ resource `B_add`) | — | — | M1 |
 | Demir Post (`demir_post`) | Savunan oyuncu bölgesine +1 etkin güç | `army_defense` / FLAT +1 | Savaş etkin gücü (`combat-system.md` §4 "Etkin güç") | — | M2 |
 | Gök Kalkanı (`gok_kalkani`) | Erlik yayılım aralığı +`GOK_KALKANI_INTERVAL_BONUS` (1) tur | `erlik_spread_interval` / FLAT +`GOK_KALKANI_INTERVAL_BONUS` | — | `GOK_KALKANI_MAX_STACKS` (3) | M1 |
-| Kurt Gücü (`kurt_gucu`) | Oyuncunun saldıran ve arındıran kuvvetine +1 etkin güç | `army_attack` / FLAT +1 | Savaş etkin gücü (`combat-system.md` §4 "Etkin güç") | — | M2 |
+| Kurt Gücü (`kurt_gucu`) | Oyuncunun saldıran ve arındıran kuvvetine +1 etkin güç | `army_attack` / FLAT +1 | Savaş etkin gücü (`combat-system.md` §4 "Etkin güç") | `KURT_GUCU_MAX_STACKS` (3) | M2 |
 | Sürü Kutsaması (`suru_kutsamasi`) | Sürü geliri +%10 | `herd_income` / PERCENT +0.10 | Sürü etkin (`resource-system.md` §3.1) | — | kilitli |
 | Yiğit Ruhu (`yigit_ruhu`) | Kahraman birim gücü +%10 | `hero_strength` / PERCENT +0.10 | Kahraman birimleri (`hero-units.md`) | — | kilitli |
+
+> **Demir Post ve düşman AI (C-44, 2026-10-21):** AI oyuncunun *etkin* savunmasını okur
+> (Demir Post düşman vuruşunu gerçekten caydırır/kırar); ayrıntı
+> [`enemy-layers.md`](enemy-layers.md)'de. **Kurt Gücü sınırı (C-44):** `KURT_GUCU_MAX_STACKS = 3`
+> (Gök Kalkanı kalıbı) — mono-build riski: simülasyonda 3 yığın Perde 1 kuzey yolunu T12 → T9'a
+> indiriyor; Perde 1'de en fazla 2 lütuf erişilebildiğinden M2'de pratik etkisi yok
+> ([denge raporu](../balance/boon-balance-2026-10-21.md)).
 
 > **Neden düz değerler (W9):** Prolog'da ordular 2–14, gelir 2–10 arasındadır;
 > %5–%10'luk bonuslar yuvarlamada kaybolur (ör. `floor(5 × 1.1) = 5`). Askeri ve
@@ -250,7 +258,8 @@ yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı.
   Ustalığı canavarın Ruh'unda 30 → 36).
 - **M2 — Vertical Slice** (C-44, C-47): savaş etkin gücü (`combat-system.md` §4 "Etkin güç") ile
   Kurt Gücü + Demir Post, sahneler arası taşıma (AC6), lütuf dengesi (C-44 kapsamında
-  `/balance-check` — C-53 ile C-44 bitti kriterine eklendi).
+  `/balance-check` — C-53 ile C-44 bitti kriterine eklendi; **karar C-44, 2026-10-21:**
+  [denge raporu](../balance/boon-balance-2026-10-21.md)).
 - **Kilitli:** Sürü Kutsaması (sürü etkinleşince), Yiğit Ruhu (kahraman birimleri
   GDD'siyle).
 
@@ -269,6 +278,7 @@ Değişkenler ve varsayılan (tuning) değerleri:
 | `BOON_COST_STEP` | Lütuf başına maliyet artışı | 20 | 5–40 |
 | `ERLIK_SPREAD_INTERVAL` | Yayılma periyodu (tur; sahne override'ı — Prolog 3) | 4 | 2–8 |
 | `GOK_KALKANI_INTERVAL_BONUS` | Gök Kalkanı yığını başına aralık artışı (tur) | 1 | 1–2 |
+| `KURT_GUCU_MAX_STACKS` | Kurt Gücü yığılma sınırı (C-44) | 3 | 1–5 |
 | `GOK_KALKANI_MAX_STACKS` | Gök Kalkanı yığılma sınırı | 3 | 1–5 |
 | `erlik_loss_threshold` | Erlik kaybı eşiği (§4.7); bölüm verisi `WinCondition`, sahibi `region-map-system.md` §3.6 | 0 (kapalı); Prolog 9 | 0 veya başlangıç `erlik_power` + 3 … 3 × bölge sayısı |
 
@@ -315,18 +325,23 @@ boon_cost(n) = BASE_BOON_COST + n × BOON_COST_STEP
 Örnek: 0→30, 1→50, 2→70, 3→90.
 Birikimli maliyet: `k` lütuf için `30k + 10k(k−1)` → 1: 30, 3: 150, 5: 350, 7: 630, 8: 800.
 
-**Eğri hedefi (D5, C-31):** doğrusal eğri korunur. Hedef sahne başına ~1 lütuf
+**Eğri hedefi (D5, C-31; C-44 ile güncellendi 2026-10-21):** doğrusal eğri korunur
+(**30 + 20n değişmez**, C-44). Hedef sahne başına ~1 lütuf
 (Prolog'da tipik 1 — C-49: hızlı oyuncuda zaferde canavarın 30 Ruh'uyla, Erlik'le ilgilenen
-oyuncuda sahne ortasında ~T7; teorik tavan 2 lütuf = 80 Ruh, ancak ≥ 13 turluk titiz oyunla),
-finalde **6–8 lütuf** — 6 sahnede toplam
-~600–800 Ruh arzı. Çapraz incelemedeki "18 lütuf = 3 600 Ruh" hedefi geçersizdir;
-katalogda 5 uygun lütuf olduğundan 6–8 yığın, "finalde tümü aktif" vaadini karşılar.
-Arz tahmini Perde 1 verisiyle M2'de doğrulanır (C-44 `/balance-check`).
+oyuncuda sahne ortasında ~T7; teorik tavan 2 lütuf = 80 Ruh, ancak ≥ 13 turluk titiz oyunla).
+Finalde hedef: **5 lütuf (M2 kataloğunda tür başına 1) ≈ 350 Ruh ≈ ortalama ~58 Ruh/sahne**;
+kilitli lütuflar açılınca **7 lütuf (≈ 630 Ruh)**. *Eski hedef "6–8 lütuf, 600–800 Ruh"
+geçersizdir;* gerekçe: Perde 1 Ruh arzı ~40–60 (aşağıda) — eski hedef sahne başına ~100 Ruh
+varsayıyordu. Çapraz incelemedeki "18 lütuf = 3 600 Ruh" hedefi de geçersizdir. Arz/maliyet
+tabloları: [denge raporu](../balance/boon-balance-2026-10-21.md).
 
 **Perde 1 Ruh arzı (C-43, 2026-10-20 — [`perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md) §6):**
-`curuk_koru` L3 arındırması **+30** (zorunlu; ilk lütuf garanti), `kurt_ini_ormani` L1 arındırması **+10**
+`curuk_koru` L3 arındırması **+30**, `kurt_ini_ormani` L1 arındırması **+10**
 (isteğe bağlı), yayılımla oluşan L1 arındırma **+10** (duruma bağlı); Perde 1 toplamı **~40–60** (ilgili
-oyuncu). Perde 1'in Ruh çıktısı ve zorunlu lütuf seçimi C-44 kararına bağlıdır.
+oyuncu). **C-44 (2026-10-21):** Prolog'da lütuf alan oyuncu için Perde 1'deki sıradaki lütuf
+**50 Ruh**'tur; `curuk_koru` +30 tek başına yetmez, lütuf seçimi isteğe bağlı arındırmalara
+(+10 / +10) bağlıdır. Zayıf oyuncunun Perde 1'i **seçimsiz bitirmesi kabul edilir** (Ruh bir
+sonraki sahneye taşınır).
 
 ### 4.5 Deterministik 3'lü sunum
 ```
@@ -339,6 +354,11 @@ aynı kalsın diye "yapılan sunum" değil "seçilen lütuf" sayılır). `pool_s
 iken üç slot farklıdır; `pool_size < 3` ise slotlar tekrar eder (§5).
 Bu, rastgelelik olmadan tekrarlanabilir sunum üretir (test determinizmi). İleride
 oyuncu-görünmez bir seed `GameState`'e eklenerek çeşitlilik artırılabilir.
+**Yeniden denemede determinizm (C-44, 2026-10-21):** sunum yalnızca `(chapter_id, n)` ve
+uygun havuzun işlevidir; sahne yeniden denenince `n` girişteki değere döndüğü için (§3.4,
+yenilgi) oyuncu aynı sunum dizisini, aynı 3'lüleri görür — çiftçilik değil, öğrenilmiş
+sunum. Sahne havuzu (§3.5) aynı girdinin parçasıdır. Yığılma sınırı sonradan düşürülürse
+eski kayıtta `n` yine `boons.size()` ile sayılır (fazla seçimler dahil; maliyet eğrisi kaymaz).
 Örnek (M1 havuzu `[arinma_ustaligi, bereket, gok_kalkani]`, Prolog `chapter_id = 1`,
 `n = 0`): seed = 31 mod 3 = 1 → sunum: Bereket, Gök Kalkanı, Arınma Ustalığı.
 
@@ -429,6 +449,17 @@ aynı yol T20). Uyarı eşiği: `erlik_power = eşik − 1` (Prolog 8 — ihmal 
   sonraki sahne yok; 2. lütuf için ~12 ek tur). Lütuflar Perde 1'e taşındığı anda (M2)
   sınırlanmalıdır → **C-44** karar verir (seçenekler: "tekrar arındırma çarpanı" knob'u +
   sahne içi bölge başına arındırma sayacı, sahne Ruh tavanı, sahne tur sınırı).
+  **C-44 kararı (2026-10-21):** Perde 1 için **yeni kural yok**. İzleme eşiği: playtestte zafer
+  turu > T18 çıkarsa yedek düğme devreye girer — "aynı bölgenin tekrar arındırması ×0.5"
+  (§7, "yedek, kapalı"). Gerekçe: Perde 1'de Erlik'in Gölgesi ve AI baskısı bekleyen oyuncuyu
+  zaten cezalandırır; T12 medyanlı sahnede çiftçilik getirisi (~10 Ruh / 3 tur) lütuf başına
+  ~15 ek tur eder.
+- **Zayıf oyuncu ve seçimsiz Perde 1 (C-44):** Perde 1'i hiç lütuf seçmeden bitirmek kabul
+  edilir; Ruh taşınır ve sonraki sahnede harcanır (§4.4 maliyeti `n`'e bağlıdır, Ruh'a değil).
+- **Prolog sahne havuzu (C-44):** Prolog'un sahne havuzu M1 üçlüsüdür (Arınma Ustalığı,
+  Bereket, Gök Kalkanı). Demir Post Prolog'da ölü seçim olurdu (`ENEMY` bölgesi yok, savunulan
+  saldırı yok) → havuza girmez. Sahne bazlı havuz için `SceneDefinition`'a veri alanı gerekir
+  (`boon_pool_ids: Array[StringName]`; boş = tüm katalog); uygulama C-47.
 - **Yayılımı yönlendirme (N4, C-49):** en az ordulu aday kuralı yüzünden oyuncu değersiz,
   garnizonu 1 bir bölgeyi "paratoner" yapabilir. Erlik'in Gölgesi her yayılımda yine +1
   olduğundan bu ihmalin bedelini kaldırmaz; hangi bölgenin acı çekeceğini seçmek
@@ -514,7 +545,9 @@ aynı yol T20). Uyarı eşiği: `erlik_power = eşik − 1` (Prolog 8 — ihmal 
 | Lütuf etki değerleri | Build gücü | Kurt Gücü / Demir Post +1–2 güç; Bereket +1–2 altın; Arınma Ustalığı %10–%30; Gök Kalkanı +1–2 tur | Denge kritik — çok yüksek zorluğu bozar; küçük tam sayılarda yüzde yerine düz değer (§3.5) |
 | `GOK_KALKANI_MAX_STACKS` | Erlik baskısının alt sınırı | 1–5 (varsayılan 3) | Yüksek = Erlik etkisizleşebilir |
 | `GOK_KALKANI_INTERVAL_BONUS` | Yığın başına aralık artışı | 1–2 tur (varsayılan 1) | — |
-| Havuz kompozisyonu | Build çeşitliliği | — | Sahne bazlı havuz override mümkün |
+| Havuz kompozisyonu | Build çeşitliliği | — | Sahne bazlı havuz: `SceneDefinition.boon_pool_ids` (boş = tüm katalog; C-44). Prolog = M1 üçlüsü; uygulama C-47 |
+| `KURT_GUCU_MAX_STACKS` | Mono-build riski (C-44) | 1–5 (varsayılan 3) | 3 yığın Perde 1 kuzey yolunu T12 → T9 indiriyor; Perde 1'de ≤ 2 lütuf erişilir, M2'de etkisiz |
+| Tekrar arındırma çarpanı (C-44, **yedek, kapalı**) | Ruh çiftçiliği | ×1.0 (kapalı); açılırsa ×0.5 | Aynı bölgenin ikinci ve sonraki arındırmasında `ruh_gain` çarpanı. Açma tetiği: Perde 1 playtestinde zafer turu > T18 |
 
 ---
 
@@ -583,3 +616,11 @@ aynı yol T20). Uyarı eşiği: `erlik_power = eşik − 1` (Prolog 8 — ihmal 
 24. HUD Erlik'in Gölgesi'ni `erlik_power / eşik` olarak gösterir; `erlik_power = eşik − 1`
     iken uyarı durumu ve yayılım göstergesiyle birlikte "bir sonraki yayılımda kayıp" bilgisi
     görünür. *(UI — walkthrough, ADVISORY; C-41/C-45)*
+25. **(C-44) Yeniden deneme determinizmi.** GIVEN sahne `n = 1` ile girildi, sunum açıldı ve
+    kaybedildi, WHEN "Sahneyi Yeniden Dene", THEN `n = 1` döner ve aynı `(chapter_id, n, havuz)`
+    için sunum öncekiyle birebir aynı 3 lütuftur. *(Test — BLOCKING, M2)*
+26. **(C-44) Sahne havuzu.** `boon_pool_ids` doluyken sunum yalnızca listedekilerden gelir;
+    Prolog'da Demir Post hiçbir sunumda yer almaz; boş liste tüm katalogu kullanır. *(Test, kod C-47)*
+27. **(C-44) Kurt Gücü sınırı.** 3 yığından sonra Kurt Gücü uygun havuzdan çıkar (`can_add()`).
+    Sınır düşürülmüş eski kayıtta `n = boons.size()` değişmez, `rebuild()` en çok sınır kadar yığın
+    kurar. *(Test — M2)*

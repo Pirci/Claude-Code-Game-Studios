@@ -200,7 +200,7 @@ Yoğunluk
 | Senaryo | Sonuç |
 | ---- | ---- |
 | N-fast | Zafer T12 |
-| S-purify-first | Zafer T14 (AI vuruşu T7) |
+| S-purify-first | Zafer **T20** (AI vuruşu T7) — C-44 düzeltmesi: eski "T14" orkestratör tablo okuma hatasıydı |
 | Mixed | Zafer T14 (AI vuruşu T5) |
 | 3 tur boş | Zafer T15 |
 | 6 tur boş | Zafer T18 |
@@ -208,6 +208,12 @@ Yoğunluk
 | Pasif | Kayıp T15 (Erlik) |
 
 Oyuncu modeli basit planlayıcıdır; gerçek değerler C-64 tarzı controller testiyle yeniden doğrulanacak.
+
+> **RİSK (C-44, 2026-10-21):** Güney yolu (önce arındır) basit oyuncu modelinde T20 — başkent
+> Cürcet Obası'nı geri alıyor (R1 geri alma), arkada 1 ordu bırakan oyuncu cezalanır. Değerler
+> şimdilik değişmez; C-47 gerçek controller replay'i esas; gerekirse `attack_start_turn` veya
+> başkent takviyesi ayarlanır. (T20, hedef aralığın T10–18 dışındadır; yalnız bu basit modelde.
+> Mixed W14 doğrudur.) Ayrıntı: [denge raporu](../balance/boon-balance-2026-10-21.md).
 
 ## 6. Kazanma Koşulu, Sahne Verisi ve Kaynak
 
@@ -226,7 +232,7 @@ Oyuncu modeli basit planlayıcıdır; gerçek değerler C-64 tarzı controller t
 
 | Ruh kaynağı | Miktar | Durum |
 | ---- | ---- | ---- |
-| curuk_koru L3 arındırma | +30 | Zorunlu; ilk lütuf garanti |
+| curuk_koru L3 arındırma | +30 | Zorunlu. C-44 (2026-10-21): Prolog'da lütuf alan oyuncu için Perde 1'deki sıradaki lütuf 50 Ruh; Çürük Koru +30 tek başına yetmez, seçim opsiyonel arındırmalara (+10 / +10) bağlıdır |
 | kurt_ini L1 | +10 | İsteğe bağlı |
 | Yayılımla oluşan L1 | +10 | Duruma bağlı |
 | Perde 1 toplamı | ~40–60 | İlgili oyuncu |
@@ -378,7 +384,7 @@ Uygulanmaz — ULUS'ta toplanabilir/gizli alan yoktur. İsteğe bağlı ödülle
 | 7 | İçerik | Perde 1 `.tres` harita + WinCondition + `decor` + sahne tanımı; `campaign.tres`'e `perde1_dogu` | 1–3, 6 |
 | 8 | İçerik | `translations.csv` anahtarları (11 dil) | 7 |
 | 9 | Test | Birim: AI (10), F6 (3), win_condition (4), map_decor_item, map_decor_geometry, ui kontrast, hud_presenter | 1–5, 7 |
-| 10 | Test | `integration/balance/perde1_balance_test` (gerçek controller replay): N-fast W12, S-purify W14, Mixed W14, no-purify L18, pasif L15, 3 boş tur 15'ten önce zafer yok. Fark çıkarsa replay esas alınır, belge güncellenir | 1, 2, 7 |
+| 10 | Test | `integration/balance/perde1_balance_test` (gerçek controller replay): N-fast W12, S-purify **W20** (C-44: eski W14 yanlıştı; RİSK notu §5), Mixed W14, no-purify L18, pasif L15, 3 boş tur 15'ten önce zafer yok. Fark çıkarsa replay esas alınır, belge güncellenir; S-purify T20 ise `attack_start_turn` / başkent takviyesi ayarı değerlendirilir | 1, 2, 7 |
 | 11 | Test | `integration/campaign/perde1_playthrough_test`: UI ile intro → zafer → outro → menü | 7, 8 |
 | 12 | Doğrulama | Ekran görüntüsü (nehir `_top_bar_height()+4`), 12 maddelik playtest | 7 |
 | 13 | Belge | §12 güncellemeleri | Onaydan sonra |
@@ -420,7 +426,7 @@ nötrde tamga yok. `unit/ui/hud_presenter`: yayılım sayacı geri sayar, yayıl
 | Konu | Durum | Not |
 | ---- | ---- | ---- |
 | Perde 2 | UNRESOLVED — `design/levels/` altında belge yok | Yalnız sahne akışı bağlantısı: Perde 1 zaferi → anlatı çıkışı (O-2, teaser: batıda Urum) → sefer haritasında sonraki sahnenin açılması (`scene-flow.md` F1). Perde 2 yerleşimi/kimliği bu belgede tanımlanmaz |
-| C-44 | Açık | Ruh / lütuf taşıma: Perde 1'in Ruh çıktısı (§6) ve zorunlu lütuf seçimi C-44 kararına bağlı |
-| Denge | Açık | Simülasyon değerleri gerçek controller replay ile doğrulanacak (§13 #10) |
+| C-44 | Çözüldü (2026-10-21) | Perde 1 Ruh çıktısı ~40–60; lütuf seçimi zorunlu değil (zayıf oyuncu seçimsiz bitirebilir, Ruh taşınır). Bkz. [denge raporu](../balance/boon-balance-2026-10-21.md), `spirit-system.md` §4.4 |
+| Denge | Açık | Simülasyon değerleri gerçek controller replay ile doğrulanacak (§13 #10); S-purify T20 riski (§5) C-47'de izlenir |
 | Ses | Açık | `audio-director` girdisi yok (§8) |
 | Nehir üst sınırı | Açık | `_top_bar_height()` ölçümü (§7.3) |

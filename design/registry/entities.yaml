@@ -448,7 +448,7 @@ constants:
       - design/gdd/spirit-system.md   # §4.4 boon_cost(n) = base + n × step
     value: 30
     unit: Ruh (first boon)
-    notes: "boon_cost_step = 20. Bkz. ruh_per_level notu."
+    notes: "boon_cost_step = 20. Bkz. ruh_per_level notu. C-44 (2026-10-21): maliyet formülü 30 + 20n değişmez; D5 hedefi 5 lütuf ≈ 350 Ruh (kilitliler açılınca 7 ≈ 630) — design/balance/boon-balance-2026-10-21.md."
     added: 2026-10-19
     revised: ""
 
@@ -475,6 +475,18 @@ constants:
     unit: erlik_power (sum of corruption levels) at which the Prolog is lost; 0 = disabled
     notes: "C-49. Prolog başlangıç erlik_power 4 → hiç arındırmayan oyuncu T15 sonunda kaybeder. Değişirse resource-system §4 tablosu yeniden üretilir."
     added: 2026-10-19
+    revised: ""
+
+  - name: kurt_gucu_max_stacks
+    status: active
+    source: design/gdd/spirit-system.md
+    referenced_by:
+      - design/gdd/spirit-system.md   # §3.5 lütuf kataloğu, §7
+      - design/balance/boon-balance-2026-10-21.md
+    value: 3
+    unit: Kurt Gücü yığılma sınırı (ModifierSource.max_stacks; Gök Kalkanı kalıbı)
+    notes: "C-44 (2026-10-21). Mono-build riski: simülasyonda 3 yığın Perde 1 kuzey yolunu T12 → T9 indiriyor; Perde 1'de ≤ 2 lütuf erişilir, M2'de pratik etkisi yok."
+    added: 2026-10-21
     revised: ""
 
 # Example:
