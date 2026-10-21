@@ -253,7 +253,7 @@ yeterli — solo kapsam kontrolü). Yeniden Dene'de A gösterilmez.
 
 | Sayfa | Durum | Vuruş | Illüstrasyon (art bible §8 adlandırma) |
 | ---- | ---- | ---- | ---- |
-| G-1 | `INTRO_NARRATIVE` | Doğuş: gün doğumu altın-turuncu, doğaüstü işaretlerle gelen çocuk. Başlık kartı = sahne adı (`CHAPTER_1_TITLE`, 24px) | `ill_prolog_intro.png` |
+| G-1 | `INTRO_NARRATIVE` | Doğuş: gün doğumu altın-turuncu, doğaüstü işaretlerle gelen çocuk. Başlık kartı = sahne adı (`CHAPTER_1_TITLE`, 12px — C-45 (2026-10-21); 24px yalnız tam ekran başlık kartı, cila) | `ill_prolog_intro.png` |
 | G-2 | `INTRO_NARRATIVE` | Dağınık boylar ve bozkırı kavuran ilk Erlik canavarı; çürümenin ilk lekesi | `ill_prolog_tribes.png` |
 | G-3 | `KOK_BORI_MARK` A | **Kök Böri'nin ilk görünüşü:** gökten ışık çizgileriyle iner (kanat yok), Oğuz'a canavarın ininin yönünü gösterir; koyu ilahi sahne, gök mavisi/beyaz/altın | `ill_prolog_genesis.png` |
 | G-4 | `KOK_BORI_MARK` B | Harita üstünde hedef işareti (aşağıda) | harita |
@@ -315,7 +315,7 @@ Sıra (TR-concept-007, ADR-0007, `spirit` §3.4, `region-map` §3.7):
 | Sayfa | Vuruş | İllüstrasyon |
 | ---- | ---- | ---- |
 | O-1 | Canavar arındırıldı, bozkır yeşeriyor; Kök Böri'nin ışığı toprağa iner (Ülgen'in zaferi) | `ill_prolog_beast_purified.png` |
-| O-2 | Boylar bayrak altında toplanır; Oğuz **Kağan** ilan edilir. Başlık kartı `CHAPTER_1_KAGAN_TITLE` (24px, ör. "Oğuz Kağan") | `ill_prolog_kagan.png` |
+| O-2 | Boylar bayrak altında toplanır; Oğuz **Kağan** ilan edilir. Başlık kartı `CHAPTER_1_KAGAN_TITLE` (12px — C-45 (2026-10-21), ör. "Oğuz Kağan") | `ill_prolog_kagan.png` |
 
 Kağan ilanı **anlatı ödülüdür**; ayrı bir mekanik etki taşımaz (durum `chapters_completed ∋ 1`'den
 türetilir). Mekanik karşılığı bir sonraki sahnenin açılmasıdır: Perde 1'de Ruh lütuf sistemi tam devrededir
@@ -371,7 +371,7 @@ Erlik adımını zaten atlar). Metinler yer tutucudur; son söz C-54'ündür.
 Kapsam: `INTRO_NARRATIVE`, `KOK_BORI_MARK` A, `OUTRO_NARRATIVE`, `CAMPAIGN_END`, `STORY_REPLAY`.
 
 - **Sayfa:** tam ekran 640×360 illüstrasyon (üstte) + alt koyu panel (12px krem metin; art bible §7).
-  İsteğe bağlı başlık 24px `HeaderLabel` (yalnız sahne adı/Kağan ilanı gibi tekil başlıklar, art bible
+  İsteğe bağlı başlık 12px `HeaderLabel` (Arapça 16px; **C-45 (2026-10-21):** 24px yalnız tam ekran başlık kartı, cila) (yalnız sahne adı/Kağan ilanı gibi tekil başlıklar, art bible
   §7 tipografi). Köşede `n/N` sayfa göstergesi (ASCII rakam), sağ altta [Atla] düğmesi.
 - **Girdi (yalnızca klavye + fare):** Enter/Space/sol tık = ilerle; Esc/[Atla] = **bulunulan durumun**
   kalan sayfalarını atla. Metin yazılırken ilk basış metni tamamlar, ikinci basış ilerler (F6). Tuş
@@ -882,7 +882,7 @@ Test türü her maddede; birim ve entegrasyon testleri **BLOCKING**. `T#` = §3.
 | Hedef işareti (haritada) | 9×9 ikon `icon_objective_marker` (gök mavisi/beyaz/altın ışık pikselleri, 2 kare / 1 fps, alfa 0/255; sahiplik ve bozulma katmanını örtmez; renk körlüğünde şekil yeterli); Hareketi Azalt: sabit | — | M1 (`/asset-spec`) |
 | Zafer sonuç kartı | "Zafer" havası: sıcak altın, merkezde beyaz-altın parlamalı Kök Böri, altın çerçeveli `ModalPanel`; üç satır ikon + rakam | `sfx_victory` + `music_victory` | M1 yer tutucu |
 | Lütuf dizisi | Mevcut lütuf ekranı (art bible §2, §7; kartlar 4 kare dither ile sırayla) | Ruh / spirit GDD'si | M1 |
-| Çıkış anlatısı / Kağan ilanı | Prolog gün doğumu altın-turuncu; son sayfada 24px başlık kartı | `sfx_narrative_advance` | M1 |
+| Çıkış anlatısı / Kağan ilanı | Prolog gün doğumu altın-turuncu; son sayfada başlık kartı (12px — C-45 (2026-10-21); 24px cila) | `sfx_narrative_advance` | M1 |
 | Yenilgi ekranı | Soğuk gri-mor, düşük kontrast, altın yok; %15–20 opak, kenarları dither ile dağılan gri Kök Böri | `sfx_defeat` + `music_defeat` | M1 yer tutucu |
 | Sefer haritası | Kilim zemin; `COMPLETED` / `AVAILABLE` (Kök Böri ışığı) / `LOCKED` düğümler; tamamlandı ve kilit **piksel ikon** (ADR-0009: ✓ metin glifi değil); yeni açılma 4 kare altın parıltı | `sfx_chapter_unlock`, ret: `sfx_ui_denied` | M1 (K=1'de görünmez) → M2 |
 | Müzik | Sahne başına parça ve anlatı müziği ADR-0008 takibi; MVP'de yer tutucu yeterli (konsept) | — | M2 |
@@ -899,7 +899,9 @@ M1'de uygulanmaz; katmanlı illüstrasyon varlığı sağlanırsa cila olarak de
 - **Anlatı ekranı:** §3.8. Köşe göstergesi `n/N`; [Atla] ikincil düğme (Esc); [Devam] / tıkla-ilerle ipucu.
 - **Hedef paneli:** §3.5. **HUD gereksinimi (ADR-0011 `HudModel`):** kalıcı "Hedef" satırı: `objective_key`
   (= `WinCondition.description_key`) + `neutral_progress` (`fethedilen nötr / gerekli`) + `foci_progress`
-  (`arındırılan odak / toplam`); sayılar `NumberFormatter` ile. Kök Böri düğmesi (spirit) bekleyen sunum
+  (`arındırılan odak / toplam`); sayılar `NumberFormatter` ile. **C-45 (2026-10-21) K3:** `must_defeat_all_enemies`
+  iken (Perde 1) ilerleme satırına dördüncü parça "Cürcet bölgeleri x/3" (alınan düşman bölgesi / başlangıçtaki
+  düşman bölgesi sayısı) eklenir; kazanma koşulunun dört parçası da izlenir. Kök Böri düğmesi (spirit) bekleyen sunum
   yokken pasif kalır.
 - **Sonuç kartı, lütuf dizisi, yenilgi:** `ModalQueue` üzerinden tek modal; harita girdisi kilitli; odak
   `FocusReveal.focus_quietly` ile, kapanışta önceki odak geri verilir (ADR-0011).

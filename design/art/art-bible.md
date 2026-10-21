@@ -695,7 +695,9 @@ estetiğidir; dünyanın içinde olması gerekmez.
   native veya tam katı:** Fusion 12/24/36, Unifont 16/32. Ara boyut yasak.
 - **Hiyerarşi boyutla değil renkle:** gövde ve butonlar 12px (Arapça 16px);
   başlık vurgusu `HeaderLabel` (altın `#EDC76B`); ikincil metin `#B8A689`.
-  24px yalnızca özel tek başlıklar (sahne adı, rapor başlığı); 36px yalnızca oyun
+  **C-45 (2026-10-21) başlık kuralı:** M2'de tüm panel/modal başlıkları (rapor, lütuf, zafer,
+  yenilgi, hedef paneli, anlatı sayfa başlığı) 12px `HeaderLabel` (Arapça 16px); 24px yalnızca
+  tam ekran başlık kartı (sahne adı/Kağan ilanı) ve bu cila işidir; 36px yalnızca oyun
   adı "ULUS" (Latin, her dilde Fusion zinciri — keskin kalır).
 - **Arapça:** tek gövde boyutu (16px), hiyerarşi yalnızca renkle; 32px yalnızca
   özel başlık.
@@ -774,7 +776,7 @@ palet dışı renk üretir).
 - **Savaş raporu:** opak modal, kilim bandı, koçboynuzu köşeler; kazanç/kayıp
   listesi ikon + rakam + renk; geometrik çubuklar; "Devam" birincil.
 - **Lütuf ekranı:** zemin katmanı koyu indigoya kayar; ilahi panelde Kök Böri
-  (32–48px) ve üç lütuf kartı (~80×100; 24×24 ikon, 12px başlık/açıklama).
+  (32–48px) ve üç lütuf kartı (genişlik 92px — C-45 (2026-10-21), kodla ve en uzun yerelleştirmeyle doğrulandı; 24×24 ikon kart adının soluna aynı satırda, 12px başlık/açıklama).
 - **Konsey:** altı portre (~24×32), adı ve bonus satırı; törensel.
 - **İntro/epilog:** tam ekran 640×360 illüstrasyon, altta koyu panelde 12px krem
   metin, yavaş tam piksel kaydırma.
