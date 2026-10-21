@@ -139,6 +139,8 @@ berabere (savunan kazanır) olurdu.
   değiştirir (§4 "Etkin güç", ADR-0006); arındırma çözümü bu resolver'ı yeniden
   kullanır (`resolve(P, corruption_strength)`, §5); başarı/başarısızlığın sonucunu
   Ruh ve Ordu sistemleri uygular (`spirit-system.md` §3.2, `army-system.md` §3.3).
+- **Katmanlı Düşman** (`enemy-layers.md`) — AI, oyuncunun etkin savunma gücünü (`D_eff`, §4 "Etkin güç")
+  okur; düşman saldırıları bu belgenin dal formülleriyle çözülür. *(C-44 inceleme (2026-10-21), W-1)*
 
 ---
 

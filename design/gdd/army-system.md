@@ -178,6 +178,8 @@ beraberlik (Dal 3): iki taraf da 1 kayıp → hedefte 0 birlik → hedef `NEUTRA
 - **Kaynak Yönetimi** (`resource-system.md`) — "Ordu Topla" üretimi `army_count`'u
   artırır; ordunun büyüyebildiği tek kaynak budur (garnizon ve hareket kuralları
   değişmez).
+- **Katmanlı Düşman** (`enemy-layers.md`) — AI hamleleri bu belgenin hareket kurallarını
+  kullanır (`mover = ENEMY`, kaynakta 1 garnizon). *(C-44 inceleme (2026-10-21), W-1)*
 
 ---
 

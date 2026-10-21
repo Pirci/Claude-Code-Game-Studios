@@ -155,7 +155,7 @@ başına değer). Tablodaki sayılar §4/§7 knob'larının varsayılanlarıdır
 knob'dur, katalog onu gösterir (C-53). Katalog içeriği spirit feature'ının
 `BoonDefinition` kaynağıdır (`boon_id`, ad key'i, `requires`, `ModifierSource`);
 yığılma sınırının **tek sahibi** `ModifierSource.max_stacks`'tir (Gök Kalkanı `.tres`'i
-`GOK_KALKANI_MAX_STACKS`, Kurt Gücü `.tres`'i `KURT_GUCU_MAX_STACKS` değerini taşır) ve uygunluk `ModifierController.can_add()` ile
+`GOK_KALKANI_MAX_STACKS`, Kurt Gücü `.tres`'i `KURT_GUCU_MAX_STACKS`, Demir Post `.tres`'i `DEMIR_POST_MAX_STACKS` değerini taşır) ve uygunluk `ModifierController.can_add()` ile
 sorulur (ADR-0006, mimari inceleme 2026-10-19 D2). **Uygun havuz** = katalog − gerektirdiği sistemi etkin olmayanlar −
 yığılma sınırına ulaşmışlar, `boon_id`'ye göre sıralı. **Sahne havuzu (C-44, 2026-10-21):** sahne `SceneDefinition.boon_pool_ids`
 doldurmuşsa uygun havuz bu listeyle de kesişir (boş = tüm katalog; §7 "Havuz kompozisyonu").
@@ -164,7 +164,7 @@ doldurmuşsa uygun havuz bu listeyle de kesişir (boş = tüm katalog; §7 "Havu
 | ---- | ---- | ---- | ---- | ---- | ---- |
 | Arınma Ustalığı (`arinma_ustaligi`) | Arındırma başına Ruh +%20 | `ruh_gain` / PERCENT +0.20 | — | — | M1 |
 | Bereket (`bereket`) | Tur geliri +1 altın | `gold_income` / FLAT +1 (→ resource `B_add`) | — | — | M1 |
-| Demir Post (`demir_post`) | Savunan oyuncu bölgesine +1 etkin güç | `army_defense` / FLAT +1 | Savaş etkin gücü (`combat-system.md` §4 "Etkin güç") | — | M2 |
+| Demir Post (`demir_post`) | Savunan oyuncu bölgesine +1 etkin güç | `army_defense` / FLAT +1 | Savaş etkin gücü (`combat-system.md` §4 "Etkin güç") | `DEMIR_POST_MAX_STACKS` (3) *(C-44 inceleme, D2 / W-3)* | M2 |
 | Gök Kalkanı (`gok_kalkani`) | Erlik yayılım aralığı +`GOK_KALKANI_INTERVAL_BONUS` (1) tur | `erlik_spread_interval` / FLAT +`GOK_KALKANI_INTERVAL_BONUS` | — | `GOK_KALKANI_MAX_STACKS` (3) | M1 |
 | Kurt Gücü (`kurt_gucu`) | Oyuncunun saldıran ve arındıran kuvvetine +1 etkin güç | `army_attack` / FLAT +1 | Savaş etkin gücü (`combat-system.md` §4 "Etkin güç") | `KURT_GUCU_MAX_STACKS` (3) | M2 |
 | Sürü Kutsaması (`suru_kutsamasi`) | Sürü geliri +%10 | `herd_income` / PERCENT +0.10 | Sürü etkin (`resource-system.md` §3.1) | — | kilitli |
@@ -176,6 +176,9 @@ doldurmuşsa uygun havuz bu listeyle de kesişir (boş = tüm katalog; §7 "Havu
 > (Gök Kalkanı kalıbı) — mono-build riski: simülasyonda 3 yığın Perde 1 kuzey yolunu T12 → T9'a
 > indiriyor; Perde 1'de en fazla 2 lütuf erişilebildiğinden M2'de pratik etkisi yok
 > ([denge raporu](../balance/boon-balance-2026-10-21.md)).
+> **Demir Post sınırı (C-44 inceleme (2026-10-21), D2 / W-3):** `DEMIR_POST_MAX_STACKS = 3`
+> (Gök Kalkanı / Kurt Gücü kalıbı). Sınırsız yığın "AI hiç vurmaz" hattını açardı;
+> `enemy-layers.md` §5 "lütuf yığın tavanı zaten sınırlar" cümlesi artık doğrudur.
 
 > **Neden düz değerler (W9):** Prolog'da ordular 2–14, gelir 2–10 arasındadır;
 > %5–%10'luk bonuslar yuvarlamada kaybolur (ör. `floor(5 × 1.1) = 5`). Askeri ve
@@ -346,7 +349,7 @@ sonraki sahneye taşınır).
 ### 4.5 Deterministik 3'lü sunum
 ```
 pool     = uygun havuz (§3.5), boon_id'ye göre sıralı
-seed     = (scene_id × 31 + boon_index × 7) mod pool_size   # scene_id = MapState.chapter_id (Prolog 1)
+seed     = (scene_id × 31 + boon_index × 7 + campaign_seed) mod pool_size   # scene_id = MapState.chapter_id (Prolog 1); campaign_seed: C-44 inceleme D4
 offer[k] = pool[ (seed + k) mod pool_size ]  , k ∈ {0,1,2}
 ```
 `boon_index` = `n` = o ana kadar **seçilen** lütuf sayısı (C-31: ertelenen sunum
@@ -354,13 +357,18 @@ aynı kalsın diye "yapılan sunum" değil "seçilen lütuf" sayılır). `pool_s
 iken üç slot farklıdır; `pool_size < 3` ise slotlar tekrar eder (§5).
 Bu, rastgelelik olmadan tekrarlanabilir sunum üretir (test determinizmi). İleride
 oyuncu-görünmez bir seed `GameState`'e eklenerek çeşitlilik artırılabilir.
+**Kampanya tohumu (C-44 inceleme (2026-10-21), D4 / H6):** `campaign_seed` Yeni Sefer'de bir kez
+üretilir ve kampanya kaydına yazılır ([`scene-flow.md`](scene-flow.md) §3.4); sunum seed'ine
+eklenir, böylece her sefer farklı lütuf sunumları görür ("kişisel build"). Sefer boyunca
+sabittir: sahne yeniden denemesinde değişmez (determinizm aşağıda korunur). Test ve
+örneklerde enjekte edilir; `campaign_seed = 0` eski formülle aynı sonucu verir (aşağıdaki örnek ve AC4 bu değerle).
 **Yeniden denemede determinizm (C-44, 2026-10-21):** sunum yalnızca `(chapter_id, n)` ve
 uygun havuzun işlevidir; sahne yeniden denenince `n` girişteki değere döndüğü için (§3.4,
 yenilgi) oyuncu aynı sunum dizisini, aynı 3'lüleri görür — çiftçilik değil, öğrenilmiş
 sunum. Sahne havuzu (§3.5) aynı girdinin parçasıdır. Yığılma sınırı sonradan düşürülürse
 eski kayıtta `n` yine `boons.size()` ile sayılır (fazla seçimler dahil; maliyet eğrisi kaymaz).
 Örnek (M1 havuzu `[arinma_ustaligi, bereket, gok_kalkani]`, Prolog `chapter_id = 1`,
-`n = 0`): seed = 31 mod 3 = 1 → sunum: Bereket, Gök Kalkanı, Arınma Ustalığı.
+`n = 0`, `campaign_seed = 0`): seed = 31 mod 3 = 1 → sunum: Bereket, Gök Kalkanı, Arınma Ustalığı.
 
 ### 4.6 Erlik yayılımı
 Her yayılım turunda (aşağıdaki `I_eff`), tek bir bölge 1 seviye bozulur:
