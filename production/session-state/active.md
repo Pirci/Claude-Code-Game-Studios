@@ -330,3 +330,8 @@
 ## Session Extract — C-43 (2026-10-20)
 - /team-level 5 adım, her adım kullanıcı onaylı. design/levels/perde1-dogu-curcet.md (0086685); GDD/ADR yayılımı (00c2da3 + narrative/registry). Simülasyon scratchpad/c43/perde1_sim.py (+ c43tools/perde1_sim_capital.py: takviye yalnız başkent). Seçilen: garnizon 2/4/4, E_r 1 yalnız curcet_otagi, AI R1 tur≥5 oran 3/2, R2 kapalı.
 - Uygulama C-47'ye bağlandı (§13, 13 adım). NEXT: C-44 (lütuf tam kapsam + Erlik katmanı GDD) / C-42 playtest raporu.
+
+## Session Extract — C-44 (2026-10-21)
+- enemy-layers.md (yeni GDD), boon-balance-2026-10-21.md, gdd-cross-review-2026-10-21.md (CONCERNS; kararlar D1–D6, tümü uygulandı). Simülasyon: c43tools/boon_run.py (onaylı Perde 1 yapılandırması; container yeniden başladıysa scratchpad gitmiş olabilir).
+- Önemli: güney "önce arındır" W20 (W14 değil) → C-47 BLOCKING ≤ T16. Demir Post/Kurt Gücü ≤ 3. Kampanya tohumu. decide(map_state, acted, defense_modifiers).
+- NEXT: C-45 (M2 UX spec'leri; D3 vuruş eşiği satırı, Odak tehlikede, yayılım sayacı dahil) / C-42 playtest raporu.
