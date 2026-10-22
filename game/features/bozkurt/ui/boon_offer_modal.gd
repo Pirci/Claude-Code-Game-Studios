@@ -110,6 +110,7 @@ func _card(boon: BoonDefinition, index: int) -> BoonCard:
 	var card: BoonCard = BoonCard.new()
 	card.name = "Card%d" % index
 	card.set_texts(tr(boon.name_key), tr(boon.description_key) % NumberFormatter.format_int(boon.display_amount()))
+	card.set_icon(boon.icon)
 	card.pressed.connect(_on_card_pressed.bind(boon.boon_id))
 	_cards_row.add_child(card)
 	return card

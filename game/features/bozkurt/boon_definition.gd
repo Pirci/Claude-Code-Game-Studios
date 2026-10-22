@@ -14,6 +14,8 @@ extends Resource
 ## boş = her zaman uygun. Etkin sistemler [member BoonCatalog.active_systems].
 @export var requires: StringName = &""
 @export var modifier_source: ModifierSource = null
+## Kart ikonu (24×24, ux/boon-selection.md §6; `tools/asset-pipeline/generate_divine_ui.gd`); null = ikonsuz kart.
+@export var icon: Texture2D = null
 
 
 ## Kartta gösterilen büyüklük: ilk etkinin yığın başına değeri (yüzde için ×100, tam sayı).

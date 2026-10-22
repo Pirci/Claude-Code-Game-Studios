@@ -1,9 +1,14 @@
-[gd_resource type="Resource" script_class="BoonCatalog" load_steps=25 format=3]
+[gd_resource type="Resource" script_class="BoonCatalog" load_steps=30 format=3]
 
 [ext_resource type="Script" path="res://features/bozkurt/boon_catalog.gd" id="1_cat"]
 [ext_resource type="Script" path="res://features/bozkurt/boon_definition.gd" id="2_def"]
 [ext_resource type="Script" path="res://features/modifiers/modifier_source.gd" id="3_src"]
 [ext_resource type="Script" path="res://features/modifiers/modifier_effect.gd" id="4_eff"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/icons/icon_boon_arinma_ustaligi.png" id="icon_arinma_ustaligi"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/icons/icon_boon_bereket.png" id="icon_bereket"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/icons/icon_boon_demir_post.png" id="icon_demir_post"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/icons/icon_boon_gok_kalkani.png" id="icon_gok_kalkani"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/icons/icon_boon_kurt_gucu.png" id="icon_kurt_gucu"]
 
 [sub_resource type="Resource" id="eff_arinma_ustaligi"]
 script = ExtResource("4_eff")
@@ -24,6 +29,7 @@ name_key = "BOON_ARINMA_USTALIGI"
 description_key = "BOON_ARINMA_USTALIGI_DESC"
 requires = &""
 modifier_source = SubResource("src_arinma_ustaligi")
+icon = ExtResource("icon_arinma_ustaligi")
 
 [sub_resource type="Resource" id="eff_bereket"]
 script = ExtResource("4_eff")
@@ -44,6 +50,7 @@ name_key = "BOON_BEREKET"
 description_key = "BOON_BEREKET_DESC"
 requires = &""
 modifier_source = SubResource("src_bereket")
+icon = ExtResource("icon_bereket")
 
 [sub_resource type="Resource" id="eff_demir_post"]
 script = ExtResource("4_eff")
@@ -64,6 +71,7 @@ name_key = "BOON_DEMIR_POST"
 description_key = "BOON_DEMIR_POST_DESC"
 requires = &"effective_power"
 modifier_source = SubResource("src_demir_post")
+icon = ExtResource("icon_demir_post")
 
 [sub_resource type="Resource" id="eff_gok_kalkani"]
 script = ExtResource("4_eff")
@@ -84,6 +92,7 @@ name_key = "BOON_GOK_KALKANI"
 description_key = "BOON_GOK_KALKANI_DESC"
 requires = &""
 modifier_source = SubResource("src_gok_kalkani")
+icon = ExtResource("icon_gok_kalkani")
 
 [sub_resource type="Resource" id="eff_kurt_gucu"]
 script = ExtResource("4_eff")
@@ -104,6 +113,7 @@ name_key = "BOON_KURT_GUCU"
 description_key = "BOON_KURT_GUCU_DESC"
 requires = &"effective_power"
 modifier_source = SubResource("src_kurt_gucu")
+icon = ExtResource("icon_kurt_gucu")
 
 [sub_resource type="Resource" id="eff_suru_kutsamasi"]
 script = ExtResource("4_eff")

@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=41 format=3]
+[gd_resource type="Theme" load_steps=42 format=3]
 
 [ext_resource type="Font" path="res://assets/fonts/default_font.tres" id="1_font"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/theme/slider_grabber.png" id="grabber"]
@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/theme/frame_primary_pressed.png" id="frame_pp"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/theme/frame_primary_disabled.png" id="frame_pd"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/theme/frame_modal.png" id="frame_modal"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/theme/frame_divine.png" id="frame_divine"]
 
 [sub_resource type="StyleBoxFlat" id="btn_normal"]
 content_margin_left = 6.0
@@ -159,18 +160,19 @@ border_width_bottom = 1
 border_color = Color(0.541176, 0.427451, 0.309804, 1)
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id="divine_panel"]
+[sub_resource type="StyleBoxTexture" id="divine_panel"]
 content_margin_left = 8.0
 content_margin_top = 6.0
 content_margin_right = 8.0
 content_margin_bottom = 6.0
-bg_color = Color(0.0392157, 0.0509804, 0.109804, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.929412, 0.780392, 0.419608, 1)
-anti_aliasing = false
+texture = ExtResource("frame_divine")
+texture_margin_left = 7.0
+texture_margin_top = 7.0
+texture_margin_right = 7.0
+texture_margin_bottom = 7.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
 
 [sub_resource type="StyleBoxTexture" id="primary_normal"]
 content_margin_left = 6.0

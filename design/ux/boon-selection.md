@@ -106,7 +106,7 @@ GameContext
 
 | Öğe | Karar | Kaynak |
 |---|---|---|
-| Ad | `tr(name_key)`, altın HeaderLabel; solunda 24×24 ikon (M2, C-67) | `BoonDefinition.name_key` |
+| Ad | `tr(name_key)`, altın HeaderLabel; solunda 24×24 ikon (M2, C-67). **Uygulama (C-46, 2026-10-22):** adın en uzun sözcüğü daralan alana (58 px) sığmazsa ikon adın üstüne geçer, ad tam genişlik (sözcük ortasından bölünme yok — DE "Himmelsschild", RU "Мастерство"); ölçüm: 6 dilde modal ≤ 280 px (RU), kanıt `production/qa/evidence/c46-boon-icons-en-de-ru-ar-zh-tr.png` | `BoonDefinition.name_key`, `BoonDefinition.icon` |
 | Açıklama | `tr(description_key) % display_amount()`; yüzde key'i `%%` taşır. Askeri lütuflar aynı yolu kullanır (`BOON_KURT_GUCU_DESC`, `BOON_DEMIR_POST_DESC`) | `display_amount()` |
 | Yığın göstergesi | Aşağıda | `ModifierController` yığın sayısı + `ModifierSource.max_stacks` |
 | Maliyet | Başlık altında ortak `Bedel: 30 Ruh`; kart başına tekrar yok. Sonraki bedel (`+STEP`) gösterilmez | `next_boon_cost()` |
