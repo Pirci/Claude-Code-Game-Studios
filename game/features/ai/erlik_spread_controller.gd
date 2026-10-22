@@ -16,6 +16,9 @@ const STAT_SPREAD_INTERVAL: StringName = &"erlik_spread_interval"
 class SpreadDecision extends RefCounted:
 	var is_spread_turn: bool = false
 	var target_id: StringName = &""
+	## Hedefin karar anındaki bozulma seviyesi (0 → yeni yayılım, ≥ 1 → derinleşme; hedef yoksa 0)
+	## — ADR-0010 eki G3.
+	var level_before: int = 0
 
 
 ## [param effective_interval] < 1 ise 1 sayılır (her tur yayılım).
@@ -24,6 +27,8 @@ func decide(map_state: MapState, effective_interval: int) -> SpreadDecision:
 	var interval: int = maxi(1, effective_interval)
 	decision.is_spread_turn = map_state.current_turn - map_state.last_erlik_spread_turn >= interval
 	decision.target_id = _pick_target(map_state)
+	if decision.target_id != &"":
+		decision.level_before = map_state.get_region(decision.target_id).corruption_level
 	return decision
 
 

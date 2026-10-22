@@ -67,6 +67,7 @@ func resolve(
 
 	var source: RegionData = map_state.get_region(from_id)
 	var target: RegionData = map_state.get_region(to_id)
+	outcome.target_owner_before = target.owner
 	outcome.moving = source.army_count - 1
 	outcome.source_army_after = 1
 	outcome.target_corruption_after = target.corruption_level

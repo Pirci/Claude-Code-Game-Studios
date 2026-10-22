@@ -59,6 +59,10 @@ var _campaign_map: CampaignMap
 var _info_panel: RegionInfoPanel
 var _awaiting_target: bool = false
 var _send_from_id: StringName = &""
+## Gece tamponu (ADR-0010 eki G4): oyuncu turu bitirince temizlenir; `end_turn()` sırasında düşman
+## savaş/arındırma sonuçları ve yayılım kararı birikir; şafakta tur özeti bunu okur (C-73).
+var _night_outcomes: Array[MoveOutcome] = []
+var _night_spread: ErlikSpreadController.SpreadDecision = null
 ## HUD altın değişimi (resource §9): gelir yeşil `↑+X`, harcama kırmızı `↓-X`.
 var _gold_feedback: ValueFeedback = ValueFeedback.new()
 var _gold_feedback_generation: int = 0
@@ -377,7 +381,8 @@ func _check_start_hint() -> void:
 		_game_state.map_state.current_turn, _game_state.gold, _resource_controller.recruit_cost()))
 
 
-func _on_corruption_spread(_region_id: StringName) -> void:
+func _on_corruption_spread(decision: ErlikSpreadController.SpreadDecision) -> void:
+	_night_spread = decision
 	_offer_hint(TutorialRules.HINT_SPREAD)
 
 
@@ -434,7 +439,28 @@ func _on_controller_region_deselected() -> void:
 func _on_end_turn_pressed() -> void:
 	_awaiting_target = false
 	_send_from_id = &""
+	_clear_night()
 	_map_controller.end_turn()
+
+
+## Testler ve tur özeti (C-73) için: bu gecenin düşman sonuçları ve yayılım kararı (salt okunur).
+func night_outcomes() -> Array[MoveOutcome]:
+	return _night_outcomes
+
+
+func night_spread() -> ErlikSpreadController.SpreadDecision:
+	return _night_spread
+
+
+func _clear_night() -> void:
+	_night_outcomes.clear()
+	_night_spread = null
+
+
+## Düşman sonucu geceye yazılır; oyuncu hamlesi tamponlanmaz (raporu hamleden hemen sonra açılır).
+func _record_night(outcome: MoveOutcome) -> void:
+	if outcome.mover == RegionData.Owner.ENEMY:
+		_night_outcomes.append(outcome)
 
 
 ## `turn_ended` yalnızca oyun sürerken ve tur sonu kontrolünden sonra gelir — kayıt anı (ADR-0007).
@@ -452,15 +478,13 @@ func _on_income_collected(amount: int) -> void:
 	_refresh_views()
 
 
-func _on_combat_occurred(
-	_from_id: StringName,
-	_to_id: StringName,
-	_result: CombatResolver.CombatResult,
-) -> void:
+func _on_combat_occurred(outcome: MoveOutcome) -> void:
+	_record_night(outcome)
 	_refresh_views()
 
 
-func _on_purification_resolved(_outcome: MoveOutcome) -> void:
+func _on_purification_resolved(outcome: MoveOutcome) -> void:
+	_record_night(outcome)
 	_refresh_views()
 
 
@@ -475,11 +499,13 @@ func _on_army_moved(
 ## Zafer/yenilgi sahne akışına bildirilir (T13/T14); sonuç kartı ve yenilgi ekranını
 ## RootContext ister ([method show_victory] / [method show_defeat]).
 func _on_game_won() -> void:
+	_clear_night()  # zafer kartı anlatır; özet açılmaz (ADR-0010 eki G4)
 	_refresh_views()
 	scene_won.emit()
 
 
 func _on_game_lost() -> void:
+	_clear_night()  # yenilgi ekranı anlatır (battle-report Q3)
 	_refresh_views()
 	scene_lost.emit()
 

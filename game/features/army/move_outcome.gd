@@ -25,9 +25,15 @@ var ruh_gain: int = 0
 ## arındırmada gelen kuvvetin tamamı).
 var dispersed: int = 0
 var source_army_after: int = 0
+## Hedefin hamle *öncesi* sahibi — rapor "düşman kampımızı aldı" ile "biz onlarınkini aldık"ı ayırır
+## (ADR-0010 eki G2).
+var target_owner_before: RegionData.Owner = RegionData.Owner.NEUTRAL
 var target_owner_after: RegionData.Owner = RegionData.Owner.NEUTRAL
 var target_army_after: int = 0
 var target_corruption_after: int = 0
+## Hamlenin nedeni: oyuncu hamlesinde boş; düşman hamlesinde [member EnemyAIController.MoveIntent.reason]
+## (ör. `&"strike"`). Çözümü değiştirmez — yalnız rapor okur (ADR-0010 eki G2).
+var reason: StringName = &""
 
 
 func is_valid() -> bool:

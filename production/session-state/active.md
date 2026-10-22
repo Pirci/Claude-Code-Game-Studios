@@ -350,3 +350,4 @@
 - production/epics/index.md (6 epic) + m2-breakdown.md (30 story C-70…C-99, kararlar §5). Kuyrukta C-48'den önce. C-47 şemsiye [~].
 - Kararlar: AC21 ayar sırası attack_start_turn 5→6 → başkent takviyesi seyreltme → garnizon (kullanıcıyı beklemeden); sanat bloklamaz (yer tutucu); başlangıç C-70.
 - Bulgu: boon_catalog Kurt Gücü/Demir Post max_stacks=0 (sınırsız) → C-80. C-41 kuyruk satırı [x] düzeltildi.
+- C-70 (c8c01f0) ADR-0010 eki G1–G4. C-71: MoveOutcome.target_owner_before/reason, MoveIntent.reason, SpreadDecision.level_before, combat_occurred(outcome), corruption_spread(decision), GameContext night buffer. Testler 355/355. NEXT: C-72.

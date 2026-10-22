@@ -6,11 +6,13 @@ extends RefCounted
 signal region_selected(region_id: StringName)
 signal region_deselected
 signal army_moved(from_id: StringName, to_id: StringName, army_count: int)
-signal combat_occurred(from_id: StringName, to_id: StringName, result: CombatResolver.CombatResult)
+## Savaş dalı — oyuncu ve düşman için aynı; rapor yalnız outcome'u okur (ADR-0010 eki G1).
+signal combat_occurred(outcome: MoveOutcome)
 ## Arındırma hamlesi (başarılı ya da değil) uygulandı — rapor/HUD sonucu buradan okur.
 signal purification_resolved(outcome: MoveOutcome)
 ## Tur sonu Erlik yayılımı bir bölgeyi bir seviye derinleştirdi.
-signal corruption_spread(region_id: StringName)
+## Yayılım gerçekleşti — karar olduğu gibi (hedef + önceki seviye; ADR-0010 eki G3).
+signal corruption_spread(decision: ErlikSpreadController.SpreadDecision)
 signal turn_ended(new_turn: int)
 signal income_collected(amount: int)
 ## Oyuncu bir bölgede birlik üretti (aksiyon harcamaz — resource R4).
@@ -182,6 +184,7 @@ func _apply_enemy_move(intent: EnemyAIController.MoveIntent) -> void:
 		push_warning("EnemyAIController geçersiz hamle önerdi: %s → %s (%s)" % [
 			intent.from_id, intent.to_id, outcome.invalid_reason])
 		return
+	outcome.reason = intent.reason
 	_army_controller.apply_outcome(_map_state, outcome)
 	_emit_move(outcome)
 
@@ -194,7 +197,7 @@ func _run_erlik_spread() -> void:
 	var decision: ErlikSpreadController.SpreadDecision = _erlik_spread.decide(_map_state, interval)
 	_spirit.apply_spread(_map_state, decision)
 	if decision.is_spread_turn and decision.target_id != &"":
-		corruption_spread.emit(decision.target_id)
+		corruption_spread.emit(decision)
 
 
 ## Lütuf etkileri — yalnızca saf kurallara aktarılır, burada okunmaz (ADR-0006).
@@ -226,7 +229,7 @@ func _finish(result: MapState.GameResult) -> void:
 func _emit_move(outcome: MoveOutcome) -> void:
 	match outcome.branch:
 		MoveOutcome.Branch.COMBAT:
-			combat_occurred.emit(outcome.from_id, outcome.to_id, outcome.combat)
+			combat_occurred.emit(outcome)
 		MoveOutcome.Branch.PURIFICATION:
 			purification_resolved.emit(outcome)
 		MoveOutcome.Branch.PEACEFUL:

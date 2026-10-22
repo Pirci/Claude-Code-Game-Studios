@@ -173,7 +173,7 @@ func test_spread_happens_every_interval_on_weakest_neighbor() -> void:
 	var m: MapState = _spread_map()
 	var c: MapController = _controller(m, GameState.new())
 	var spreads: Array[StringName] = []
-	c.corruption_spread.connect(func(id: StringName) -> void: spreads.append(id))
+	c.corruption_spread.connect(func(d: ErlikSpreadController.SpreadDecision) -> void: spreads.append(d.target_id))
 	c.end_turn()
 	c.end_turn()
 	assert_array(spreads).is_empty()

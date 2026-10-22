@@ -11,10 +11,13 @@ extends RefCounted
 class MoveIntent extends RefCounted:
 	var from_id: StringName
 	var to_id: StringName
+	## Hamlenin nedeni (ADR-0005 eki: ör. `&"strike"`); rapor için [MoveOutcome]'a kopyalanır.
+	var reason: StringName
 
-	func _init(p_from: StringName = &"", p_to: StringName = &"") -> void:
+	func _init(p_from: StringName = &"", p_to: StringName = &"", p_reason: StringName = &"") -> void:
 		from_id = p_from
 		to_id = p_to
+		reason = p_reason
 
 
 ## Sıradaki düşman hamlesi. [param acted] bu tur hamle yapmış (ya da bu tur ele geçirilmiş)
