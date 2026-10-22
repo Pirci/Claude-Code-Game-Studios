@@ -345,3 +345,8 @@
 - Kullanıcı: MCP ile pixel art aracı sordu → öneri Retro Diffusion MCP (palet zorlamalı, barındırılan); Aseprite MCP'leri yerel Aseprite ister, bulut oturumdan erişilemez. Karar: önce küçük varlıklar, illüstrasyonlara sonra bakılacak.
 - tools/asset-pipeline/generate_env_forest.gd → maps/env/env_tree_healthy_01/02, env_tree_rotten_01/02, env_bridge_wood_01, env_otag_curcet_01; units/unit_kormos_forest_idle_0/1. tests/unit/art/env_forest_assets_test.gd. Testler 341/341, palet 46 PNG 0 ihlal.
 - C-67 (C-46 içinde, 2026-10-22): generate_divine_ui.gd → theme/frame_divine.png (DivinePanel StyleBoxTexture, margin 7, content 8/6), icons/icon_boon_<id>.png ×5; BoonDefinition.icon; BoonCard ikon satırı (BoxContainer, uzun sözcükte vertical). tests/unit/bozkurt/boon_card_icon_test.gd. Testler 346/346. Kullanıcı: Aseprite'ı devreye aldığını söyleyince kurulum + kurallar kontrol listesi hazırlanacak.
+
+## Session Extract — C-47 kırılımı (2026-10-22)
+- production/epics/index.md (6 epic) + m2-breakdown.md (30 story C-70…C-99, kararlar §5). Kuyrukta C-48'den önce. C-47 şemsiye [~].
+- Kararlar: AC21 ayar sırası attack_start_turn 5→6 → başkent takviyesi seyreltme → garnizon (kullanıcıyı beklemeden); sanat bloklamaz (yer tutucu); başlangıç C-70.
+- Bulgu: boon_catalog Kurt Gücü/Demir Post max_stacks=0 (sınırsız) → C-80. C-41 kuyruk satırı [x] düzeltildi.

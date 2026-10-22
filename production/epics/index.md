@@ -1,0 +1,12 @@
+# Epic İndeksi
+
+> M2 (Vertical Slice) epic'leri — C-47 (2026-10-22). Story'ler: [`m2-breakdown.md`](m2-breakdown.md) §2 ve `production/continuation.md` kuyruğu (C-70…C-99).
+
+| # | Slug | Kapsam (modül) | Yönetici ADR'ler | Kapsanan GDD/UX gereksinimleri |
+| --- | --- | --- | --- | --- |
+| E1 | `m2-reports-input` | Sunum: savaş/arındırma raporu, tur özeti, ortak girdi koruması, klavyeyle bölge seçimi + hedef seçim modu (`ui/`, `features/*/ui`, `GameContext`) | ADR-0011 (birincil), ADR-0010 (+ yeni ek G1–G4), ADR-0009 | `battle-report.md` §8–§9 (G1–G4); `enemy-layers.md` AC13, §3.4; `hud.md` A-4, A-7, B1, B6, §5.6; `boon-selection.md` AC8; `scene-screens.md` §0.2–§0.3, AC-E5-6 |
+| E2 | `m2-enemy-layers` | Siyasi düşman AI'ı + takviye listesi (`features/ai`, `features/resources`, `MapController` çağrı noktası) | ADR-0005 (+ ekler 10-20/10-21), ADR-0006, ADR-0010 | `enemy-layers.md` §3.2–§3.5, F-E1–F-E3, AC1–AC12, AC14, AC19, AC20; seviye §4.2–§4.3; cross-review D6 |
+| E3 | `m2-boons-effective-power` | Lütuf sistemi M2: etkin güç, Kurt Gücü / Demir Post, sahne havuzu, kampanya tohumu, lütuf modalı M2 (`features/combat`, `features/army`, `features/bozkurt`, `features/save`) | ADR-0006 (birincil), ADR-0010, ADR-0007 (+ yeni ek: `campaign_seed`), ADR-0011 | `combat-system.md` §4 "Etkin güç"; `spirit-system.md` §3.5, §4.5, AC4, AC25–AC29; `scene-flow.md` §3.4 (tohum), §3.10 (`boon_pool_ids`); `boon-selection.md` AC7, AC9; cross-review D2, D4 |
+| E4 | `m2-map-hud` | Harita dekor katmanı + okunabilirlik + HUD M2 satırları (`features/grid`, `ui/hud`, bilgi paneli) | ADR-0011 (+ ek 10-20), ADR-0004, ADR-0009 | Seviye §7.2–§7.8, kabul #5–#7; `hud.md` §5.1–§5.5, H1–H10, L1–L7, A-1/A-2; `spirit-system.md` §3.6 (sayaç, Odak tehlikede); `enemy-layers.md` §10; cross-review D3, S2-a; scene-screens K3 |
+| E5 | `m2-perde1-content` | Perde 1 verisi + sahne akışı + metin (`features/grid/data`, `features/campaign/data`, `assets/locale`, `ChapterSelectContext`) | ADR-0012 (birincil), ADR-0009, ADR-0002 | Seviye §2, §3, §6, §13 #5/#7/#8; `scene-flow.md` §3.1, §3.9, §3.10; `scene-screens.md` E1 (AC-E1-8/9), E4 (AC-E4-1/7/8), E5 (AC-E5-1…9), §7 anahtarlar |
+| E6 | `m2-perde1-validation` | Denge replay'i, ölçümler, uçtan uca oynanış, kanıt, belge güncellemeleri (`tests/integration/balance`, `tests/integration/campaign`, `production/qa/evidence`) | ADR-0005, ADR-0007, ADR-0012 | Seviye §13 #9–#13, kabul #1–#12; `enemy-layers.md` AC15, **AC21 (BLOCKING)**, AC22; cross-review D1, D5 |
