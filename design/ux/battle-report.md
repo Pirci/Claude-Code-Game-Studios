@@ -242,7 +242,8 @@ görünür). Kuyruk boşalınca önceki odak geri verilir. Fare kullanıcısınd
 
 ## 8. Veri boşlukları (kodda henüz yok) — tasarım gerektirir
 
-> **Bağımlılık (C-45): G1–G4 için ADR-0010 eki gerekir (C-47 görevi).** Bu spec'in M2 uygulaması ek yazılıp kabul edilene kadar başlamaz; ek `MoveOutcome` / sinyal imzalarını (`combat_occurred(outcome)`, `target_owner_before`, `reason`, `SpreadDecision.level_before`, tur tamponu) tek yerde tanımlar.
+> **Bağımlılık karşılandı (C-70, 2026-10-22): ADR-0010 eki "report data contract" G1–G4'ü tanımlar** (`combat_occurred(outcome)`, `target_owner_before`, `reason`, `SpreadDecision.level_before` + `corruption_spread(decision)`, gece tamponu). Kod: C-71.
+> ~~**Bağımlılık (C-45): G1–G4 için ADR-0010 eki gerekir (C-47 görevi).**~~ Bu spec'in M2 uygulaması ek yazılıp kabul edilene kadar başlamaz; ek `MoveOutcome` / sinyal imzalarını (`combat_occurred(outcome)`, `target_owner_before`, `reason`, `SpreadDecision.level_before`, tur tamponu) tek yerde tanımlar.
 
 | # | Boşluk | Etki | Öneri |
 | --- | --- | --- | --- |

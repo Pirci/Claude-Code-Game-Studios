@@ -5,6 +5,42 @@
 Accepted (2026-10-19 — C-59; night-mode decision, recommended option accepted per user
 instruction; re-validate at the next `/architecture-review`.)
 
+> **Amendment 2026-10-22 (C-70 — report data contract, [`design/ux/battle-report.md`](../../design/ux/battle-report.md) §8 G1–G4):**
+> The battle / purification reports and the dawn turn summary (ADR-0011 Decision 4–5) read
+> only `MoveOutcome` and `SpreadDecision`; nothing in a report re-derives rules. Four data gaps
+> are closed here. All new fields are **data**, filled by the pure decider that already owns
+> them; `MapController` still only applies and emits.
+>
+> 1. **G1 — one signal shape per branch.** `MapController.combat_occurred(outcome: MoveOutcome)`
+>    replaces `(from_id, to_id, result: CombatResult)`, symmetric with
+>    `purification_resolved(outcome)`; `army_moved(from_id, to_id, army_count)` is unchanged
+>    (peaceful moves have no report). Player and enemy moves emit through the same `_emit_move`.
+> 2. **G2 — who held the target, and why the move happened.** `MoveOutcome` gains
+>    `target_owner_before: RegionData.Owner` (written by `MoveResolver.resolve()` from the map it
+>    already reads — the report can say "the enemy took our camp" vs. "we took theirs") and
+>    `reason: StringName` (empty for player moves; for enemy moves `MapController` copies
+>    `MoveIntent.reason` — ADR-0005 amendment 2026-10-21, e.g. `&"strike"`). `reason` never
+>    changes resolution; `MoveResolver` ignores it.
+> 3. **G3 — spread vs. deepen.** `ErlikSpreadController.SpreadDecision` gains `level_before: int`
+>    (the target's `corruption_level` at decision time; 0 when there is no target). Report text:
+>    `level_before == 0` → `TURN_SUMMARY_SPREAD`, `≥ 1` → `TURN_SUMMARY_DEEPENED`.
+>    `MapController.corruption_spread(decision: SpreadDecision)` replaces
+>    `corruption_spread(region_id)` so the view receives the decision as decided.
+> 4. **G4 — one summary per night.** `GameContext` owns a night buffer
+>    (`Array[MoveOutcome]` + the night's `SpreadDecision`). It is cleared when the player ends
+>    the turn (before `MapController.end_turn()`); enemy outcomes (`mover == ENEMY`) and the
+>    spread decision are appended from the signals above during `end_turn()`; on `turn_ended`
+>    the view calls `TurnSummaryReport.show_turn(outcomes, spread)` (ADR-0011 signature) and
+>    pushes it on `ModalQueue` **before** the dawn boon offer. If `end_turn()` ends in
+>    `game_lost` / `game_won`, the buffer is discarded — the defeat / victory screens tell the
+>    story (battle-report Q3). Player moves are not buffered: their report opens right after the
+>    move. A night with no enemy outcome and no spread opens no summary (battle-report Q5).
+>
+> Validation (C-71): enemy `MoveOutcome` has `mover == ENEMY`, correct `target_owner_before`
+> and `reason == &"strike"` when the profile struck; `level_before` distinguishes SPREAD /
+> DEEPENED; the buffer is empty at the start of every `end_turn()`; existing preview-equals-
+> apply tests stay green. Implementation: C-71 (data + signals), C-72 / C-73 (views).
+
 ## Date
 
 2026-10-19
