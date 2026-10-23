@@ -373,17 +373,19 @@ func _show_region_info(data: RegionData) -> void:
 # --- Öğretici ipuçları (design/ux/prolog-tutorial.md) ---
 
 ## 1. turda altın yetiyorsa "önce üret" — modal açıkken bekler, kapanınca (`drained`) gelir.
+## Bu gece yayılım olduysa yayılım ipucu önce (Q9: tur özeti kapanana dek ertelenir).
 func _check_start_hint() -> void:
 	if _game_state.map_state == null or _modal_queue.is_open() \
 			or _game_state.map_state.game_result != MapState.GameResult.ONGOING:
 		return
+	if _night_spread != null:
+		_offer_hint(TutorialRules.HINT_SPREAD)
 	_offer_hint(TutorialRules.hint_at_turn_start(
 		_game_state.map_state.current_turn, _game_state.gold, _resource_controller.recruit_cost()))
 
 
 func _on_corruption_spread(decision: ErlikSpreadController.SpreadDecision) -> void:
-	_night_spread = decision
-	_offer_hint(TutorialRules.HINT_SPREAD)
+	_night_spread = decision  # ipucu özet kapanınca (`drained` → `_check_start_hint`)
 
 
 func _on_ruh_changed(ruh: int) -> void:
@@ -468,8 +470,28 @@ func _on_turn_ended(_new_turn: int) -> void:
 	if _save:
 		_save.save_campaign(_game_state)
 	_refresh_views()
-	# Şafak (spirit §3.4): tur başına en çok 1 kendiliğinden sunum; ertelenebilir.
-	_push_boon_offer(false)
+	# Sıra (ADR-0011 K5): gece özeti → şafak lütfu (spirit §3.4: en çok 1, ertelenebilir).
+	var summary_open: bool = _push_turn_summary()
+	_push_boon_offer(false, summary_open)
+
+
+## Bu gecenin özeti; olaysız gecede modal açılmaz (battle-report Q5). Açıldıysa true.
+func _push_turn_summary() -> bool:
+	var map_state: MapState = _game_state.map_state
+	var names: Dictionary = {}
+	for region_id: StringName in map_state.regions:
+		names[region_id] = _region_name_key(region_id)
+	var win: WinCondition = _map_def.win_condition
+	var warning: bool = win != null and win.erlik_loss_threshold > 0 \
+		and WinCondition.erlik_power(map_state) == win.erlik_loss_threshold - 1
+	var summary: TurnSummaryReport = TurnSummaryReport.new(_night_outcomes, _night_spread, names, warning,
+		_flow_config.screen_input_guard_s)
+	if not summary.has_events():
+		summary.free()
+		return false
+	_modal_queue.top_margin = _top_bar_height() + 4.0
+	_modal_queue.push(summary)
+	return true
 
 
 func _on_income_collected(amount: int) -> void:
@@ -611,9 +633,10 @@ func _on_kok_bori_pressed() -> void:
 
 ## Sunum bekliyorsa (ve başka modal yoksa) lütuf modalını sıraya koyar. [param mandatory]
 ## sahne sonu dizisidir: ertelenemez, `victory_pick_cap` ile sınırlıdır.
+## [param after_summary]: şafak sunumu bu gecenin özetinin arkasına girer (açık tek modal odur).
 ## Sıraya girdiyse true.
-func _push_boon_offer(mandatory: bool) -> bool:
-	if _modal_queue.is_open() and not mandatory:
+func _push_boon_offer(mandatory: bool, after_summary: bool = false) -> bool:
+	if _modal_queue.is_open() and not mandatory and not after_summary:
 		return false
 	if mandatory and _victory_picks >= _spirit_rules.victory_pick_cap():
 		return false

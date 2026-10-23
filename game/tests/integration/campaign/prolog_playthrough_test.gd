@@ -60,8 +60,14 @@ func _send(from_id: StringName, to_id: StringName) -> void:
 
 
 ## Oyuncu hamlesi raporu (C-72) hamleden sonra açılır; [Devam] ile kapatılır.
+## Tur sonu: gece olaylıysa (Prolog'da yayılım) özet açılır; okunup kapatılır (C-73).
+func _end_turn() -> void:
+	_press("EndTurnButton")
+	_dismiss_reports()
+
+
 func _dismiss_reports() -> void:
-	for report_name: String in ["BattleReport", "PurificationReport"]:
+	for report_name: String in ["BattleReport", "PurificationReport", "TurnSummaryReport"]:
 		var report: Node = _root_ctx.find_child(report_name, true, false)
 		if report != null:
 			var button: Button = report.find_child("ContinueButton", true, false) as Button
@@ -84,12 +90,12 @@ func test_prolog_plays_from_new_campaign_to_kagan_and_back_to_menu() -> void:
 	_dismiss_hints()
 
 	# A çizgisi (prolog_balance_test ile aynı; burada arayüzden).
-	_recruit(&"otuken", 2); _send(&"otuken", &"altai"); _dismiss_hints(); _press("EndTurnButton")
-	_recruit(&"otuken", 2); _send(&"otuken", &"guney_vadi"); _recruit(&"guney_vadi", 1); _press("EndTurnButton")
+	_recruit(&"otuken", 2); _send(&"otuken", &"altai"); _dismiss_hints(); _end_turn()
+	_recruit(&"otuken", 2); _send(&"otuken", &"guney_vadi"); _recruit(&"guney_vadi", 1); _end_turn()
 	_dismiss_hints()
-	_recruit(&"guney_vadi", 3); _send(&"altai", &"bati_bozkir"); _press("EndTurnButton")
+	_recruit(&"guney_vadi", 3); _send(&"altai", &"bati_bozkir"); _end_turn()
 	_dismiss_hints()
-	_recruit(&"guney_vadi", 3); _recruit(&"bati_bozkir", 1); _send(&"bati_bozkir", &"guney_vadi"); _press("EndTurnButton")
+	_recruit(&"guney_vadi", 3); _recruit(&"bati_bozkir", 1); _send(&"bati_bozkir", &"guney_vadi"); _end_turn()
 	_dismiss_hints()
 	assert_int(_state().map_state.current_turn).is_equal(5)
 	_recruit(&"guney_vadi", 3)

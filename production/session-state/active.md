@@ -356,3 +356,8 @@
 - ReportModal + BattleReport + PurificationReport; SceneDefinition.focus_heading/success/failed_key (C-92 UD kapandı); ModalQueue.push_avoiding (CENTER→BOTTOM→TOP, PanelPlacement); RegionNode.bounds_rect / CampaignMap.region_rect.
 - Bulgu: başarısız arındırmada outcome.combat == null (tasarım gereği) → _report_data_ok yalnız COMBAT/başarılı arındırmada combat ister. Ritüel başlığı yalnız başarıda.
 - Testler 364/364. Kanıt production/qa/evidence/c72-{battle,purify-failed,purify-ritual}.png. NEXT: C-73.
+
+## Session Extract — C-73 (2026-10-23)
+- TurnSummaryReport (game/ui/turn_summary_report.gd; has_events, attacks_on_player, MAX_ATTACKS 3), GameContext._push_turn_summary + _push_boon_offer(after_summary); HINT_SPREAD drained'de (_check_start_hint). icon_alert.png (generate_ui_theme_icons.gd). ReportModal._number_label.
+- Karar: saldırı sayıları tek satır (HBox) + blok boşluğu 4 → 8 dilde sığar. Prolog playthrough _end_turn() özeti kapatır.
+- Testler 374/374. NEXT: C-74.

@@ -16,6 +16,8 @@ const GOLD := Color("#EDC76B")     # Vurgu / açık durum
 const GOLD_D := Color("#C99A3D")   # Ülgen altını — açık anahtar dolgusu
 const CREAM := Color("#F2E6C7")    # Birincil metin rengi — ok, açık topuz
 const DISABLED := Color("#6B655A") # Devre dışı öğe
+const RED := Color("#E87A7A")      # Deel Kırmızısı 6 — kayıp / uyarı (ValueFeedback.COLOR_LOSS)
+const RED_D := Color("#992E2E")    # Deel Kırmızısı 4 — uyarı ikonu kenarı
 
 func _img(w: int, h: int) -> Image:
 	var i: Image = Image.create_empty(w, h, false, Image.FORMAT_RGBA8)
@@ -58,6 +60,14 @@ func _radio(on: bool) -> Image:
 		_rect(i, 2, 2, 2, 2, GOLD)
 	return i
 
+## 7×7 uyarı ikonu (battle-report §4.3 blok C): kırmızı kutu, koyu `!` — Fusion'da `⚠` glifi yok.
+func _alert() -> Image:
+	var i: Image = _img(7, 7)
+	_box(i, 0, 0, 7, 7, RED_D, RED)
+	_rect(i, 3, 1, 1, 3, DARK)
+	_rect(i, 3, 5, 1, 1, DARK)
+	return i
+
 func _save(i: Image, name: String) -> void:
 	var err: Error = i.save_png(ProjectSettings.globalize_path(OUT + name + ".png"))
 	print(name, " ", i.get_size(), " err=", err)
@@ -77,4 +87,5 @@ func _init() -> void:
 	_save(_arrow(), "dropdown_arrow")
 	_save(_radio(true), "radio_checked")
 	_save(_radio(false), "radio_unchecked")
+	_save(_alert(), "icon_alert")
 	quit()

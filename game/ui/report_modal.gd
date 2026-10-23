@@ -50,31 +50,41 @@ func _add_heading(text: String) -> void:
 	label.theme_type_variation = &"HeaderLabel"
 
 
-func _add_region_name(name_key: StringName) -> void:
+func _add_region_name(name_key: StringName, node_name: String = "RegionName") -> void:
 	if name_key == &"":
 		return
-	var label: Label = _label("RegionName", tr(String(name_key)))
+	var label: Label = _label(node_name, tr(String(name_key)))
 	label.theme_type_variation = &"SecondaryLabel"
 	label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
 
-func _add_verse(text: String) -> void:
-	var label: Label = _label("Verse", text)
+func _add_verse(text: String, node_name: String = "Verse") -> Label:
+	var label: Label = _label(node_name, text)
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.custom_minimum_size = Vector2(LINE_WIDTH, 0)
+	return label
 
 
 ## Sayı satırı: `tr(key) % sayı`, sayı LTR yalıtımlı (ADR-0009). [param trend] < 0 kayıp (`↓`, kırmızı),
 ## > 0 kazanç (`↑`, yeşil), 0 düz — renk tek başına anlam taşımaz (glif + metin).
 func _add_number(node_name: String, key: String, value: int, trend: int = 0) -> void:
+	_vbox.add_child(_number_label(node_name, key, value, trend))
+
+
+## [method _add_number] satırını eklemeden üretir (aynı satırda yan yana sayılar için).
+func _number_label(node_name: String, key: String, value: int, trend: int = 0) -> Label:
 	var text: String = tr(key) % NumberFormatter.ltr(NumberFormatter.format_int(value))
 	if trend < 0:
 		text = "↓ " + text
 	elif trend > 0:
 		text = "↑ " + text
-	var label: Label = _label(node_name, text)
+	var label: Label = Label.new()
+	label.name = node_name
+	label.text = text
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	if trend != 0:
 		label.add_theme_color_override(&"font_color", ValueFeedback.COLOR_LOSS if trend < 0 else ValueFeedback.COLOR_GAIN)
+	return label
 
 
 func _label(node_name: String, text: String) -> Label:
