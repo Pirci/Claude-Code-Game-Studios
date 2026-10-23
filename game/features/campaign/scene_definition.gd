@@ -24,6 +24,11 @@ enum Pose { PROFILE, DESCENT, FRONT }
 @export var teaser_key: StringName = &""
 ## İsteğe bağlı sahneye özel yenilgi metni (boş → `DEFEAT_REASON_*`).
 @export var defeat_text_key: StringName = &""
+## Erlik odağı arındırma raporunun ritüel metinleri (ux/battle-report.md §4.2; boş → `PURIFY_*`):
+## başlık, başarı dizesi, başarısızlık dizesi. Prolog `CHAPTER_1_SLAIN_*` / `HUNT_FAILED`.
+@export var focus_heading_key: StringName = &""
+@export var focus_success_key: StringName = &""
+@export var focus_failed_key: StringName = &""
 
 
 func load_map_definition() -> ChapterMapDefinition:

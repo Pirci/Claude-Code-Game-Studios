@@ -252,6 +252,16 @@ func set_tamga(texture: Texture2D) -> void:
 	_update_tamga_visibility()
 
 
+## Bölge poligonunun harita koordinatlarındaki sınır kutusu — paneller bunu örtmekten kaçınır.
+func bounds_rect() -> Rect2:
+	if _points.is_empty():
+		return Rect2()
+	var rect: Rect2 = Rect2(_points[0], Vector2.ZERO)
+	for point: Vector2 in _points:
+		rect = rect.expand(point)
+	return rect
+
+
 ## Çizilen bozulma seviyesi (0 = leke yok).
 func get_corruption_level() -> int:
 	return _stain.level if _stain else 0

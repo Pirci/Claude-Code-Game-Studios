@@ -21,6 +21,8 @@ var bottom_margin: float = 31.0
 
 var _queue: Array[Control] = []
 var _placements: Array[Placement] = []
+## Modal başına kaçınılacak alanlar (boş → verilen yerleşim aynen kullanılır).
+var _obstacles: Array[Array] = []
 var _current: Control = null
 var _return_focus: Control = null
 var _center: CenterContainer
@@ -43,12 +45,13 @@ func _ready() -> void:
 
 ## Modalı sıraya ekler; açık modal yoksa hemen gösterir.
 func push(modal: Control, placement: Placement = Placement.CENTER) -> void:
-	assert(modal.has_signal(&"closed"), "ModalQueue: modal `closed` sinyali yaymalı")
-	_queue.append(modal)
-	_placements.append(placement)
-	if _current == null:
-		_return_focus = get_viewport().gui_get_focus_owner()
-		_show_next()
+	_enqueue(modal, placement, [] as Array[Rect2])
+
+
+## Modalı sıraya ekler; gösterilirken ortada, altta ya da üstte [param obstacles]'ı (ör. raporun hedef
+## bölgesi) örtmeyen ilk yeri seçer — hepsi örterse en az örteni (ux/battle-report.md §3 Q2).
+func push_avoiding(modal: Control, obstacles: Array[Rect2]) -> void:
+	_enqueue(modal, Placement.CENTER, obstacles)
 
 
 func is_open() -> bool:
@@ -62,7 +65,10 @@ func current() -> Control:
 
 ## Açık bir kenar modalını üst ya da alt kenara (yatayda ortalı) taşır.
 func place(modal: Control, placement: Placement) -> void:
-	if placement == Placement.CENTER or modal.get_parent() != self:
+	if modal.get_parent() != self:
+		return
+	if placement == Placement.CENTER:
+		modal.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		return
 	var preset: Control.LayoutPreset = Control.PRESET_CENTER_TOP if placement == Placement.TOP \
 		else Control.PRESET_CENTER_BOTTOM
@@ -74,7 +80,11 @@ func place(modal: Control, placement: Placement) -> void:
 func rect_for(modal: Control, placement: Placement) -> Rect2:
 	var size: Vector2 = modal.get_combined_minimum_size()
 	var x: float = (self.size.x - size.x) / 2.0
-	var y: float = top_margin if placement == Placement.TOP else self.size.y - bottom_margin - size.y
+	var y: float = (self.size.y - size.y) / 2.0
+	if placement == Placement.TOP:
+		y = top_margin
+	elif placement == Placement.BOTTOM:
+		y = self.size.y - bottom_margin - size.y
 	return Rect2(Vector2(x, y), size)
 
 
@@ -89,7 +99,11 @@ func _show_next() -> void:
 		return
 	_current = _queue.pop_front()
 	var placement: Placement = _placements.pop_front()
-	if placement == Placement.CENTER:
+	var obstacles: Array = _obstacles.pop_front()
+	if not obstacles.is_empty():
+		add_child(_current)
+		_choose_placement(_current, obstacles)
+	elif placement == Placement.CENTER:
 		_center.add_child(_current)
 	else:
 		add_child(_current)
@@ -98,6 +112,26 @@ func _show_next() -> void:
 	show()
 	if _current.has_method(&"get_focus_target"):
 		FocusReveal.focus_quietly(_current.call(&"get_focus_target") as Control)
+
+
+func _enqueue(modal: Control, placement: Placement, obstacles: Array[Rect2]) -> void:
+	assert(modal.has_signal(&"closed"), "ModalQueue: modal `closed` sinyali yaymalı")
+	_queue.append(modal)
+	_placements.append(placement)
+	_obstacles.append(obstacles)
+	if _current == null:
+		_return_focus = get_viewport().gui_get_focus_owner()
+		_show_next()
+
+
+func _choose_placement(modal: Control, obstacles: Array) -> void:
+	var options: Array[Placement] = [Placement.CENTER, Placement.BOTTOM, Placement.TOP]
+	var rects: Array[Rect2] = []
+	for option: Placement in options:
+		rects.append(rect_for(modal, option))
+	var avoid: Array[Rect2] = []
+	avoid.assign(obstacles)
+	place(modal, options[PanelPlacement.choose(rects, avoid)])
 
 
 func _on_current_closed() -> void:

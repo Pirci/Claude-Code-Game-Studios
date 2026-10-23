@@ -50,6 +50,9 @@ objective_region_ids = Array[StringName]([])
 outro_pages = Array[ExtResource("3_page")]([SubResource("prolog_outro_1"), SubResource("prolog_outro_2")])
 teaser_key = &""
 defeat_text_key = &""
+focus_heading_key = &"CHAPTER_1_SLAIN_HEADING"
+focus_success_key = &"CHAPTER_1_SLAIN_LINE"
+focus_failed_key = &"CHAPTER_1_HUNT_FAILED"
 
 [resource]
 script = ExtResource("1_camp")

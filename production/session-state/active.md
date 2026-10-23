@@ -351,3 +351,8 @@
 - Kararlar: AC21 ayar sırası attack_start_turn 5→6 → başkent takviyesi seyreltme → garnizon (kullanıcıyı beklemeden); sanat bloklamaz (yer tutucu); başlangıç C-70.
 - Bulgu: boon_catalog Kurt Gücü/Demir Post max_stacks=0 (sınırsız) → C-80. C-41 kuyruk satırı [x] düzeltildi.
 - C-70 (c8c01f0) ADR-0010 eki G1–G4. C-71: MoveOutcome.target_owner_before/reason, MoveIntent.reason, SpreadDecision.level_before, combat_occurred(outcome), corruption_spread(decision), GameContext night buffer. Testler 355/355. NEXT: C-72.
+
+## Session Extract — C-72 (2026-10-23)
+- ReportModal + BattleReport + PurificationReport; SceneDefinition.focus_heading/success/failed_key (C-92 UD kapandı); ModalQueue.push_avoiding (CENTER→BOTTOM→TOP, PanelPlacement); RegionNode.bounds_rect / CampaignMap.region_rect.
+- Bulgu: başarısız arındırmada outcome.combat == null (tasarım gereği) → _report_data_ok yalnız COMBAT/başarılı arındırmada combat ister. Ritüel başlığı yalnız başarıda.
+- Testler 364/364. Kanıt production/qa/evidence/c72-{battle,purify-failed,purify-ritual}.png. NEXT: C-73.

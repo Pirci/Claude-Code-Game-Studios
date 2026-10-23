@@ -481,11 +481,40 @@ func _on_income_collected(amount: int) -> void:
 func _on_combat_occurred(outcome: MoveOutcome) -> void:
 	_record_night(outcome)
 	_refresh_views()
+	if outcome.mover == RegionData.Owner.PLAYER and _report_data_ok(outcome):
+		_push_report(BattleReport.new(outcome, _region_name_key(outcome.to_id), _flow_config.screen_input_guard_s),
+			outcome.to_id)
 
 
 func _on_purification_resolved(outcome: MoveOutcome) -> void:
 	_record_night(outcome)
 	_refresh_views()
+	if outcome.mover == RegionData.Owner.PLAYER and _report_data_ok(outcome):
+		var is_focus: bool = _map_def.win_condition != null and outcome.to_id in _map_def.win_condition.erlik_foci
+		_push_report(PurificationReport.new(outcome, _region_name_key(outcome.to_id), _scene if is_focus else null,
+			_flow_config.screen_input_guard_s), outcome.to_id)
+
+
+## Oyuncu hamlesi raporu hamleden hemen sonra açılır; hedef bölgeyi örtmeyen yere yerleşir
+## (ux/battle-report.md §2–§3). Kazandıran hamlede rapor zafer kartından önce gelir (kuyruk sırası).
+func _push_report(report: ReportModal, target_id: StringName) -> void:
+	_modal_queue.top_margin = _top_bar_height() + 4.0
+	_modal_queue.push_avoiding(report, [_campaign_map.region_rect(target_id)] as Array[Rect2])
+
+
+## Eksik veride rapor açılmaz, uyarı günlüğe yazılır (ux/battle-report.md §9). Başarısız arındırmada
+## savaş sonucu tasarım gereği yoktur (bütün kuvvet dağılır) — o rapor yalnız `moving` ve `S` okur.
+func _report_data_ok(outcome: MoveOutcome) -> bool:
+	var needs_combat: bool = outcome.branch == MoveOutcome.Branch.COMBAT or outcome.purified
+	if needs_combat and outcome.combat == null:
+		push_warning("GameContext: savaş sonucu olmayan outcome için rapor atlandı (%s → %s)" % [outcome.from_id, outcome.to_id])
+		return false
+	return true
+
+
+func _region_name_key(region_id: StringName) -> StringName:
+	var region: RegionData = _game_state.map_state.get_region(region_id)
+	return region.display_name_key if region != null else &""
 
 
 func _on_army_moved(

@@ -56,6 +56,17 @@ func _send(from_id: StringName, to_id: StringName) -> void:
 	_click(from_id)
 	_press("SendArmyButton")
 	_click(to_id)
+	_dismiss_reports()
+
+
+## Oyuncu hamlesi raporu (C-72) hamleden sonra açılır; [Devam] ile kapatılır.
+func _dismiss_reports() -> void:
+	for report_name: String in ["BattleReport", "PurificationReport"]:
+		var report: Node = _root_ctx.find_child(report_name, true, false)
+		if report != null:
+			var button: Button = report.find_child("ContinueButton", true, false) as Button
+			assert_bool(button.disabled).is_false()
+			button.pressed.emit()
 
 
 func _dismiss_hints() -> void:
@@ -82,7 +93,14 @@ func test_prolog_plays_from_new_campaign_to_kagan_and_back_to_menu() -> void:
 	_dismiss_hints()
 	assert_int(_state().map_state.current_turn).is_equal(5)
 	_recruit(&"guney_vadi", 3)
-	_send(&"guney_vadi", &"sinir_bolge")
+	_click(&"guney_vadi")
+	_press("SendArmyButton")
+	_click(&"sinir_bolge")
+	# Canavar ini Erlik odağı: arındırma raporu Prolog ritüel başlığıyla, zafer kartından önce.
+	var report: Node = _root_ctx.find_child("PurificationReport", true, false)
+	assert_object(report).is_not_null()
+	assert_str((report.find_child("Heading", true, false) as Label).text).is_equal(tr("CHAPTER_1_SLAIN_HEADING"))
+	_dismiss_reports()
 
 	assert_int(_root_ctx.flow_state()).is_equal(S.VICTORY_BEAT)
 	assert_int(_state().ruh).is_equal(30)

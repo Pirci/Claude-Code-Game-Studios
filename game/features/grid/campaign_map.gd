@@ -74,6 +74,12 @@ func objective_marker_rects() -> Array[Rect2]:
 	return rects
 
 
+## Bölgenin harita koordinatlarında sınır kutusu (yoksa boş Rect2).
+func region_rect(region_id: StringName) -> Rect2:
+	var node: RegionNode = _region_nodes.get(region_id) as RegionNode
+	return node.bounds_rect() if node != null else Rect2()
+
+
 ## Testler için: bölge işaretli mi.
 func is_region_marked(region_id: StringName) -> bool:
 	var node: RegionNode = _region_nodes.get(region_id) as RegionNode

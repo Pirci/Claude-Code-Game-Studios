@@ -243,6 +243,8 @@ görünür). Kuyruk boşalınca önceki odak geri verilir. Fare kullanıcısınd
 ## 8. Veri boşlukları (kodda henüz yok) — tasarım gerektirir
 
 > **Bağımlılık karşılandı (C-70, 2026-10-22): ADR-0010 eki "report data contract" G1–G4'ü tanımlar** (`combat_occurred(outcome)`, `target_owner_before`, `reason`, `SpreadDecision.level_before` + `corruption_spread(decision)`, gece tamponu). Kod: C-71.
+
+> **Uygulandı (C-72, 2026-10-23):** `ReportModal` (ortak çerçeve) → `BattleReport` / `PurificationReport` (`game/ui/report_modal.gd`, `features/combat/ui/battle_report.gd`, `features/bozkurt/ui/purification_report.gd`); yalnız oyuncu hamlesinde açılır, `ModalQueue.push_avoiding` hedef bölgeyi örtmeyen yerleşimi seçer (CENTER → BOTTOM → TOP). Odak ritüel metni `SceneDefinition.focus_heading_key / focus_success_key / focus_failed_key` (boşsa `PURIFY_*`); ritüel başlığı yalnız başarıda. Başarısız arındırmada `combat` tasarım gereği yoktur — rapor `moving` ve `S` ile açılır; eksik veri koruması yalnız savaş ve başarılı arındırmada `combat` ister. Kanıt: `production/qa/evidence/c72-*.png` (en/de/ru · ar/zh/tr).
 > ~~**Bağımlılık (C-45): G1–G4 için ADR-0010 eki gerekir (C-47 görevi).**~~ Bu spec'in M2 uygulaması ek yazılıp kabul edilene kadar başlamaz; ek `MoveOutcome` / sinyal imzalarını (`combat_occurred(outcome)`, `target_owner_before`, `reason`, `SpreadDecision.level_before`, tur tamponu) tek yerde tanımlar.
 
 | # | Boşluk | Etki | Öneri |
