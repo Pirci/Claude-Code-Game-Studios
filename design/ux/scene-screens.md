@@ -481,7 +481,7 @@ Alpha K = 6: 6 düğüm × ≈ 22 + teaser 20 + başlık/şerit/düğme ≈ 80 �
 
 **Karar (C-45) — kilit ipucu:** `LOCKED` düğüm yalnız ikon + soluk ad; `CHAPTER_LOCKED_HINT` ortak bir durum satırında (odak/tık sırasında) gösterilir; teaser `AVAILABLE` düğümün altında; ek key gerekmez.
 
-Başlangıç odağı (sessiz): `AVAILABLE` düğümün [Başla]'sı; yoksa [Ana Menü]. **Girdi koruması:** E5 açılışında 0,4 sn (§0.3; **Mevcut: yok** → AC-E5-6).
+Başlangıç odağı (sessiz): `AVAILABLE` düğümün [Başla]'sı; yoksa [Ana Menü]. **Girdi koruması:** E5 açılışında 0,4 sn (§0.3; uygulandı C-74 — `ChapterSelectContext.bind_services(..., guard_s)`, koruma sonrası Esc = [Ana Menü]; kanıt `tests/integration/campaign/input_guard_all_modals_test.gd`).
 
 ### E5.6 Durumlar
 

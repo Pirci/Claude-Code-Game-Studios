@@ -581,7 +581,7 @@ func show_objective() -> void:
 
 ## T15: harita sırasında Ana Menü onayı (kayıt yazılmaz).
 func show_leave_confirm() -> void:
-	var dialog: ConfirmDialog = ConfirmDialog.new("CONFIRM_LEAVE_SCENE")
+	var dialog: ConfirmDialog = ConfirmDialog.new("CONFIRM_LEAVE_SCENE", _flow_config.screen_input_guard_s)
 	dialog.confirmed.connect(leave_confirmed.emit)
 	_modal_queue.push(dialog)
 
@@ -643,7 +643,7 @@ func _push_boon_offer(mandatory: bool, after_summary: bool = false) -> bool:
 	var offer: Array[BoonDefinition] = _spirit.current_offer(_game_state.map_state.chapter_id)
 	if offer.is_empty():
 		return false
-	var modal: BoonOfferModal = BoonOfferModal.new()
+	var modal: BoonOfferModal = BoonOfferModal.new(_flow_config.screen_input_guard_s)
 	modal.show_offer(offer, _game_state.ruh, _spirit.next_boon_cost(), mandatory)
 	modal.boon_picked.connect(_on_boon_picked.bind(mandatory))
 	_modal_queue.push(modal)

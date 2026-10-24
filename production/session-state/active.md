@@ -361,3 +361,8 @@
 - TurnSummaryReport (game/ui/turn_summary_report.gd; has_events, attacks_on_player, MAX_ATTACKS 3), GameContext._push_turn_summary + _push_boon_offer(after_summary); HINT_SPREAD drained'de (_check_start_hint). icon_alert.png (generate_ui_theme_icons.gd). ReportModal._number_label.
 - Karar: saldırı sayıları tek satır (HBox) + blok boşluğu 4 → 8 dilde sığar. Prolog playthrough _end_turn() özeti kapatır.
 - Testler 374/374. NEXT: C-74.
+
+## Session Extract — C-74 (2026-10-24)
+- InputGuard: BoonOfferModal.new(guard_s) (_ready arm kartlar+Sonra; Esc defer butonu pasifse düşer), ConfirmDialog.new(key, guard_s), ChapterSelectContext.bind_services(..., guard_s) + Esc = menü. RootContext/GameContext flow_config.screen_input_guard_s geçirir.
+- Bulgu: ModalQueue kuyruğunda bekleyen (ağaca girmemiş) modallar sızıyordu → NOTIFICATION_PREDELETE'te free.
+- Testler 384/384. tests/integration/campaign/input_guard_all_modals_test.gd. NEXT: C-75.

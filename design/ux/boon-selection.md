@@ -225,7 +225,7 @@ Görünüm pasiftir: veri alır, niyet sinyali yollar; durum yazmaz.
 - [ ] AC5: Açılışta odak ilk karttadır; ok/Tab ile 3 kart (+[Sonra]) dolaşılır, odak modaldan çıkmaz; kapanışta önceki odak geri gelir.
 - [ ] AC6: Seçimden sonra Ruh bedel kadar düşer, etki aynı turda görünür; ertelenebilirde ikinci modal kendiliğinden açılmaz.
 - [ ] AC7 (M2): Tavanlı lütufta `×N/MAX` (son yığında `(son)`), tavana ulaşmış lütuf kartta yok; havuz < 3'te tekrarlı kartlar birleşik, tek kartla Enter seçer.
-- [ ] AC8 (M2): **Her** sunum türünde (zorunlu, şafak, HUD, yükleme) `screen_input_guard_s` içinde tık/Enter/Esc hiçbir kartı seçmez/ertelemez (scene-flow AC24 genişletilmiş).
+- [x] AC8 (M2, C-74 — `BoonOfferModal.new(guard_s)`, `input_guard_all_modals_test.gd`): **Her** sunum türünde (zorunlu, şafak, HUD, yükleme) `screen_input_guard_s` içinde tık/Enter/Esc hiçbir kartı seçmez/ertelemez (scene-flow AC24 genişletilmiş).
 - [ ] AC9: 640×360'ta RU, DE, AR, ZH, TR, EN için panel üst (40) / alt (31) çubuklara taşmaz (≤ 281 px), kart metinleri kırpılmaz (ikon + yığın satırı dahil); figür sığmazsa gizlenir; ekran görüntüsü kanıtı `production/qa/evidence/`.
 - [ ] AC10: Arapçada ilk kart sağda, Unifont 16, harita LTR.
 - [ ] AC11: Seçim konturu (1 px altın + `◆`) görünür ve ≤ 2 kare sonra modal kapanır; Hareketi Azalt açıkken kontur ve (varsa) kart belirişi anlıktır.

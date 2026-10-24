@@ -3,6 +3,8 @@ extends PanelContainer
 ## Kök Böri lütuf sunumu (spirit-system.md §3.4, ADR-0011): üç kart, biri seçilir; zorunlu
 ## değilse "Sonra" ya da Esc ile ertelenir. Pasif görünüm — veriyi [method show_offer] alır,
 ## niyeti sinyalle bildirir; seçimi [SpiritController] uygular, kapanışı [ModalQueue] yönetir.
+## Her sunum türünde (zorunlu, şafak, HUD, yükleme) açılışta girdi koruması: kartlar ve [Sonra]
+## pasif, Esc düşer (boon-selection AC8, scene-flow §0.3).
 
 
 signal boon_picked(boon_id: StringName)
@@ -19,10 +21,12 @@ var _cost_label: Label
 var _cards_row: HBoxContainer
 var _carries_label: Label
 var _defer_button: Button
+var _guard_s: float = 0.0
 
 
-func _init() -> void:
+func _init(guard_s: float = 0.0) -> void:
 	name = "BoonOfferModal"
+	_guard_s = guard_s
 	# İlahi panel (art bible §7): koyu indigo zemin, 2px altın kenar.
 	theme_type_variation = &"DivinePanel"
 	var vbox: VBoxContainer = VBoxContainer.new()
@@ -95,6 +99,13 @@ func show_offer(boons: Array[BoonDefinition], ruh: int, cost: int, mandatory: bo
 	_carries_label.visible = mandatory
 
 
+func _ready() -> void:
+	var buttons: Array[BaseButton] = [_defer_button]
+	for card: BoonCard in _cards:
+		buttons.append(card)
+	InputGuard.arm(self, buttons, _guard_s)
+
+
 ## [ModalQueue] açılışta odağı buraya verir: ilk kart.
 func get_focus_target() -> Control:
 	return _cards[0] if not _cards.is_empty() else _defer_button
@@ -103,7 +114,8 @@ func get_focus_target() -> Control:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"ui_cancel") and not _mandatory:
 		get_viewport().set_input_as_handled()
-		_on_defer_pressed()
+		if not _defer_button.disabled:  # koruma içinde Esc düşer (kuyruğa alınmaz)
+			_on_defer_pressed()
 
 
 func _card(boon: BoonDefinition, index: int) -> BoonCard:

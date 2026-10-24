@@ -178,7 +178,8 @@ func _enter_state(state: SceneFlow.State, previous: SceneFlow.State) -> void:
 		SceneFlow.State.CHAPTER_SELECT:
 			var select: ChapterSelectContext = ChapterSelectContext.new()
 			select.name = "ChapterSelectContext"
-			select.bind_services(_campaign, _game_state, load(BOON_CATALOG_PATH) as BoonCatalog)
+			select.bind_services(_campaign, _game_state, load(BOON_CATALOG_PATH) as BoonCatalog,
+				flow_config.screen_input_guard_s)
 			select.start_requested.connect(_on_chapter_start)
 			select.read_requested.connect(_on_chapter_read)
 			select.menu_requested.connect(_dispatch.bind(SceneFlow.EVENT_MENU))

@@ -3,6 +3,7 @@ extends Control
 ## Sefer haritası — `CHAPTER_SELECT` (scene-flow.md §3.9; ADR-0012 karar 3): sahne düğümleri
 ## (F1: tamamlandı / açık / kilitli), taşınan güç şeridi (Ruh + lütuflar), [Başla] /
 ## [Destanı Oku] / [Ana Menü]. Pasif: yalnızca niyet sinyalleri; geçişi SceneFlow verir.
+## Açılışta girdi koruması (AC-E5-6): düğmeler pasif, Esc/Enter düşer; sonra Esc = [Ana Menü] (AC-E5-8).
 
 
 signal start_requested(chapter_id: int)
@@ -13,12 +14,16 @@ var _campaign: CampaignDefinition = null
 var _game_state: GameState = null
 var _boon_catalog: BoonCatalog = null
 var _focus_target: Control = null
+var _guard_s: float = 0.0
+var _menu_button: Button = null
 
 
-func bind_services(campaign: CampaignDefinition, game_state: GameState, boon_catalog: BoonCatalog = null) -> void:
+func bind_services(campaign: CampaignDefinition, game_state: GameState, boon_catalog: BoonCatalog = null,
+		guard_s: float = 0.0) -> void:
 	_campaign = campaign
 	_game_state = game_state
 	_boon_catalog = boon_catalog
+	_guard_s = guard_s
 
 
 func _ready() -> void:
@@ -55,13 +60,24 @@ func _ready() -> void:
 		vbox.add_child(_scene_row(scene, CampaignRules.chapter_state(scene.chapter_id, completed)))
 	vbox.add_child(_power_strip())
 
-	var menu_button: Button = Button.new()
-	menu_button.name = "MenuButton"
-	menu_button.text = tr("MAIN_MENU")
-	menu_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	menu_button.pressed.connect(menu_requested.emit)
-	vbox.add_child(menu_button)
-	FocusReveal.focus_quietly(_focus_target if _focus_target != null else menu_button)
+	_menu_button = Button.new()
+	_menu_button.name = "MenuButton"
+	_menu_button.text = tr("MAIN_MENU")
+	_menu_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_menu_button.pressed.connect(menu_requested.emit)
+	vbox.add_child(_menu_button)
+	var buttons: Array[BaseButton] = []
+	for node: Node in find_children("*", "BaseButton", true, false):
+		buttons.append(node as BaseButton)
+	InputGuard.arm(self, buttons, _guard_s)
+	FocusReveal.focus_quietly(_focus_target if _focus_target != null else _menu_button)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed(&"ui_cancel") and _menu_button != null:
+		get_viewport().set_input_as_handled()
+		if not _menu_button.disabled:
+			menu_requested.emit()
 
 
 func _scene_row(scene: SceneDefinition, state: CampaignRules.ChapterState) -> Control:

@@ -43,6 +43,16 @@ func _ready() -> void:
 	hide()
 
 
+## Ağaca hiç girmemiş bekleyen modallar sahipsizdir — kuyrukla birlikte serbest bırakılır
+## (ör. tur özetinin arkasındaki şafak lütfu, oyun ekranı kapanırken).
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		for modal: Control in _queue:
+			if is_instance_valid(modal) and not modal.is_inside_tree():
+				modal.free()
+		_queue.clear()
+
+
 ## Modalı sıraya ekler; açık modal yoksa hemen gösterir.
 func push(modal: Control, placement: Placement = Placement.CENTER) -> void:
 	_enqueue(modal, placement, [] as Array[Rect2])
