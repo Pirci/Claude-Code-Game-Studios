@@ -178,8 +178,9 @@ func _run_enemy_ai() -> void:
 
 
 func _apply_enemy_move(intent: EnemyAIController.MoveIntent) -> void:
+	# Lütuflar oyuncunun savunmasına da işler (Demir Post `D_eff`, combat §4).
 	var outcome: MoveOutcome = _move_resolver.resolve(
-		_map_state, intent.from_id, intent.to_id, RegionData.Owner.ENEMY)
+		_map_state, intent.from_id, intent.to_id, RegionData.Owner.ENEMY, _modifiers())
 	if not outcome.is_valid():
 		push_warning("EnemyAIController geçersiz hamle önerdi: %s → %s (%s)" % [
 			intent.from_id, intent.to_id, outcome.invalid_reason])

@@ -12,6 +12,10 @@ const REASON_NOT_OWNER: StringName = &"not_owner"
 const REASON_SINGLE_GARRISON: StringName = &"single_garrison"
 const REASON_NOT_ADJACENT: StringName = &"not_adjacent"
 const REASON_NO_ACTIONS: StringName = &"no_actions"
+## Etkin güç stat'ları (combat §4, ADR-0006): Kurt Gücü / Demir Post. Yalnız oyuncu tarafına uygulanır.
+const STAT_ARMY_ATTACK: StringName = &"army_attack"
+const STAT_ARMY_DEFENSE: StringName = &"army_defense"
+const CEIL_EPSILON: float = 1e-6
 
 var _combat: CombatResolver = CombatResolver.new()
 var _spirit: SpiritRules = SpiritRules.new()
@@ -74,7 +78,7 @@ func resolve(
 
 	# 1. Savaş: hedefte yabancı garnizon (sahibi hamle yapan değil ve army > 0).
 	if target.owner != mover and target.army_count > 0:
-		_resolve_combat(outcome, target)
+		_resolve_combat(outcome, target, modifiers)
 		return outcome
 
 	# 2. Arındırma: yalnızca oyuncu; yabancı garnizon yok ve hedef bozuk (spirit §3.2).
@@ -92,17 +96,25 @@ func resolve(
 	return outcome
 
 
-## Başarı yalnızca `P > S`; kayıp her zaman Dal 1 (`draw_favors_defender` etkisiz — C-53).
-## Başarısızlıkta gelen kuvvetin tamamı kaybolur; hedef değişmez (spirit §3.2).
+## Etkin güç `ceil(resolve(stat, ordu))` (combat §4); modifikatörsüz ordunun kendisi. Kayan nokta
+## artığı (yığınlı yüzde toplamları) tavanı bir üste taşımasın diye küçük tolerans düşülür.
+static func effective_power(stat_id: StringName, army: int, modifiers: Array[StatModifier]) -> int:
+	return ceili(StatResolver.resolve(stat_id, float(army), modifiers) - CEIL_EPSILON)
+
+
+## Başarı yalnızca `P_eff > S`; kayıp her zaman Dal 1 (`draw_favors_defender` etkisiz — C-53).
+## `S` savunma modifikatörü almaz. Başarısızlıkta gelen kuvvetin tamamı kaybolur; hedef değişmez (spirit §3.2).
 func _resolve_purification(outcome: MoveOutcome, target: RegionData, modifiers: Array[StatModifier]) -> void:
 	outcome.branch = MoveOutcome.Branch.PURIFICATION
 	outcome.corruption_strength = _spirit.corruption_strength(target.corruption_level)
 	outcome.target_owner_after = target.owner
 	outcome.target_army_after = target.army_count
-	if outcome.moving <= outcome.corruption_strength:
+	var p_eff: int = effective_power(STAT_ARMY_ATTACK, outcome.moving, modifiers)
+	if p_eff <= outcome.corruption_strength:
 		outcome.dispersed = outcome.moving
 		return
-	var result: CombatResolver.CombatResult = _combat.resolve(outcome.moving, outcome.corruption_strength)
+	var result: CombatResolver.CombatResult = _combat.resolve_effective(
+		outcome.moving, outcome.corruption_strength, p_eff, outcome.corruption_strength)
 	outcome.combat = result
 	outcome.purified = true
 	outcome.ruh_gain = _spirit.ruh_gain(target.corruption_level, modifiers)
@@ -114,9 +126,17 @@ func _resolve_purification(outcome: MoveOutcome, target: RegionData, modifiers: 
 		outcome.target_army_after = result.attacker_remaining
 
 
-func _resolve_combat(outcome: MoveOutcome, target: RegionData) -> void:
+## Oyuncu saldırıyorsa `A_eff` lütuflu, oyuncu savunuyorsa `D_eff` lütuflu; düşmanın gücü ordusudur.
+func _resolve_combat(outcome: MoveOutcome, target: RegionData, modifiers: Array[StatModifier]) -> void:
 	outcome.branch = MoveOutcome.Branch.COMBAT
-	var result: CombatResolver.CombatResult = _combat.resolve(outcome.moving, target.army_count)
+	var a_eff: int = outcome.moving
+	if outcome.mover == RegionData.Owner.PLAYER:
+		a_eff = effective_power(STAT_ARMY_ATTACK, outcome.moving, modifiers)
+	var d_eff: int = target.army_count
+	if target.owner == RegionData.Owner.PLAYER:
+		d_eff = effective_power(STAT_ARMY_DEFENSE, target.army_count, modifiers)
+	var result: CombatResolver.CombatResult = _combat.resolve_effective(
+		outcome.moving, target.army_count, a_eff, d_eff)
 	outcome.combat = result
 	if result.attacker_won:
 		outcome.target_owner_after = outcome.mover

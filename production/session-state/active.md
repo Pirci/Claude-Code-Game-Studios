@@ -384,3 +384,7 @@
 ## Session Extract — C-78 (2026-10-27)
 - BoonRules.offer(pool, scene_id, n, campaign_seed=0), eligible_pool(catalog, modifiers, scene_pool=[]); SpiritController.bind_boons(..., scene_pool), current_offer tohumu state'ten. SceneDefinition.boon_pool_ids; campaign.tres Prolog üçlüsü.
 - RootContext testlerinde campaign_seed_source = 1 (determinizm). tests/unit/bozkurt/boon_offer_seed_pool_test.gd. Testler 407. NEXT: C-79.
+
+## Session Extract — C-79 (2026-10-27)
+- CombatResolver.resolve_effective + CombatResult.attacker/defender_effective; MoveResolver.STAT_ARMY_ATTACK/DEFENSE, effective_power (CEIL_EPSILON 1e-6), _resolve_combat(..., modifiers), arındırma P_eff. MapController._apply_enemy_move lütufları geçirir.
+- tests/unit/combat/combat_effective_power_test.gd. Testler 414. NEXT: C-80 (katalog max_stacks 3, active_systems effective_power).

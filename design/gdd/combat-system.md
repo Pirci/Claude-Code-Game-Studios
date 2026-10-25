@@ -84,7 +84,9 @@ attacker_remaining=0, defender_remaining=5.
 **Örnek 3** (A=4, D=4): eşitlik → attacker_losses=ceil(2.8)=3, defender_losses=2,
 attacker_remaining=1, defender_remaining=2, savunan kazanır.
 
-### Etkin güç (lütuf modifikatörleri) — *planlı, M2 (C-31 kararı)*
+### Etkin güç (lütuf modifikatörleri) — *uygulandı C-79 (2026-10-27; C-31 kararı)*
+
+> Kod: `CombatResolver.resolve_effective(A, D, A_eff, D_eff)` (`resolve(A, D)` = etkin güç ordu), `MoveResolver.effective_power` (`ceil`, kayan nokta artığına karşı 1e-6 tolerans), oyuncu saldırısı / savunması / arındırması ve düşman hamlesi (MapController lütufları geçirir) aynı yoldan; `CombatResult.attacker_effective` / `defender_effective`. Lütufların açılması (`active_systems += effective_power`, yığın sınırı 3) C-80.
 Kurt Gücü / Demir Post lütufları (`spirit-system.md` §3.5) **etkin gücü** değiştirir;
 birlik sayısı değişmez. Modifikatörler yalnızca **oyuncunun** tarafına uygulanır
 (ADR-0006 `StatResolver`, yuvarlama `ceil`). **C-44 (2026-10-21):** düşman AI saldırı kararında
@@ -177,10 +179,10 @@ GDD konseptte var ama kodda henüz yok.
 4. Hiçbir `*_remaining` değeri negatif olamaz. *(Test)*
 5. Tüm kayıplar `ceil` ile hesaplanır (kayıpsız zafer yok, taraf ≥1 iken). *(Test)*
 6. Çözüm deterministiktir — aynı girdi her zaman aynı sonuç. *(Test)*
-7. Modifikatör yokken etkin güç yolu AC1–3 sonuçlarını değiştirmez. *(Test — M2)*
+7. Modifikatör yokken etkin güç yolu AC1–3 sonuçlarını değiştirmez. *(Test — M2; ✅ C-79 `combat_effective_power_test.gd`, 12×12 tablo)*
 8. Kurt Gücü 1 yığınla A=4, D=4 → saldıran kazanır; attacker_remaining=2,
    defender_remaining=0. Demir Post 1 yığınla oyuncu savunurken A=4, D=4 →
-   `D_eff = 5`, savunan kazanır; defender_losses = ceil(4 × 0.3) = 2. *(Test — M2)*
+   `D_eff = 5`, savunan kazanır; defender_losses = ceil(4 × 0.3) = 2. *(Test — M2; ✅ C-79)*
 9. `draw_favors_defender = false` iken A=4, D=4 → `attacker_won = true`,
    attacker_remaining=1; A=D=1 → iki taraf 0 (bölgeyi sahipsiz yapma kararı Ordu
    Sistemi'nde, `army-system.md` AC13). *(Test)*
