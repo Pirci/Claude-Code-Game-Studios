@@ -88,3 +88,15 @@ func test_symbols_outside_fusion_are_known() -> void:
 		assert_array(_missing(symbol, fusion)).override_failure_message(symbol).is_not_empty()
 	for symbol: String in ["↑", "↓", "-", "◆", "…", " "]:
 		assert_array(_missing(symbol, fusion)).override_failure_message(symbol).is_empty()
+
+
+## C-76: `×` (yığın `BOON_STACK` "×N/MAX") ve `→` her native fontta var — metinde kullanılabilir.
+## Arapçada yön sırası bozulmasın diye yığın metni kod tarafında LTR yalıtılır (NumberFormatter.ltr).
+func test_multiplication_and_arrow_glyphs_are_in_every_native_font() -> void:
+	var fonts: Array[Font] = [load(UNIFONT_PATH) as Font]
+	for path: String in FUSION_PATHS:
+		fonts.append(load(path) as Font)
+	for font: Font in fonts:
+		for symbol: String in ["×", "→"]:
+			assert_bool(font.has_char(symbol.unicode_at(0))).override_failure_message(
+				"%s yok: %s" % [symbol, font.resource_path]).is_true()

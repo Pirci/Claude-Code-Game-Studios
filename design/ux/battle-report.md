@@ -113,7 +113,7 @@ Kullanılabilir modal yüksekliği ≈ 360 − 40 − 31 − 8 ≈ **281 px**.
 ## 4. İçerik tabloları
 
 Anahtarlar `narrative-voice.md` §8; hepsi CSV'de mevcut (CH2 anahtarları hariç). "En uzun dil" = CSV'den el sayımı (en/tr/de/fr/es/ru/pt/zh/ja/ko/ar), `%s` sayı/ad ile dolar.
-Font: Fusion 12 (Arapça Unifont 16, tek gövde boyutu, hiyerarşi renkle). Metinde `-` ASCII. **Glifler:** `↑ ↓` Fusion'da var (`glyph_coverage_test`) ve metin glifi olarak kullanılır; `✓ ⚠ ✕` glifi yok → **piksel ikon**; `×` ve `→` için glif testi görevi yazılır (C-47), doğrulanana kadar kullanılmaz.
+Font: Fusion 12 (Arapça Unifont 16, tek gövde boyutu, hiyerarşi renkle). Metinde `-` ASCII. **Glifler:** `↑ ↓` Fusion'da var (`glyph_coverage_test`) ve metin glifi olarak kullanılır; `✓ ⚠ ✕` glifi yok → **piksel ikon**; **C-76 (2026-10-26): `×` ve `→` her native fontta var** (Fusion 12 latin/ja/ko/zh + Unifont 16; `glyph_coverage_test` + 12 px görsel kontrol) → metinde kullanılabilir; `×N/MAX` gibi sayı içeren biçimler Arapçada yön sırası bozulmasın diye kodda LTR yalıtılır (`NumberFormatter.ltr`).
 
 ### 4.1 BattleReport (oyuncu hamlesi, `Branch.COMBAT`)
 
@@ -232,7 +232,7 @@ görünür). Kuyruk boşalınca önceki odak geri verilir. Fare kullanıcısınd
 | Klavye | Tüm eylemler klavyeyle (Enter/Esc/Tab); fare gerekmez |
 | Renk | Kayıp/kazanç = glif/ikon + `+/-` rakam + metin; kırmızı/yeşil yedekli (renk körlüğü) |
 | Kontrast | Modal zemin `#1C150D` opak; gövde krem, başlık `#EDC76B`, ikincil `#B8A689`; test: palet doğrulayıcı + render ölçümü (TBD) |
-| Glif | `↑ ↓` metin glifi (Fusion'da var); `✓ ⚠ ✕` piksel ikon; `×` `→` kullanılmaz (glif testi görevi); `- ` ASCII; `glyph_coverage_test` her çeviri için |
+| Glif | `↑ ↓` metin glifi (Fusion'da var); `✓ ⚠ ✕` piksel ikon; `×` `→` kullanılabilir (C-76, sayılı biçim LTR yalıtılır); `- ` ASCII; `glyph_coverage_test` her çeviri için |
 | Sayı biçimi | `NumberFormatter.format_int` (binlik ayırıcı dile göre); Arapça'da sayı/kesir LRI...PDI ile soldan sağa yalıtılır (C-69) |
 | RTL (ar) | Ozan dizesi ve satırlar sağa dayalı, ikon/glif satırın sağında; panel simetrik; düğme ortada; harita LTR kalır |
 | Büyük/küçük harf | Çeviride; kodda `to_upper()` yok |
@@ -296,7 +296,7 @@ görünür). Kuyruk boşalınca önceki odak geri verilir. Fare kullanıcısınd
 | Q9 | Özet açılırken `HINT_SPREAD` balonu aynı anda çıkabilir | Balon, modal kuyruğu boşalana dek ertelenir (`_offer_hint` kuyruk kontrolü `drained` sonrası yeniden dener) | godot-specialist |
 | Q10 | Başlık 24px mi 12px mı | **12 px `HeaderLabel`** (Arapça 16); 24 px yalnız tam ekran başlık kartı (cila). Ortak kural; art-bible §7 güncellenir | art-director |
 
-**Çözülmemiş / bağımlı:** G1–G4 (ADR-0010 eki, C-47); `CHAPTER_2_*` anahtarları (C-43); `×` / `→` glif testi görevi (C-47).
+**Çözülmemiş / bağımlı:** G1–G4 (ADR-0010 eki, C-47); `CHAPTER_2_*` anahtarları (C-43); ~~`×` / `→` glif testi~~ (C-76 kapandı).
 
 ## 11. Yeni Kalıp Bayrakları (interaction-patterns.md yok)
 

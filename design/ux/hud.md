@@ -350,7 +350,7 @@ Boyutlar tahmindir; 12 px font (Arapça 16 px) satır ≈ 14 px (Arapça ≈ 20 
 |---|---|
 | İşaretli ve oranlı değerler | `NumberFormatter.ltr()` / `fraction()` (LRI…PDI) |
 | Sözcük sırası ve birim | Çevirmen sahipli biçim key'i (`PER_TURN`); `to_upper/to_lower/capitalize` yasak |
-| Glif | `−`, `⚠`, `✕`, `✓` metinde yasak; eksi ASCII `-`; durum sembolleri piksel ikon. `↑ ↓ ◆` Fusion'da var (`glyph_coverage_test`). `×` ve `→` için **glif testi görevi** (C-47) yazılır; doğrulanana kadar kullanılmaz |
+| Glif | `−`, `⚠`, `✕`, `✓` metinde yasak; eksi ASCII `-`; durum sembolleri piksel ikon. `↑ ↓ ◆` Fusion'da var (`glyph_coverage_test`). **C-76 (2026-10-26): `×` ve `→` her native fontta var** (Fusion 12 latin/ja/ko/zh + Unifont 16; `glyph_coverage_test` + 12 px görsel kontrol) → metinde kullanılabilir; `×N/MAX` gibi sayı içeren biçimler Arapçada yön sırası bozulmasın diye kodda LTR yalıtılır (`NumberFormatter.ltr`) |
 | Panel yönü | Bilgi paneli LTR (harita aynalanmaz), içerik locale yönünde; üst bar ve alt bar locale yönünde |
 | Yeni key'ler | Yalnız `en` önce, sonra diğer 10 dil; Fusion/Unifont kapsama testi geçmeli. M2 key'leri: `SPREAD_COUNTDOWN`, `SPREAD_THIS_TURN_END`, `FOCUS_AT_RISK`, `ENEMY_STRIKE_THRESHOLD`, `PROGRESS_ENEMY_REGIONS`, `PICK_TARGET_HINT` (adlar öneridir) |
 
@@ -399,7 +399,7 @@ Boyutlar tahmindir; 12 px font (Arapça 16 px) satır ≈ 14 px (Arapça ≈ 20 
 | L3 | Yayılım segmenti ve Odak tehlikede aynı segmentte; ikisi birden görünmez |
 | L4 | Arapçada `Yayılım: N`, `p / eşik`, `(+Y)` rakam ve işaret sırası doğru (c69 örneği); native okur onayı (ADR-0009) |
 | L5 | Panel/ipucu balonu hedef işaretlerini örtmez (`PanelPlacement.choose`); Perde 1'de sol-üst başlangıç yok |
-| L6 | Yeni key'ler `glyph_coverage_test`i geçer (`−`, `⚠`, `✕`, `✓` yok); `×` ve `→` kullanılmaz (glif testi görevi bitene dek) |
+| L6 | Yeni key'ler `glyph_coverage_test`i geçer (`−`, `⚠`, `✕`, `✓` yok); `×` ve `→` kullanılabilir (C-76; sayılı biçim LTR yalıtılır) |
 | L7 | Modal iç genişliği ≤ 288 px, dış ≤ 304 px; modal ≈ 281 px kullanılabilir yüksekliğe sığar (üst 40 / alt 31 marj) |
 
 **Erişilebilirlik**
@@ -446,7 +446,7 @@ Boyutlar tahmindir; 12 px font (Arapça 16 px) satır ≈ 14 px (Arapça ≈ 20 
 | A8 | Hedef satırı kısalıyor | Hedef panelindeki tam cümle yeterli; R2'de kısaltma kabul. `WIN_CONDITION_*` metinleri ≤ 40 karakter hedefi (çevirmen notu) |
 | Ortak | Esc, girdi koruması, modal genişliği, başlık, animasyon, çubuk ölçüleri, AccessKit, glifler | §3.2, §7, §8, §10.3 (kural 7), §10.4–10.5 |
 
-**Çözülmemiş / bağımlı:** (1) scene-flow §10 "Hedef" satırı ve cross-review D3 notu başka görevlerde güncellenecek. (2) M2 key adları öneridir; `translations.csv` kaydında kesinleşir. (3) `×` / `→` glif testi görevi C-47'de.
+**Çözülmemiş / bağımlı:** (1) scene-flow §10 "Hedef" satırı ve cross-review D3 notu başka görevlerde güncellenecek. (2) M2 key adları öneridir; `translations.csv` kaydında kesinleşir. (3) ~~`×` / `→` glif testi~~ C-76'da kapandı.
 
 ---
 

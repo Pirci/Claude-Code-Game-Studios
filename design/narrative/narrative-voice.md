@@ -82,7 +82,7 @@ Her rapor modalı aynı üç katmanı izler (art bible §7 "Savaş raporu"):
 | Arındırma başarısız. Kayıp: 8 | Erlik yuttu. Gidenlerden kimse dönmedi. / Karanlığa giden: 8 / Erlik direnci 12 idi. Daha büyük bir orduyla dön. |
 | Arındırma başarılı. +30 Ruh | Ülgen'in ışığı döndü. Toprak yeniden arındı. / Kazanılan Ruh: +30 |
 | Bozulma +1 (Doğu Obası) | Erlik'in lekesi yayıldı: Doğu Obası |
-| Kaybettiniz: bozulma eşiği aşıldı | Erlik'in gölgesi ata yurdunu yuttu. / Erlik'in Gölgesi: 9 / 9 |
+| Kaybettiniz: bozulma eşiği aşıldı | Erlik'in gölgesi bu toprakları yuttu. / Erlik'in Gölgesi: 9 / 9 |
 
 ## 5. Mitik Anlar
 
@@ -117,7 +117,7 @@ sebebinde `ERLIK_SHADOW_VALUE` ("Erlik'in Gölgesi: 9 / 9" — öğrenme geri bi
 
 | `loss_reason` | Anahtar | tr |
 | ---- | ---- | ---- |
-| `ERLIK` | `DEFEAT_REASON_ERLIK` | Erlik'in gölgesi ata yurdunu yuttu. |
+| `ERLIK` | `DEFEAT_REASON_ERLIK` | Erlik'in gölgesi bu toprakları yuttu. *(C-76: sahneden bağımsız; eski "ata yurdu" Perde 1 doğu ormanında yanlış bağlamdı)* |
 | `NO_REGIONS` | `DEFEAT_REASON_NO_REGIONS` | Son toprağımız da düştü. Hiçbir ocağımızda ateş kalmadı. |
 | `NONE` / eşlemesiz | `DEFEAT_REASON_GENERIC` | Destan burada sustu, şimdilik. |
 
@@ -162,7 +162,7 @@ Tur sonu = **gece** (`TURN_SUMMARY_HEADING` "Gece Çökerken"), lütuf sunumu = 
 
 ## 7. "Kuru Hesap Yok" Denetimi (Kabul Ölçütleri)
 
-- **AC-V1 (içerik, C-41'de otomatik test önerisi):** `BATTLE_*`, `REPORT_*`, `PURIFY_*`, `TURN_SUMMARY_*`,
+- **AC-V1 (içerik; otomatik test C-76: `tests/unit/localization/narrative_voice_test.gd`):** `BATTLE_*`, `REPORT_*`, `PURIFY_*`, `TURN_SUMMARY_*`,
   `CHAPTER_*_HUNT_*`, `CHAPTER_*_SLAIN_*` anahtarlarının `en` metni şu sözcükleri bütün sözcük olarak
   içermez: *Attacker, Defender, Losses, Remaining, Casualties, Units*; `tr` metni: *Saldıran, Savunan,
   Kayıp, Kayıplar, Birlik*. (Bu belgeyle birlikte eklenen 45 anahtar geçer.)
@@ -216,7 +216,7 @@ karakter. Diğer diller bu sınırın ~%130'una kadar çıkabilir (de/fr/ru); F4
 | `CHAPTER_1_OUTRO_1` | O-1 | — | 220 | The beast fell, and its black stain sank back into the earth. Grass rose green where it had walked. Kök Böri's light touched the land: Ülgen had won the first day. |
 | `CHAPTER_1_OUTRO_2` | O-2 (başlıklı sayfa) | — | 150 | The tribes came from every fire to a great feast. Under one banner Oğuz spoke: I have become your Kağan. |
 | `CHAPTER_1_KAGAN_TITLE` | O-2 başlık kartı (24px) | — | 24 | Oğuz Kağan |
-| `DEFEAT_REASON_ERLIK` | Yenilgi, `ERLIK` | — | 64 | Erlik's shadow has swallowed the homeland. |
+| `DEFEAT_REASON_ERLIK` | Yenilgi, `ERLIK` (sahneden bağımsız, C-76) | — | 64 | Erlik's shadow has swallowed these lands. |
 | `DEFEAT_REASON_NO_REGIONS` | Yenilgi, `NO_REGIONS` | — | 64 | Our last land has fallen. No hearth of ours still burns. |
 | `DEFEAT_REASON_GENERIC` | Yenilgi, `NONE`/eşlemesiz | — | 64 | Here the song falls silent, for now. |
 | `DEFEAT_PROGRESS_KEPT` | Yenilgi güvence satırı | — | 64 | The Spirit and blessings from earlier chapters stay with you. |

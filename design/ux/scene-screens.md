@@ -379,7 +379,7 @@ Oyuncu: "Neden kaybettim?" ve "ilerlemem gitti mi?" sorularına anında cevap; t
 | Güvence | `DEFEAT_PROGRESS_KEPT` | en 61 → 2–3 satır; her yenilgide |
 | Birincil / ikincil | `RETRY_SCENE` ("bölüm" terimi, E5 ile tutarlı) / `MAIN_MENU` | de `Kapitel wiederholen` (19) |
 
-**Açık bağımlılık (C-45, Q11 → karar):** `DEFEAT_REASON_ERLIK` sahneden bağımsız yeniden yazımı ("ata yurdu/homeland" çıkar; Perde 1 doğu ormanı için de doğru) **11 dilde henüz yok**. Metin **C-47/C-43 içerik görevi** (narrative-director); **AC-E4-1 (ERLIK metni kısmı) ve AC-E4-7 bu metnin yazılmasına bağlıdır**; yazılana dek E4'te Perde 1 Erlik kaybı yanlış bağlam gösterir (c40 hâlâ "homeland").
+**Kapandı (C-76, 2026-10-26):** yeni metin "Erlik'in gölgesi bu toprakları yuttu." / "Erlik's shadow has swallowed these lands." (11 dil; yer sözcüğü yok — `narrative_voice_test`); en/tr/fr/de/ru/ar'da tek satır, taşma yok (`production/qa/evidence/c76-defeat-erlik.png`). ~~**Açık bağımlılık (C-45, Q11 → karar):** `DEFEAT_REASON_ERLIK` sahneden bağımsız yeniden yazımı ("ata yurdu/homeland" çıkar; Perde 1 doğu ormanı için de doğru) **11 dilde henüz yok**. Metin **C-47/C-43 içerik görevi** (narrative-director); **AC-E4-1 (ERLIK metni kısmı) ve AC-E4-7 bu metnin yazılmasına bağlıdır**; yazılana dek E4'te Perde 1 Erlik kaybı yanlış bağlam gösterir (c40 hâlâ "homeland").~~
 
 ### E4.5 Etkileşim
 
@@ -408,7 +408,7 @@ Enter / Space: odaktaki düğme (varsayılan [Yeniden Dene], sessiz odak). Tab /
 - [ ] AC-E4-4: Yeniden Dene → E2 (anlatı yok), `ruh/boons` giriş değerine döner (AC16).
 - [ ] AC-E4-5: Yalnız klavye ile iki yol çalışır; varsayılan odak [Yeniden Dene]; Esc etkisiz.
 - [ ] AC-E4-6: Altın renk yok (art-director onaylı tema); tüm metin ≥ 4,5:1.
-- [ ] AC-E4-7: fr/de/ru/ar'da neden metni taşmaz (yeni `DEFEAT_REASON_ERLIK` yazıldıktan sonra); düğmeler tek satırda sığar ya da panel genişler (≤ 288).
+- [x] AC-E4-7 (C-76, neden metni kısmı): fr/de/ru/ar'da neden metni taşmaz (yeni `DEFEAT_REASON_ERLIK` yazıldıktan sonra); düğmeler tek satırda sığar ya da panel genişler (≤ 288).
 - [ ] AC-E4-8: Erlik satırı `loss_reason ≠ ERLIK` iken görünmez.
 
 ---

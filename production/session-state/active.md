@@ -371,3 +371,8 @@
 - features/grid/region_focus_target.gd (Control, MOUSE_FILTER_IGNORE, LTR, has_focus(true) iken kontur, ui_accept → accepted), region_focus_rules.gd (saf, MIN_ALIGNMENT 0.38). RegionNode.accepted / get_focus_target; CampaignMap.region_accepted, focus_target, focus_order, _link_focus_neighbors (komşu yoksa kendine).
 - GameContext: _on_region_accepted, _set_target_mode, _cancel_target_mode, _unhandled_input (Esc), _link_map_tab_order. RegionInfoPanel: toggle Send + PickTargetHint, set_awaiting_target, get_first_focus, get_send_button. PICK_TARGET_HINT 11 dil.
 - Bulgu: Node2D altındaki kontroller Tab'a girmiyor → açık zincir. Testler 391/391. NEXT: C-76.
+
+## Session Extract — C-76 (2026-10-26)
+- DEFEAT_REASON_ERLIK yeni metin (11 dil, yer sözcüğü yok). tests/unit/localization/narrative_voice_test.gd (AC-V1 + sahne bağımsızlığı). glyph_coverage_test: × → her fontta.
+- Karar: BOON_STACK = "×%s/%s", kod LTR yalıtır (Arapçada × sona kayıyor). ChapterSelect güç şeridi hâlâ ASCII "x" + kod biçimi — C-81/BOON_STACK işinde key'e taşınabilir.
+- Testler 395. NEXT: C-77.

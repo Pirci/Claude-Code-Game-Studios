@@ -123,7 +123,7 @@ GameContext
 | Maksimuma ulaşmış lütuf | Havuzdan **çıkar** (GDD §3.5); "dolu" kartı yoktur |
 | Renk | Yalnız renge bağlı değil: metin `×N/MAX` |
 
-`×` glifi: Fusion'da varlığı henüz doğrulanmadı. **Görev:** `glyph_coverage_test` kapsamına `×` ve `→` eklenir; doğrulanana kadar ASCII `x` kullanılır (`x1/3`). Kararın kendisi (`×N/MAX` + `(son)`) değişmez.
+`×` glifi: **C-76 (2026-10-26): `×` ve `→` her native fontta var** (Fusion 12 latin/ja/ko/zh + Unifont 16; `glyph_coverage_test` + 12 px görsel kontrol) → metinde kullanılabilir; `×N/MAX` gibi sayı içeren biçimler Arapçada yön sırası bozulmasın diye kodda LTR yalıtılır (`NumberFormatter.ltr`). **`BOON_STACK` biçimi kesinleşti: `×%s/%s`** (ASCII `x` yedeğine gerek yok); kod yığın metninin tamamını LTR yalıtır.
 
 **Tekrarlı kartlar (karar):** Havuz < 3'te `BoonRules.offer` aynı lütfu 2–3 slotta döndürebilir; **görünüm katmanı tekrarları birleştirir** (1–2 benzersiz kart). `BoonRules.offer` ve test determinizmi değişmez. Tek kart kalırsa Enter yine seçer; kart satırı ortalanır.
 
@@ -244,4 +244,4 @@ Görünüm pasiftir: veri alır, niyet sinyali yollar; durum yazmaz.
 | 7 | Sonraki bedel | Gösterilmez; yalnız `Kalan: X` | game-designer |
 | 8 | Ruh/Kalan | İki ayrı etiket; `→` kullanılmaz | ux-designer |
 | 9 | Kuyruk | Şafakta özet önce; sunum drained'de yeniden denenir (ADR-0011 K5) | ui-programmer |
-| 10 | Glif | `×`, `→` için glif testi görevi; doğrulanana dek ASCII `x` | ui-programmer |
+| 10 | Glif | Kapandı (C-76): `×` `→` her native fontta var; `BOON_STACK` = `×%s/%s`, LTR yalıtılır | ui-programmer |
