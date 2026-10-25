@@ -35,9 +35,14 @@ func forecast_income(map_state: MapState, modifiers: Array[StatModifier] = []) -
 	return IncomeRules.turn_income(raw, not regions.is_empty(), modifiers, _config)
 
 
-## F6: her düşman bölgesine `+enemy_reinforcement_per_turn` (düşmanın hazinesi yok).
+## F6: takviye alan her düşman bölgesine `+enemy_reinforcement_per_turn` (düşmanın hazinesi yok).
+## Liste boşsa tüm `ENEMY` bölgeler; doluysa listedeki **ve** o an `ENEMY` olanlar — AI'ın bu tur aldığı
+## listedeki bölge de aynı tur alır (ekonomi adımı AI'dan sonra; enemy-layers §3.5, AC14).
 func reinforce_enemies(map_state: MapState) -> void:
+	var listed: Array[StringName] = map_state.enemy_reinforcement_region_ids
 	for region: RegionData in map_state.get_enemy_regions():
+		if not listed.is_empty() and region.region_id not in listed:
+			continue
 		region.army_count += map_state.enemy_reinforcement_per_turn
 
 

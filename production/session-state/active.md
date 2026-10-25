@@ -400,3 +400,7 @@
 ## Session Extract — C-82 (2026-10-28)
 - features/ai/enemy_ai_profile.gd; EnemyAIController.bind_config/decide(..., defense_modifiers)/_decide_strike/strike_allowed/effective_defense/REASON_STRIKE; ChapterMapDefinition.enemy_ai_profile; GameContext bağlar; MapController _modifiers() geçirir.
 - tests/unit/ai/enemy_ai_counterattack_test.gd (15). Testler 437. Perde 1 profil .tres harita verisiyle (C-84+). NEXT: C-83.
+
+## Session Extract — C-83 (2026-10-28)
+- MapState/ChapterMapDefinition.enemy_reinforcement_region_ids; ResourceController.reinforce_enemies süzgeci. Profil MapState'e kopyalanmadı (bind_config tek kaynak).
+- tests/unit/resources/reinforcement_region_list_test.gd. Testler 443. NEXT: C-84.

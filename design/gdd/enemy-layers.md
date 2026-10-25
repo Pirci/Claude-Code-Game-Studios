@@ -158,6 +158,8 @@ Bu belge takviyenin **kural sahibidir** (K2); ekonomi adımında çağrılması 
 6. Düşmanın hazinesi yoktur; takviye ordudur, altın değil. Nötr bölgeler takviye almaz.
 7. `E_r` ve bölge listesi **bölüm verisidir**; sabit kodlanmaz.
 
+> **✅ C-83 (2026-10-28):** `ChapterMapDefinition.enemy_reinforcement_region_ids` → `MapState` (kopya; kaydedilmez, yüklemede harita tanımından), `ResourceController.reinforce_enemies` liste süzgeci; AC11 (3 test), AC12, AC14 → `tests/unit/resources/reinforcement_region_list_test.gd`. Profil `MapState`'e kopyalanmaz: `ChapterMapDefinition.enemy_ai_profile` → `EnemyAIController.bind_config` (ADR-0005 D6, C-82) tek kaynaktır.
+
 **Asimetrik ekonomi (K7):** düşman ekonomisi oyuncununkiyle simetrik değildir — hazine yok, sabit takviye,
 modifikatör yok. `resource-system.md` Açık Soru 4 bu karar ile kapanmıştır.
 
