@@ -6,13 +6,16 @@ extends RefCounted
 ## `game_result` kaydedilmez (yalnızca oyun sürerken kaydedilir).
 
 
-const SCHEMA_VERSION: int = 1
+## v2 (C-77): `game.campaign_seed` zorunlu; v1 kayıt `migrate` ile 0 alır.
+const SCHEMA_VERSION: int = 2
 ## Doğrulama aralıkları (GDD aralıklarının üstünde güvenlik sınırları).
 const MAX_GOLD: int = 1_000_000_000
 const MAX_RUH: int = 1_000_000_000
 const MAX_ARMY: int = 1_000_000
 const MAX_TURN: int = 1_000_000
 const MAX_CHAPTER: int = 1000
+## Tohum aralığı: pozitif 31 bit (0 = tohumsuz eski kayıt).
+const MAX_SEED: int = 0x7FFFFFFF
 const MAX_CORRUPTION: int = 3
 ## Kayıtta sahiplik enum'u int olarak (RegionData.Owner: NEUTRAL 0, PLAYER 1, ENEMY 2).
 const OWNER_MAX: int = 2
@@ -31,6 +34,7 @@ static func to_dict(game_state: GameState, saved_at: String = "") -> Dictionary:
 		"ruh": game_state.ruh,
 		"boons": boons,
 		"chapters_completed": game_state.chapters_completed.duplicate(),
+		"campaign_seed": game_state.campaign_seed,
 		"map": _map_to_dict(game_state.map_state),
 	}
 	return {"schema_version": SCHEMA_VERSION, "saved_at": saved_at, "game": game}
@@ -76,9 +80,17 @@ static func from_dict(data: Dictionary, map_factory: Callable) -> LoadResult:
 	return _game_from_dict(game as Dictionary, map_factory)
 
 
-## Sürüm zinciri v1 → v2 → … (şimdilik yalnızca v1 var — kimlik dönüşümü).
+## Sürüm zinciri v1 → v2 → …; her adım bir sonraki sürümün zorunlu alanlarını ekler. Girdi değişmez.
 static func migrate(data: Dictionary) -> Dictionary:
-	return data
+	var out: Dictionary = data.duplicate(true)
+	var version: int = int(out.get("schema_version", 1))
+	if version < 2:
+		# v1 → v2: tohumsuz sefer (0 = eski sunum çıktısı, spirit AC4).
+		var game: Variant = out.get("game")
+		if typeof(game) == TYPE_DICTIONARY and not (game as Dictionary).has("campaign_seed"):
+			(game as Dictionary)["campaign_seed"] = 0
+		out["schema_version"] = 2
+	return out
 
 
 static func _map_to_dict(map_state: MapState) -> Variant:
@@ -109,6 +121,10 @@ static func _game_from_dict(game: Dictionary, map_factory: Callable) -> LoadResu
 	state.current_chapter = int(chapter)
 	state.gold = int(gold)
 	state.ruh = int(ruh)
+	var seed_value: Variant = as_int(game.get("campaign_seed"), 0, MAX_SEED)
+	if seed_value == null:
+		return LoadResult.error(LoadResult.Code.CORRUPT, "campaign_seed geçersiz")
+	state.campaign_seed = int(seed_value)
 
 	var boons: Variant = game.get("boons")
 	if typeof(boons) != TYPE_ARRAY:

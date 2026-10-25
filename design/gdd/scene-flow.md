@@ -208,7 +208,7 @@ Ek kurallar:
   kampanya kaydına (`campaign` yuvası, `GameState`) yazılır; `spirit-system.md` §4.5 lütuf sunum
   seed'ine eklenir. Sefer boyunca sabittir: S1–S3 ile korunur, Yeniden Dene'de (T22) ve Devam Et'te
   değişmez; yalnızca yeni Yeni Sefer (T1/T2) yenisini üretir. Testte enjekte edilir. Kayıt biçimi
-  alanı ADR-0007 sürümüne işlenir (uygulama C-47; ADR bu işin kapsamı dışında).
+  alanı ADR-0007 sürümüne işlenir — **uygulandı C-77 (2026-10-26):** şema v2, v1 kayıt `campaign_seed = 0` ile göç eder (ADR-0007 eki).
 - **S2 gerekçesi:** (a) Yeni Sefer ve Yeniden Dene'den sonra eski sahneden kalma bir kayıt "Devam Et"i
   yanıltmasın; (b) sahne girişi anlık görüntüsü kalıcı olsun, Devam Et'ten sonra bile Yeniden Dene
   çalışsın. 1. tur başı, ADR-0007'nin "tutarlı durum tur sınırlarında vardır" ilkesine uyar; tur ortası
@@ -840,7 +840,7 @@ Test türü her maddede; birim ve entegrasyon testleri **BLOCKING**. `T#` = §3.
   `CampaignDefinition.end_pages ≥ 1`.
 - **AC25b (sahne havuzu verisi, C-44 inceleme, W-12):** L10 yeşildir; Prolog `boon_pool_ids` tam olarak
   `[arinma_ustaligi, bereket, gok_kalkani]`; var olmayan `boon_id` ya da 3'ten küçük süzülmüş havuz CI'ı kırar.
-- **AC25c (kampanya tohumu, C-44 inceleme, D4):** Yeni Sefer `campaign_seed` üretir ve kayda yazar; S1–S3,
+- **AC25c (kampanya tohumu, C-44 inceleme, D4; ✅ C-77 — `save_serializer_campaign_seed_test.gd`):** Yeni Sefer `campaign_seed` üretir ve kayda yazar; S1–S3,
   Devam Et ve Yeniden Dene sonrası aynı değer okunur; yeni Yeni Sefer değeri yeniden üretir. Testte tohum enjekte edilir.
 - **AC27 (alfa/fade yasağı):** `features/campaign/` içinde ve anlatı ekranı betiklerinde `modulate` /
   `self_modulate` alfa tween'i bulunmaz (`run-tests.sh` grep denetimi; ihlalde CI kırmızı).

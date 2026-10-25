@@ -376,3 +376,7 @@
 - DEFEAT_REASON_ERLIK yeni metin (11 dil, yer sözcüğü yok). tests/unit/localization/narrative_voice_test.gd (AC-V1 + sahne bağımsızlığı). glyph_coverage_test: × → her fontta.
 - Karar: BOON_STACK = "×%s/%s", kod LTR yalıtır (Arapçada × sona kayıyor). ChapterSelect güç şeridi hâlâ ASCII "x" + kod biçimi — C-81/BOON_STACK işinde key'e taşınabilir.
 - Testler 395. NEXT: C-77.
+
+## Session Extract — C-77 (2026-10-26)
+- GameState.campaign_seed; SaveSerializer SCHEMA_VERSION 2, MAX_SEED, migrate v1→v2 (0); RootContext.campaign_seed_source + static new_campaign_seed(). ADR-0007 eki (sürüm artışı kararı).
+- tests/unit/save/save_serializer_campaign_seed_test.gd. Testler 401. NEXT: C-78 (BoonRules seed'e campaign_seed, SceneDefinition.boon_pool_ids).

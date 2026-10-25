@@ -21,6 +21,19 @@ Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-revi
 > (4) defeat and "leave scene" write nothing. Open: whether the snapshot is a second slot (recommended) or a
 > schema field — decided in the scene-flow ADR (C-62).
 
+> **Amendment 2026-10-26 (C-77, scene-flow §3.2 / §3.4 D4, spirit §4.5 — status stays Accepted):** the `game` block
+> gains **`campaign_seed`** (int, `0…0x7FFFFFFF`), generated once at New Campaign (`RootContext.campaign_seed_source`,
+> injectable; default `randi_range(1, 0x7FFFFFFF)` — never 0) and carried unchanged through S1, S2, S3, Continue
+> and Retry (only a new New Campaign replaces it). **Decision (the open "schema bump vs. default field" question):
+> bump `SCHEMA_VERSION` 1 → 2** with a real `migrate()` step (v1 → v2 adds `campaign_seed: 0`; input is not
+> mutated). In v2 the field is required and range-checked (missing / negative / non-integer → `CORRUPT`).
+> Rationale: (1) an older build that only knew v1 would silently drop an unknown field and its next autosave
+> would erase the seed; with the bump it reports `VERSION_TOO_NEW` and, per the existing rule, never overwrites
+> the newer save; (2) `0` keeps its meaning "unseeded" so v1 saves (C-42 playtest builds) present the same
+> boon offers as before (spirit AC4); (3) the migration chain is now exercised by tests instead of being an
+> identity stub. Evidence: `tests/unit/save/save_serializer_campaign_seed_test.gd` (round trip, v1 → 0,
+> invalid values, S2/S1/Retry/Continue/S3 constancy, regenerated on New Campaign). Consumer: `BoonRules` seed (C-78).
+
 > **Implementation note 2026-10-19 (C-56):** built in `game/features/save/`. Two as-built refinements:
 > (1) `SaveStore.read(slot) -> String` became `read_candidates(slot) -> PackedStringArray` (final → `.bak` →
 > `.tmp`) so `SaveController` can validate each candidate and fall back — the store stays content-agnostic;

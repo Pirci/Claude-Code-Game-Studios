@@ -14,6 +14,9 @@ var boons: Array[StringName] = []
 ## ile kurulur, kaydedilmez. Yalnızca [StatResolver] ile okunur (ADR-0006).
 var modifiers: Array[StatModifier] = []
 var chapters_completed: Array[int] = []
+## Sefer tohumu (scene-flow §3.4, ADR-0007 eki C-77): Yeni Sefer'de üretilir, sefer boyunca sabit
+## (S1–S3, Devam Et, Yeniden Dene). 0 = tohumsuz (v1 kayıt) — lütuf sunumu eski çıktıyı verir (spirit AC4).
+var campaign_seed: int = 0
 var map_state: MapState = null
 
 
@@ -30,4 +33,5 @@ func reset() -> void:
 	boons.clear()
 	modifiers.clear()
 	chapters_completed.clear()
+	campaign_seed = 0
 	map_state = null

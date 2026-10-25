@@ -33,6 +33,8 @@ const BOON_CATALOG_PATH: String = "res://features/bozkurt/data/boon_catalog.tres
 var save_store: SaveStore = null
 ## Akış ayarları; ağaca eklenmeden önce verilebilir (testler girdi korumasını kapatır).
 var flow_config: SceneFlowConfig = null
+## Yeni Sefer tohumu üreteci `() -> int` (1…0x7FFFFFFF); testler sabit değer enjekte eder (AC25c).
+var campaign_seed_source: Callable = new_campaign_seed
 
 var _current_context: Node = null
 var _game_state: GameState = null
@@ -125,6 +127,7 @@ func _run_action(action: StringName) -> void:
 			(_current_context as MenuContext).show_confirm_new_campaign()
 		SceneFlow.ACTION_NEW_STATE:
 			_game_state = GameState.new()
+			_game_state.campaign_seed = campaign_seed_source.call() as int
 			_entry = {}
 		SceneFlow.ACTION_ADOPT_STATE:
 			_game_state = _loaded.state
@@ -237,6 +240,11 @@ func _show_game() -> GameContext:
 	game.retry_requested.connect(_dispatch.bind(SceneFlow.EVENT_RETRY))
 	_switch_to(game, &"game")
 	return game
+
+
+## Varsayılan tohum: rastgele pozitif 31 bit; 0 tohumsuz eski kayıt anlamına geldiği için üretilmez.
+static func new_campaign_seed() -> int:
+	return randi_range(1, SaveSerializer.MAX_SEED)
 
 
 func _scene() -> SceneDefinition:

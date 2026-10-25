@@ -80,7 +80,7 @@ func test_same_state_serializes_to_identical_text() -> void:
 func test_every_state_field_is_saved_or_explicitly_derived() -> void:
 	var covered: Dictionary = {
 		GameState: ["current_chapter", "gold", "ruh", "boons", "chapters_completed", "map_state",
-			"modifiers"],  # modifiers: türetilir (ADR-0006)
+			"campaign_seed", "modifiers"],  # modifiers: türetilir (ADR-0006)
 		MapState: ["chapter_id", "current_turn", "last_erlik_spread_turn", "regions",
 			"actions_remaining", "selected_region_id", "game_result", "loss_reason",  # tur sonu / kaydedilmez
 			"actions_per_turn", "enemy_actions_per_turn", "player_tamga_id", "enemy_tamga_id",
