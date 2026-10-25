@@ -481,7 +481,7 @@ başlık `CHAPTER_1_KAGAN_TITLE`]; `teaser_key = CHAPTER_1_TEASER`.
 | L7 | Her illüstrasyon dosyası var; 640×360; alfa yalnızca 0/255; ≤ 32 renk; palet doğrulayıcıdan geçer |
 | L8 | `Σ` `en` karakter bütçeleri (F5) aşılmaz |
 | L9 | `Prolog.kok_bori_pose = DESCENT`; `kok_bori_pages ≥ 1` (genesis zorunlu) |
-| L10 | *(C-44 inceleme, W-12)* `boon_pool_ids` içindeki her kimlik katalogda bir `boon_id`'dir ve tekrarsızdır; liste doluysa katalogdan süzülen havuz (`requires` etkin olanlar) en az 3 lütuf içerir (aksi halde sunum slotları tekrar eder, `spirit` §5). Prolog listesi tam olarak `[arinma_ustaligi, bereket, gok_kalkani]` |
+| L10 | *(C-44 inceleme, W-12)* `boon_pool_ids` içindeki her kimlik katalogda bir `boon_id`'dir ve tekrarsızdır; liste doluysa katalogdan süzülen havuz (`requires` etkin olanlar) en az 3 lütuf içerir (aksi halde sunum slotları tekrar eder, `spirit` §5). Prolog listesi tam olarak `[arinma_ustaligi, bereket, gok_kalkani]` *(✅ C-78, `boon_offer_seed_pool_test.gd`)* |
 
 ---
 

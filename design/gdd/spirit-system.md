@@ -478,7 +478,7 @@ aynı yol T20). Uyarı eşiği: `erlik_power = eşik − 1` (Prolog 8 — ihmal 
 - **Prolog sahne havuzu (C-44):** Prolog'un sahne havuzu M1 üçlüsüdür (Arınma Ustalığı,
   Bereket, Gök Kalkanı). Demir Post Prolog'da ölü seçim olurdu (`ENEMY` bölgesi yok, savunulan
   saldırı yok) → havuza girmez. Sahne bazlı havuz için `SceneDefinition`'a veri alanı gerekir
-  (`boon_pool_ids: Array[StringName]`; boş = tüm katalog); uygulama C-47.
+  (`boon_pool_ids: Array[StringName]`; boş = tüm katalog); **uygulandı C-78** (`BoonRules.eligible_pool(..., scene_pool)`, Prolog verisi M1 üçlüsü).
 - **Yayılımı yönlendirme (N4, C-49):** en az ordulu aday kuralı yüzünden oyuncu değersiz,
   garnizonu 1 bir bölgeyi "paratoner" yapabilir. Erlik'in Gölgesi her yayılımda yine +1
   olduğundan bu ihmalin bedelini kaldırmaz; hangi bölgenin acı çekeceğini seçmek
@@ -654,4 +654,4 @@ aynı yol T20). Uyarı eşiği: `erlik_power = eşik − 1` (Prolog 8 — ihmal 
 29. **(C-44 inceleme, D4 / H6) Kampanya tohumu.** Aynı `(chapter_id, n, havuz)` için `campaign_seed`
     farklıysa sunum farklı olabilir; aynı `campaign_seed` ile (yeniden deneme dahil) sunum birebir
     aynıdır; `campaign_seed = 0` AC4'ün çıktısını verir; tohum kayıttan geri yüklenir. *(Test, tohum
-    enjekte edilir — BLOCKING, M2)*
+    enjekte edilir — BLOCKING, M2; ✅ C-78 `tests/unit/bozkurt/boon_offer_seed_pool_test.gd`)*

@@ -53,6 +53,7 @@ defeat_text_key = &""
 focus_heading_key = &"CHAPTER_1_SLAIN_HEADING"
 focus_success_key = &"CHAPTER_1_SLAIN_LINE"
 focus_failed_key = &"CHAPTER_1_HUNT_FAILED"
+boon_pool_ids = Array[StringName]([&"arinma_ustaligi", &"bereket", &"gok_kalkani"])
 
 [resource]
 script = ExtResource("1_camp")

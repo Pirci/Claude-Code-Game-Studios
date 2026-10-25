@@ -29,6 +29,9 @@ enum Pose { PROFILE, DESCENT, FRONT }
 @export var focus_heading_key: StringName = &""
 @export var focus_success_key: StringName = &""
 @export var focus_failed_key: StringName = &""
+## Sahne lütuf havuzu (spirit §3.5, scene-flow §3.10 L10): uygun havuz bu listeyle kesişir; boş = tüm
+## katalog. Prolog = M1 üçlüsü (Kurt Gücü / Demir Post Prolog'da sunulmaz — AC26).
+@export var boon_pool_ids: Array[StringName] = []
 
 
 func load_map_definition() -> ChapterMapDefinition:

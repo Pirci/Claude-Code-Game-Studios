@@ -21,6 +21,7 @@ func before_test() -> void:
 	config.screen_input_guard_s = 0.0
 	config.text_reveal_cps = 0.0
 	_root_ctx.flow_config = config
+	_root_ctx.campaign_seed_source = func() -> int: return 1  # deterministik lütuf sunumu (C-78)
 	add_child(_root_ctx)
 
 

@@ -380,3 +380,7 @@
 ## Session Extract — C-77 (2026-10-26)
 - GameState.campaign_seed; SaveSerializer SCHEMA_VERSION 2, MAX_SEED, migrate v1→v2 (0); RootContext.campaign_seed_source + static new_campaign_seed(). ADR-0007 eki (sürüm artışı kararı).
 - tests/unit/save/save_serializer_campaign_seed_test.gd. Testler 401. NEXT: C-78 (BoonRules seed'e campaign_seed, SceneDefinition.boon_pool_ids).
+
+## Session Extract — C-78 (2026-10-27)
+- BoonRules.offer(pool, scene_id, n, campaign_seed=0), eligible_pool(catalog, modifiers, scene_pool=[]); SpiritController.bind_boons(..., scene_pool), current_offer tohumu state'ten. SceneDefinition.boon_pool_ids; campaign.tres Prolog üçlüsü.
+- RootContext testlerinde campaign_seed_source = 1 (determinizm). tests/unit/bozkurt/boon_offer_seed_pool_test.gd. Testler 407. NEXT: C-79.

@@ -13,6 +13,8 @@ var _game_state: GameState = null
 var _rules: SpiritRules = SpiritRules.new()
 var _catalog: BoonCatalog = null
 var _modifiers: ModifierController = null
+## Sahnenin lütuf havuzu (`SceneDefinition.boon_pool_ids`; boş = tüm katalog).
+var _scene_pool: Array[StringName] = []
 
 
 func bind_services(game_state: GameState, rules: SpiritRules = null) -> void:
@@ -22,10 +24,12 @@ func bind_services(game_state: GameState, rules: SpiritRules = null) -> void:
 
 
 ## Lütuf katmanı (§3.4–3.5): [param catalog] içerik, [param modifiers] etkinin tek yazarı
-## (ADR-0006). Bağlanmazsa sunum hiç beklemez.
-func bind_boons(catalog: BoonCatalog, modifiers: ModifierController) -> void:
+## (ADR-0006), [param scene_pool] sahnenin lütuf havuzu (boş = tüm katalog). Bağlanmazsa sunum
+## hiç beklemez.
+func bind_boons(catalog: BoonCatalog, modifiers: ModifierController, scene_pool: Array[StringName] = []) -> void:
 	_catalog = catalog
 	_modifiers = modifiers
+	_scene_pool = scene_pool.duplicate()
 
 
 ## Kaydedilmiş seçimlerden ([member GameState.boons]) lütuf kayıtlarını yeniden kurar —
@@ -49,10 +53,11 @@ func is_offer_pending() -> bool:
 
 
 ## Bekleyen sunumun 3 kartı (§4.5) — açıldığı anda yeniden hesaplanır; sunum yoksa boş.
+## Sefer tohumu kayıttan gelir: aynı tohum + `(scene_id, n, havuz)` → aynı 3'lü (Yeniden Dene dahil, AC25/AC29).
 func current_offer(scene_id: int) -> Array[BoonDefinition]:
 	if not is_offer_pending():
 		return [] as Array[BoonDefinition]
-	return BoonRules.offer(_pool(), scene_id, _game_state.boons.size())
+	return BoonRules.offer(_pool(), scene_id, _game_state.boons.size(), _game_state.campaign_seed)
 
 
 ## Seçim (§3.4): yalnızca bekleyen sunumdaki bir kart; etki hemen başlar
@@ -102,4 +107,4 @@ func apply_spread(map_state: MapState, decision: ErlikSpreadController.SpreadDec
 
 
 func _pool() -> Array[BoonDefinition]:
-	return BoonRules.eligible_pool(_catalog, _modifiers)
+	return BoonRules.eligible_pool(_catalog, _modifiers, _scene_pool)

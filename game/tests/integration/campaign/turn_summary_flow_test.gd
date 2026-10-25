@@ -18,6 +18,7 @@ func _start() -> GameContext:
 	config.screen_input_guard_s = 0.0
 	config.text_reveal_cps = 0.0
 	root_ctx.flow_config = config
+	root_ctx.campaign_seed_source = func() -> int: return 1  # deterministik lütuf sunumu (C-78)
 	add_child(root_ctx)
 	for button: String in ["NewCampaignButton", "SkipButton", "SkipButton", "StartButton"]:
 		(root_ctx.find_child(button, true, false) as Button).pressed.emit()

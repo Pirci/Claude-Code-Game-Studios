@@ -14,11 +14,15 @@ static func boon_cost(picked_count: int, config: SpiritConfig) -> int:
 
 
 ## Uygun havuz (§3.5): katalog − gerektirdiği sistem etkin olmayanlar − yığın sınırına
-## ulaşmışlar ([method ModifierController.can_add]), `boon_id`'ye göre sıralı.
-static func eligible_pool(catalog: BoonCatalog, modifiers: ModifierController) -> Array[BoonDefinition]:
+## ulaşmışlar ([method ModifierController.can_add]), `boon_id`'ye göre sıralı. [param scene_pool]
+## sahnenin `boon_pool_ids`'i — doluysa havuz bu listeyle kesişir, boşsa tüm katalog (C-44, AC26).
+static func eligible_pool(catalog: BoonCatalog, modifiers: ModifierController,
+		scene_pool: Array[StringName] = []) -> Array[BoonDefinition]:
 	var pool: Array[BoonDefinition] = []
 	for boon: BoonDefinition in catalog.boons:
 		if not catalog.is_available(boon):
+			continue
+		if not scene_pool.is_empty() and boon.boon_id not in scene_pool:
 			continue
 		if modifiers != null and not modifiers.can_add(boon.modifier_source):
 			continue
@@ -28,13 +32,15 @@ static func eligible_pool(catalog: BoonCatalog, modifiers: ModifierController) -
 	return pool
 
 
-## §4.5 deterministik 3'lü: `seed = (scene_id × 31 + n × 7) mod |pool|`, slot k =
+## §4.5 deterministik 3'lü: `seed = (scene_id × 31 + n × 7 + campaign_seed) mod |pool|`, slot k =
 ## `pool[(seed + k) mod |pool|]`. Havuz 3'ten küçükse slotlar tekrar eder; boşsa sunum yok.
-static func offer(pool: Array[BoonDefinition], scene_id: int, picked_count: int) -> Array[BoonDefinition]:
+## `campaign_seed = 0` eski (C-44 öncesi) çıktıyı verir (AC4, AC29).
+static func offer(pool: Array[BoonDefinition], scene_id: int, picked_count: int,
+		campaign_seed: int = 0) -> Array[BoonDefinition]:
 	var result: Array[BoonDefinition] = []
 	if pool.is_empty():
 		return result
-	var start: int = posmod(scene_id * 31 + picked_count * 7, pool.size())
+	var start: int = posmod(scene_id * 31 + picked_count * 7 + campaign_seed, pool.size())
 	for k: int in OFFER_SIZE:
 		result.append(pool[(start + k) % pool.size()])
 	return result

@@ -133,7 +133,7 @@ func _setup_controllers() -> void:
 	_modifiers = ModifierController.new()
 	_modifiers.bind_services(_game_state)
 	# Lütuf kayıtları türetilmiş durumdur: kayıttaki seçimlerden yeniden kurulur (ADR-0006/0007).
-	_spirit.bind_boons(BOON_CATALOG, _modifiers)
+	_spirit.bind_boons(BOON_CATALOG, _modifiers, _scene.boon_pool_ids)
 	_spirit.rebuild_boon_modifiers()
 	_map_controller = MapController.new()
 	_map_controller.bind_services(
