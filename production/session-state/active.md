@@ -396,3 +396,7 @@
 ## Session Extract — C-81 (2026-10-28)
 - BoonOfferModal.show_offer(..., stacks), stack_text, unique_boons, RemainingLabel, MAX_HEIGHT 281 + OfferLine gizleme (minimum_size_changed); BoonCard.set_stack; ModifierController.stacks_of. Key'ler BOON_REMAINING/STACK/STACK_LAST/STACK_COUNT.
 - tests/unit/bozkurt/boon_card_stack_label_test.gd. Testler 422. NEXT: C-82.
+
+## Session Extract — C-82 (2026-10-28)
+- features/ai/enemy_ai_profile.gd; EnemyAIController.bind_config/decide(..., defense_modifiers)/_decide_strike/strike_allowed/effective_defense/REASON_STRIKE; ChapterMapDefinition.enemy_ai_profile; GameContext bağlar; MapController _modifiers() geçirir.
+- tests/unit/ai/enemy_ai_counterattack_test.gd (15). Testler 437. Perde 1 profil .tres harita verisiyle (C-84+). NEXT: C-83.

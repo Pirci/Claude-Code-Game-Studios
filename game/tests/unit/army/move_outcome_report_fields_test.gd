@@ -5,7 +5,8 @@ extends GdUnitTestSuite
 
 ## Her zaman ilk düşman bölgesinden ilk komşuya `&"strike"` nedeniyle saldıran sahte AI.
 class StrikeAI extends EnemyAIController:
-	func decide(map_state: MapState, acted: Array[StringName]) -> MoveIntent:
+	func decide(map_state: MapState, acted: Array[StringName],
+		_defense_modifiers: Array[StatModifier] = []) -> MoveIntent:
 		for region: RegionData in map_state.get_enemy_regions():
 			if region.region_id in acted or region.army_count <= 1:
 				continue

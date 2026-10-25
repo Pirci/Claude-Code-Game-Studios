@@ -127,6 +127,8 @@ func _setup_controllers() -> void:
 	_combat_resolver = CombatResolver.new()
 	_combat_resolver.bind_config(COMBAT_CONFIG)
 	var move_resolver: MoveResolver = MoveResolver.new()
+	var enemy_ai: EnemyAIController = EnemyAIController.new()
+	enemy_ai.bind_config(map_def.enemy_ai_profile)
 	move_resolver.bind_services(_combat_resolver, _spirit_rules)
 	_spirit = SpiritController.new()
 	_spirit.bind_services(_game_state, _spirit_rules)
@@ -143,7 +145,7 @@ func _setup_controllers() -> void:
 		_resource_controller,
 		_combat_resolver,
 		map_def.win_condition,
-		EnemyAIController.new(),
+		enemy_ai,
 		move_resolver,
 	)
 	_map_controller.bind_erlik_layer(_spirit, ErlikSpreadController.new(), _modifiers)

@@ -25,6 +25,8 @@ extends Resource
 @export var erlik_spread_interval: int = 3
 @export var regions: Array[RegionDefinition] = []
 @export var win_condition: WinCondition = null
+## Siyasi düşman AI profili (enemy-layers §3.2); null → varsayılan (eski davranış, Prolog).
+@export var enemy_ai_profile: EnemyAIProfile = null
 
 
 func create_map_state() -> MapState:

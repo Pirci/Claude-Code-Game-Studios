@@ -168,7 +168,8 @@ func end_turn() -> void:
 func _run_enemy_ai() -> void:
 	var acted: Array[StringName] = []
 	for _i: int in _map_state.enemy_actions_per_turn:
-		var intent: EnemyAIController.MoveIntent = _enemy_ai.decide(_map_state, acted)
+		# AI oyuncunun etkin savunmasını okur (lütuflar dahil; ADR-0005 eki, enemy-layers AC19).
+		var intent: EnemyAIController.MoveIntent = _enemy_ai.decide(_map_state, acted, _modifiers())
 		if intent == null:
 			return
 		_apply_enemy_move(intent)

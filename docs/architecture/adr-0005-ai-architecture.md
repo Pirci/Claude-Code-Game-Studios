@@ -49,6 +49,16 @@ Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-revi
 > - **`BATTLE_HELD_DEFENSE` (W-5):** the 2026-10-20 amendment's HELD/LOST wording is narrowed: HELD is reserved
 >   for `A ≤ P_eff` attacks only; the Perde 1 R1 rule never produces it (the key is kept).
 
+> **Implementation note 2026-10-28 (C-82):** built as specified — `EnemyAIProfile` (`features/ai/enemy_ai_profile.gd`,
+> 4 fields, default `strike_enabled = false`), `EnemyAIController.bind_config(profile)` (null → default),
+> `decide(map_state, acted, defense_modifiers = [])`, R1 + F-E2 defence hold, `P_eff` via
+> `MoveResolver.effective_power(army_defense)` (the same value combat uses; `P_eff = 0` for an empty target),
+> global order key `(P_eff, −A, from, to)`, `reason = &"strike"`. `ChapterMapDefinition.enemy_ai_profile`
+> carries the per-chapter profile (Prolog: none → legacy, unchanged); `GameContext` binds it; `MapController`
+> passes the player's modifiers to both `decide()` and the enemy move resolution (C-79). Tests:
+> `tests/unit/ai/enemy_ai_counterattack_test.gd` (enemy-layers AC1–AC10, AC19, AC20; level §13 names).
+> The Perde 1 profile resource itself is authored with the Perde 1 map data.
+
 ## Date
 2026-08-13
 
