@@ -30,6 +30,8 @@ extends Resource
 @export var win_condition: WinCondition = null
 ## Siyasi düşman AI profili (enemy-layers §3.2); null → varsayılan (eski davranış, Prolog).
 @export var enemy_ai_profile: EnemyAIProfile = null
+## Harita dekoru (seviye perde1 §7.6); null → dekor yok (Prolog, davranış değişmez).
+@export var decor: MapDecor = null
 
 
 func create_map_state() -> MapState:

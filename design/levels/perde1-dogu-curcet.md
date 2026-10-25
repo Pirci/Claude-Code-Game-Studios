@@ -291,6 +291,8 @@ kurt_ini x395–495 y72–128; curuk_koru x280–390 y212–268; curcet_oba x410
 
 ### 7.6 Dekor sistemi (en küçük çözüm)
 
+> **✅ Veri modeli C-84 (2026-10-29):** `features/grid/map_decor_item.gd` (`frames`, ayak `position`, `layer`, `bound_region_id`, `min/max_corruption`, `fps`; saf `is_visible(level)`, `is_animated()`), `features/grid/map_decor.gd` (`items`, `water_rects`, `items_in_layer` ayak-y → x sıralı), `ChapterMapDefinition.decor = null`; test `tests/unit/grid/map_decor_item_test.gd`. Çizim (`MapDecorLayer`) C-85.
+
 | Parça | Tanım |
 | ---- | ---- |
 | `MapDecorItem` (Resource) | texture/frames, position (ayak), layer {GROUND, PROP, OVERLAY}, `bound_region_id`, `min_corruption`, `max_corruption` (-1 sınırsız), fps; saf `is_visible(level)` |

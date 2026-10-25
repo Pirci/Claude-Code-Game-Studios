@@ -404,3 +404,6 @@
 ## Session Extract — C-83 (2026-10-28)
 - MapState/ChapterMapDefinition.enemy_reinforcement_region_ids; ResourceController.reinforce_enemies süzgeci. Profil MapState'e kopyalanmadı (bind_config tek kaynak).
 - tests/unit/resources/reinforcement_region_list_test.gd. Testler 443. NEXT: C-84.
+
+## Session Extract — C-84 (2026-10-29)
+- features/grid/map_decor_item.gd, map_decor.gd; ChapterMapDefinition.decor. tests/unit/grid/map_decor_item_test.gd. Testler 449. NEXT: C-85 (MapDecorLayer çizimi).
