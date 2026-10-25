@@ -28,6 +28,11 @@ func get_modifiers() -> Array[StatModifier]:
 
 ## Kaynak eklenebilir mi? Lütuf havuzu gibi uygunluk denetimleri [code]stacks[/code]
 ## okumak yerine bunu sorar.
+## Kaynağın şu anki yığın sayısı (yoksa 0) — yalnız okuma (lütuf kartı `×N/MAX`, ux/boon-selection §6).
+func stacks_of(source_id: StringName) -> int:
+	return _source_stacks.get(source_id, 0)
+
+
 func can_add(source: ModifierSource) -> bool:
 	if source == null or source.source_id == &"":
 		return false

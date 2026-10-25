@@ -392,3 +392,7 @@
 ## Session Extract — C-80 (2026-10-27)
 - boon_catalog.tres: active_systems [effective_power], kurt_gucu/demir_post max_stacks 3. prolog_replay.gd + boon_offer_test _setup Prolog havuzunu kullanıyor.
 - tests/unit/bozkurt/boon_stack_caps_test.gd. Testler 418. NEXT: C-81.
+
+## Session Extract — C-81 (2026-10-28)
+- BoonOfferModal.show_offer(..., stacks), stack_text, unique_boons, RemainingLabel, MAX_HEIGHT 281 + OfferLine gizleme (minimum_size_changed); BoonCard.set_stack; ModifierController.stacks_of. Key'ler BOON_REMAINING/STACK/STACK_LAST/STACK_COUNT.
+- tests/unit/bozkurt/boon_card_stack_label_test.gd. Testler 422. NEXT: C-82.

@@ -19,6 +19,7 @@ var _name_row: BoxContainer
 var _icon: TextureRect
 var _name_label: Label
 var _description_label: Label
+var _stack_label: Label
 
 
 func _init() -> void:
@@ -50,6 +51,9 @@ func _init() -> void:
 	_name_label.name = "NameLabel"
 	_description_label = _label(&"")
 	_description_label.name = "DescriptionLabel"
+	_stack_label = _label(&"SecondaryLabel")
+	_stack_label.name = "StackLabel"
+	_stack_label.hide()
 	_content.minimum_size_changed.connect(_fit_height)
 
 
@@ -78,6 +82,15 @@ func set_texts(title: String, description: String) -> void:
 	accessibility_name = title
 	accessibility_description = description
 	_layout_name_row()
+
+
+## Yığın satırı (`×1/3`, `×3/3 (son)`, `×2`); boş → gizli. Metin çağıranda biçimlenir ve LTR yalıtılır.
+func set_stack(text: String) -> void:
+	_stack_label.text = text
+	_stack_label.visible = not text.is_empty()
+	accessibility_description = _description_label.text if text.is_empty() \
+		else "%s %s" % [_description_label.text, text]
+	_fit_height()
 
 
 func _label(variation: StringName, parent: Container = null) -> Label:

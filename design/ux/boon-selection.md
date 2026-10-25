@@ -125,6 +125,8 @@ GameContext
 
 `×` glifi: **C-76 (2026-10-26): `×` ve `→` her native fontta var** (Fusion 12 latin/ja/ko/zh + Unifont 16; `glyph_coverage_test` + 12 px görsel kontrol) → metinde kullanılabilir; `×N/MAX` gibi sayı içeren biçimler Arapçada yön sırası bozulmasın diye kodda LTR yalıtılır (`NumberFormatter.ltr`). **`BOON_STACK` biçimi kesinleşti: `×%s/%s`** (ASCII `x` yedeğine gerek yok); kod yığın metninin tamamını LTR yalıtır.
 
+**Uygulama (C-81, 2026-10-28):** `BoonOfferModal.stack_text` (`BOON_STACK` `×%s/%s` + `BOON_STACK_LAST`, sınırsızda `BOON_STACK_COUNT` `×%s`; LTR yalıtılmış), `BoonCard.set_stack`, `RemainingLabel` (`BOON_REMAINING`), istatistik satırı `HFlowContainer` (uzun dilde kırılır), yığın sayısı `ModifierController.stacks_of`. **Yükseklik kuralı:** panel `MAX_HEIGHT = 281`'i aşarsa (figür henüz yok) Kök Böri sözü (`OfferLine`) gizlenir — bilgi kaybı yok; ölçüm her en küçük boyut değişiminde (kart yükseklikleri ağaçta oturur). DE `BOON_KURT_GUCU_DESC` "Reinigungsheere" 84 px'e sığmayıp ortadan bölünüyordu → "Angriff und Reinigung: unsere Heere +%s Stärke."
+
 **Tekrarlı kartlar (karar):** Havuz < 3'te `BoonRules.offer` aynı lütfu 2–3 slotta döndürebilir; **görünüm katmanı tekrarları birleştirir** (1–2 benzersiz kart). `BoonRules.offer` ve test determinizmi değişmez. Tek kart kalırsa Enter yine seçer; kart satırı ortalanır.
 
 ## 7. Etkileşim
@@ -224,12 +226,12 @@ Görünüm pasiftir: veri alır, niyet sinyali yollar; durum yazmaz.
 - [ ] AC4: Zorunlu modalda [Sonra] yok, Esc etkisiz, `BOON_CARRIES_ON` görünür; zincir `victory_pick_cap` (8) ile biter.
 - [ ] AC5: Açılışta odak ilk karttadır; ok/Tab ile 3 kart (+[Sonra]) dolaşılır, odak modaldan çıkmaz; kapanışta önceki odak geri gelir.
 - [ ] AC6: Seçimden sonra Ruh bedel kadar düşer, etki aynı turda görünür; ertelenebilirde ikinci modal kendiliğinden açılmaz.
-- [ ] AC7 (M2): Tavanlı lütufta `×N/MAX` (son yığında `(son)`), tavana ulaşmış lütuf kartta yok; havuz < 3'te tekrarlı kartlar birleşik, tek kartla Enter seçer.
+- [x] AC7 (M2, C-81 — `boon_card_stack_label_test.gd`): Tavanlı lütufta `×N/MAX` (son yığında `(son)`), tavana ulaşmış lütuf kartta yok; havuz < 3'te tekrarlı kartlar birleşik, tek kartla Enter seçer.
 - [x] AC8 (M2, C-74 — `BoonOfferModal.new(guard_s)`, `input_guard_all_modals_test.gd`): **Her** sunum türünde (zorunlu, şafak, HUD, yükleme) `screen_input_guard_s` içinde tık/Enter/Esc hiçbir kartı seçmez/ertelemez (scene-flow AC24 genişletilmiş).
-- [ ] AC9: 640×360'ta RU, DE, AR, ZH, TR, EN için panel üst (40) / alt (31) çubuklara taşmaz (≤ 281 px), kart metinleri kırpılmaz (ikon + yığın satırı dahil); figür sığmazsa gizlenir; ekran görüntüsü kanıtı `production/qa/evidence/`.
+- [x] AC9 (C-81: en kötü durum — üç kartta yığın satırı, Kurt Gücü — ru 261, de 281, ar 274, zh 206, tr 236, en 274, fr/es 261 px; ru/ar/fr/es'de Kök Böri sözü bütçe kuralıyla gizlenir; kanıt `production/qa/evidence/c81-boon-m2-*.png`): 640×360'ta RU, DE, AR, ZH, TR, EN için panel üst (40) / alt (31) çubuklara taşmaz (≤ 281 px), kart metinleri kırpılmaz (ikon + yığın satırı dahil); figür sığmazsa gizlenir; ekran görüntüsü kanıtı `production/qa/evidence/`.
 - [ ] AC10: Arapçada ilk kart sağda, Unifont 16, harita LTR.
 - [ ] AC11: Seçim konturu (1 px altın + `◆`) görünür ve ≤ 2 kare sonra modal kapanır; Hareketi Azalt açıkken kontur ve (varsa) kart belirişi anlıktır.
-- [ ] AC12: `GameContext`/`BoonOfferModal` durum yazmaz; yalnız `boon_picked`/`deferred` yayılır.
+- [x] AC12 (C-81): `GameContext`/`BoonOfferModal` durum yazmaz; yalnız `boon_picked`/`deferred` yayılır.
 
 ## 14. Kararlar (C-45, 2026-10-21)
 

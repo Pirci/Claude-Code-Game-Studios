@@ -718,7 +718,11 @@ func _push_boon_offer(mandatory: bool, after_summary: bool = false) -> bool:
 	if offer.is_empty():
 		return false
 	var modal: BoonOfferModal = BoonOfferModal.new(_flow_config.screen_input_guard_s)
-	modal.show_offer(offer, _game_state.ruh, _spirit.next_boon_cost(), mandatory)
+	var stacks: Dictionary = {}
+	for boon: BoonDefinition in offer:
+		if boon.modifier_source != null:
+			stacks[boon.boon_id] = _modifiers.stacks_of(boon.modifier_source.source_id)
+	modal.show_offer(offer, _game_state.ruh, _spirit.next_boon_cost(), mandatory, stacks)
 	modal.boon_picked.connect(_on_boon_picked.bind(mandatory))
 	_modal_queue.push(modal)
 	return true
