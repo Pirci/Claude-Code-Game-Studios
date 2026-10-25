@@ -11,15 +11,27 @@ var _region_nodes: Dictionary = {}  # StringName -> RegionNode
 var _line_drawer: AdjacencyLineDrawer
 var _line_color: Color = AdjacencyLineDrawer.DEFAULT_LINE_COLOR
 var _tamgas: TamgaLibrary = TamgaLibrary.new()
+## Bölüm dekoru (null → yok, Prolog); katmanlar [method build_map]'te kurulur.
+var _decor: MapDecor = null
+var _decor_layers: Array[MapDecorLayer] = []
+var _reduce_motion: bool = false
+
+
+## Dekor [method build_map]'ten önce verilir (seviye perde1 §7.6).
+func set_decor(decor: MapDecor) -> void:
+	_decor = decor
 
 
 func build_map(map_state: MapState) -> void:
 	_clear()
 
+	# Çizim sırası (§7.6): GROUND (nehir) → çizgiler → PROP → bölgeler → OVERLAY.
+	_add_decor_layer(MapDecorItem.Layer.GROUND, "DecorGround")
 	_line_drawer = AdjacencyLineDrawer.new()
 	_line_drawer.line_color = _line_color
 	add_child(_line_drawer)
 	_line_drawer.build_connections(map_state)
+	_add_decor_layer(MapDecorItem.Layer.PROP, "DecorProp")
 
 	for region: RegionData in map_state.regions.values():
 		var node: RegionNode = RegionNode.new()
@@ -29,7 +41,36 @@ func build_map(map_state: MapState) -> void:
 		node.accepted.connect(region_accepted.emit)
 		add_child(node)
 		_region_nodes[region.region_id] = node
+	_add_decor_layer(MapDecorItem.Layer.OVERLAY, "DecorOverlay")
+	_apply_decor_corruption(map_state)
 	_link_focus_neighbors(map_state)
+
+
+## Dekor katmanları (testler ve ölçüm için; dekor yoksa boş).
+func decor_layers() -> Array[MapDecorLayer]:
+	return _decor_layers
+
+
+func _add_decor_layer(layer: MapDecorItem.Layer, node_name: String) -> void:
+	if _decor == null:
+		return
+	var decor_layer: MapDecorLayer = MapDecorLayer.new()
+	decor_layer.name = node_name
+	decor_layer.setup(_decor, layer, layer == MapDecorItem.Layer.GROUND)
+	decor_layer.reduce_motion = _reduce_motion
+	add_child(decor_layer)
+	_decor_layers.append(decor_layer)
+
+
+## Bozulma bağlı görünürlük (§7.6): her yenilemede bölge seviyeleri katmanlara geçer.
+func _apply_decor_corruption(map_state: MapState) -> void:
+	if _decor_layers.is_empty():
+		return
+	var levels: Dictionary = {}
+	for region: RegionData in map_state.regions.values():
+		levels[region.region_id] = region.corruption_level
+	for decor_layer: MapDecorLayer in _decor_layers:
+		decor_layer.apply_corruption(levels)
 
 
 ## Bölgenin klavye odak kontrolü (yoksa null).
@@ -100,6 +141,7 @@ func refresh(map_state: MapState) -> void:
 		if node:
 			node.update_display(region)
 			node.set_tamga(_tamgas.get_texture(map_state.get_owner_tamga_id(region.owner)))
+	_apply_decor_corruption(map_state)
 
 
 func set_selected(region_id: StringName) -> void:
@@ -112,6 +154,9 @@ func set_selected(region_id: StringName) -> void:
 func apply_accessibility(settings: AccessibilitySettings) -> void:
 	if settings == null:
 		return
+	_reduce_motion = settings.reduce_motion
+	for decor_layer: MapDecorLayer in _decor_layers:
+		decor_layer.reduce_motion = settings.reduce_motion
 	for node: RegionNode in _region_nodes.values():
 		node.color_blind_mode = settings.color_blind_mode
 		node.show_name_label = settings.show_region_names
@@ -158,3 +203,4 @@ func _clear() -> void:
 	for child: Node in get_children():
 		child.queue_free()
 	_region_nodes.clear()
+	_decor_layers.clear()

@@ -407,3 +407,7 @@
 
 ## Session Extract — C-84 (2026-10-29)
 - features/grid/map_decor_item.gd, map_decor.gd; ChapterMapDefinition.decor. tests/unit/grid/map_decor_item_test.gd. Testler 449. NEXT: C-85 (MapDecorLayer çizimi).
+
+## Session Extract — C-85 (2026-10-29)
+- features/grid/map_decor_layer.gd (setup, apply_corruption, visible_items, frame_index, canvas_origin, shore_segments); CampaignMap.set_decor/decor_layers; GameContext set_decor(map_def.decor).
+- tests/integration/grid/map_decor_layer_test.gd. Testler 456. Bulgu: körmös/leke kontrastı → C-98. NEXT: C-86.

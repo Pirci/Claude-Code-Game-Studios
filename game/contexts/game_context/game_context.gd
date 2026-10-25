@@ -157,6 +157,7 @@ func _setup_map_visuals() -> void:
 	_campaign_map.set_line_color(_map_def.adjacency_line_color)
 	add_child(_campaign_map)
 	move_child(_campaign_map, 1)
+	_campaign_map.set_decor(_map_def.decor)
 	_campaign_map.build_map(_game_state.map_state)
 	_campaign_map.apply_accessibility(_accessibility)
 
