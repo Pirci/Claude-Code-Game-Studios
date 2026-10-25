@@ -9,6 +9,7 @@ const COMBAT_CONFIG: String = "res://features/combat/data/combat_config.tres"
 const SPIRIT_CONFIG: String = "res://features/bozkurt/data/spirit_config.tres"
 const ECONOMY_CONFIG: String = "res://features/resources/data/economy_config.tres"
 const BOON_CATALOG: String = "res://features/bozkurt/data/boon_catalog.tres"
+const CAMPAIGN: String = "res://features/campaign/data/campaign.tres"
 const ALIAS: Dictionary = {
 	"O": &"otuken", "B": &"bati_bozkir", "D": &"dogu_bozkir",
 	"A": &"altai", "G": &"guney_vadi", "L": &"sinir_bolge",
@@ -52,7 +53,9 @@ func _bind() -> void:
 	spirit.bind_services(game_state, rules)
 	var modifiers: ModifierController = ModifierController.new()
 	modifiers.bind_services(game_state)
-	spirit.bind_boons(load(BOON_CATALOG) as BoonCatalog, modifiers)
+	# Sahne havuzu GameContext ile aynı kaynaktan (Prolog = M1 üçlüsü, C-78/C-80).
+	spirit.bind_boons(load(BOON_CATALOG) as BoonCatalog, modifiers,
+		(load(CAMPAIGN) as CampaignDefinition).scene(1).boon_pool_ids)
 	spirit.rebuild_boon_modifiers()
 	map = MapController.new()
 	map.bind_services(game_state.map_state, game_state, ArmyController.new(), resources, combat,

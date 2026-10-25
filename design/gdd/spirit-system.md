@@ -647,10 +647,10 @@ aynı yol T20). Uyarı eşiği: `erlik_power = eşik − 1` (Prolog 8 — ihmal 
     sunumda yer almaz *(C-44 inceleme, W-12)*; boş liste tüm katalogu kullanır. *(Test, kod C-47)*
 27. **(C-44) Kurt Gücü sınırı.** 3 yığından sonra Kurt Gücü uygun havuzdan çıkar (`can_add()`).
     Sınır düşürülmüş eski kayıtta `n = boons.size()` değişmez, `rebuild()` en çok sınır kadar yığın
-    kurar. *(Test — M2)*
+    kurar. *(Test — M2; ✅ C-80 `boon_stack_caps_test.gd`)*
 28. **(C-44 inceleme, D2 / W-3) Demir Post sınırı.** 3 yığından (`DEMIR_POST_MAX_STACKS`) sonra Demir
     Post uygun havuzdan çıkar (`can_add()`); sınır düşürülmüş eski kayıtta `n = boons.size()`
-    değişmez, `rebuild()` en çok sınır kadar yığın kurar. *(Test — M2)*
+    değişmez, `rebuild()` en çok sınır kadar yığın kurar. *(Test — M2; ✅ C-80 `boon_stack_caps_test.gd`)*
 29. **(C-44 inceleme, D4 / H6) Kampanya tohumu.** Aynı `(chapter_id, n, havuz)` için `campaign_seed`
     farklıysa sunum farklı olabilir; aynı `campaign_seed` ile (yeniden deneme dahil) sunum birebir
     aynıdır; `campaign_seed = 0` AC4'ün çıktısını verir; tohum kayıttan geri yüklenir. *(Test, tohum

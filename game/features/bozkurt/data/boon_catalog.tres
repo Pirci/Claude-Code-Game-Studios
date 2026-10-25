@@ -61,7 +61,7 @@ value = 1.0
 [sub_resource type="Resource" id="src_demir_post"]
 script = ExtResource("3_src")
 source_id = &"boon:demir_post"
-max_stacks = 0
+max_stacks = 3
 effects = Array[ExtResource("4_eff")]([SubResource("eff_demir_post")])
 
 [sub_resource type="Resource" id="boon_demir_post"]
@@ -103,7 +103,7 @@ value = 1.0
 [sub_resource type="Resource" id="src_kurt_gucu"]
 script = ExtResource("3_src")
 source_id = &"boon:kurt_gucu"
-max_stacks = 0
+max_stacks = 3
 effects = Array[ExtResource("4_eff")]([SubResource("eff_kurt_gucu")])
 
 [sub_resource type="Resource" id="boon_kurt_gucu"]
@@ -158,4 +158,4 @@ modifier_source = SubResource("src_yigit_ruhu")
 [resource]
 script = ExtResource("1_cat")
 boons = Array[ExtResource("2_def")]([SubResource("boon_arinma_ustaligi"), SubResource("boon_bereket"), SubResource("boon_demir_post"), SubResource("boon_gok_kalkani"), SubResource("boon_kurt_gucu"), SubResource("boon_suru_kutsamasi"), SubResource("boon_yigit_ruhu")])
-active_systems = Array[StringName]([])
+active_systems = Array[StringName]([&"effective_power"])

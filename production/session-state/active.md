@@ -388,3 +388,7 @@
 ## Session Extract — C-79 (2026-10-27)
 - CombatResolver.resolve_effective + CombatResult.attacker/defender_effective; MoveResolver.STAT_ARMY_ATTACK/DEFENSE, effective_power (CEIL_EPSILON 1e-6), _resolve_combat(..., modifiers), arındırma P_eff. MapController._apply_enemy_move lütufları geçirir.
 - tests/unit/combat/combat_effective_power_test.gd. Testler 414. NEXT: C-80 (katalog max_stacks 3, active_systems effective_power).
+
+## Session Extract — C-80 (2026-10-27)
+- boon_catalog.tres: active_systems [effective_power], kurt_gucu/demir_post max_stacks 3. prolog_replay.gd + boon_offer_test _setup Prolog havuzunu kullanıyor.
+- tests/unit/bozkurt/boon_stack_caps_test.gd. Testler 418. NEXT: C-81.

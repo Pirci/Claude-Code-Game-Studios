@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 
 
 const CATALOG: BoonCatalog = preload("res://features/bozkurt/data/boon_catalog.tres")
+const PROLOG_POOL: Array[StringName] = [&"arinma_ustaligi", &"bereket", &"gok_kalkani"]
 
 
 func _setup(ruh: int = 0) -> Array:
@@ -12,7 +13,8 @@ func _setup(ruh: int = 0) -> Array:
 	modifiers.bind_services(state)
 	var spirit: SpiritController = SpiritController.new()
 	spirit.bind_services(state)
-	spirit.bind_boons(CATALOG, modifiers)
+	# Prolog sahne havuzu (M1 üçlüsü): etkin güç açıkken (C-80) bu testler Prolog sunumunu modeller.
+	spirit.bind_boons(CATALOG, modifiers, PROLOG_POOL)
 	return [state, modifiers, spirit]
 
 
@@ -29,11 +31,15 @@ func test_boon_cost_grows_linearly() -> void:
 	assert_array([0, 1, 2, 3].map(func(n: int) -> int: return BoonRules.boon_cost(n, config))).is_equal([30, 50, 70, 90])
 
 
-# AC4 + AC18: M1 havuzu, determinizm ve kilitli lütufların dışlanması.
+# AC4 + AC18 (M2'de AC26 ile güncellendi, C-80): etkin güç açık — katalog havuzu Kurt Gücü / Demir Post'u
+# içerir, sistemi kapalı lütuflar (sürü, yiğitler) dışarıda; Prolog sahne havuzu M1 üçlüsü ve eski sunum.
 func test_m1_offer_is_deterministic_and_excludes_locked_boons() -> void:
 	var modifiers: ModifierController = _setup()[1]
-	var pool: Array[BoonDefinition] = BoonRules.eligible_pool(CATALOG, modifiers)
-	assert_array(_ids(pool)).is_equal([&"arinma_ustaligi", &"bereket", &"gok_kalkani"])
+	assert_array(_ids(BoonRules.eligible_pool(CATALOG, modifiers))).is_equal(
+		[&"arinma_ustaligi", &"bereket", &"demir_post", &"gok_kalkani", &"kurt_gucu"])
+	var prolog: Array[StringName] = [&"arinma_ustaligi", &"bereket", &"gok_kalkani"]
+	var pool: Array[BoonDefinition] = BoonRules.eligible_pool(CATALOG, modifiers, prolog)
+	assert_array(_ids(pool)).is_equal(prolog)
 	var offer: Array[BoonDefinition] = BoonRules.offer(pool, 1, 0)
 	assert_array(_ids(offer)).is_equal([&"bereket", &"gok_kalkani", &"arinma_ustaligi"])
 	assert_array(_ids(BoonRules.offer(pool, 1, 0))).is_equal(_ids(offer))
@@ -112,7 +118,7 @@ func test_offer_and_modifiers_rebuild_from_saved_choices() -> void:
 	modifiers.bind_services(restored)
 	var spirit2: SpiritController = SpiritController.new()
 	spirit2.bind_services(restored)
-	spirit2.bind_boons(CATALOG, modifiers)
+	spirit2.bind_boons(CATALOG, modifiers, PROLOG_POOL)
 	spirit2.rebuild_boon_modifiers()
 	assert_int(restored.ruh).is_equal(100)
 	assert_array(_ids(spirit2.current_offer(1))).is_equal(before)
