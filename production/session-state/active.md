@@ -366,3 +366,8 @@
 - InputGuard: BoonOfferModal.new(guard_s) (_ready arm kartlar+Sonra; Esc defer butonu pasifse düşer), ConfirmDialog.new(key, guard_s), ChapterSelectContext.bind_services(..., guard_s) + Esc = menü. RootContext/GameContext flow_config.screen_input_guard_s geçirir.
 - Bulgu: ModalQueue kuyruğunda bekleyen (ağaca girmemiş) modallar sızıyordu → NOTIFICATION_PREDELETE'te free.
 - Testler 384/384. tests/integration/campaign/input_guard_all_modals_test.gd. NEXT: C-75.
+
+## Session Extract — C-75 (2026-10-25)
+- features/grid/region_focus_target.gd (Control, MOUSE_FILTER_IGNORE, LTR, has_focus(true) iken kontur, ui_accept → accepted), region_focus_rules.gd (saf, MIN_ALIGNMENT 0.38). RegionNode.accepted / get_focus_target; CampaignMap.region_accepted, focus_target, focus_order, _link_focus_neighbors (komşu yoksa kendine).
+- GameContext: _on_region_accepted, _set_target_mode, _cancel_target_mode, _unhandled_input (Esc), _link_map_tab_order. RegionInfoPanel: toggle Send + PickTargetHint, set_awaiting_target, get_first_focus, get_send_button. PICK_TARGET_HINT 11 dil.
+- Bulgu: Node2D altındaki kontroller Tab'a girmiyor → açık zincir. Testler 391/391. NEXT: C-76.

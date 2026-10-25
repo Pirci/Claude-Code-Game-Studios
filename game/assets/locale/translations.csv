@@ -34,6 +34,7 @@ FULLSCREEN,Fullscreen,Tam Ekran,Vollbild,Plein écran,Pantalla completa,全屏,�
 BACK,Back,Geri,Zurück,Retour,Atrás,返回,戻る,뒤로,Назад,Voltar,رجوع
 ARMY,Army,Ordu,Armee,Armée,Ejército,军队,軍隊,군대,Армия,Exército,جيش
 SEND_ARMY,Send Army,Ordu Gönder,Armee entsenden,Envoyer l'armée,Enviar ejército,派遣军队,軍隊を派遣,군대 파견,Отправить армию,Enviar exército,إرسال الجيش
+PICK_TARGET_HINT,Choose the target region.,Hedef bölgeyi seç.,Wähle das Zielgebiet.,Choisissez la région cible.,Elige la región de destino.,选择目标地区。,目標の地域を選ぶ。,목표 지역을 고르라.,Выберите целевую область.,Escolha a região de destino.,اختر المنطقة الهدف.
 OWNER_PLAYER,Yours,Sizin,Euer,Vôtre,Tuyo,己方,自軍,아군,Ваше,Seu,ملكك
 OWNER_ENEMY,Enemy,Düşman,Feind,Ennemi,Enemigo,敌方,敵軍,적군,Враг,Inimigo,العدو
 OWNER_NEUTRAL,Neutral,Nötr,Neutral,Neutre,Neutral,中立,中立,중립,Нейтральный,Neutro,محايد

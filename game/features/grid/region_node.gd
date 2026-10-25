@@ -7,6 +7,8 @@ extends Node2D
 
 
 signal clicked(region_id: StringName)
+## Klavyeyle seçildi (odaktayken `ui_accept`) — tıklamadan ayrı: seçimden sonra odak panele geçer.
+signal accepted(region_id: StringName)
 
 ## Sahiplik mini rampaları (koyu / ana / açık) — art bible §4. Opak; yarı saydam yasak.
 const RAMP_PLAYER: PackedColorArray = [Color("#2E7AB8"), Color("#47A3E8"), Color("#87C4F5")]
@@ -89,6 +91,7 @@ var _points: PackedVector2Array = PackedVector2Array()
 var _inner_points: PackedVector2Array = PackedVector2Array()
 var _owner: RegionData.Owner = RegionData.Owner.NEUTRAL
 var _area: Area2D
+var _focus_target: RegionFocusTarget
 var _collision: CollisionPolygon2D
 var _label: Label
 var _army_label: Label
@@ -188,6 +191,19 @@ func setup(data: RegionData) -> void:
 	_area.mouse_entered.connect(_on_mouse_entered)
 	_area.mouse_exited.connect(_on_mouse_exited)
 
+	# Klavye odağı (K4): sınır kutusu kadar görünmez kontrol, poligon konturunu kendisi çizer.
+	var bounds: Rect2 = bounds_rect()
+	_focus_target = RegionFocusTarget.new()
+	_focus_target.name = "FocusTarget"
+	_focus_target.position = bounds.position
+	_focus_target.size = bounds.size
+	var local: PackedVector2Array = PackedVector2Array()
+	for point: Vector2 in _points:
+		local.append(point - bounds.position)
+	_focus_target.outline = local
+	_focus_target.accepted.connect(func() -> void: accepted.emit(region_id))
+	add_child(_focus_target)
+
 	# Font boyutu override edilmez: tema dil bazlı pixel font boyutunu belirler
 	# (Fusion 12 / Arapça Unifont 16). Ara boyutlar pixel fontu bozar.
 	# Konumlar harita (dünya) koordinatıdır: RTL dillerde aynalanmamalı → LTR yerleşim;
@@ -250,6 +266,11 @@ func set_tamga(texture: Texture2D) -> void:
 	_tamga.texture = texture
 	_layout_army_and_tamga()
 	_update_tamga_visibility()
+
+
+## Klavye odak kontrolü (komşu bağları ve odak taşıma için).
+func get_focus_target() -> RegionFocusTarget:
+	return _focus_target
 
 
 ## Bölge poligonunun harita koordinatlarındaki sınır kutusu — paneller bunu örtmekten kaçınır.

@@ -4,6 +4,8 @@ extends Node2D
 
 
 signal region_clicked(region_id: StringName)
+## Bölge klavyeyle seçildi (K4).
+signal region_accepted(region_id: StringName)
 
 var _region_nodes: Dictionary = {}  # StringName -> RegionNode
 var _line_drawer: AdjacencyLineDrawer
@@ -24,8 +26,65 @@ func build_map(map_state: MapState) -> void:
 		node.setup(region)
 		node.set_tamga(_tamgas.get_texture(map_state.get_owner_tamga_id(region.owner)))
 		node.clicked.connect(_on_region_clicked)
+		node.accepted.connect(region_accepted.emit)
 		add_child(node)
 		_region_nodes[region.region_id] = node
+	_link_focus_neighbors(map_state)
+
+
+## Bölgenin klavye odak kontrolü (yoksa null).
+func focus_target(region_id: StringName) -> Control:
+	var node: RegionNode = _region_nodes.get(region_id) as RegionNode
+	return node.get_focus_target() if node != null else null
+
+
+## Tab sırası: okuma sırası (yukarıdan aşağı, soldan sağa; eşitlikte kimlik). Harita LTR.
+func focus_order() -> Array[Control]:
+	var nodes: Array = _region_nodes.values()
+	nodes.sort_custom(func(a: RegionNode, b: RegionNode) -> bool:
+		var pa: Vector2 = a.bounds_rect().get_center()
+		var pb: Vector2 = b.bounds_rect().get_center()
+		if not is_equal_approx(pa.y, pb.y):
+			return pa.y < pb.y
+		if not is_equal_approx(pa.x, pb.x):
+			return pa.x < pb.x
+		return String(a.region_id) < String(b.region_id))
+	var order: Array[Control] = []
+	for node: RegionNode in nodes:
+		order.append(node.get_focus_target())
+	return order
+
+
+## Ok tuşları komşuluğa göre (RegionFocusRules); o yönde komşu yoksa odak yerinde kalır —
+## boş bırakılırsa Godot geometrik olarak en yakın kontrole (HUD düğmeleri) atlardı.
+func _link_focus_neighbors(map_state: MapState) -> void:
+	var centers: Dictionary = {}
+	var adjacency: Dictionary = {}
+	for region: RegionData in map_state.regions.values():
+		centers[region.region_id] = region.position
+		adjacency[region.region_id] = region.adjacent_regions
+	var links: Dictionary = RegionFocusRules.neighbors(centers, adjacency)
+	for region_id: StringName in links:
+		var target: Control = focus_target(region_id)
+		var sides: Dictionary = links[region_id]
+		for side: RegionFocusRules.Side in RegionFocusRules.DIRECTIONS:
+			var other: Control = focus_target(sides[side]) if sides.has(side) else target
+			var path: NodePath = target.get_path_to(other)
+			match side:
+				RegionFocusRules.Side.LEFT:
+					target.focus_neighbor_left = path
+				RegionFocusRules.Side.RIGHT:
+					target.focus_neighbor_right = path
+				RegionFocusRules.Side.UP:
+					target.focus_neighbor_top = path
+				RegionFocusRules.Side.DOWN:
+					target.focus_neighbor_bottom = path
+	# Node2D altındaki kontroller Godot'nun Tab gezinmesine kendiliğinden girmez: zinciri kur.
+	# Uçlar (haritaya giriş / çıkış) GameContext tarafından HUD'a bağlanır.
+	var order: Array[Control] = focus_order()
+	for i: int in order.size() - 1:
+		order[i].focus_next = order[i].get_path_to(order[i + 1])
+		order[i + 1].focus_previous = order[i + 1].get_path_to(order[i])
 
 
 ## Bölümün komşuluk çizgisi rengi (ChapterMapDefinition.adjacency_line_color).

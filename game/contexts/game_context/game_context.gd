@@ -191,6 +191,7 @@ func _connect_signals() -> void:
 	_menu_button.pressed.connect(_on_menu_pressed)
 	_kok_bori_button.pressed.connect(_on_kok_bori_pressed)
 	_campaign_map.region_clicked.connect(_on_region_clicked)
+	_campaign_map.region_accepted.connect(_on_region_accepted)
 	_info_panel.send_army_pressed.connect(_on_send_army_pressed)
 	_info_panel.recruit_pressed.connect(_on_recruit_pressed)
 	_map_controller.region_selected.connect(_on_controller_region_selected)
@@ -310,6 +311,7 @@ func _refresh_views() -> void:
 ## Dinamik Ordu Gönder butonunu odak zincirine bağlar (art bible §7): görünürken
 ## Tur Bitir ↑ Ordu Gönder ↓ Tur Bitir; gizliyken bağ kaldırılır.
 func _update_focus_chain() -> void:
+	_link_map_tab_order()
 	var send: Control = _info_panel.get_focus_target()
 	if send == null:
 		_end_turn_button.focus_neighbor_top = NodePath()
@@ -318,22 +320,94 @@ func _update_focus_chain() -> void:
 	send.focus_neighbor_bottom = send.get_path_to(_end_turn_button)
 
 
+## Tab: Tur Bitir → harita bölgeleri (okuma sırası) → Tur Bitir'in olağan sonrakisi (K4, A-7).
+## Olağan sonraki, HUD görünürlüğü değiştikçe değişir; her yenilemede yeniden hesaplanır.
+func _link_map_tab_order() -> void:
+	var order: Array[Control] = _campaign_map.focus_order()
+	if order.is_empty():
+		return
+	_end_turn_button.focus_next = NodePath()
+	var after: Control = _end_turn_button.find_next_valid_focus()
+	_end_turn_button.focus_next = _end_turn_button.get_path_to(order[0])
+	order[0].focus_previous = order[0].get_path_to(_end_turn_button)
+	var last: Control = order[order.size() - 1]
+	if after != null and after != _end_turn_button:
+		last.focus_next = last.get_path_to(after)
+	else:
+		last.focus_next = last.get_path_to(_end_turn_button)
+
+
 func _on_region_clicked(region_id: StringName) -> void:
 	# Modal açıkken harita girdisi kilitli (ADR-0011 karar 5).
 	if _modal_queue.is_open():
 		return
 	if _awaiting_target:
 		if _map_controller.attempt_move(region_id):
-			_awaiting_target = false
-			_send_from_id = &""
+			_set_target_mode(false)
 			_refresh_views()
 		return
 	_map_controller.select_region(region_id)
 
 
+## Klavyeyle seçim (K4): hedef modunda hamle; değilse seçim + odak panelin ilk etkin düğmesine
+## (görünür). Panelde düğme yoksa odak bölgede kalır.
+func _on_region_accepted(region_id: StringName) -> void:
+	if _modal_queue.is_open():
+		return
+	if _awaiting_target:
+		_on_region_clicked(region_id)
+		return
+	_on_region_clicked(region_id)
+	var first: Control = _info_panel.get_first_focus()
+	if first != null:
+		first.grab_focus()
+
+
+## [Ordu Gönder]: hedef seçim modu (A5). Mod açıkken tekrar basmak iptal eder. Klavyeyle
+## basıldıysa odak kaynak bölgeye geçer (oklarla hedef seçilir); fareyle gizli kalır.
 func _on_send_army_pressed(from_id: StringName) -> void:
-	_awaiting_target = true
-	_send_from_id = from_id
+	if _awaiting_target:
+		_cancel_target_mode()
+		return
+	var keyboard: bool = _info_panel.get_send_button().has_focus(true)
+	_set_target_mode(true, from_id)
+	var source: Control = _campaign_map.focus_target(from_id)
+	if source != null:
+		source.grab_focus(not keyboard)
+
+
+## Hedef modu iptal (Esc / tekrar basış): odak [Ordu Gönder]'e, klavye odağı görünürse görünür.
+func _cancel_target_mode() -> void:
+	var owner: Control = get_viewport().gui_get_focus_owner()
+	var keyboard: bool = owner != null and owner.has_focus(true)
+	_set_target_mode(false)
+	var send: Button = _info_panel.get_send_button()
+	if send.is_visible_in_tree():
+		send.grab_focus(not keyboard)
+
+
+func _set_target_mode(awaiting: bool, from_id: StringName = &"") -> void:
+	_awaiting_target = awaiting
+	_send_from_id = from_id if awaiting else &""
+	_info_panel.set_awaiting_target(awaiting)
+
+
+## Esc (hud §10.3 kural 7): hedef modu iptal; panel odaktaysa seçili bölgeye dön. Modal
+## açıkken modal kendisi karar verir.
+func _unhandled_input(event: InputEvent) -> void:
+	if not event.is_action_pressed(&"ui_cancel") or _modal_queue.is_open():
+		return
+	if _awaiting_target:
+		get_viewport().set_input_as_handled()
+		_cancel_target_mode()
+		return
+	var owner: Control = get_viewport().gui_get_focus_owner()
+	var selected: StringName = _game_state.map_state.selected_region_id
+	if owner != null and _info_panel.is_ancestor_of(owner) and selected != &"":
+		var region: Control = _campaign_map.focus_target(selected)
+		if region != null:
+			get_viewport().set_input_as_handled()
+			region.grab_focus(not owner.has_focus(true))
 
 
 func _on_controller_region_selected(region_id: StringName) -> void:
@@ -433,14 +507,14 @@ func _on_recruit_pressed(region_id: StringName, count: int) -> void:
 
 
 func _on_controller_region_deselected() -> void:
+	_set_target_mode(false)
 	_campaign_map.clear_selection()
 	_info_panel.hide_panel()
 	_refresh_views()
 
 
 func _on_end_turn_pressed() -> void:
-	_awaiting_target = false
-	_send_from_id = &""
+	_set_target_mode(false)
 	_clear_night()
 	_map_controller.end_turn()
 

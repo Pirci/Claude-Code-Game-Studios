@@ -328,7 +328,7 @@ Boyutlar tahmindir; 12 px font (Arapça 16 px) satır ≈ 14 px (Arapça ≈ 20 
 | 2 | Zincir: `Tur Bitir ↑ Ordu Topla/Gönder ↓ Tur Bitir` (dinamik bağ; panel gizlenince kalkar). `GameContext._update_focus_chain` kurar, panel kardeşlerini bilmez |
 | 3 | Modal açılınca odak modalın `get_focus_target()`'ına gizlice taşınır; kapanınca önceki odak geri verilir |
 | 4 | Modal klavyeyle kapanır (`ui_accept` / `ui_cancel` — Esc kuralı 7'ye tabi) |
-| 5 | **K4 (Karar C-45, M2 kapsamında): klavyeyle bölge seçimi.** Harita bölgeleri odaklanabilir (`focus_mode=ALL`; Tab ve ok tuşları, ok tuşları harita komşuluğuna göre `focus_neighbor`), `ui_accept` = bölgeyi seç (bilgi paneli açılır, odak panelin ilk etkin öğesine geçer; `ui_cancel` ile bölgeye döner). Hedef seçim modunda `ui_accept` = hedef. Yeni kalıp: **Bölge odağı**. **C-47 görevi:** godot-specialist uygular; AC A-7 |
+| 5 | **K4 (Karar C-45, M2 kapsamında): klavyeyle bölge seçimi.** Harita bölgeleri odaklanabilir (`focus_mode=ALL`; Tab ve ok tuşları, ok tuşları harita komşuluğuna göre `focus_neighbor`), `ui_accept` = bölgeyi seç (bilgi paneli açılır, odak panelin ilk etkin öğesine geçer; `ui_cancel` ile bölgeye döner). Hedef seçim modunda `ui_accept` = hedef. Yeni kalıp: **Bölge odağı**. Uygulandı **C-75**; RTL: harita LTR olduğundan oklar her dilde ekran geometrisini izler (UD kapandı). AC A-7 |
 | 6 | Yeni M2 salt-okunur satırları (D3, Yayılım, Odak tehlikede, düşman bölgesi sayacı) odaklanmaz (odak zincirini uzatmaz) |
 | 7 | **Esc kuralı (ortak, tüm modallar):** tek güvenli çıkışı olan veya ertelenebilir modalda Esc = o eylem (rapor/zafer kartı = Devam; ertelenebilir lütuf = Ertele; E1 anlatı = Atla; E5 = Ana Menü). Zorunlu içeriği atlatacak modalda (zorunlu lütuf, E2 hedef paneli, E4 yenilgi) Esc **etkisizdir**. HUD hedef seçimi modunda Esc = iptal. Girdi koruması süresince (0.4 sn) Esc/Enter düşer |
 
@@ -412,7 +412,7 @@ Boyutlar tahmindir; 12 px font (Arapça 16 px) satır ≈ 14 px (Arapça ≈ 20 
 | A-4 | Klavye yalnız: Tur Bitir ↔ Ordu Gönder/Topla zinciri çalışır; modal açılınca odak modalda, kapanınca geri döner; **ortak Esc kuralı (§10.3 kural 7) her modal türünde doğrulanır**: rapor/zafer kartı Esc = Devam, ertelenebilir lütuf Esc = Ertele, zorunlu lütuf / E2 / E4'te Esc etkisiz, hedef seçim modunda Esc iptal; girdi koruması süresince Esc/Enter düşer |
 | A-5 | HUD'da yanıp sönme yok (>3 Hz); renk vurgusu 2 kare ve Hareketi Azalt'ta kalıcı |
 | A-6 | Tüm kontrast çiftleri `ui_palette_contrast_test` ile ≥ 4.5:1 (metin) / ≥ 3:1 (grafik) |
-| A-7 | **K4:** Yalnız klavyeyle bir bölge seçilebilir (Tab/ok ile odak, `ui_accept` seçer); bilgi paneline (D3 satırı, Ordu Topla) ve hedef seçim moduna klavyeyle erişilir; fare hiç kullanılmadan bir tur oynanabilir. Uygulama: **C-47 görevi** |
+| A-7 | **K4:** Yalnız klavyeyle bir bölge seçilebilir (Tab/ok ile odak, `ui_accept` seçer); bilgi paneline (D3 satırı, Ordu Topla) ve hedef seçim moduna klavyeyle erişilir; fare hiç kullanılmadan bir tur oynanabilir. Uygulama: **C-75** (`RegionFocusTarget`, `RegionFocusRules`, Tab: Tur Bitir → bölgeler okuma sırası; kanıt `production/qa/evidence/c75-keyboard-turn.md`) |
 
 **Davranış**
 

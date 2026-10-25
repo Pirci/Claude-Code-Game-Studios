@@ -26,6 +26,7 @@ var _corruption_value: Label
 var _hold_row: HBoxContainer
 var _hold_value: Label
 var _send_button: Button
+var _pick_hint_label: Label
 var _recruit_box: VBoxContainer
 var _recruit_minus: Button
 var _recruit_count_label: Label
@@ -88,8 +89,18 @@ func _ready() -> void:
 	_send_button.name = "SendArmyButton"
 	_send_button.theme_type_variation = &"PrimaryButton"  # birincil aksiyon (art bible §7)
 	_send_button.text = tr("SEND_ARMY")
+	# Hedef seçim modunda basılı kalır (hud §5.6, A5): toggle görünümü, durum sunucudan gelir.
+	_send_button.toggle_mode = true
 	_send_button.pressed.connect(_on_send_pressed)
 	vbox.add_child(_send_button)
+	_pick_hint_label = Label.new()
+	_pick_hint_label.name = "PickTargetHint"
+	_pick_hint_label.text = tr("PICK_TARGET_HINT")
+	_pick_hint_label.theme_type_variation = &"SecondaryLabel"
+	_pick_hint_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_pick_hint_label.custom_minimum_size = Vector2(120, 0)
+	_pick_hint_label.hide()
+	vbox.add_child(_pick_hint_label)
 
 	_build_recruit_section(vbox)
 
@@ -172,6 +183,31 @@ func show_reinforcement(per_turn: int) -> void:
 	_reinforcement_row.show()
 
 
+## Hedef seçim modu (A5): [Ordu Gönder] basılı + "Hedef bölgeyi seç" satırı; kapanınca normal.
+func set_awaiting_target(awaiting: bool) -> void:
+	_send_button.set_pressed_no_signal(awaiting and _send_button.visible)
+	_pick_hint_label.visible = awaiting and _send_button.visible
+
+
+func is_awaiting_target() -> bool:
+	return _pick_hint_label.visible
+
+
+func get_send_button() -> Button:
+	return _send_button
+
+
+## Klavyeyle bölge seçilince odağın gideceği ilk etkin düğme (hud §10.3 kural 5); yoksa null.
+func get_first_focus() -> Control:
+	if not visible:
+		return null
+	for node: Node in find_children("*", "BaseButton", true, false):
+		var button: BaseButton = node as BaseButton
+		if button.is_visible_in_tree() and not button.disabled and button.focus_mode != Control.FOCUS_NONE:
+			return button
+	return null
+
+
 ## Klavye odak zincirine bağlanacak en alttaki kontrol (Ordu Topla onayı, yoksa Ordu
 ## Gönder) — görünür değilse null. Panel kardeşlerini bilmez; zinciri ebeveyn kurar.
 func get_focus_target() -> Control:
@@ -185,6 +221,7 @@ func get_focus_target() -> Control:
 
 
 func hide_panel() -> void:
+	set_awaiting_target(false)
 	_region_id = &""
 	_shown_region_id = &""
 	hide()
