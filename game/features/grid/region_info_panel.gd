@@ -36,6 +36,7 @@ var _recruit_cost_label: Label
 var _recruit_cap_label: Label
 var _recruit_hint_label: Label
 var _reinforcement_row: HBoxContainer
+var _strike_label: Label
 var _reinforcement_value: Label
 var _recruit_count: int = 1
 var _recruit_max: int = 0
@@ -104,6 +105,15 @@ func _ready() -> void:
 
 	_build_recruit_section(vbox)
 
+	# Düşmana komşu oyuncu bölgesi: Kağan vuruş eşiği (hud §5.3, D3) — kural bilgisi, kırmızı değil.
+	_strike_label = Label.new()
+	_strike_label.name = "StrikeThresholdLabel"
+	_strike_label.theme_type_variation = &"SecondaryLabel"
+	_strike_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_strike_label.custom_minimum_size = Vector2(120, 0)
+	_strike_label.hide()
+	vbox.add_child(_strike_label)
+
 	# Düşman bölgesi: tur başına takviye bilgisi (resource-system §10).
 	_reinforcement_row = _row(vbox)
 	_reinforcement_row.name = "ReinforcementRow"
@@ -156,6 +166,7 @@ func show_region(
 	_shown_region_id = data.region_id
 	_recruit_box.hide()
 	_reinforcement_row.hide()
+	_strike_label.hide()
 	show()
 
 
@@ -175,6 +186,12 @@ func show_recruit(used: int, cap: int, max_count: int, cost: int, missing_gold: 
 		_recruit_hint_label.text = tr("RECRUIT_NOT_ENOUGH_GOLD") % NumberFormatter.format_int(missing_gold)
 	_recruit_box.show()
 	_update_recruit_selector()
+
+
+## Kağan vuruş eşiği satırı (hud §5.3): [param min_force] = `StrikeThreshold.min_force` (çağıranda).
+func show_strike_threshold(min_force: int) -> void:
+	_strike_label.text = tr("ENEMY_STRIKE_THRESHOLD") % NumberFormatter.ltr(NumberFormatter.format_int(min_force))
+	_strike_label.show()
 
 
 ## Düşman bölgesinin tur sonu takviyesi (F6) — bilgi satırı.

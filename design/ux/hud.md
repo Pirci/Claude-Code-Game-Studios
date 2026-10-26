@@ -394,7 +394,7 @@ Boyutlar tahmindir; 12 px font (Arapça 16 px) satır ≈ 14 px (Arapça ≈ 20 
 
 | # | Kriter |
 |---|---|
-| L1 | 11 dilin tümünde (özellikle de, ru, ar) üst bar 2 satırda ve ≤ 40 px kalır; taşma yok; yalnız Bölüm adı ve Hedef `…` ile kısalır; Altın/Ruh/Tur/Gölge `p / eşik`/Yayılım **kısalmaz** |
+| L1 *(C-88: `_fit_objective_row` — Hedef sonra İlerleme `…`; en/de/ru/ar en kötü durum ve Prolog 6 dil 38 px; de/ar/fr/es/pt `SPREAD_COUNTDOWN` kısa biçim, Prolog'da Arapça in sayısı kaybolmasın diye)* | 11 dilin tümünde (özellikle de, ru, ar) üst bar 2 satırda ve ≤ 40 px kalır; taşma yok; yalnız Bölüm adı ve Hedef `…` ile kısalır; Altın/Ruh/Tur/Gölge `p / eşik`/Yayılım **kısalmaz** |
 | L2 | Bilgi paneli en kötü durumda (oyuncu, bozuk, tavan, D3 satırı) ≤ **285 px** (360 − 27 − 4 − (40 + 4)); üst barla çakışmaz; de/ru/ar kontrol edilir |
 | L3 | Yayılım segmenti ve Odak tehlikede aynı segmentte; ikisi birden görünmez |
 | L4 | Arapçada `Yayılım: N`, `p / eşik`, `(+Y)` rakam ve işaret sırası doğru (c69 örneği); native okur onayı (ADR-0009) |

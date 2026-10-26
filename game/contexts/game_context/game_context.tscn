@@ -76,6 +76,7 @@ text_overrun_behavior = 3
 [node name="ProgressLabel" type="Label" parent="TopBarPanel/TopBarRows/ObjectiveBar"]
 unique_name_in_owner = true
 layout_mode = 2
+text_overrun_behavior = 3
 
 [node name="ShadowLabel" type="Label" parent="TopBarPanel/TopBarRows/ObjectiveBar"]
 unique_name_in_owner = true

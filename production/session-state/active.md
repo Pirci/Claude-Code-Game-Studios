@@ -419,3 +419,7 @@
 ## Session Extract — C-87 (2026-10-26)
 - features/ai/strike_threshold.gd; EnemyAIController.strike_allowed/profile(); ErlikSpreadController.effective_interval/turns_until_spread; MapState.enemy_region_ids_initial; HudModel M2 alanları + Warning; HudPresenter._fill_m2/warning_for.
 - tests/unit/ui/hud_presenter_m2_test.gd. Testler 470. NEXT: C-88 (görünümler + 11 dil key).
+
+## Session Extract — C-88 (2026-10-26)
+- GameContext: _render_spread/_build_spread_segment (SpreadIcon/SpreadLabel), _fit_objective_row, _show_strike_threshold, _enemy_ai; takviye satırı süzgeci. RegionInfoPanel.show_strike_threshold. ProgressLabel overrun. 5 key.
+- tests/unit/ui/info_panel_rows_test.gd. Testler 475. Prolog üst çubuğunda artık yayılım sayacı var (demo görünümü değişti). NEXT: C-89.

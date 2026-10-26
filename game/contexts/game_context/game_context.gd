@@ -32,6 +32,11 @@ const BOON_CATALOG: BoonCatalog = preload("res://features/bozkurt/data/boon_cata
 @onready var _objective_label: Label = %ObjectiveLabel
 @onready var _progress_label: Label = %ProgressLabel
 @onready var _shadow_label: Label = %ShadowLabel
+## Gölge hücresinin ikinci segmenti (hud §5.1–5.2, K1): "Yayılım: N tur" ya da ikonlu "Odak tehlikede".
+var _spread_icon: TextureRect = null
+var _spread_label: Label = null
+## Bölüm AI profili (Kağan vuruş eşiği satırı aynı oranı okur — hud §5.3).
+var _enemy_ai: EnemyAIController = null
 @onready var _end_turn_button: Button = %EndTurnButton
 @onready var _menu_button: Button = %MenuButton
 
@@ -129,6 +134,7 @@ func _setup_controllers() -> void:
 	var move_resolver: MoveResolver = MoveResolver.new()
 	var enemy_ai: EnemyAIController = EnemyAIController.new()
 	enemy_ai.bind_config(map_def.enemy_ai_profile)
+	_enemy_ai = enemy_ai
 	move_resolver.bind_services(_combat_resolver, _spirit_rules)
 	_spirit = SpiritController.new()
 	_spirit.bind_services(_game_state, _spirit_rules)
@@ -295,6 +301,71 @@ func _render_objective(model: HudModel) -> void:
 	_shadow_label.text = tr("ERLIK_SHADOW_VALUE") % NumberFormatter.fraction(model.erlik_power, model.erlik_threshold)
 	_shadow_label.add_theme_color_override(&"font_color", RegionInfoPanel.COLOR_LOSS if model.erlik_warning \
 		else RegionInfoPanel.COLOR_ERLIK_INFO)
+	if model.enemy_counter_visible:
+		parts.append(tr("PROGRESS_ENEMY_REGIONS") % NumberFormatter.fraction(model.enemy_regions_taken, model.enemy_regions_initial))
+		_progress_label.text = "  ".join(parts)
+	_render_spread(model, ongoing)
+	_fit_objective_row()
+
+
+## L1 / K1 sığdırma sırası: satır taşarsa önce Hedef (`…`), sonra İlerleme (`…`) kısalır; Gölge `p / eşik`
+## ve Yayılım segmenti kısalmaz. İlerleme etiketi kendi doğal genişliğini, sığmazsa kalan yeri alır.
+func _fit_objective_row() -> void:
+	var bar: HBoxContainer = _shadow_label.get_parent() as HBoxContainer
+	var panel_margin: float = _top_bar.get_theme_stylebox(&"panel").get_minimum_size().x
+	var row_width: float = get_viewport_rect().size.x - panel_margin
+	var separation: float = bar.get_theme_constant(&"separation")
+	var fixed: float = 0.0
+	var visible_count: int = 0
+	for child: Node in bar.get_children():
+		var control: Control = child as Control
+		if control == null or not control.visible:
+			continue
+		visible_count += 1
+		if control != _objective_label and control != _progress_label:
+			fixed += control.get_combined_minimum_size().x
+	fixed += separation * maxi(0, visible_count - 1)
+	var font: Font = _progress_label.get_theme_font(&"font")
+	var natural: float = font.get_string_size(_progress_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1,
+		_progress_label.get_theme_font_size(&"font_size")).x if _progress_label.visible else 0.0
+	var room: float = maxf(0.0, row_width - fixed)
+	_progress_label.custom_minimum_size.x = minf(natural, room)
+
+
+## Gölge hücresinin 2. segmenti (L3: Yayılım ve Odak tehlikede aynı yerde, ikisi birden yok). Kırmızı yalnız
+## bu segmentin uyarısı seçiliyse (H8: tek kırmızı uyarı); renk tek ipucu değil — metin değişir, odakta ikon.
+func _render_spread(model: HudModel, ongoing: bool) -> void:
+	if _spread_label == null:
+		_build_spread_segment()
+	var visible_segment: bool = model.spread_visible and ongoing
+	_spread_label.visible = visible_segment
+	_spread_icon.visible = visible_segment and model.red_warning == HudModel.Warning.FOCUS_AT_RISK
+	if not visible_segment:
+		return
+	if model.focus_at_risk:
+		_spread_label.text = tr("FOCUS_AT_RISK") % tr(String(_region_name_key(model.spread_target_id)))
+	elif model.spread_turns_left == 0:
+		_spread_label.text = tr("SPREAD_THIS_TURN_END")
+	else:
+		_spread_label.text = tr("SPREAD_COUNTDOWN") % NumberFormatter.ltr(NumberFormatter.format_int(model.spread_turns_left))
+	var red: bool = model.red_warning == HudModel.Warning.FOCUS_AT_RISK or model.red_warning == HudModel.Warning.SPREAD_NOW
+	_spread_label.add_theme_color_override(&"font_color", RegionInfoPanel.COLOR_LOSS if red \
+		else RegionInfoPanel.COLOR_ERLIK_INFO)
+
+
+## Segment Gölge etiketinin hemen ardına eklenir (aynı hücre; R2'ye yeni satır açılmaz).
+func _build_spread_segment() -> void:
+	var bar: Node = _shadow_label.get_parent()
+	_spread_icon = TextureRect.new()
+	_spread_icon.name = "SpreadIcon"
+	_spread_icon.texture = TurnSummaryReport.ALERT_ICON
+	_spread_icon.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	_spread_icon.hide()
+	bar.add_child(_spread_icon)
+	_spread_label = Label.new()
+	_spread_label.name = "SpreadLabel"
+	_spread_label.hide()
+	bar.add_child(_spread_label)
 
 
 ## Her işlenmiş değişiklikten sonra tam yenileme (ADR-0011 karar 2): harita, HUD ve seçili
@@ -442,9 +513,33 @@ func _show_region_info(data: RegionData) -> void:
 					cost,
 					maxi(0, cost - _game_state.gold),
 				)
+			_show_strike_threshold(data)
 		RegionData.Owner.ENEMY:
-			if _game_state.map_state.enemy_reinforcement_per_turn > 0:
+			# Takviye satırı yalnız takviye alan bölgede (hud §5.4, H6; boş liste = tüm düşman bölgeleri).
+			var listed: Array[StringName] = _game_state.map_state.enemy_reinforcement_region_ids
+			if _game_state.map_state.enemy_reinforcement_per_turn > 0 \
+					and (listed.is_empty() or data.region_id in listed):
 				_info_panel.show_reinforcement(_game_state.map_state.enemy_reinforcement_per_turn)
+
+
+## Kağan vuruş eşiği (hud §5.3, H5): yalnız düşmana komşu oyuncu bölgesi, R1 açıkken, 1. turdan itibaren
+## her tur, oyun sürerken. `P_eff` lütuflar dahil; eşik AI kararıyla aynı fonksiyon ([StrikeThreshold]).
+func _show_strike_threshold(data: RegionData) -> void:
+	if _enemy_ai == null or not _enemy_ai.profile().strike_enabled:
+		return
+	if _game_state.map_state.game_result != MapState.GameResult.ONGOING:
+		return
+	var borders_enemy: bool = false
+	for adj_id: StringName in data.adjacent_regions:
+		var adj: RegionData = _game_state.map_state.get_region(adj_id)
+		if adj != null and adj.owner == RegionData.Owner.ENEMY:
+			borders_enemy = true
+			break
+	if not borders_enemy:
+		return
+	var profile: EnemyAIProfile = _enemy_ai.profile()
+	var p_eff: int = EnemyAIController.effective_defense(data.army_count, _modifiers.get_modifiers())
+	_info_panel.show_strike_threshold(StrikeThreshold.min_force(p_eff, profile.strike_ratio_num, profile.strike_ratio_den))
 
 
 # --- Öğretici ipuçları (design/ux/prolog-tutorial.md) ---
