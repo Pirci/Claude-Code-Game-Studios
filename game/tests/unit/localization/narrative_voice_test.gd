@@ -17,6 +17,9 @@ const SCENE_BOUND_WORDS: Dictionary = {
 	"tr": ["ata yurdu", "bozkır", "orman"],
 }
 
+## Ad sözlüğü (narrative-voice §6.7): Cürcet'in ÇJK karşılıkları.
+const JURCHEN_NAMES: Dictionary = {"zh": "女真", "ja": "女真", "ko": "여진"}
+
 
 ## Anahtar → { dil → metin } (CSV içerik verisi).
 func _rows() -> Dictionary:
@@ -81,3 +84,25 @@ func test_defeat_reason_erlik_is_scene_independent_in_every_locale() -> void:
 		for word: String in SCENE_BOUND_WORDS[locale]:
 			assert_bool(_has_word(texts[locale] as String, word)).override_failure_message(
 				"%s: %s" % [locale, word]).is_false()
+
+
+# Ad sözlüğü (narrative-voice §6.7, C-91): "Cürcet" yalnız Türkçede; tr metni Cürcet diyorsa zh/ja 女真, ko 여진.
+func test_narrative_voice_jurchen_glossary() -> void:
+	var rows: Dictionary = _rows()
+	var problems: Array[String] = []
+	var checked: int = 0
+	for key: String in rows:
+		var texts: Dictionary = rows[key]
+		if not (texts["tr"] as String).contains("Cürcet"):
+			continue
+		checked += 1
+		for locale: String in texts:
+			if locale != "tr" and (texts[locale] as String).contains("Cürcet"):
+				problems.append("%s/%s: Cürcet" % [key, locale])
+		for locale: String in JURCHEN_NAMES:
+			if not (texts[locale] as String).contains(JURCHEN_NAMES[locale]):
+				problems.append("%s/%s: %s yok" % [key, locale, JURCHEN_NAMES[locale]])
+		if not (texts["en"] as String).contains("Jurchen"):
+			problems.append("%s/en: Jurchen yok" % key)
+	assert_int(checked).is_greater_equal(8)
+	assert_array(problems).override_failure_message("\n".join(problems)).is_empty()

@@ -432,3 +432,8 @@
 - campaign.tres: perde1_dogu sahnesi (K = 2), Prolog teaser CHAPTER_1_TEASER; translations.csv 27 yeni anahtar (en+tr; 9 dil C-91).
 - Testler: campaign_content_test (+4), prolog_playthrough_test ve scene_flow_integration_test K = 2'ye uyarlandı (Prolog sonrası CHAPTER_SELECT). Testler 492.
 - Bulgular C-91 satırına not edildi (Royal Camp kırpılması, CAMPAIGN_END_DEMO_1, HINT/HUNT_READY bağlanmamış). NEXT: C-91.
+
+## Session Extract — C-91 (2026-10-26)
+- translations.csv: 27 Perde 1 key + OBJECTIVE_FOCI_CH2 + CAMPAIGN_END_DEMO_1 11 dilde; en/de "Jurchen"; 28 bölge adı kısaltıldı (Prolog es/pt/ru/ar dahil).
+- WinCondition.foci_label_key → HudModel/HudPresenter/GameContext; chapter_2_map.tres + build_perde1_map.gd OBJECTIVE_FOCI_CH2.
+- Yeni testler: tests/unit/localization/narrative_page_fit_test.gd (L6), region_name_fit_test.gd; narrative_voice Jurchen sözlük; campaign_content 11 dil; hud odak etiketi. Testler 498. Bulgu C-101 (üst çubuk ru/ar/de kırpma). NEXT: C-92.

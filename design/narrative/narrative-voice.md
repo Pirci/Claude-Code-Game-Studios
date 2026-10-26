@@ -150,8 +150,10 @@ Tur sonu = **gece** (`TURN_SUMMARY_HEADING` "Gece Çökerken"), lütuf sunumu = 
    Lütuf — en blessing (C-39 aynı terimi kullanmalı). Kağan — zh 可汗, ar خاقان, ru каган.
 6. **Arapça:** ünlem yok; hareke yalnız gerekiyorsa; RTL'yi motor çözer (ADR-0009 §6).
 7. **Cürcet / Jurchen (C-43, 2026-10-20 — [`perde1-dogu-curcet.md`](../levels/perde1-dogu-curcet.md) §2):**
-   Ad sözlüğüne girer: Cürcet (tr) / Jurchen (en); zh/ja 女真, ko 여진 (diğer dillerde çevriyazı; Arapça adı
-   Perde 1 anahtarlarında belirlenir). Çeviriler tarihsel Jurchen'i karşılar; **kaynak nüshası doğrulanmamıştır**,
+   Ad sözlüğüne girer: Cürcet (tr) / Jurchen (en, de, fr, pt; es yurchen); zh/ja 女真, ko 여진, ru чжурчжэни,
+   ar الجورتشن *(C-91)*. Kanglı: zh 康里, ja カンリ, ko 캉리, ru канглы, ar كانقلي; Urum: zh 乌鲁姆, ja ウルム, ko 우룸,
+   ru Урум, ar أوروم; körmös Latin dillerde körmös, ru кёрмёс, ÇJK/ar "kötü ruh" (邪灵 / 悪霊 / 악령 / الأرواح الشريرة).
+   Bölge adları 96 px harita etiketine sığar (`region_name_fit_test`); sığmayan çeviri kısaltılır. Çeviriler tarihsel Jurchen'i karşılar; **kaynak nüshası doğrulanmamıştır**,
    destandan doğrudan alıntı yapılmaz ve "tarihsel Cürcet" iddiası kurulmaz. Cürcet Kağan'ın adı da bu
    adlandırmaya bağlıdır (yukarıdaki "Yazılmayanlar" notu).
 8. **Perde 1 dil kuralları (C-43):** arındırma **"şifa"** olarak anlatılır, "av" olarak değil (bu, §5.2'nin

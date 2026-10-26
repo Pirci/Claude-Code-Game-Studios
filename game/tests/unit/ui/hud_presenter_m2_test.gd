@@ -168,3 +168,11 @@ func test_initial_enemy_regions_come_from_chapter_data() -> void:
 		region.starting_army = 2
 		definition.regions.append(region)
 	assert_array(definition.create_map_state().enemy_region_ids_initial).contains_exactly_in_any_order([&"otag", &"oba"])
+
+
+# C-91: odak sayacı etiketi kazanma koşulundan; varsayılan Prolog anahtarı.
+func test_hud_presenter_foci_label_from_win_condition() -> void:
+	var win: WinCondition = _win([&"koru"] as Array[StringName])
+	assert_str(String(_build(_state(1, 0), win).foci_label_key)).is_equal("OBJECTIVE_FOCI")
+	win.foci_label_key = &"OBJECTIVE_FOCI_CH2"
+	assert_str(String(_build(_state(1, 0), win).foci_label_key)).is_equal("OBJECTIVE_FOCI_CH2")

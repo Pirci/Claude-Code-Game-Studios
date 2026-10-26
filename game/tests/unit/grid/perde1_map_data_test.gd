@@ -63,6 +63,7 @@ func test_perde1_chapter_settings() -> void:
 	var w: WinCondition = d.win_condition
 	assert_array([w.required_neutral_conquests, w.must_defeat_all_enemies, w.erlik_loss_threshold]).is_equal([2, true, 9])
 	assert_array(w.erlik_foci).is_equal([&"curuk_koru"])
+	assert_str(String(w.foci_label_key)).is_equal("OBJECTIVE_FOCI_CH2")  # C-91: "koru şifası", Prolog "in" değil
 	assert_object(d.decor).is_not_null()
 
 

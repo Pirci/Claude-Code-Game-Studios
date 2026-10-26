@@ -124,6 +124,7 @@ func _win() -> WinCondition:
 	win.erlik_foci = [&"curuk_koru"] as Array[StringName]
 	win.erlik_loss_threshold = 9
 	win.description_key = &"WIN_CONDITION_CH2"
+	win.foci_label_key = &"OBJECTIVE_FOCI_CH2"
 	return win
 
 

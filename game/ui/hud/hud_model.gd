@@ -14,6 +14,8 @@ var game_result: MapState.GameResult = MapState.GameResult.ONGOING
 var boon_offer_available: bool = false
 ## Kalıcı "Hedef" satırı (scene-flow §10): kazanma koşulunun metni ve ilerlemesi.
 var objective_key: StringName = &""
+## Odak sayacı etiketi (`WinCondition.foci_label_key`).
+var foci_label_key: StringName = &"OBJECTIVE_FOCI"
 var neutral_conquered: int = 0
 var neutral_required: int = 0
 var foci_cleansed: int = 0

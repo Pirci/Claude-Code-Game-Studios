@@ -14,6 +14,8 @@ extends Resource
 ## Erlik kaybı eşiği: toplam bozulma bu değere ulaşınca tur sonunda kayıp (Prolog 9). 0 = kapalı.
 @export var erlik_loss_threshold: int = 0
 @export var description_key: StringName = &""
+## Üst çubuk odak sayacı etiketi (`%s` = kesir); sahne dili (Prolog "in", Perde 1 "koru şifası").
+@export var foci_label_key: StringName = &"OBJECTIVE_FOCI"
 
 
 func is_met(map_state: MapState) -> bool:

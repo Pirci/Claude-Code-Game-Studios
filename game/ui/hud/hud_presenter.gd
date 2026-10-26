@@ -60,6 +60,7 @@ static func warning_for(model: HudModel) -> HudModel.Warning:
 ## Hedef ilerlemesi ve Erlik'in Gölgesi — kazanma koşulunun kendi saf fonksiyonlarından.
 static func _fill_objective(model: HudModel, map_state: MapState, win: WinCondition) -> void:
 	model.objective_key = win.description_key
+	model.foci_label_key = win.foci_label_key
 	model.neutral_conquered = win.conquered_neutral_count(map_state)
 	model.neutral_required = win.required_neutral_conquests
 	model.foci_total = win.erlik_foci.size()

@@ -294,7 +294,7 @@ func _render_objective(model: HudModel) -> void:
 	if model.neutral_required > 0:
 		parts.append(tr("OBJECTIVE_TRIBES") % NumberFormatter.fraction(model.neutral_conquered, model.neutral_required))
 	if model.foci_total > 0:
-		parts.append(tr("OBJECTIVE_FOCI") % NumberFormatter.fraction(model.foci_cleansed, model.foci_total))
+		parts.append(tr(String(model.foci_label_key)) % NumberFormatter.fraction(model.foci_cleansed, model.foci_total))
 	_progress_label.text = "  ".join(parts)
 	_progress_label.visible = not warning  # uyarı tam okunsun diye aynı satırda yer açılır
 	_shadow_label.visible = model.erlik_threshold > 0

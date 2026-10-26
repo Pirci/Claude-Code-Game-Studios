@@ -149,3 +149,35 @@ func test_perde1_map_keys_have_english() -> void:
 		keys.append(region.display_name_key)
 	for key: StringName in keys:
 		assert_str(String(english.get(String(key), ""))).override_failure_message(String(key)).is_not_empty()
+
+
+# C-91: Perde 1'in sahne + harita anahtarları ve kampanya sonu 11 dilde dolu (boş hücre `en`'e düşerdi).
+func test_perde1_keys_translated_in_all_locales() -> void:
+	var file: FileAccess = FileAccess.open(TRANSLATIONS, FileAccess.READ)
+	var header: PackedStringArray = file.get_csv_line()
+	var rows: Dictionary = {}
+	while not file.eof_reached():
+		var row: PackedStringArray = file.get_csv_line()
+		if row.size() > 1:
+			rows[row[0]] = row
+	var campaign: CampaignDefinition = _campaign()
+	var perde1: SceneDefinition = campaign.scene(2)
+	var definition: ChapterMapDefinition = perde1.load_map_definition()
+	var keys: Array[StringName] = [perde1.title_key, perde1.kok_bori_line_key, perde1.teaser_key,
+		perde1.focus_heading_key, perde1.focus_success_key, perde1.focus_failed_key, campaign.scene(1).teaser_key,
+		definition.win_condition.description_key, definition.win_condition.foci_label_key,
+		&"CHAPTER_2_HUNT_HEADING", &"CHAPTER_2_HUNT_READY", &"CHAPTER_2_HUNT_NOT_READY", &"HINT_ENEMY_KING", &"HINT_CAPITAL"]
+	for page: NarrativePage in _all_pages(perde1) + campaign.end_pages:
+		keys.append(page.text_key)
+		if page.title_key != &"":
+			keys.append(page.title_key)
+	for region: RegionDefinition in definition.regions:
+		keys.append(region.display_name_key)
+	var problems: Array[String] = []
+	for key: StringName in keys:
+		var row: PackedStringArray = rows.get(String(key), PackedStringArray())
+		for i: int in range(1, header.size()):
+			if row.size() <= i or row[i].is_empty():
+				problems.append("%s/%s" % [key, header[i]])
+	assert_int(keys.size()).is_greater_equal(30)
+	assert_array(problems).override_failure_message("\n".join(problems)).is_empty()

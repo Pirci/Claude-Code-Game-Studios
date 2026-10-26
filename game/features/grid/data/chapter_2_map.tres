@@ -385,6 +385,7 @@ required_neutral_conquests = 2
 erlik_foci = Array[StringName]([&"curuk_koru"])
 erlik_loss_threshold = 9
 description_key = &"WIN_CONDITION_CH2"
+foci_label_key = &"OBJECTIVE_FOCI_CH2"
 
 [resource]
 script = ExtResource("13_gc0bi")
