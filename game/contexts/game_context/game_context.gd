@@ -489,7 +489,8 @@ func _on_controller_region_selected(region_id: StringName) -> void:
 		_audio.play_sfx(AudioController.SFX_REGION_SELECT)
 	_campaign_map.set_selected(region_id)
 	_refresh_views()
-	_offer_hint(TutorialRules.hint_for_selection(_game_state.map_state.get_region(region_id)))
+	var map_state: MapState = _game_state.map_state
+	_offer_hint(TutorialRules.hint_for_selection(map_state.get_region(region_id), map_state.enemy_reinforcement_region_ids))
 
 
 ## Bilgi paneline bölge + Erlik bilgisi (direnç, seviye sınırı, cezalı gelir) — değerler
@@ -545,13 +546,15 @@ func _show_strike_threshold(data: RegionData) -> void:
 # --- Öğretici ipuçları (design/ux/prolog-tutorial.md) ---
 
 ## 1. turda altın yetiyorsa "önce üret" — modal açıkken bekler, kapanınca (`drained`) gelir.
-## Bu gece yayılım olduysa yayılım ipucu önce (Q9: tur özeti kapanana dek ertelenir).
+## Bu gece yayılım olduysa yayılım ipucu önce (Q9: tur özeti kapanana dek ertelenir). Perde 1'in
+## ilk turunda düşman kağanı ipucu üretimden önce; balon kapanınca sıradaki tur başı ipucu gelir.
 func _check_start_hint() -> void:
 	if _game_state.map_state == null or _modal_queue.is_open() \
 			or _game_state.map_state.game_result != MapState.GameResult.ONGOING:
 		return
 	if _night_spread != null:
 		_offer_hint(TutorialRules.HINT_SPREAD)
+	_offer_hint(TutorialRules.hint_enemy_king(_game_state.map_state))
 	_offer_hint(TutorialRules.hint_at_turn_start(
 		_game_state.map_state.current_turn, _game_state.gold, _resource_controller.recruit_cost()))
 
@@ -594,6 +597,7 @@ func _on_hint_dismissed(hint_id: StringName) -> void:
 	remove_child(_hint_bubble)
 	_hint_bubble.queue_free()
 	_hint_bubble = null
+	_check_start_hint.call_deferred()  # aynı tur başında bekleyen ipucu (ör. düşman kağanı → üret)
 
 
 ## Ordu Topla aksiyon harcamaz (resource R4); sonuç panel ve HUD yenilenince görünür.

@@ -437,3 +437,7 @@
 - translations.csv: 27 Perde 1 key + OBJECTIVE_FOCI_CH2 + CAMPAIGN_END_DEMO_1 11 dilde; en/de "Jurchen"; 28 bölge adı kısaltıldı (Prolog es/pt/ru/ar dahil).
 - WinCondition.foci_label_key → HudModel/HudPresenter/GameContext; chapter_2_map.tres + build_perde1_map.gd OBJECTIVE_FOCI_CH2.
 - Yeni testler: tests/unit/localization/narrative_page_fit_test.gd (L6), region_name_fit_test.gd; narrative_voice Jurchen sözlük; campaign_content 11 dil; hud odak etiketi. Testler 498. Bulgu C-101 (üst çubuk ru/ar/de kırpma). NEXT: C-92.
+
+## Session Extract — C-92 (2026-10-26)
+- TutorialRules: HINT_ENEMY_KING, HINT_CAPITAL, hint_enemy_king(map_state), hint_for_selection(region, capital_ids). GameContext: _check_start_hint düşman kağanı; _on_hint_dismissed → _check_start_hint zinciri.
+- tests/integration/campaign/perde1_hints_test.gd (5), tutorial_test (+2). Testler 505. Bulgu C-102: hamle önizleme UI yok. NEXT: C-93.

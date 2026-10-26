@@ -27,6 +27,36 @@ func test_selection_hint_priority_corrupted_then_neutral_then_send_army() -> voi
 	assert_str(TutorialRules.hint_for_selection(null)).is_equal("")
 
 
+# C-92: takviye alan düşman başkenti → başkent ipucu; listede olmayan düşman ya da boş liste → yok.
+func test_selection_hint_capital_only_for_listed_enemy_region() -> void:
+	var capital: RegionData = _region(RegionData.Owner.ENEMY, 4)
+	capital.region_id = &"otag"
+	var capitals: Array[StringName] = [&"otag"]
+	assert_str(TutorialRules.hint_for_selection(capital, capitals)).is_equal("capital")
+	assert_str(TutorialRules.hint_for_selection(capital)).is_equal("")
+	var village: RegionData = _region(RegionData.Owner.ENEMY, 4)
+	village.region_id = &"oba"
+	assert_str(TutorialRules.hint_for_selection(village, capitals)).is_equal("")
+	capital.owner = RegionData.Owner.PLAYER  # alındıktan sonra başkent ipucu yok
+	assert_str(TutorialRules.hint_for_selection(capital, capitals)).is_equal("send_army")
+
+
+# C-92: düşman kağanı ipucu yalnız 1. turda ve haritada düşman varken.
+func test_enemy_king_hint_only_turn_one_with_enemies() -> void:
+	var m: MapState = MapState.new()
+	var enemy: RegionData = _region(RegionData.Owner.ENEMY, 2)
+	enemy.region_id = &"e"
+	m.regions[enemy.region_id] = enemy
+	m.current_turn = 1
+	assert_str(TutorialRules.hint_enemy_king(m)).is_equal("enemy_king")
+	m.current_turn = 2
+	assert_str(TutorialRules.hint_enemy_king(m)).is_equal("")
+	m.current_turn = 1
+	enemy.owner = RegionData.Owner.NEUTRAL
+	assert_str(TutorialRules.hint_enemy_king(m)).is_equal("")
+	assert_str(TutorialRules.hint_enemy_king(null)).is_equal("")
+
+
 func test_every_hint_has_english_text_and_button_keys() -> void:
 	var english: Dictionary = {}
 	var file: FileAccess = FileAccess.open(TRANSLATIONS, FileAccess.READ)
