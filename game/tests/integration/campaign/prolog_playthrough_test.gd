@@ -2,7 +2,7 @@ extends GdUnitTestSuite
 ## Prolog uçtan uca oynanış (C-42, M1 kapanışı): yalnızca oyuncunun kullandığı arayüz yollarıyla —
 ## menü düğmeleri, bölge tıklaması, Ordu Topla seçicisi, Ordu Gönder, Tur Bitir, modallar.
 ## Yeni Sefer → anlatı → hedef → A çizgisi (T5 zafer) → sonuç kartı → zorunlu lütuf → çıkış →
-## kampanya sonu → menü → Devam Et → tamamlanmış sefer haritası.
+## sefer haritası (Perde 1 açık, C-90) → menü → Devam Et → sefer haritası.
 
 
 const ROOT_SCENE: String = "res://contexts/root_context/root_context.tscn"
@@ -118,13 +118,23 @@ func test_prolog_plays_from_new_campaign_to_kagan_and_back_to_menu() -> void:
 	assert_int(_root_ctx.flow_state()).is_equal(S.OUTRO_NARRATIVE)
 	_press("ContinueButton")
 	_press("ContinueButton")
-	assert_int(_root_ctx.flow_state()).is_equal(S.CAMPAIGN_END)
-	_press("SkipButton")
+	# C-90 (K = 2): Prolog son sahne değil → T19 sefer haritası; Perde 1 AVAILABLE, Prolog COMPLETED.
+	assert_int(_root_ctx.flow_state()).is_equal(S.CHAPTER_SELECT)
+	_assert_perde1_available()
+	_press("MenuButton")
 	assert_int(_root_ctx.flow_state()).is_equal(S.MAIN_MENU)
 
-	# S3 kaydı: tamamlanmış Prolog; Devam Et salt-okunur sefer haritasını açar.
+	# S3 kaydı: tamamlanmış Prolog; Devam Et sefer haritasını açar.
 	_press("ContinueButton")
 	assert_int(_root_ctx.flow_state()).is_equal(S.CHAPTER_SELECT)
 	assert_array(_state().chapters_completed).is_equal([1])
 	assert_int(_state().boons.size()).is_equal(1)
-	assert_object(_root_ctx.find_child("CampaignCompleteBadge", true, false)).is_not_null()
+	_assert_perde1_available()
+
+
+func _assert_perde1_available() -> void:
+	var prolog_row: Node = _root_ctx.find_child("Chapter1", true, false)
+	var perde1_row: Node = _root_ctx.find_child("Chapter2", true, false)
+	assert_object(prolog_row.find_child("ReadButton", false, false)).is_not_null()
+	assert_object(perde1_row.find_child("StartButton", false, false)).is_not_null()
+	assert_object(_root_ctx.find_child("CampaignCompleteBadge", true, false)).is_null()

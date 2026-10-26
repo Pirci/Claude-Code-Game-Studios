@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="CampaignDefinition" load_steps=11 format=3]
+[gd_resource type="Resource" script_class="CampaignDefinition" load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://features/campaign/campaign_definition.gd" id="1_camp"]
 [ext_resource type="Script" path="res://features/campaign/scene_definition.gd" id="2_scene"]
@@ -31,6 +31,33 @@ illustration_path = "res://assets/art/illustrations/ill_prolog_kagan.png"
 text_key = &"CHAPTER_1_OUTRO_2"
 title_key = &"CHAPTER_1_KAGAN_TITLE"
 
+[sub_resource type="Resource" id="perde1_intro_1"]
+script = ExtResource("3_page")
+illustration_path = "res://assets/art/illustrations/ill_perde1_intro.png"
+text_key = &"CHAPTER_2_INTRO_1"
+title_key = &"CHAPTER_2_TITLE"
+
+[sub_resource type="Resource" id="perde1_intro_2"]
+script = ExtResource("3_page")
+illustration_path = "res://assets/art/illustrations/ill_perde1_mist.png"
+text_key = &"CHAPTER_2_INTRO_2"
+
+[sub_resource type="Resource" id="perde1_kokbori"]
+script = ExtResource("3_page")
+illustration_path = "res://assets/art/illustrations/ill_perde1_kokbori.png"
+text_key = &"CHAPTER_2_KOKBORI_1"
+
+[sub_resource type="Resource" id="perde1_outro_1"]
+script = ExtResource("3_page")
+illustration_path = "res://assets/art/illustrations/ill_perde1_forest_healed.png"
+text_key = &"CHAPTER_2_OUTRO_1"
+
+[sub_resource type="Resource" id="perde1_outro_2"]
+script = ExtResource("3_page")
+illustration_path = "res://assets/art/illustrations/ill_perde1_kangli.png"
+text_key = &"CHAPTER_2_OUTRO_2"
+title_key = &"CHAPTER_2_KANGLI_TITLE"
+
 [sub_resource type="Resource" id="demo_end_1"]
 script = ExtResource("3_page")
 illustration_path = "res://assets/art/illustrations/ill_prolog_kagan.png"
@@ -48,14 +75,32 @@ kok_bori_pages = Array[ExtResource("3_page")]([SubResource("prolog_genesis")])
 kok_bori_line_key = &"CHAPTER_1_KOKBORI_LINE"
 objective_region_ids = Array[StringName]([])
 outro_pages = Array[ExtResource("3_page")]([SubResource("prolog_outro_1"), SubResource("prolog_outro_2")])
-teaser_key = &""
+teaser_key = &"CHAPTER_1_TEASER"
 defeat_text_key = &""
 focus_heading_key = &"CHAPTER_1_SLAIN_HEADING"
 focus_success_key = &"CHAPTER_1_SLAIN_LINE"
 focus_failed_key = &"CHAPTER_1_HUNT_FAILED"
 boon_pool_ids = Array[StringName]([&"arinma_ustaligi", &"bereket", &"gok_kalkani"])
 
+[sub_resource type="Resource" id="perde1_dogu"]
+script = ExtResource("2_scene")
+chapter_id = 2
+title_key = &"CHAPTER_2_TITLE"
+map_path = "res://features/grid/data/chapter_2_map.tres"
+intro_pages = Array[ExtResource("3_page")]([SubResource("perde1_intro_1"), SubResource("perde1_intro_2")])
+kok_bori_pose = 0
+kok_bori_pages = Array[ExtResource("3_page")]([SubResource("perde1_kokbori")])
+kok_bori_line_key = &"CHAPTER_2_KOKBORI_LINE"
+objective_region_ids = Array[StringName]([&"curcet_otagi"])
+outro_pages = Array[ExtResource("3_page")]([SubResource("perde1_outro_1"), SubResource("perde1_outro_2")])
+teaser_key = &"CHAPTER_2_TEASER"
+defeat_text_key = &""
+focus_heading_key = &"CHAPTER_2_CLEANSED_HEADING"
+focus_success_key = &"CHAPTER_2_CLEANSED_LINE"
+focus_failed_key = &"CHAPTER_2_HUNT_FAILED"
+boon_pool_ids = Array[StringName]([])
+
 [resource]
 script = ExtResource("1_camp")
-scenes = Array[ExtResource("2_scene")]([SubResource("prolog")])
+scenes = Array[ExtResource("2_scene")]([SubResource("prolog"), SubResource("perde1_dogu")])
 end_pages = Array[ExtResource("3_page")]([SubResource("demo_end_1")])

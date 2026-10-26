@@ -89,7 +89,7 @@ func test_s2_written_only_when_objective_dismissed() -> void:
 	assert_int(entry.gold).is_equal(6)
 
 
-# AC10 + AC12: zafer → kart → zorunlu seçimler → S3 → çıkış; K=1 → kampanya sonu → menü.
+# AC10 + AC12: zafer → kart → zorunlu seçimler → S3 → çıkış → sefer haritası (K = 2) → menü.
 func test_victory_sequence_commits_after_last_pick() -> void:
 	var root_ctx: RootContext = _root()
 	_start_prolog(root_ctx)
@@ -107,12 +107,12 @@ func test_victory_sequence_commits_after_last_pick() -> void:
 	var completed: GameState = _saved(SaveController.CAMPAIGN_SLOT)
 	assert_object(completed.map_state).is_null()
 	assert_array(completed.chapters_completed).is_equal([1])
-	assert_int(completed.current_chapter).is_equal(1)
+	assert_int(completed.current_chapter).is_equal(2)
 	assert_int(completed.ruh).is_equal(10)
 	assert_int(completed.boons.size()).is_equal(1)
 	_press(root_ctx, "SkipButton")
-	assert_int(root_ctx.flow_state()).is_equal(S.CAMPAIGN_END)
-	_press(root_ctx, "SkipButton")
+	assert_int(root_ctx.flow_state()).is_equal(S.CHAPTER_SELECT)  # T19: K = 2, Prolog son sahne değil (C-90)
+	_press(root_ctx, "MenuButton")
 	assert_int(root_ctx.flow_state()).is_equal(S.MAIN_MENU)
 
 
@@ -161,7 +161,7 @@ func test_continue_routes_by_saved_map() -> void:
 	assert_object(_game(root_ctx)).is_not_null()
 
 	var done: GameState = GameState.new()
-	done.chapters_completed = [1] as Array[int]
+	done.chapters_completed = [1, 2] as Array[int]  # K = 2 (C-90): rozet için iki sahne de tamam
 	_store = MemorySaveStore.new()
 	_store.write(SaveController.CAMPAIGN_SLOT, SaveSerializer.to_text(done))
 	var second: RootContext = _root()

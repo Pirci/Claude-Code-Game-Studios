@@ -427,3 +427,8 @@
 ## Session Extract — C-89 (2026-10-26)
 - game/features/grid/data/chapter_2_map.tres (üretici tools/level-data/build_perde1_map.gd). tests/unit/grid/perde1_map_data_test.gd (8), map_decor_geometry_test.gd (5). Testler 488.
 - Bulgu C-91: OBJECTIVE_TRIBES/FOCI Prolog terimleri Perde 1'de. NEXT: C-90.
+
+## Session Extract — C-90 (2026-10-26)
+- campaign.tres: perde1_dogu sahnesi (K = 2), Prolog teaser CHAPTER_1_TEASER; translations.csv 27 yeni anahtar (en+tr; 9 dil C-91).
+- Testler: campaign_content_test (+4), prolog_playthrough_test ve scene_flow_integration_test K = 2'ye uyarlandı (Prolog sonrası CHAPTER_SELECT). Testler 492.
+- Bulgular C-91 satırına not edildi (Royal Camp kırpılması, CAMPAIGN_END_DEMO_1, HINT/HUNT_READY bağlanmamış). NEXT: C-91.
