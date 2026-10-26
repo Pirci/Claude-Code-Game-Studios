@@ -441,3 +441,8 @@
 ## Session Extract — C-92 (2026-10-26)
 - TutorialRules: HINT_ENEMY_KING, HINT_CAPITAL, hint_enemy_king(map_state), hint_for_selection(region, capital_ids). GameContext: _check_start_hint düşman kağanı; _on_hint_dismissed → _check_start_hint zinciri.
 - tests/integration/campaign/perde1_hints_test.gd (5), tutorial_test (+2). Testler 505. Bulgu C-102: hamle önizleme UI yok. NEXT: C-93.
+
+## Session Extract — C-93 (2026-10-26)
+- ChapterSelectContext: bind_services(..., newly_unlocked, reduce_motion, audio); _scene_node/_locked_button/_on_action_focused/_announce_unlock/is_unlock_glowing; SelectPanel, StatusLine, StateIcon, NameLabel, Teaser, NewMark, LockedButton. RootContext: OUTRO_NARRATIVE'dan gelişte unlocked = next_chapter.
+- NumberFormatter.isolate (FSI). İkonlar icon_chapter_{completed,available,available_glow,locked,new}.png.
+- tests/unit/campaign/chapter_select_nodes_test.gd (5). Testler 510. NEXT: C-94.

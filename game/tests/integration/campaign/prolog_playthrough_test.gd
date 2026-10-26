@@ -135,6 +135,6 @@ func test_prolog_plays_from_new_campaign_to_kagan_and_back_to_menu() -> void:
 func _assert_perde1_available() -> void:
 	var prolog_row: Node = _root_ctx.find_child("Chapter1", true, false)
 	var perde1_row: Node = _root_ctx.find_child("Chapter2", true, false)
-	assert_object(prolog_row.find_child("ReadButton", false, false)).is_not_null()
-	assert_object(perde1_row.find_child("StartButton", false, false)).is_not_null()
+	assert_object(prolog_row.find_child("ReadButton", true, false)).is_not_null()
+	assert_object(perde1_row.find_child("StartButton", true, false)).is_not_null()
 	assert_object(_root_ctx.find_child("CampaignCompleteBadge", true, false)).is_null()

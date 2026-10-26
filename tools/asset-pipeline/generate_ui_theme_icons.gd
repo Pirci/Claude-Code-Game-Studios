@@ -68,6 +68,55 @@ func _alert() -> Image:
 	_rect(i, 3, 5, 1, 1, DARK)
 	return i
 
+## E5 sefer haritası durum ikonları (scene-screens E5.6, AC-E5-4; C-93 yer tutucu, gerçek sanat C-46):
+## biçimleri renksiz de ayrışır — kutulu tik (tamamlandı), elmas ışık (açık), asma kilit (kilitli).
+func _chapter_completed() -> Image:
+	var i: Image = _img(9, 9)
+	_box(i, 0, 0, 9, 9, BROWN, DARK)
+	for p: Vector2i in [Vector2i(2, 4), Vector2i(3, 5), Vector2i(4, 6), Vector2i(5, 5), Vector2i(6, 4), Vector2i(7, 3)]:
+		_rect(i, p.x, p.y, 1, 1, GOLD)
+		_rect(i, p.x, p.y - 1, 1, 1, GOLD)
+	return i
+
+func _chapter_available() -> Image:
+	var i: Image = _img(9, 9)
+	for r: int in 5:
+		_rect(i, 4 - r, r, 2 * r + 1, 1, GOLD_D)
+		_rect(i, 4 - r, 8 - r, 2 * r + 1, 1, GOLD_D)
+	for r: int in 3:
+		_rect(i, 4 - r, r + 2, 2 * r + 1, 1, GOLD)
+		_rect(i, 4 - r, 6 - r, 2 * r + 1, 1, GOLD)
+	_rect(i, 4, 4, 1, 1, CREAM)
+	return i
+
+## Parıltı karesi: aynı elmas, krem gövde (yeni açılma 4 karede normal ↔ parlak).
+func _chapter_available_glow() -> Image:
+	var i: Image = _img(9, 9)
+	for r: int in 5:
+		_rect(i, 4 - r, r, 2 * r + 1, 1, GOLD)
+		_rect(i, 4 - r, 8 - r, 2 * r + 1, 1, GOLD)
+	for r: int in 3:
+		_rect(i, 4 - r, r + 2, 2 * r + 1, 1, CREAM)
+		_rect(i, 4 - r, 6 - r, 2 * r + 1, 1, CREAM)
+	return i
+
+func _chapter_locked() -> Image:
+	var i: Image = _img(9, 9)
+	_rect(i, 3, 0, 3, 1, DISABLED)
+	_rect(i, 2, 1, 1, 3, DISABLED)
+	_rect(i, 6, 1, 1, 3, DISABLED)
+	_box(i, 1, 4, 7, 5, BROWN_D, DISABLED)
+	_rect(i, 4, 5, 1, 2, DARK)
+	return i
+
+## 5×5 "yeni" işareti: Hareketi Azalt'ta parıltı yerine sabit (E5.6).
+func _chapter_new() -> Image:
+	var i: Image = _img(5, 5)
+	_rect(i, 2, 0, 1, 5, GOLD)
+	_rect(i, 0, 2, 5, 1, GOLD)
+	_rect(i, 2, 2, 1, 1, CREAM)
+	return i
+
 func _save(i: Image, name: String) -> void:
 	var err: Error = i.save_png(ProjectSettings.globalize_path(OUT + name + ".png"))
 	print(name, " ", i.get_size(), " err=", err)
@@ -88,4 +137,9 @@ func _init() -> void:
 	_save(_radio(true), "radio_checked")
 	_save(_radio(false), "radio_unchecked")
 	_save(_alert(), "icon_alert")
+	_save(_chapter_completed(), "icon_chapter_completed")
+	_save(_chapter_available(), "icon_chapter_available")
+	_save(_chapter_available_glow(), "icon_chapter_available_glow")
+	_save(_chapter_locked(), "icon_chapter_locked")
+	_save(_chapter_new(), "icon_chapter_new")
 	quit()

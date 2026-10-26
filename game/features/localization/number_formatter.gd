@@ -14,6 +14,9 @@ const GROUP_SIZE: int = 3
 ## Arapçada "4 / 9" → "9 / 4", "(+2)" → "(2+)" ters dönmesin (C-69). Görünmez karakterlerdir.
 const LTR_ISOLATE: String = "\u2066"
 const POP_ISOLATE: String = "\u2069"
+## İlk güçlü karaktere göre yalıtım (FSI … PDI): yan yana parçalar (güç şeridi) birbirine karışmaz,
+## her parça kendi yönünde okunur (AC-E5-7).
+const FIRST_STRONG_ISOLATE: String = "\u2068"
 
 
 ## Etkin dilin ayırıcısıyla biçimlendirir: 12345 → "12,345" (en) / "12.345" (tr).
@@ -32,6 +35,11 @@ static func current_separator() -> String:
 ## Sayısal ifadeyi (kesir, işaretli sayı) soldan sağa yalıtır; LTR dillerde görünür etkisi yok.
 static func ltr(text: String) -> String:
 	return LTR_ISOLATE + text + POP_ISOLATE
+
+
+## Bir metin parçasını kendi yönünde yalıtır (Arapça ad RTL, Latin ad LTR); komşu parçalarla karışmaz.
+static func isolate(text: String) -> String:
+	return FIRST_STRONG_ISOLATE + text + POP_ISOLATE
 
 
 ## "a / b" — her dilde soldan sağa okunan kesir (ilerleme, tavan, Erlik'in Gölgesi).
