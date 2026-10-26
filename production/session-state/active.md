@@ -423,3 +423,7 @@
 ## Session Extract — C-88 (2026-10-26)
 - GameContext: _render_spread/_build_spread_segment (SpreadIcon/SpreadLabel), _fit_objective_row, _show_strike_threshold, _enemy_ai; takviye satırı süzgeci. RegionInfoPanel.show_strike_threshold. ProgressLabel overrun. 5 key.
 - tests/unit/ui/info_panel_rows_test.gd. Testler 475. Prolog üst çubuğunda artık yayılım sayacı var (demo görünümü değişti). NEXT: C-89.
+
+## Session Extract — C-89 (2026-10-26)
+- game/features/grid/data/chapter_2_map.tres (üretici tools/level-data/build_perde1_map.gd). tests/unit/grid/perde1_map_data_test.gd (8), map_decor_geometry_test.gd (5). Testler 488.
+- Bulgu C-91: OBJECTIVE_TRIBES/FOCI Prolog terimleri Perde 1'de. NEXT: C-90.

@@ -1,0 +1,401 @@
+[gd_resource type="Resource" script_class="ChapterMapDefinition" format=3]
+
+[ext_resource type="Script" path="res://features/grid/map_decor_item.gd" id="1_8fumb"]
+[ext_resource type="Texture2D" path="res://assets/art/maps/env/env_tree_healthy_01.png" id="2_x8iyi"]
+[ext_resource type="Texture2D" path="res://assets/art/maps/env/env_tree_healthy_02.png" id="3_yhwld"]
+[ext_resource type="Texture2D" path="res://assets/art/maps/env/env_tree_rotten_01.png" id="4_61sls"]
+[ext_resource type="Texture2D" path="res://assets/art/maps/env/env_tree_rotten_02.png" id="5_qq1ax"]
+[ext_resource type="Texture2D" path="res://assets/art/maps/env/env_bridge_wood_01.png" id="6_r563t"]
+[ext_resource type="Texture2D" path="res://assets/art/maps/env/env_otag_curcet_01.png" id="7_3dh2j"]
+[ext_resource type="Texture2D" path="res://assets/art/units/unit_kormos_forest_idle_0.png" id="8_oktgf"]
+[ext_resource type="Texture2D" path="res://assets/art/units/unit_kormos_forest_idle_1.png" id="9_kck5h"]
+[ext_resource type="Script" path="res://features/grid/map_decor.gd" id="10_lmcr5"]
+[ext_resource type="Script" path="res://features/ai/enemy_ai_profile.gd" id="11_i6k6t"]
+[ext_resource type="Script" path="res://features/grid/region_definition.gd" id="12_d67uk"]
+[ext_resource type="Script" path="res://features/grid/chapter_map_definition.gd" id="13_gc0bi"]
+[ext_resource type="Script" path="res://features/grid/win_condition.gd" id="14_x1gdy"]
+
+[sub_resource type="Resource" id="Resource_14p1m"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(30, 120)
+
+[sub_resource type="Resource" id="Resource_sx7jm"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(48, 300)
+
+[sub_resource type="Resource" id="Resource_ss41d"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(150, 184)
+
+[sub_resource type="Resource" id="Resource_qxyj1"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(158, 200)
+
+[sub_resource type="Resource" id="Resource_rf00a"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(148, 212)
+
+[sub_resource type="Resource" id="Resource_5d646"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(300, 160)
+
+[sub_resource type="Resource" id="Resource_ylng2"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(330, 172)
+
+[sub_resource type="Resource" id="Resource_s1mr4"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(288, 192)
+
+[sub_resource type="Resource" id="Resource_ay4u6"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(342, 200)
+
+[sub_resource type="Resource" id="Resource_pgltu"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(400, 254)
+
+[sub_resource type="Resource" id="Resource_db3ua"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(398, 302)
+
+[sub_resource type="Resource" id="Resource_cfb6l"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(440, 296)
+
+[sub_resource type="Resource" id="Resource_7fsec"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(20, 66)
+
+[sub_resource type="Resource" id="Resource_dpj4m"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(64, 64)
+
+[sub_resource type="Resource" id="Resource_a4wrj"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(112, 68)
+
+[sub_resource type="Resource" id="Resource_tw0hv"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(158, 62)
+
+[sub_resource type="Resource" id="Resource_gv0xy"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(292, 64)
+
+[sub_resource type="Resource" id="Resource_p3b86"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(420, 66)
+
+[sub_resource type="Resource" id="Resource_5lo50"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(622, 100)
+
+[sub_resource type="Resource" id="Resource_25ns4"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(624, 130)
+
+[sub_resource type="Resource" id="Resource_13q7d"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(620, 160)
+
+[sub_resource type="Resource" id="Resource_egkpt"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(532, 180)
+
+[sub_resource type="Resource" id="Resource_8sr56"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("2_x8iyi")])
+position = Vector2(600, 180)
+
+[sub_resource type="Resource" id="Resource_woetq"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(292, 208)
+bound_region_id = &"curuk_koru"
+max_corruption = 0
+
+[sub_resource type="Resource" id="Resource_77iem"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("4_61sls")])
+position = Vector2(292, 208)
+bound_region_id = &"curuk_koru"
+min_corruption = 1
+
+[sub_resource type="Resource" id="Resource_qeb2c"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(322, 206)
+bound_region_id = &"curuk_koru"
+max_corruption = 0
+
+[sub_resource type="Resource" id="Resource_od745"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("5_qq1ax")])
+position = Vector2(322, 206)
+bound_region_id = &"curuk_koru"
+min_corruption = 1
+
+[sub_resource type="Resource" id="Resource_axi05"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(362, 205)
+bound_region_id = &"curuk_koru"
+max_corruption = 0
+
+[sub_resource type="Resource" id="Resource_313f4"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("4_61sls")])
+position = Vector2(362, 205)
+bound_region_id = &"curuk_koru"
+min_corruption = 1
+
+[sub_resource type="Resource" id="Resource_fkwtt"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(350, 290)
+bound_region_id = &"curuk_koru"
+max_corruption = 0
+
+[sub_resource type="Resource" id="Resource_mawb1"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("5_qq1ax")])
+position = Vector2(350, 290)
+bound_region_id = &"curuk_koru"
+min_corruption = 1
+
+[sub_resource type="Resource" id="Resource_1155h"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(310, 292)
+bound_region_id = &"curuk_koru"
+max_corruption = 0
+
+[sub_resource type="Resource" id="Resource_6mb4t"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("4_61sls")])
+position = Vector2(310, 292)
+bound_region_id = &"curuk_koru"
+min_corruption = 1
+
+[sub_resource type="Resource" id="Resource_78ks5"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(440, 147)
+bound_region_id = &"kurt_ini_ormani"
+max_corruption = 0
+
+[sub_resource type="Resource" id="Resource_asv00"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("5_qq1ax")])
+position = Vector2(440, 147)
+bound_region_id = &"kurt_ini_ormani"
+min_corruption = 1
+
+[sub_resource type="Resource" id="Resource_eot68"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(478, 147)
+bound_region_id = &"kurt_ini_ormani"
+max_corruption = 0
+
+[sub_resource type="Resource" id="Resource_2eq7a"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("4_61sls")])
+position = Vector2(478, 147)
+bound_region_id = &"kurt_ini_ormani"
+min_corruption = 1
+
+[sub_resource type="Resource" id="Resource_2v347"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(168, 322)
+bound_region_id = &"kayin_koruluk"
+max_corruption = 0
+
+[sub_resource type="Resource" id="Resource_o6dux"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("5_qq1ax")])
+position = Vector2(168, 322)
+bound_region_id = &"kayin_koruluk"
+min_corruption = 1
+
+[sub_resource type="Resource" id="Resource_uy52n"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("3_yhwld")])
+position = Vector2(232, 324)
+bound_region_id = &"kayin_koruluk"
+max_corruption = 0
+
+[sub_resource type="Resource" id="Resource_u6r84"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("4_61sls")])
+position = Vector2(232, 324)
+bound_region_id = &"kayin_koruluk"
+min_corruption = 1
+
+[sub_resource type="Resource" id="Resource_yo0id"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("6_r563t")])
+position = Vector2(386, 98)
+
+[sub_resource type="Resource" id="Resource_kwtv4"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("7_3dh2j")])
+position = Vector2(584, 90)
+
+[sub_resource type="Resource" id="Resource_mh1k6"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("8_oktgf"), ExtResource("9_kck5h")])
+position = Vector2(293, 261)
+layer = 2
+bound_region_id = &"curuk_koru"
+min_corruption = 1
+fps = 2.0
+
+[sub_resource type="Resource" id="Resource_yf67w"]
+script = ExtResource("1_8fumb")
+frames = Array[Texture2D]([ExtResource("8_oktgf"), ExtResource("9_kck5h")])
+position = Vector2(377, 261)
+layer = 2
+bound_region_id = &"curuk_koru"
+min_corruption = 1
+fps = 2.0
+
+[sub_resource type="Resource" id="Resource_4qsji"]
+script = ExtResource("10_lmcr5")
+items = Array[ExtResource("1_8fumb")]([SubResource("Resource_14p1m"), SubResource("Resource_sx7jm"), SubResource("Resource_ss41d"), SubResource("Resource_qxyj1"), SubResource("Resource_rf00a"), SubResource("Resource_5d646"), SubResource("Resource_ylng2"), SubResource("Resource_s1mr4"), SubResource("Resource_ay4u6"), SubResource("Resource_pgltu"), SubResource("Resource_db3ua"), SubResource("Resource_cfb6l"), SubResource("Resource_7fsec"), SubResource("Resource_dpj4m"), SubResource("Resource_a4wrj"), SubResource("Resource_tw0hv"), SubResource("Resource_gv0xy"), SubResource("Resource_p3b86"), SubResource("Resource_5lo50"), SubResource("Resource_25ns4"), SubResource("Resource_13q7d"), SubResource("Resource_egkpt"), SubResource("Resource_8sr56"), SubResource("Resource_woetq"), SubResource("Resource_77iem"), SubResource("Resource_qeb2c"), SubResource("Resource_od745"), SubResource("Resource_axi05"), SubResource("Resource_313f4"), SubResource("Resource_fkwtt"), SubResource("Resource_mawb1"), SubResource("Resource_1155h"), SubResource("Resource_6mb4t"), SubResource("Resource_78ks5"), SubResource("Resource_asv00"), SubResource("Resource_eot68"), SubResource("Resource_2eq7a"), SubResource("Resource_2v347"), SubResource("Resource_o6dux"), SubResource("Resource_uy52n"), SubResource("Resource_u6r84"), SubResource("Resource_yo0id"), SubResource("Resource_kwtv4"), SubResource("Resource_mh1k6"), SubResource("Resource_yf67w")])
+water_rects = Array[Rect2]([Rect2(0, 45, 386, 15), Rect2(382, 45, 8, 95), Rect2(380, 136, 12, 8)])
+
+[sub_resource type="Resource" id="Resource_wtgte"]
+script = ExtResource("11_i6k6t")
+attack_start_turn = 5
+strike_enabled = true
+
+[sub_resource type="Resource" id="Resource_lk1yb"]
+script = ExtResource("12_d67uk")
+region_id = &"orman_agzi"
+display_name_key = &"REGION_ORMAN_AGZI"
+owner = 1
+starting_army = 6
+gold_per_turn = 2
+position = Vector2(100, 190)
+polygon_points = PackedVector2Array(73, 163, 127, 163, 140, 190, 127, 217, 73, 217, 60, 190)
+adjacent_region_ids = Array[StringName]([&"kayin_koruluk", &"kuzey_aksu"])
+
+[sub_resource type="Resource" id="Resource_mrg2o"]
+script = ExtResource("12_d67uk")
+region_id = &"kayin_koruluk"
+display_name_key = &"REGION_KAYIN_KORULUK"
+starting_army = 2
+gold_per_turn = 1
+position = Vector2(200, 270)
+polygon_points = PackedVector2Array(145, 243, 255, 243, 255, 297, 145, 297)
+adjacent_region_ids = Array[StringName]([&"orman_agzi", &"curuk_koru"])
+
+[sub_resource type="Resource" id="Resource_8ah3p"]
+script = ExtResource("12_d67uk")
+region_id = &"kuzey_aksu"
+display_name_key = &"REGION_KUZEY_AKSU"
+starting_army = 3
+gold_per_turn = 2
+position = Vector2(225, 101)
+polygon_points = PackedVector2Array(175, 72, 275, 72, 275, 130, 175, 130)
+adjacent_region_ids = Array[StringName]([&"orman_agzi", &"tahta_kopru"])
+
+[sub_resource type="Resource" id="Resource_xjajb"]
+script = ExtResource("12_d67uk")
+region_id = &"tahta_kopru"
+display_name_key = &"REGION_TAHTA_KOPRU"
+starting_army = 2
+gold_per_turn = 1
+position = Vector2(345, 96)
+polygon_points = PackedVector2Array(313, 62, 377, 62, 377, 130, 313, 130)
+adjacent_region_ids = Array[StringName]([&"kuzey_aksu", &"kurt_ini_ormani"])
+
+[sub_resource type="Resource" id="Resource_pp3xn"]
+script = ExtResource("12_d67uk")
+region_id = &"kurt_ini_ormani"
+display_name_key = &"REGION_KURT_INI_ORMANI"
+owner = 2
+starting_army = 2
+gold_per_turn = 1
+position = Vector2(445, 100)
+polygon_points = PackedVector2Array(395, 72, 495, 72, 495, 128, 395, 128)
+adjacent_region_ids = Array[StringName]([&"tahta_kopru", &"curuk_koru", &"curcet_otagi"])
+starting_corruption = 1
+
+[sub_resource type="Resource" id="Resource_46x0o"]
+script = ExtResource("12_d67uk")
+region_id = &"curuk_koru"
+display_name_key = &"REGION_CURUK_KORU"
+gold_per_turn = 2
+position = Vector2(335, 240)
+polygon_points = PackedVector2Array(280, 212, 390, 212, 390, 268, 280, 268)
+adjacent_region_ids = Array[StringName]([&"kayin_koruluk", &"kurt_ini_ormani", &"curcet_oba"])
+starting_corruption = 3
+
+[sub_resource type="Resource" id="Resource_56q0n"]
+script = ExtResource("12_d67uk")
+region_id = &"curcet_oba"
+display_name_key = &"REGION_CURCET_OBA"
+owner = 2
+starting_army = 4
+gold_per_turn = 2
+position = Vector2(460, 205)
+polygon_points = PackedVector2Array(410, 178, 510, 178, 510, 232, 410, 232)
+adjacent_region_ids = Array[StringName]([&"curuk_koru", &"curcet_otagi"])
+
+[sub_resource type="Resource" id="Resource_jtpbl"]
+script = ExtResource("12_d67uk")
+region_id = &"curcet_otagi"
+display_name_key = &"REGION_CURCET_OTAGI"
+owner = 2
+starting_army = 4
+gold_per_turn = 3
+position = Vector2(562, 125)
+polygon_points = PackedVector2Array(526, 92, 598, 92, 610, 104, 610, 146, 598, 158, 526, 158, 514, 146, 514, 104)
+adjacent_region_ids = Array[StringName]([&"kurt_ini_ormani", &"curcet_oba"])
+
+[sub_resource type="Resource" id="Resource_5yyh5"]
+script = ExtResource("14_x1gdy")
+required_neutral_conquests = 2
+erlik_foci = Array[StringName]([&"curuk_koru"])
+erlik_loss_threshold = 9
+description_key = &"WIN_CONDITION_CH2"
+
+[resource]
+script = ExtResource("13_gc0bi")
+chapter_id = 2
+chapter_name_key = &"CHAPTER_2_TITLE"
+enemy_tamga_id = &"curcet"
+ground_color = Color(0.05882353, 0.101960786, 0.050980393, 1)
+adjacency_line_color = Color(0.36078432, 0.56078434, 0.36078432, 1)
+enemy_reinforcement_region_ids = Array[StringName]([&"curcet_otagi"])
+starting_gold = 6
+regions = Array[ExtResource("12_d67uk")]([SubResource("Resource_lk1yb"), SubResource("Resource_mrg2o"), SubResource("Resource_8ah3p"), SubResource("Resource_xjajb"), SubResource("Resource_pp3xn"), SubResource("Resource_46x0o"), SubResource("Resource_56q0n"), SubResource("Resource_jtpbl")])
+win_condition = SubResource("Resource_5yyh5")
+enemy_ai_profile = SubResource("Resource_wtgte")
+decor = SubResource("Resource_4qsji")
