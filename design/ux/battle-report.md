@@ -113,7 +113,7 @@ Kullanılabilir modal yüksekliği ≈ 360 − 40 − 31 − 8 ≈ **281 px**.
 ## 4. İçerik tabloları
 
 Anahtarlar `narrative-voice.md` §8; hepsi CSV'de mevcut (CH2 anahtarları hariç). "En uzun dil" = CSV'den el sayımı (en/tr/de/fr/es/ru/pt/zh/ja/ko/ar), `%s` sayı/ad ile dolar.
-Font: Fusion 12 (Arapça Unifont 16, tek gövde boyutu, hiyerarşi renkle). Metinde `-` ASCII. **Glifler:** `↑ ↓` Fusion'da var (`glyph_coverage_test`) ve metin glifi olarak kullanılır; `✓ ⚠ ✕` glifi yok → **piksel ikon**; **C-76 (2026-10-26): `×` ve `→` her native fontta var** (Fusion 12 latin/ja/ko/zh + Unifont 16; `glyph_coverage_test` + 12 px görsel kontrol) → metinde kullanılabilir; `×N/MAX` gibi sayı içeren biçimler Arapçada yön sırası bozulmasın diye kodda LTR yalıtılır (`NumberFormatter.ltr`).
+Font: Fusion 12 (Arapça Unifont 16, tek gövde boyutu, hiyerarşi renkle). Metinde `-` ASCII. **Glifler:** `↑ ↓` Fusion'da var (`glyph_coverage_test`) ve metin glifi olarak kullanılır; `✓ ⚠ ✕` glifi yok → **piksel ikon**; **C-76 (2026-10-25): `×` ve `→` her native fontta var** (Fusion 12 latin/ja/ko/zh + Unifont 16; `glyph_coverage_test` + 12 px görsel kontrol) → metinde kullanılabilir; `×N/MAX` gibi sayı içeren biçimler Arapçada yön sırası bozulmasın diye kodda LTR yalıtılır (`NumberFormatter.ltr`).
 
 ### 4.1 BattleReport (oyuncu hamlesi, `Branch.COMBAT`)
 

@@ -350,7 +350,7 @@ Boyutlar tahmindir; 12 px font (Arapça 16 px) satır ≈ 14 px (Arapça ≈ 20 
 |---|---|
 | İşaretli ve oranlı değerler | `NumberFormatter.ltr()` / `fraction()` (LRI…PDI) |
 | Sözcük sırası ve birim | Çevirmen sahipli biçim key'i (`PER_TURN`); `to_upper/to_lower/capitalize` yasak |
-| Glif | `−`, `⚠`, `✕`, `✓` metinde yasak; eksi ASCII `-`; durum sembolleri piksel ikon. `↑ ↓ ◆` Fusion'da var (`glyph_coverage_test`). **C-76 (2026-10-26): `×` ve `→` her native fontta var** (Fusion 12 latin/ja/ko/zh + Unifont 16; `glyph_coverage_test` + 12 px görsel kontrol) → metinde kullanılabilir; `×N/MAX` gibi sayı içeren biçimler Arapçada yön sırası bozulmasın diye kodda LTR yalıtılır (`NumberFormatter.ltr`) |
+| Glif | `−`, `⚠`, `✕`, `✓` metinde yasak; eksi ASCII `-`; durum sembolleri piksel ikon. `↑ ↓ ◆` Fusion'da var (`glyph_coverage_test`). **C-76 (2026-10-25): `×` ve `→` her native fontta var** (Fusion 12 latin/ja/ko/zh + Unifont 16; `glyph_coverage_test` + 12 px görsel kontrol) → metinde kullanılabilir; `×N/MAX` gibi sayı içeren biçimler Arapçada yön sırası bozulmasın diye kodda LTR yalıtılır (`NumberFormatter.ltr`) |
 | Panel yönü | Bilgi paneli LTR (harita aynalanmaz), içerik locale yönünde; üst bar ve alt bar locale yönünde |
 | Yeni key'ler | Yalnız `en` önce, sonra diğer 10 dil; Fusion/Unifont kapsama testi geçmeli. M2 key'leri: `SPREAD_COUNTDOWN`, `SPREAD_THIS_TURN_END`, `FOCUS_AT_RISK`, `ENEMY_STRIKE_THRESHOLD`, `PROGRESS_ENEMY_REGIONS`, `PICK_TARGET_HINT` (adlar öneridir) |
 

@@ -372,42 +372,46 @@
 - GameContext: _on_region_accepted, _set_target_mode, _cancel_target_mode, _unhandled_input (Esc), _link_map_tab_order. RegionInfoPanel: toggle Send + PickTargetHint, set_awaiting_target, get_first_focus, get_send_button. PICK_TARGET_HINT 11 dil.
 - Bulgu: Node2D altındaki kontroller Tab'a girmiyor → açık zincir. Testler 391/391. NEXT: C-76.
 
-## Session Extract — C-76 (2026-10-26)
+## Session Extract — C-76 (2026-10-25)
 - DEFEAT_REASON_ERLIK yeni metin (11 dil, yer sözcüğü yok). tests/unit/localization/narrative_voice_test.gd (AC-V1 + sahne bağımsızlığı). glyph_coverage_test: × → her fontta.
 - Karar: BOON_STACK = "×%s/%s", kod LTR yalıtır (Arapçada × sona kayıyor). ChapterSelect güç şeridi hâlâ ASCII "x" + kod biçimi — C-81/BOON_STACK işinde key'e taşınabilir.
 - Testler 395. NEXT: C-77.
 
-## Session Extract — C-77 (2026-10-26)
+## Session Extract — C-77 (2026-10-25)
 - GameState.campaign_seed; SaveSerializer SCHEMA_VERSION 2, MAX_SEED, migrate v1→v2 (0); RootContext.campaign_seed_source + static new_campaign_seed(). ADR-0007 eki (sürüm artışı kararı).
 - tests/unit/save/save_serializer_campaign_seed_test.gd. Testler 401. NEXT: C-78 (BoonRules seed'e campaign_seed, SceneDefinition.boon_pool_ids).
 
-## Session Extract — C-78 (2026-10-27)
+## Session Extract — C-78 (2026-10-25)
 - BoonRules.offer(pool, scene_id, n, campaign_seed=0), eligible_pool(catalog, modifiers, scene_pool=[]); SpiritController.bind_boons(..., scene_pool), current_offer tohumu state'ten. SceneDefinition.boon_pool_ids; campaign.tres Prolog üçlüsü.
 - RootContext testlerinde campaign_seed_source = 1 (determinizm). tests/unit/bozkurt/boon_offer_seed_pool_test.gd. Testler 407. NEXT: C-79.
 
-## Session Extract — C-79 (2026-10-27)
+## Session Extract — C-79 (2026-10-25)
 - CombatResolver.resolve_effective + CombatResult.attacker/defender_effective; MoveResolver.STAT_ARMY_ATTACK/DEFENSE, effective_power (CEIL_EPSILON 1e-6), _resolve_combat(..., modifiers), arındırma P_eff. MapController._apply_enemy_move lütufları geçirir.
 - tests/unit/combat/combat_effective_power_test.gd. Testler 414. NEXT: C-80 (katalog max_stacks 3, active_systems effective_power).
 
-## Session Extract — C-80 (2026-10-27)
+## Session Extract — C-80 (2026-10-25)
 - boon_catalog.tres: active_systems [effective_power], kurt_gucu/demir_post max_stacks 3. prolog_replay.gd + boon_offer_test _setup Prolog havuzunu kullanıyor.
 - tests/unit/bozkurt/boon_stack_caps_test.gd. Testler 418. NEXT: C-81.
 
-## Session Extract — C-81 (2026-10-28)
+## Session Extract — C-81 (2026-10-25)
 - BoonOfferModal.show_offer(..., stacks), stack_text, unique_boons, RemainingLabel, MAX_HEIGHT 281 + OfferLine gizleme (minimum_size_changed); BoonCard.set_stack; ModifierController.stacks_of. Key'ler BOON_REMAINING/STACK/STACK_LAST/STACK_COUNT.
 - tests/unit/bozkurt/boon_card_stack_label_test.gd. Testler 422. NEXT: C-82.
 
-## Session Extract — C-82 (2026-10-28)
+## Session Extract — C-82 (2026-10-25)
 - features/ai/enemy_ai_profile.gd; EnemyAIController.bind_config/decide(..., defense_modifiers)/_decide_strike/strike_allowed/effective_defense/REASON_STRIKE; ChapterMapDefinition.enemy_ai_profile; GameContext bağlar; MapController _modifiers() geçirir.
 - tests/unit/ai/enemy_ai_counterattack_test.gd (15). Testler 437. Perde 1 profil .tres harita verisiyle (C-84+). NEXT: C-83.
 
-## Session Extract — C-83 (2026-10-28)
+## Session Extract — C-83 (2026-10-25)
 - MapState/ChapterMapDefinition.enemy_reinforcement_region_ids; ResourceController.reinforce_enemies süzgeci. Profil MapState'e kopyalanmadı (bind_config tek kaynak).
 - tests/unit/resources/reinforcement_region_list_test.gd. Testler 443. NEXT: C-84.
 
-## Session Extract — C-84 (2026-10-29)
+## Session Extract — C-84 (2026-10-25)
 - features/grid/map_decor_item.gd, map_decor.gd; ChapterMapDefinition.decor. tests/unit/grid/map_decor_item_test.gd. Testler 449. NEXT: C-85 (MapDecorLayer çizimi).
 
-## Session Extract — C-85 (2026-10-29)
+## Session Extract — C-85 (2026-10-25)
 - features/grid/map_decor_layer.gd (setup, apply_corruption, visible_items, frame_index, canvas_origin, shore_segments); CampaignMap.set_decor/decor_layers; GameContext set_decor(map_def.decor).
 - tests/integration/grid/map_decor_layer_test.gd. Testler 456. Bulgu: körmös/leke kontrastı → C-98. NEXT: C-86.
+
+## Session Extract — C-86 (2026-10-26)
+- RegionNode.is_tamga_visible: ENEMY her zaman. tests/unit/ui/map_readability_contrast_test.gd (benzetim, çizgi lint, istisna Prolog → C-100). Testler 461.
+- Düzeltme: C-76…C-85 tarihleri 2026-10-25'e çekildi (commit tarihleri). NEXT: C-87.

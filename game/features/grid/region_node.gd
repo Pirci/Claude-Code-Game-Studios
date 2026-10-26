@@ -293,9 +293,13 @@ func get_stain_image() -> Image:
 	return _stain.frames[_stain_frame] if _stain and not _stain.frames.is_empty() else null
 
 
-## Tamga şu an çiziliyor mu: dokusu var ve (seçili veya Renk Körlüğü Modu).
+## Tamga şu an çiziliyor mu: dokusu var ve (seçili, Renk Körlüğü Modu ya da DÜŞMAN bölgesi). Düşman
+## sahipliği renkten bağımsız okunmalı — düşman/nötr protanopide 1.09:1 (seviye perde1 §7.8 #2, hud A-2);
+## nötrde tamga dokusu yoktur. Prolog'da düşman bölgesi olmadığından Prolog görünümü değişmez.
 func is_tamga_visible() -> bool:
-	return _tamga != null and _tamga.texture != null and (is_selected or color_blind_mode)
+	if _tamga == null or _tamga.texture == null:
+		return false
+	return is_selected or color_blind_mode or _owner == RegionData.Owner.ENEMY
 
 
 ## Renk Körlüğü Modu'nda sahipli (oyuncu/düşman) bölgeler ek iç kontur alır; nötr almaz.

@@ -158,7 +158,7 @@ Bu belge takviyenin **kural sahibidir** (K2); ekonomi adımında çağrılması 
 6. Düşmanın hazinesi yoktur; takviye ordudur, altın değil. Nötr bölgeler takviye almaz.
 7. `E_r` ve bölge listesi **bölüm verisidir**; sabit kodlanmaz.
 
-> **✅ C-83 (2026-10-28):** `ChapterMapDefinition.enemy_reinforcement_region_ids` → `MapState` (kopya; kaydedilmez, yüklemede harita tanımından), `ResourceController.reinforce_enemies` liste süzgeci; AC11 (3 test), AC12, AC14 → `tests/unit/resources/reinforcement_region_list_test.gd`. Profil `MapState`'e kopyalanmaz: `ChapterMapDefinition.enemy_ai_profile` → `EnemyAIController.bind_config` (ADR-0005 D6, C-82) tek kaynaktır.
+> **✅ C-83 (2026-10-25):** `ChapterMapDefinition.enemy_reinforcement_region_ids` → `MapState` (kopya; kaydedilmez, yüklemede harita tanımından), `ResourceController.reinforce_enemies` liste süzgeci; AC11 (3 test), AC12, AC14 → `tests/unit/resources/reinforcement_region_list_test.gd`. Profil `MapState`'e kopyalanmaz: `ChapterMapDefinition.enemy_ai_profile` → `EnemyAIController.bind_config` (ADR-0005 D6, C-82) tek kaynaktır.
 
 **Asimetrik ekonomi (K7):** düşman ekonomisi oyuncununkiyle simetrik değildir — hazine yok, sabit takviye,
 modifikatör yok. `resource-system.md` Açık Soru 4 bu karar ile kapanmıştır.
@@ -391,7 +391,7 @@ Kural değişirse (özellikle `P_eff` okuması sonrası) seviye belgesi §5 sim�
 
 ### Birim (BLOCKING) — `tests/unit/ai/` (Perde 1 listesi seviye belgesi §13'ten)
 
-> **✅ C-82 (2026-10-28):** AC1–AC10, AC19, AC20 → `tests/unit/ai/enemy_ai_counterattack_test.gd` (15 test; adlar §13'teki `test_counterattack_*`). Profil `EnemyAIProfile`, harita alanı `ChapterMapDefinition.enemy_ai_profile`.
+> **✅ C-82 (2026-10-25):** AC1–AC10, AC19, AC20 → `tests/unit/ai/enemy_ai_counterattack_test.gd` (15 test; adlar §13'teki `test_counterattack_*`). Profil `EnemyAIProfile`, harita alanı `ChapterMapDefinition.enemy_ai_profile`.
 
 - **AC1:** GIVEN tur 4, profil `attack_start_turn=5`, uygun bir hedef var, WHEN `decide`, THEN `null`
   (`test_counterattack_before_turn_five_never_strikes`).

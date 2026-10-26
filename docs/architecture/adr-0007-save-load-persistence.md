@@ -21,7 +21,7 @@ Accepted (2026-10-19 — `/architecture-review` C-17, [report](architecture-revi
 > (4) defeat and "leave scene" write nothing. Open: whether the snapshot is a second slot (recommended) or a
 > schema field — decided in the scene-flow ADR (C-62).
 
-> **Amendment 2026-10-26 (C-77, scene-flow §3.2 / §3.4 D4, spirit §4.5 — status stays Accepted):** the `game` block
+> **Amendment 2026-10-25 (C-77, scene-flow §3.2 / §3.4 D4, spirit §4.5 — status stays Accepted):** the `game` block
 > gains **`campaign_seed`** (int, `0…0x7FFFFFFF`), generated once at New Campaign (`RootContext.campaign_seed_source`,
 > injectable; default `randi_range(1, 0x7FFFFFFF)` — never 0) and carried unchanged through S1, S2, S3, Continue
 > and Retry (only a new New Campaign replaces it). **Decision (the open "schema bump vs. default field" question):

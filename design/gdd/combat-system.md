@@ -84,7 +84,7 @@ attacker_remaining=0, defender_remaining=5.
 **Örnek 3** (A=4, D=4): eşitlik → attacker_losses=ceil(2.8)=3, defender_losses=2,
 attacker_remaining=1, defender_remaining=2, savunan kazanır.
 
-### Etkin güç (lütuf modifikatörleri) — *uygulandı C-79 (2026-10-27; C-31 kararı)*
+### Etkin güç (lütuf modifikatörleri) — *uygulandı C-79 (2026-10-25; C-31 kararı)*
 
 > Kod: `CombatResolver.resolve_effective(A, D, A_eff, D_eff)` (`resolve(A, D)` = etkin güç ordu), `MoveResolver.effective_power` (`ceil`, kayan nokta artığına karşı 1e-6 tolerans), oyuncu saldırısı / savunması / arındırması ve düşman hamlesi (MapController lütufları geçirir) aynı yoldan; `CombatResult.attacker_effective` / `defender_effective`. Lütufların açılması (`active_systems += effective_power`, yığın sınırı 3) C-80.
 Kurt Gücü / Demir Post lütufları (`spirit-system.md` §3.5) **etkin gücü** değiştirir;

@@ -208,7 +208,7 @@ Ek kurallar:
   kampanya kaydına (`campaign` yuvası, `GameState`) yazılır; `spirit-system.md` §4.5 lütuf sunum
   seed'ine eklenir. Sefer boyunca sabittir: S1–S3 ile korunur, Yeniden Dene'de (T22) ve Devam Et'te
   değişmez; yalnızca yeni Yeni Sefer (T1/T2) yenisini üretir. Testte enjekte edilir. Kayıt biçimi
-  alanı ADR-0007 sürümüne işlenir — **uygulandı C-77 (2026-10-26):** şema v2, v1 kayıt `campaign_seed = 0` ile göç eder (ADR-0007 eki).
+  alanı ADR-0007 sürümüne işlenir — **uygulandı C-77 (2026-10-25):** şema v2, v1 kayıt `campaign_seed = 0` ile göç eder (ADR-0007 eki).
 - **S2 gerekçesi:** (a) Yeni Sefer ve Yeniden Dene'den sonra eski sahneden kalma bir kayıt "Devam Et"i
   yanıltmasın; (b) sahne girişi anlık görüntüsü kalıcı olsun, Devam Et'ten sonra bile Yeniden Dene
   çalışsın. 1. tur başı, ADR-0007'nin "tutarlı durum tur sınırlarında vardır" ilkesine uyar; tur ortası

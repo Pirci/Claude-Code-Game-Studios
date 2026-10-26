@@ -291,9 +291,9 @@ kurt_ini x395–495 y72–128; curuk_koru x280–390 y212–268; curcet_oba x410
 
 ### 7.6 Dekor sistemi (en küçük çözüm)
 
-> **✅ Veri modeli C-84 (2026-10-29):** `features/grid/map_decor_item.gd` (`frames`, ayak `position`, `layer`, `bound_region_id`, `min/max_corruption`, `fps`; saf `is_visible(level)`, `is_animated()`), `features/grid/map_decor.gd` (`items`, `water_rects`, `items_in_layer` ayak-y → x sıralı), `ChapterMapDefinition.decor = null`; test `tests/unit/grid/map_decor_item_test.gd`. Çizim (`MapDecorLayer`) C-85.
+> **✅ Veri modeli C-84 (2026-10-25):** `features/grid/map_decor_item.gd` (`frames`, ayak `position`, `layer`, `bound_region_id`, `min/max_corruption`, `fps`; saf `is_visible(level)`, `is_animated()`), `features/grid/map_decor.gd` (`items`, `water_rects`, `items_in_layer` ayak-y → x sıralı), `ChapterMapDefinition.decor = null`; test `tests/unit/grid/map_decor_item_test.gd`. Çizim (`MapDecorLayer`) C-85.
 
-> **✅ Çizim C-85 (2026-10-29):** `features/grid/map_decor_layer.gd`; `CampaignMap.set_decor()` → `build_map` üç katman kurar (GROUND + su, çizgiler, PROP, bölgeler, OVERLAY), `refresh()` bozulma seviyelerini geçirir, `apply_accessibility` Hareketi Azalt'ı (kare 0, `_process` kapalı); `_process` yalnız görünür animasyonlu öğe varken; nehir dolgu `#1F2B52` + birleşik 1 px kıyı `#476B8F` (L-dönüşünde iç çizgi yok); ayak → tuval `CANVAS_PAD = 2` (varlık kuralı). Test `tests/integration/grid/map_decor_layer_test.gd` (7), kanıt `production/qa/evidence/c85-decor-layer*.png` (Prolog haritasında test dekoru). **Bulgu (C-98'e):** koyu mor körmös mor bozulma lekesi üstünde düşük kontrast — Perde 1 yerleşimi lekesiz köşeye ya da ayrı çerçeve/gölge kararı ister.
+> **✅ Çizim C-85 (2026-10-25):** `features/grid/map_decor_layer.gd`; `CampaignMap.set_decor()` → `build_map` üç katman kurar (GROUND + su, çizgiler, PROP, bölgeler, OVERLAY), `refresh()` bozulma seviyelerini geçirir, `apply_accessibility` Hareketi Azalt'ı (kare 0, `_process` kapalı); `_process` yalnız görünür animasyonlu öğe varken; nehir dolgu `#1F2B52` + birleşik 1 px kıyı `#476B8F` (L-dönüşünde iç çizgi yok); ayak → tuval `CANVAS_PAD = 2` (varlık kuralı). Test `tests/integration/grid/map_decor_layer_test.gd` (7), kanıt `production/qa/evidence/c85-decor-layer*.png` (Prolog haritasında test dekoru). **Bulgu (C-98'e):** koyu mor körmös mor bozulma lekesi üstünde düşük kontrast — Perde 1 yerleşimi lekesiz köşeye ya da ayrı çerçeve/gölge kararı ister.
 
 | Parça | Tanım |
 | ---- | ---- |
@@ -332,6 +332,8 @@ kurt_ini x395–495 y72–128; curuk_koru x280–390 y212–268; curcet_oba x410
 | R3 | Bilişsel yük | HUD'a "Yayılım: N tur" sayacı; takviye (yalnız başkent) ve AI kuralı `HINT_ENEMY_KING` / `HINT_CAPITAL` metninde |
 
 Ertelenen (cila): saldırıya uğrayan bölge harita işareti; ses ipuçları eşlemesi.
+
+> **✅ C-86 (2026-10-26):** #2 `RegionNode.is_tamga_visible` (düşmanda her zaman), #3 kontrast testi; A-2 benzetimi `tests/unit/ui/map_readability_contrast_test.gd`. Prolog etkilenmez (düşman bölgesi yok). **Bulgu:** Prolog çizgisi 2,24:1 → C-100.
 
 ## 8. Ses Yönü
 
