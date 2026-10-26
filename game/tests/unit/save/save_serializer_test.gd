@@ -84,7 +84,8 @@ func test_every_state_field_is_saved_or_explicitly_derived() -> void:
 		MapState: ["chapter_id", "current_turn", "last_erlik_spread_turn", "regions",
 			"actions_remaining", "selected_region_id", "game_result", "loss_reason",  # tur sonu / kaydedilmez
 			"actions_per_turn", "enemy_actions_per_turn", "player_tamga_id", "enemy_tamga_id",
-			"erlik_spread_interval", "enemy_reinforcement_per_turn", "enemy_reinforcement_region_ids"],  # içerik
+			"erlik_spread_interval", "enemy_reinforcement_per_turn", "enemy_reinforcement_region_ids",
+			"enemy_region_ids_initial"],  # içerik
 		RegionData: ["owner", "army_count", "corruption_level", "recruited_this_turn",  # sayaç: tur sonunda 0
 			"region_id", "display_name_key", "initial_owner", "gold_per_turn", "position",
 			"polygon_points", "adjacent_regions"],  # içerik

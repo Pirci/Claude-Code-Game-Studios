@@ -73,9 +73,14 @@ func _decide_strike(map_state: MapState, acted: Array[StringName],
 	return MoveIntent.new(StringName(best[2]), StringName(best[3]), REASON_STRIKE)
 
 
-## F-E1 koşulları: `A > P_eff` ve `den · A ≥ num · P_eff` (tam sayı).
+## F-E1 koşulları: `A > P_eff` ve `den · A ≥ num · P_eff` — HUD eşiğiyle aynı fonksiyon ([StrikeThreshold]).
 func strike_allowed(attack: int, p_eff: int) -> bool:
-	return attack > p_eff and _profile.strike_ratio_den * attack >= _profile.strike_ratio_num * p_eff
+	return attack >= StrikeThreshold.min_force(p_eff, _profile.strike_ratio_num, _profile.strike_ratio_den)
+
+
+## Bölge profili (HUD eşik satırı için salt okunur).
+func profile() -> EnemyAIProfile:
+	return _profile
 
 
 ## `P_eff`: boş bölge 0 (savaş yok), değilse savaşın kullandığı etkin savunma (combat §4).

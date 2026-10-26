@@ -415,3 +415,7 @@
 ## Session Extract — C-86 (2026-10-26)
 - RegionNode.is_tamga_visible: ENEMY her zaman. tests/unit/ui/map_readability_contrast_test.gd (benzetim, çizgi lint, istisna Prolog → C-100). Testler 461.
 - Düzeltme: C-76…C-85 tarihleri 2026-10-25'e çekildi (commit tarihleri). NEXT: C-87.
+
+## Session Extract — C-87 (2026-10-26)
+- features/ai/strike_threshold.gd; EnemyAIController.strike_allowed/profile(); ErlikSpreadController.effective_interval/turns_until_spread; MapState.enemy_region_ids_initial; HudModel M2 alanları + Warning; HudPresenter._fill_m2/warning_for.
+- tests/unit/ui/hud_presenter_m2_test.gd. Testler 470. NEXT: C-88 (görünümler + 11 dil key).

@@ -194,8 +194,7 @@ func _apply_enemy_move(intent: EnemyAIController.MoveIntent) -> void:
 ## (2) Erlik yayılımı (spirit §3.6, §4.6): etkin aralık = bölüm tabanı + lütuflar
 ## (`erlik_spread_interval` stat'ı, ADR-0006); karar saf, uygulama SpiritController'da.
 func _run_erlik_spread() -> void:
-	var interval: int = roundi(StatResolver.resolve(
-		ErlikSpreadController.STAT_SPREAD_INTERVAL, float(_map_state.erlik_spread_interval), _modifiers()))
+	var interval: int = ErlikSpreadController.effective_interval(_map_state, _modifiers())
 	var decision: ErlikSpreadController.SpreadDecision = _erlik_spread.decide(_map_state, interval)
 	_spirit.apply_spread(_map_state, decision)
 	if decision.is_spread_turn and decision.target_id != &"":

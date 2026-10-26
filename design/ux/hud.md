@@ -379,7 +379,7 @@ Boyutlar tahmindir; 12 px font (Arapça 16 px) satır ≈ 14 px (Arapça ≈ 20 
 
 | # | Kriter | Tür |
 |---|---|---|
-| H1 | `HudPresenter.build`: `spread_turns_left = max(0, I_eff − (turn − last_spread))`; yayılım turunda 0; arındırma sayacı sıfırlamaz; Gök Kalkanı ile `I_eff` uzayınca N uzar | Otomatik |
+| H1 *(✅ C-87 model; H1–H4, H8–H10 `tests/unit/ui/hud_presenter_m2_test.gd`; görünüm C-88)* | `HudPresenter.build`: `spread_turns_left = max(0, I_eff − (turn − last_spread))`; yayılım turunda 0; arındırma sayacı sıfırlamaz; Gök Kalkanı ile `I_eff` uzayınca N uzar | Otomatik |
 | H2 | `erlik_threshold = 0` iken yayılım sayacı ve Gölge gizli | Otomatik |
 | H3 | `spread_target ∈ erlik_foci` **ve** `N = 0` ⇒ `focus_at_risk = true`; `N ≥ 1` iken `false`; hedef `null` ise `false`; hedef odak değilse `false` | Otomatik |
 | H4 | `StrikeThreshold.min_force(P_eff, num, den)`: `(P_eff=0 → 1)`, `(2 → 3)`, `(3 → 5)` (3/2); `(5 → 8)`; `A > P_eff` ve `2A ≥ 3·P_eff` birlikte sağlanır; lütuf modifikatörü `P_eff`'i artırınca N artar; aynı fonksiyon AI'nın kullandığı F-E1 ile tutarlı (çapraz test) | Otomatik |

@@ -21,6 +21,17 @@ class SpreadDecision extends RefCounted:
 	var level_before: int = 0
 
 
+## Etkin yayılım aralığı `I_eff` = bölüm tabanı + lütuflar (`erlik_spread_interval` stat'ı, ADR-0006);
+## en az 1. Tur sonu yayılımı ve HUD "Yayılım: N tur" sayacı aynı değeri okur.
+static func effective_interval(map_state: MapState, modifiers: Array[StatModifier]) -> int:
+	return maxi(1, roundi(StatResolver.resolve(STAT_SPREAD_INTERVAL, float(map_state.erlik_spread_interval), modifiers)))
+
+
+## Bir sonraki yayılıma kalan tur `N = max(0, I_eff − (tur − son_yayılım))`; 0 = bu tur sonu (hud §5.1, H1).
+static func turns_until_spread(map_state: MapState, modifiers: Array[StatModifier]) -> int:
+	return maxi(0, effective_interval(map_state, modifiers) - (map_state.current_turn - map_state.last_erlik_spread_turn))
+
+
 ## [param effective_interval] < 1 ise 1 sayılır (her tur yayılım).
 func decide(map_state: MapState, effective_interval: int) -> SpreadDecision:
 	var decision: SpreadDecision = SpreadDecision.new()

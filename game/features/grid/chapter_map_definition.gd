@@ -48,4 +48,6 @@ func create_map_state() -> MapState:
 	for definition: RegionDefinition in regions:
 		var data: RegionData = definition.create_region_data()
 		state.regions[data.region_id] = data
+		if data.owner == RegionData.Owner.ENEMY:
+			state.enemy_region_ids_initial.append(data.region_id)
 	return state

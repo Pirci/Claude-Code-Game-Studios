@@ -23,7 +23,38 @@ static func build(
 		map_state.game_result == MapState.GameResult.ONGOING and spirit.is_offer_pending())
 	if win_condition != null:
 		_fill_objective(model, map_state, win_condition)
+		_fill_m2(model, map_state, win_condition, modifiers)
 	return model
+
+
+## M2 alanları (hud §5.1, §5.2, §5.5; H1–H3, H8–H10) — tur sonu ve AI ile aynı saf kurallardan.
+static func _fill_m2(model: HudModel, map_state: MapState, win: WinCondition, modifiers: Array[StatModifier]) -> void:
+	model.spread_visible = win.erlik_loss_threshold > 0
+	model.spread_turns_left = ErlikSpreadController.turns_until_spread(map_state, modifiers)
+	model.spread_target_id = ErlikSpreadController.new().decide(
+		map_state, ErlikSpreadController.effective_interval(map_state, modifiers)).target_id
+	model.focus_at_risk = model.spread_turns_left == 0 and model.spread_target_id != &"" \
+		and model.spread_target_id in win.erlik_foci
+	model.enemy_regions_initial = map_state.enemy_region_ids_initial.size()
+	model.enemy_counter_visible = win.must_defeat_all_enemies and model.enemy_regions_initial > 0
+	for region_id: StringName in map_state.enemy_region_ids_initial:
+		var region: RegionData = map_state.get_region(region_id)
+		if region != null and region.owner != RegionData.Owner.ENEMY:
+			model.enemy_regions_taken += 1
+	model.red_warning = warning_for(model)
+
+
+## H8 önceliği; oyun bitince uyarı yok.
+static func warning_for(model: HudModel) -> HudModel.Warning:
+	if model.game_result != MapState.GameResult.ONGOING:
+		return HudModel.Warning.NONE
+	if model.erlik_warning:
+		return HudModel.Warning.ERLIK_LOSS
+	if model.focus_at_risk:
+		return HudModel.Warning.FOCUS_AT_RISK
+	if model.spread_visible and model.spread_turns_left == 0:
+		return HudModel.Warning.SPREAD_NOW
+	return HudModel.Warning.NONE
 
 
 ## Hedef ilerlemesi ve Erlik'in Gölgesi — kazanma koşulunun kendi saf fonksiyonlarından.
