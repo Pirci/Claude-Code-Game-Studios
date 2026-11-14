@@ -1,10 +1,10 @@
-# Devam İndeksi — ULUS
+# Devam İndeksi — TURAN: Kızılelma
 
 > **Tek doğruluk kaynağı.** Kullanıcı "devam" yazdığında iş buradan sürdürülür.
 > Görev listesi, durumlar ve tamamlanan işlerin kaydı burada tutulur;
 > `production/session-state/active.md` yalnızca oturum notlarıdır.
 
-- **Son güncelleme:** 2026-10-19
+- **Son güncelleme:** 2026-11-14
 - **Son commit:** `3f1d98f` (C-93: E5 bölüm seçimi M2)
 - **Proje evresi:** Concept (`production/stage.txt`)
 - **Aktif görev:** C-42 — kullanıcının playtest raporu bekleniyor; sıradaki C-94 (Perde 1 denge replay'i)
@@ -243,6 +243,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | C-100 | [ ] | **Demo (M1) erişilebilirlik:** Prolog komşuluk çizgisi `#436129` zemin `#1A2614`'e 2,24:1 (< 3:1, WCAG 1.4.11 grafik nesne) — bölge bağlantıları zor seçiliyor. Öneri: Bozkır Yeşili rampasında zemine ≥ 3:1 veren ton (art-director onayı), `chapter_1_map.tres` tek satır; `map_readability_contrast_test` istisnası silinir | C-86 kontrast denetimi | C-86 | Prolog çizgi/zemin ≥ 3:1, istisna listesi boş; Prolog ekran görüntüsü (en) |
 | C-101 | [ ] | **M2 · UI:** Perde 1 üst çubuk ilerleme satırı (`Objective tribes · foci · enemy lands`) ru/ar/de'de 640 px'e sığmıyor, sonu `…` ile kırpılıyor (C-88 `_fit_objective_row`) — kısa biçim key'leri ya da ikon+kesir | C-91 bulgusu (`production/qa/evidence/c91-perde1-map-ru.png`, `c91-perde1-map-ar.png`) | C-91 | 11 dilde üst çubuk kırpmasız (ölçüm testi `Font.get_string_size`); ekran görüntüsü ru/ar/de |
 | C-102 | [ ] | **M2 · UI (karar gerekli):** **Hamle önizlemesi yok** — `MapController.preview_move()` var ama hiçbir görünüm çağırmıyor; `PURIFY_PREVIEW_OK/FAIL`, `PURIFY_CONFIRM_AGAIN` (başarısız arındırmada ikinci tık onayı, ADR-0011 §6), `CHAPTER_1/2_HUNT_HEADING/READY/NOT_READY` metinleri yazılı ama gösterilmiyor (Prolog dahil). Hedef modunda hedef bölge üzerine gelince/odaklanınca önizleme satırı + başarısız arındırmada ikinci seçim | C-92 bulgusu | C-92 | ux/battle-report.md §216 "önizleme / ikinci tık"; narrative-voice AC-V3 (`HUNT_READY` Kök Böri anı); ekran görüntüsü + entegrasyon testi |
+| C-103 | [ ] | **Tür pivotu (karar gerekli):** oyun artık strateji + kartla şehir kurma + kule savunması + sıra tabanlı karışımı (kullanıcı, 2026-11-14). `game-concept.md` Temel Döngü / Mekanikler / Sütunlar / MVP yeniden yazılır (`/brainstorm` veya `/quick-design` ile: kart destesi, şehir ızgarası, dalga yapısı, mevcut bölge haritasının rolü), ardından `systems-index.md` ve etkilenen GDD/ADR listesi (`/propagate-design-change`). **M2 görevleri (C-94…C-48) eski tasarıma göredir — bu görev kapanmadan sürdürülüp sürdürülmeyeceği kullanıcıya sorulur** | Kullanıcı isteği 2026-11-14 | — | Konsept belgesinde "Tür Revizyonu" notu kalkar; yeni sistem listesi + hangi mevcut sistemin kalıp hangisinin değiştiği yazılı; kuyruk yeni türe göre yeniden sıralanmış |
 | C-48 | [ ] | **M2 · Kilometre taşı kapanışı: Vertical Slice** — `/vertical-slice` + `/gate-check` (Pre-Production → Production) | M2 | C-46, C-47 | PROCEED/PIVOT/KILL kararı yazılı; PIVOT'ta düzeltme görevleri kuyruğa eklenir |
 
 ## Tamamlananlar
@@ -252,6 +253,7 @@ Durum işaretleri: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti · `[-]` 
 | 2026-10-07 | Menü başlık/alt başlık çevirileri, `locale/fallback="en"` | `b0083ee` |
 | 2026-10-07 | Oyun adı Steppeborn → ASENA | `dcf5d83` |
 | 2026-10-08 | Oyun adı ASENA → **ULUS: Blood of the Sky Wolf** (başlık tüm dillerde ULUS, alt başlık çevrili) | `79aae73` |
+| 2026-11-14 | Oyun adı ULUS → **TURAN: Kızılelma** (başlık tüm dillerde TURAN, alt başlık çevrilmez; palet dosyası `global_palette_turan.gpl`; `user://` klasörü TURAN); tür tanımı: strateji + kartla şehir kurma + kule savunması + sıra tabanlı (yeniden tasarım C-103) | bu commit |
 | 2026-10-07 | gdUnit4 runner `.gitignore` yüzünden eksikti → geri getirildi, CI sessiz başarı açığı kapandı | `a6233ee` |
 | 2026-10-07 | Pixel art geçişi: 640×360, pixel fontlar (Fusion Pixel + Unifont), LocaleFontController | `5266962` |
 | 2026-10-07 | Tüm ekranlar 640×360'a yeniden yerleşti, pixel UI teması, RTL düzeltmeleri | `80fbc01` |

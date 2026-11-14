@@ -446,3 +446,8 @@
 - ChapterSelectContext: bind_services(..., newly_unlocked, reduce_motion, audio); _scene_node/_locked_button/_on_action_focused/_announce_unlock/is_unlock_glowing; SelectPanel, StatusLine, StateIcon, NameLabel, Teaser, NewMark, LockedButton. RootContext: OUTRO_NARRATIVE'dan gelişte unlocked = next_chapter.
 - NumberFormatter.isolate (FSI). İkonlar icon_chapter_{completed,available,available_glow,locked,new}.png.
 - tests/unit/campaign/chapter_select_nodes_test.gd (5). Testler 510. NEXT: C-94.
+
+## Session Extract — Rename + genre (2026-11-14)
+- Game renamed ULUS → **TURAN: Kızılelma** (user request). GAME_TITLE = "TURAN", GAME_SUBTITLE = "Kızılelma" in all 11 locales (proper noun, untranslated). project.godot config/name="TURAN" (no colon — user:// folder name; old saves under app_userdata/ULUS are not migrated). export_presets: TURAN.exe / TURAN.zip, com.turan.prologdemo. Palette file → art-source/global_palette_turan.gpl.
+- Left unchanged on purpose (dated records / already-built C-42 artefacts): smoke-2026-10-19.md, playtest-c42-protocol.md, architecture-review-2026-10-19.md, old rows in continuation.md.
+- Genre (user decision): strategy + card city-builder + tower defence + turn-based. game-concept.md Hızlı Anlatım / Temel Kimlik updated + "Tür Revizyonu" note; mechanics sections, GDDs and code still describe the old grand-strategy design. Redesign queued as C-103 (needs user decisions). NEXT: ask user whether M2 (C-94…) continues before C-103.

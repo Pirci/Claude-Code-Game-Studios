@@ -1,10 +1,10 @@
-# HUD Tasarımı: ULUS
+# HUD Tasarımı: TURAN
 
 > **Durum**: Approved (C-45, 2026-10-21)
 > **Bağlantılı kararlar**: K1 (Yayılım: Sade), K2 (Kağan vuruş eşiği satırı), K3 (Hedef sayacı), K4 (klavyeyle bölge seçimi M2 kapsamında) — bkz. §13
 > **Yazar**: ux-designer
 > **Son güncelleme**: 2026-10-21
-> **Oyun**: ULUS (tek belge, öğe başına değil)
+> **Oyun**: TURAN (tek belge, öğe başına değil)
 > **Platform**: PC (Steam) — yalnız klavye/fare. Gamepad, dokunmatik, Steam Deck, konsol YOK (technical-preferences, 2026-10-08)
 > **İlgili GDD/ADR**: `resource-system.md` §9–10, `spirit-system.md` §3.4/§3.6/§4.7, `scene-flow.md` §10, `enemy-layers.md` §3.3/§10, `region-map-system.md` §3.6, `design/levels/perde1-dogu-curcet.md` §7, `gdd-cross-review-2026-10-21.md` (D3, S2-a, H5), `design/ux/battle-report.md`, ADR-0009, ADR-0010, ADR-0011
 > **Erişilebilirlik katmanı**: Standart (renk körlüğü, Hareketi Azalt, klavye odak zinciri; Büyük Metin ertelendi — art bible §7). Ekran okuyucu / AccessKit **kapsam dışı** (Standart katman); `accessibility_name` kodda kalabilir, kabul ölçütü değildir.
@@ -17,7 +17,7 @@
 
 ## 1. HUD Felsefesi
 
-**Bilgiyle ilişki.** ULUS sıra tabanlı bir stratejidir: oyuncu zamanı baskısı altında değil, **karar vermek için** bakar. HUD "stratejist bakışı"nın çerçevesidir (art bible §7): harita odakta, HUD sade. Oyuncunun asıl sorusu her turda aynıdır: *"Ne kadar kaynağım var, hedefe ne kadar yakınım, ne beni zorlayacak?"* HUD yalnız bu üç soruyu cevaplar; neden-sonuç ayrıntısı bağlamsal panelde ve modallarda yaşar.
+**Bilgiyle ilişki.** TURAN sıra tabanlı bir stratejidir: oyuncu zamanı baskısı altında değil, **karar vermek için** bakar. HUD "stratejist bakışı"nın çerçevesidir (art bible §7): harita odakta, HUD sade. Oyuncunun asıl sorusu her turda aynıdır: *"Ne kadar kaynağım var, hedefe ne kadar yakınım, ne beni zorlayacak?"* HUD yalnız bu üç soruyu cevaplar; neden-sonuç ayrıntısı bağlamsal panelde ve modallarda yaşar.
 
 **Görünürlük ilkesi: BAĞLAMSAL, ama karar-kritik sayılar sabit.** Tur boyunca kararı değiştiren az sayıda değer (altın, gelir, Ruh, tur, hedef, Erlik) kalıcıdır; seçili bölgeye ait ayrıntı seçimle gelir; olay anlatımı (savaş, yayılım sonucu) modalda gelir. Şüphede: **sabit satır eklemek yerine bağlamsal panele koy.**
 

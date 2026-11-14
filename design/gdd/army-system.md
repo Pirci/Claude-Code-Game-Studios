@@ -1,6 +1,6 @@
 # Sistem GDD: Ordu ve Hareket Sistemi
 
-*Oyun: ULUS: Blood of the Sky Wolf*
+*Oyun: TURAN: Kızılelma*
 *Oluşturulma: 2026-07-14*
 *Durum: Belgelenmiş (kod mevcut — `game/features/army/army_controller.gd`)*
 *Katman: Core*

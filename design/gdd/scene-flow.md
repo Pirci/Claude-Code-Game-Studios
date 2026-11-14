@@ -1,6 +1,6 @@
 # Sistem GDD: Sahne Akışı & İlerleme
 
-*Oyun: ULUS: Blood of the Sky Wolf*
+*Oyun: TURAN: Kızılelma*
 *Oluşturulma: 2026-10-19*
 *Durum: Designed (inceleme bekliyor — `/design-review` taze oturumda). Kod henüz yok: uygulama C-40, mimari karar C-62, anlatı metinleri C-54 ([`narrative-voice.md`](../narrative/narrative-voice.md)); kayıp sebebi C-63'te kodlandı (`MapState.loss_reason`). Prolog kayıp kuralı C-49 ile belirlendi (§3.7).*
 *Creative Director Review (CD-GDD-ALIGN): atlandı — lean mod*

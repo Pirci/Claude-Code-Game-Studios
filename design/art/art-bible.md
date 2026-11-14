@@ -1,4 +1,4 @@
-# Art Bible — ULUS: Blood of the Sky Wolf
+# Art Bible — TURAN: Kızılelma
 
 > **Durum**: Tamamlandı — 9/9 bölüm onaylandı (2026-10-07)
 > **Sanat yönü**: Pixel art (2026-10-07'de sulu boyadan geçildi)
@@ -62,7 +62,7 @@ süvarisi ve şu an sağlam" okunabilmeli.
 
 ### Pixel Art Konumlandırması
 
-ULUS **low-bit disiplin ile orta-bit palet** arasındadır: her asset basit,
+TURAN **low-bit disiplin ile orta-bit palet** arasındadır: her asset basit,
 ikonik ve hızla okunur; ama kozmik atmosfer için renkler katmanlıdır — **asset
 başına 16–32 renk, toplam ~64–128 renklik global palet**. Bu seviye solo
 üretim için sürdürülebilir ve kozmik ikiliği taşımaya yeter.
@@ -698,7 +698,7 @@ estetiğidir; dünyanın içinde olması gerekmez.
   **C-45 (2026-10-21) başlık kuralı:** M2'de tüm panel/modal başlıkları (rapor, lütuf, zafer,
   yenilgi, hedef paneli, anlatı sayfa başlığı) 12px `HeaderLabel` (Arapça 16px); 24px yalnızca
   tam ekran başlık kartı (sahne adı/Kağan ilanı) ve bu cila işidir; 36px yalnızca oyun
-  adı "ULUS" (Latin, her dilde Fusion zinciri — keskin kalır).
+  adı "TURAN" (Latin, her dilde Fusion zinciri — keskin kalır).
 - **Arapça:** tek gövde boyutu (16px), hiyerarşi yalnızca renkle; 32px yalnızca
   özel başlık.
 - **Büyük harf:** büyük harfli metin çeviri dosyasında doğrudan büyük yazılır;
@@ -769,7 +769,7 @@ palet dışı renk üretir).
 ### Ekranlar
 
 - **Ana menü:** indigo `#141A33` zemin, soluk Kök Böri silüeti, kenarlarda altın
-  tündük; "ULUS" 36px altın; birincil buton süslü, diğerleri sade.
+  tündük; "TURAN" 36px altın; birincil buton süslü, diğerleri sade.
 - **Harita HUD:** üst bar (bölüm adı / altın / tur) ve alt bar (Ana Menü / Tur
   Bitir) **%70 opak koyu zemin** üzerinde; sağda 136px bölge bilgi paneli. HUD
   sade, harita odakta.
@@ -849,7 +849,7 @@ seçeneği.
 - **Export:** PNG, sRGB, **yalnızca 1× native boyut**. Alfa yalnızca 0 veya 255
   (yarı saydam piksel yok). Ölçeklenmiş varyant (`_2x` vb.) repoya girmez —
   büyütme Godot'un işidir (integer scaling).
-- **Global palet:** `art-source/global_palette_ulus.gpl` — **tek kaynak** (metin,
+- **Global palet:** `art-source/global_palette_turan.gpl` — **tek kaynak** (metin,
   diff'te incelenebilir; Aseprite "Load Palette" ve GIMP/Krita doğrudan açar; renk
   adları rampa + sıra + hex). Bölüm 4 değişirse: önce bu tablo → `.gpl` güncellenir
   → doğrulayıcı yeniden çalışır → etkilenen asset'ler yeniden export edilir.

@@ -1,4 +1,4 @@
-# ULUS: Blood of the Sky Wolf — AI Görsel Üretim Prompt'ları (Pixel Art)
+# TURAN: Kızılelma — AI Görsel Üretim Prompt'ları (Pixel Art)
 
 > **Bağlayıcı kaynak:** [design/art/art-bible.md](../art/art-bible.md). Bu dosya
 > art bible'ın kurallarını prompt diline çevirir; çelişki olursa bible geçerlidir.
@@ -15,7 +15,7 @@ Platform: **Gemini Nano Banana** (Nano Banana 2 / Nano Banana Pro). Prompt'lar
 AI görselleri **konsept ve kompozisyon referansıdır; doğrudan oyuna girmez.**
 
 Neden: art bible her oyun asset'inden şunları ister — yalnızca global palet
-(`art-source/global_palette_ulus.gpl`, 94 renk), **1× native boyut**, harita
+(`art-source/global_palette_turan.gpl`, 94 renk), **1× native boyut**, harita
 birimlerinde ve <16px ikonlarda anti-alias yok, alfa yalnızca 0/255, tutarlı piksel
 ızgarası. Görsel üreticiler bunları güvenilir biçimde sağlamaz (düzensiz piksel
 boyutu, palet dışı ara tonlar, bulanık kenarlar — "sahte pixel art").
@@ -68,7 +68,7 @@ or letters in the image, watermarks.
 
 ## Palet ve Renk Rolleri (prompt'a hex ile yazılır)
 
-Tam liste: `art-source/global_palette_ulus.gpl` (bible §4). Prompt başına yalnızca
+Tam liste: `art-source/global_palette_turan.gpl` (bible §4). Prompt başına yalnızca
 sahneye gereken rampaları yaz — fazlası çıktıyı bulandırır.
 
 | Rol | Hex | Not |

@@ -1,6 +1,6 @@
 # Sistem GDD: Bölge Haritası ve Tur Akışı
 
-*Oyun: ULUS: Blood of the Sky Wolf*
+*Oyun: TURAN: Kızılelma*
 *Oluşturulma: 2026-07-14*
 *Durum: Belgelenmiş (kod mevcut — `game/features/grid/`, `game/state/`) + planlı bölümler (§3.4 yayılım adımı, §3.6–3.7 oyun sonu: C-38, C-51; Erlik kaybı C-49 → kod C-63)*
 *Katman: Core*

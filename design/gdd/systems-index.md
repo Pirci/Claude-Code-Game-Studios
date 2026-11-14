@@ -1,6 +1,5 @@
-# Sistem GDD İndeksi — ULUS: Blood of the Sky Wolf
+# Sistem GDD İndeksi — TURAN: Kızılelma
 
-*Türkçe alt-başlık: Gökkurt'un Kanı*
 *Son Güncelleme: 2026-10-21* — son çapraz inceleme: [gdd-cross-review-2026-10-21.md](gdd-cross-review-2026-10-21.md) (**CONCERNS**, C-44). Önceki: [2026-10-19](gdd-cross-review-2026-10-19.md) (**CONCERNS**, 0 engelleyici; uyarılar C-53 / C-49); önceki: [2026-10-08](gdd-cross-review-2026-10-08.md) (FAIL)
 
 Bu indeks tüm sistem GDD'lerini ve durumlarını takip eder. Yeni bir GDD

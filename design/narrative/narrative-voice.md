@@ -1,6 +1,6 @@
 # Anlatı Sesi Rehberi — Raporlar, Kök Böri İşareti, Canavar Anı
 
-*Oyun: ULUS: Blood of the Sky Wolf*
+*Oyun: TURAN: Kızılelma*
 *Oluşturulma: 2026-10-19 — Görev C-54 (çapraz inceleme D7 / N10; `scene-flow.md` Q8)*
 *Durum: Taslak (gece modu — kullanıcıya ait kararlar önerilen seçenekle verildi, §9)*
 *Sahip: narrative-director (metin taslakları writer düzeyinde, ana dil incelemesi bekliyor)*

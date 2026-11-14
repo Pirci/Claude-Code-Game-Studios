@@ -1,6 +1,6 @@
 # Sistem GDD: Savaş Çözümü (Otomatik)
 
-*Oyun: ULUS: Blood of the Sky Wolf*
+*Oyun: TURAN: Kızılelma*
 *Oluşturulma: 2026-07-14*
 *Durum: Belgelenmiş (kod mevcut — `game/features/combat/combat_resolver.gd`) + planlı: "Etkin güç" (M2)*
 *Katman: Core*

@@ -19,7 +19,7 @@ Technical direction (night-mode autonomous run, recommended option accepted per 
 
 ## Summary
 
-ULUS had no audio infrastructure: the settings screen already wrote `Music` and `SFX` bus
+TURAN had no audio infrastructure: the settings screen already wrote `Music` and `SFX` bus
 volumes, but no bus layout existed, so those sliders did nothing, and the art bible's
 selection "click" (the colour-blind fallback for selection, §4) could not be played. We add a
 project bus layout (`Master` → `Music`, `SFX`), a persistent `AudioController` owned by

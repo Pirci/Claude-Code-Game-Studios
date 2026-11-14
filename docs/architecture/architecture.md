@@ -1,4 +1,4 @@
-# ULUS: Blood of the Sky Wolf — Master Architecture
+# TURAN: Kızılelma — Master Architecture
 
 ## Document Status
 
@@ -24,12 +24,12 @@
 
 ## 1. Engine Knowledge Gap Summary
 
-ULUS is a turn-based 2D game: no physics simulation, no 3D, no networking, no per-frame
+TURAN is a turn-based 2D game: no physics simulation, no 3D, no networking, no per-frame
 gameplay loop. Most engine surface it touches is stable since 4.0. The model's training data
 covers ~4.3; 4.4–4.7 are post-cutoff. The engine reference under
 `docs/engine-reference/godot/` is verified for 4.6 only (refresh task **C-58**).
 
-| Risk | Domain | Relevance to ULUS | Status |
+| Risk | Domain | Relevance to TURAN | Status |
 | --- | --- | --- | --- |
 | HIGH | GDScript language additions (4.5 `@abstract`, variadic args; 4.4 typed dictionaries) | `SaveStore` (`@abstract`), typed `Dictionary[StringName, RegionData]` for new state | `@abstract` verified on 4.7.1 (one-line form, body-less funcs); typed dicts verified |
 | HIGH | Typed-array invariance (runtime) | `StatResolver` (`Array[StatModifier]`) | Verified 4.7.1: runtime error for untyped input; `.filter()` keeps typing; convert with `assign()` |
@@ -165,7 +165,7 @@ Feature folders never import each other's *view* nodes; services depend only dow
 
 ## 4. Data Flow
 
-ULUS has **no per-frame gameplay update**: state changes only in response to input or
+TURAN has **no per-frame gameplay update**: state changes only in response to input or
 `end_turn`. Views redraw on signals (`queue_redraw()` / refresh), never by polling.
 
 ### 4.1 Player move (input → rules → state → views)

@@ -1,6 +1,6 @@
 # Seviye: Perde 1 — Doğu (Cürcet Yönü)
 
-*Oyun: ULUS: Blood of the Sky Wolf · Görev: C-43 · `chapter_id` = 2 (Prolog = 1) · `campaign.tres` kimliği: `perde1_dogu`*
+*Oyun: TURAN: Kızılelma · Görev: C-43 · `chapter_id` = 2 (Prolog = 1) · `campaign.tres` kimliği: `perde1_dogu`*
 
 **Durum: Onaylı (C-43, 2026-10-20) — değerler gerçek controller denge testiyle uygulamada yeniden doğrulanacak**
 
@@ -344,7 +344,7 @@ Adım 4'te cilaya ertelendi. Mevcut `AudioController` / `SfxLibrary` (ADR-0008) 
 
 ## 9. Toplanabilirler ve Gizli Alanlar
 
-Uygulanmaz — ULUS'ta toplanabilir/gizli alan yoktur. İsteğe bağlı ödüller: bkz. §3.5 ve §6.
+Uygulanmaz — TURAN'da toplanabilir/gizli alan yoktur. İsteğe bağlı ödüller: bkz. §3.5 ve §6.
 
 ## 10. Teknik Notlar
 

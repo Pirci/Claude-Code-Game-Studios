@@ -20,7 +20,7 @@ Technical direction (night-mode autonomous run).
 
 ## Summary
 
-ULUS ships in 11 languages (en, tr, de, fr, es, zh, ja, ko, ru, pt, ar) on a 640×360 pixel-art
+TURAN ships in 11 languages (en, tr, de, fr, es, zh, ja, ko, ru, pt, ar) on a 640×360 pixel-art
 canvas. Text must stay pixel-crisp in every script, including Arabic (RTL) and CJK. We keep one
 CSV translation table with `tr()` keys, a pixel-font chain (Fusion Pixel 12px, GNU Unifont 16px)
 used only at native sizes or integer multiples, a theme-wide font switch for Arabic, locale-driven

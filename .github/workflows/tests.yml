@@ -1,4 +1,4 @@
-# ULUS — otomatik test kapısı (coding standards: her push/PR'da testler, kırmızıysa merge yok).
+# TURAN — otomatik test kapısı (coding standards: her push/PR'da testler, kırmızıysa merge yok).
 # Headless Godot ile tools/ci/run-tests.sh çalışır: GDUnit4 birim testleri + palet doğrulayıcı.
 # Godot sürümü docs/engine-reference/godot/VERSION.md ile aynı tutulur; sürüm değişince
 # GODOT_SHA512'yi resmi SHA512-SUMS.txt'den güncelle.

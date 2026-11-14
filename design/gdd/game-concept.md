@@ -1,25 +1,38 @@
-# Oyun Konsepti: ULUS: Blood of the Sky Wolf
+# Oyun Konsepti: TURAN: Kızılelma
 
-*Türkçe alt-başlık: Gökkurt'un Kanı*
-
-*İsim geçmişi: Steppeborn → ASENA (2026-10-07) → **ULUS: Blood of the Sky Wolf** (2026-10-08). "Ulus" = Türk-Moğol dünyasında yurt/devlet; logo kelimesi ULUS, alt başlık her dile çevrilir.*
+*İsim geçmişi: Steppeborn → ASENA (2026-10-07) → ULUS: Blood of the Sky Wolf (2026-10-08) → **TURAN: Kızılelma** (2026-11-14). Logo kelimesi TURAN; alt başlık "Kızılelma" özel addır, hiçbir dile çevrilmez.*
 
 *Oluşturulma: 2026-07-10*
-*Son Güncelleme: 2026-10-18*
-*Durum: Taslak — Oğuz Kağan omurgasına revize edildi*
+*Son Güncelleme: 2026-11-14*
+*Durum: Taslak — **tür revizyonu sürüyor** (aşağıdaki "Tür Revizyonu" notuna bakın)*
 
 ---
 
 ## Hızlı Anlatım
 
-> Sıra tabanlı, harita odaklı büyük strateji oyunu. Oğuz Kağan Destanı'nı
-> yaşıyorsunuz: doğaüstü işaretlerle doğan ata-kahraman Oğuz'un, gök kurt
-> **Kök Böri**'nin rehberliğinde dört yöne açılışı. Her yönde bir kral (siyasi
-> düşman) ve Erlik'in bozgunu (doğaüstü düşman) sizi bekliyor. Ordu üretin,
-> bölgeleri fethedin, bozulmuş toprakları arındırın, ruh gücü toplayın. Savaşlar
-> otomatik çözümleniyor ama ayrıntılı raporlarla sunuluyor. Gerçek zamanlı
-> çatışma yok — sadece stratejik harita. Final: imparatorluğun altı oğula
-> bölünmesi — zirve ve bölünme aynı anda.
+> Sıra tabanlı bir strateji karışımı: **kartlarla şehir kurma + kule savunması +
+> harita stratejisi**. Oğuz Kağan Destanı'nı yaşıyorsunuz: gök kurt **Kök Böri**'nin
+> rehberliğinde dört yöne açılış. Her turda elinizdeki kartlarla yurdunuzu
+> kurarsınız (yapılar, savunma kuleleri, birlikler), sonra düşman dalgaları —
+> kralların orduları ve Erlik'in bozgunu — gelir ve kurduğunuz savunma sınanır.
+> Gerçek zamanlı çatışma yok; her şey sıra tabanlı. Ufuktaki hedef **Kızılelma**:
+> dört yönün birleşmesi ve imparatorluğun altı oğula bölünmesi.
+
+---
+
+## Tür Revizyonu (2026-11-14)
+
+Kullanıcı kararı: oyun artık **strateji + kartla şehir kurma (card city-builder) +
+kule savunması (tower defence) + sıra tabanlı** karışımıdır. Önceki tür "Sıra
+Tabanlı Büyük Strateji / Kampanya Haritası Strateji" idi.
+
+- Bu belgenin **Hızlı Anlatım** ve **Temel Kimlik** bölümleri yeni türe göre güncellendi.
+- **Henüz güncellenmedi:** Temel Döngü, Temel Mekanikler, Oyun Sütunları, Mekanikler,
+  MVP Tanımı ve tüm sistem GDD'leri (`army`, `combat`, `region-map`, `resource`,
+  `spirit`, `enemy-layers`, `scene-flow`) hâlâ eski büyük strateji tasarımını anlatır.
+  Mevcut kod (Prolog + Perde 1) da o tasarımı uygular.
+- Yeniden tasarım `production/continuation.md` → **C-103** görevinde izlenir; kart
+  destesi, şehir ızgarası, dalga yapısı gibi kararlar orada kullanıcıyla alınır.
 
 ---
 
@@ -27,9 +40,9 @@
 
 | Husus | Detay |
 | ---- | ---- |
-| **Tür** | Sıra Tabanlı Büyük Strateji / Kampanya Haritası Strateji |
+| **Tür** | Sıra Tabanlı Strateji — Kartla Şehir Kurma + Kule Savunması karışımı |
 | **Platform** | PC (Steam) |
-| **Hedef Kitle** | Strateji sevenler + Türk mitolojisi/destanı meraklıları |
+| **Hedef Kitle** | Strateji, kart ve kule savunması sevenler + Türk mitolojisi/destanı meraklıları |
 | **Oyuncu Sayısı** | Tek oyunculu |
 | **Oturum Süresi** | 20-35 dakika (1 sahne) |
 | **Gelir Modeli** | Premium (tek seferlik satın alma) |

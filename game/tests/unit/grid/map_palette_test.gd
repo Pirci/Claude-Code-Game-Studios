@@ -1,6 +1,6 @@
 extends GdUnitTestSuite
 ## Harita zemini ve komşuluk çizgileri palete bağlı ve data-driven — art bible §4
-## "Yön Başına Sıcaklık" (C-22). Beklenen hex'ler art-source/global_palette_ulus.gpl'dedir.
+## "Yön Başına Sıcaklık" (C-22). Beklenen hex'ler art-source/global_palette_turan.gpl'dedir.
 
 
 const PROLOG_MAP: String = "res://features/grid/data/chapter_1_map.tres"

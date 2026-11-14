@@ -1,6 +1,6 @@
 # Sistem GDD: Katmanlı Düşman (Siyasi Krallar)
 
-*Oyun: ULUS: Blood of the Sky Wolf*
+*Oyun: TURAN: Kızılelma*
 *Oluşturulma: 2026-10-21 — C-44; kullanıcı onaylı (§11 kararları, 2026-10-21)*
 *Durum: Designed (C-44). Kod henüz yok (R1 / `EnemyAIProfile` / `reason` uygulaması C-44 uygulama görevi).*
 *Creative Director Review (CD-GDD-ALIGN): yapılmadı*

@@ -4,14 +4,14 @@ extends SceneTree
 ## Kullanım (repo kökünden):
 ##   godot --headless --path game --script ../tools/asset-pipeline/validate_palette.gd \
 ##       -- <palet.gpl> <taranacak_klasör>
-## Varsayılan: ../art-source/global_palette_ulus.gpl, res://assets/art
+## Varsayılan: ../art-source/global_palette_turan.gpl, res://assets/art
 ##
 ## Klasördeki tüm PNG'leri tarar; alfa 0 pikseller atlanır. Alfa 0/255 dışındaki
 ## (yarı saydam) ve paletteki 94 renk dışındaki her pikseli dosya + konum + hex ile
 ## raporlar. İhlal varsa exit 1. Aynı dosyada tekrar eden ihlaller renk başına
 ## gruplanır (ilk konum + adet) — rapor okunur kalsın.
 
-const DEFAULT_PALETTE: String = "../art-source/global_palette_ulus.gpl"
+const DEFAULT_PALETTE: String = "../art-source/global_palette_turan.gpl"
 const DEFAULT_DIR: String = "res://assets/art"
 const MAX_LINES_PER_FILE: int = 20
 

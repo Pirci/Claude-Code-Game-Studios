@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ULUS — GDUnit4 birim testlerini headless çalıştırır.
+# TURAN — GDUnit4 birim testlerini headless çalıştırır.
 #
 # Kullanım:
 #   GODOT=/path/to/Godot tools/ci/run-tests.sh [test_yolu]
@@ -63,7 +63,7 @@ TEST_EXIT=$?
 # Palet doğrulama (art bible §8): game/assets/art altındaki PNG'ler global palette uymalı.
 "$GODOT" --headless --path . \
   --script ../tools/asset-pipeline/validate_palette.gd \
-  -- "$PROJECT_DIR/../art-source/global_palette_ulus.gpl" res://assets/art
+  -- "$PROJECT_DIR/../art-source/global_palette_turan.gpl" res://assets/art
 PALETTE_EXIT=$?
 
 # ADR-0006: GameState.modifiers yalnızca features/modifiers/ içinden okunur/yazılır —
