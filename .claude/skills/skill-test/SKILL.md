@@ -3,6 +3,7 @@ name: skill-test
 description: "Validate skill files for structural compliance and behavioral correctness. Three modes: static (linter), spec (behavioral), audit (coverage report)."
 argument-hint: "static [skill-name | all] | spec [skill-name] | category [skill-name | all] | audit"
 user-invocable: true
+disable-model-invocation: true
 allowed-tools: Read, Glob, Grep, Write
 model: sonnet
 ---

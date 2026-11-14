@@ -3,6 +3,7 @@ name: adopt
 description: "Brownfield onboarding — audits existing project artifacts for template format compliance (not just existence), classifies gaps by impact, and produces a numbered migration plan. Run this when joining an in-progress project or upgrading from an older template version. Distinct from /project-stage-detect (which checks what exists) — this checks whether what exists will actually work with the template's skills."
 argument-hint: "[focus: full | gdds | adrs | stories | infra]"
 user-invocable: true
+disable-model-invocation: true
 allowed-tools: Read, Glob, Grep, Write, AskUserQuestion
 model: sonnet
 agent: technical-director

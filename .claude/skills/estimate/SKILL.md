@@ -3,6 +3,7 @@ name: estimate
 description: "Estimates task effort by analyzing complexity, dependencies, historical velocity, and risk factors. Produces a structured estimate with confidence levels."
 argument-hint: "[task-description]"
 user-invocable: true
+disable-model-invocation: true
 allowed-tools: Read, Glob, Grep
 model: haiku
 ---

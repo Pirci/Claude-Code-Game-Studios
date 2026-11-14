@@ -3,6 +3,7 @@ name: test-setup
 description: "Scaffold the test framework and CI/CD pipeline for the project's engine. Creates the tests/ directory structure, engine-specific test runner configuration, and GitHub Actions workflow. Run once during Technical Setup phase before the first sprint begins."
 argument-hint: "[force]"
 user-invocable: true
+disable-model-invocation: true
 allowed-tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 ---

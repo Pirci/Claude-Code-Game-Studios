@@ -3,6 +3,7 @@ name: perf-profile
 description: "Structured performance profiling workflow. Identifies bottlenecks, measures against budgets, and generates optimization recommendations with priority rankings."
 argument-hint: "[system-name or 'full']"
 user-invocable: true
+disable-model-invocation: true
 agent: performance-analyst
 allowed-tools: Read, Glob, Grep, Bash
 model: sonnet

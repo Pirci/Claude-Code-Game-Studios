@@ -1,112 +1,64 @@
-# Agent Coordination Rules
+# Coordination Rules & Token Budget
 
-1. **Vertical Delegation**: Leadership agents delegate to department leads, who
-   delegate to specialists. Never skip a tier for complex decisions.
-2. **Horizontal Consultation**: Agents at the same tier may consult each other
-   but must not make binding decisions outside their domain.
-3. **Conflict Resolution**: When two agents disagree, escalate to the shared
-   parent. If no shared parent, escalate to `creative-director` for design
-   conflicts or `technical-director` for technical conflicts.
-4. **Change Propagation**: When a design change affects multiple domains, the
-   `producer` agent coordinates the propagation.
-5. **No Unilateral Cross-Domain Changes**: An agent must never modify files
-   outside its designated directories without explicit delegation.
+Amaç: **aynı kalite, daha az token.** Kalite kapıları (testler, ADR uyumu, kullanıcı kararı)
+aynen kalır; kısılan şey tekrar okuma, gereksiz ajan ve uzun çıktıdır.
 
-## Model Tier Assignment
+## Orkestrasyon
 
-Skills and agents are assigned to model tiers based on task complexity:
+1. **Önce kendin yap.** Hedefi bilinen iş (≤ ~5 dosya, tek alan) ana oturumda yapılır. Ajan
+   yalnız şunlar için açılır: (a) geniş arama/keşif, (b) birbirinden bağımsız paralel işler,
+   (c) ana bağlamı şişirecek uzun okuma, (d) bağımsız göz gerektiren inceleme.
+2. **Tek uzman, zincir değil.** Bir iş için doğru uzmanı doğrudan çağır
+   (dosya uzantısı → uzman tablosu `technical-preferences.md`'de). Yönetici → lead → uzman
+   zinciri yalnız çok alanlı bir **karar** için kurulur; uygulama için kurulmaz.
+3. **Paralel.** Girdileri bağımsız ajanlar tek mesajda birlikte açılır; biri BLOCKED ise
+   hemen bildirilir, diğerlerinin sonucuyla kısmi rapor verilir.
+4. **İnceleme kapıya göre.** Bağımsız inceleme (`/code-review`, director gate) yalnız BLOCKING
+   işlerde (formül, durum makinesi, kayıt, mimari) ve kilometre taşı kapılarında. Metin, veri,
+   tek satırlık düzeltme için inceleme ajanı açılmaz — test + diff yeterlidir.
+5. **Alan sınırı.** Ajan kendi alanı dışındaki dosyayı açık görevlendirme olmadan değiştirmez.
+   Anlaşmazlık: tasarımda `creative-director`, teknikte `technical-director`; çok alanlı
+   değişikliğin yayılımını `producer` izler.
 
-| Tier | Model | When to use |
-|------|-------|-------------|
-| **Haiku** | `claude-haiku-4-5-20251001` | Read-only status checks, formatting, simple lookups, templated output — no creative judgment needed |
-| **Sonnet** | `claude-sonnet-4-6` | Implementation, design authoring, analysis of individual systems — default for most work |
-| **Opus** | `claude-opus-4-6` | Multi-document synthesis, high-stakes phase gate verdicts, cross-system holistic review, architecture decisions |
+## Ajan brifi (her çağrıda)
 
-### Agent Tier Dağılımı
+Ajan konuşma geçmişini görmez; brif kısa ama eksiksiz olur:
 
-| Tier | Agents |
-|------|--------|
-| **Opus** (5) | creative-director, technical-director, producer, narrative-director, lead-programmer |
-| **Sonnet** (37) | Tüm designer'lar, programmer'lar, specialist'ler (varsayılan) |
-| **Haiku** (7) | devops-engineer, community-manager, qa-tester, tools-programmer, sound-designer, localization-lead, release-manager |
+- **Hedef** (tek cümle) + görev ID'si · **Okunacaklar** (`yol` + bölüm/satır — "hepsini oku" değil)
+- **Bilinenler / elenenler** (yeniden keşfetmesin) · **Kapsam dışı**
+- **Bitti kriteri** + çalıştırılacak test yolu
+- **Dönüş biçimi:** ≤ 200 kelime — değişen dosyalar (`yol:satır`), test özeti, açık sorular.
+  Kod veya dosya içeriği geri yapıştırılmaz.
 
-### Skill Tier Dağılımı
+## Model kademesi
 
-Skills with `model: haiku`: `/help`, `/sprint-status`, `/story-readiness`, `/scope-check`,
-`/project-stage-detect`, `/changelog`, `/patch-notes`, `/onboard`, `/smoke-check`,
-`/bug-report`, `/estimate`, `/test-evidence-review`
+Kademe takma adla yazılır (`haiku` / `sonnet` / `opus`) — sürüm kimliği yazılmaz.
 
-Skills with `model: opus`: `/review-all-gdds`, `/architecture-review`, `/gate-check`,
-`/create-architecture`, `/milestone-review`, `/design-review`, `/team-combat`,
-`/content-audit`, `/balance-check`
+| Kademe | Ne için | Ajanlar |
+|--------|---------|---------|
+| `haiku` | Arama, durum kontrolü, şablon doldurma, biçimlendirme | Explore (varsayılan), devops-engineer, community-manager, qa-tester, tools-programmer, sound-designer, localization-lead, release-manager |
+| `sonnet` | Uygulama, tek sistem tasarımı/analizi — **varsayılan** | diğer tüm uzmanlar ve lead'ler |
+| `opus` | 5+ belge sentezi, faz kapısı, mimari karar, geri dönüşü zor çıktı | creative-director, technical-director, producer, narrative-director, lead-programmer |
 
-All other skills default to Sonnet.
+- Alt görev daha basitse çağrıda düşür: `Agent(subagent_type="Explore", model="haiku", …)`.
+- Yükseltme (`model="opus"`) yalnız kapı kararı veya çapraz sistem sentezi için.
+- Skill kademeleri SKILL.md `model:` alanındadır; `opus` skill'ler: `/review-all-gdds`,
+  `/architecture-review`, `/gate-check`, `/create-architecture`, `/milestone-review`,
+  `/design-review`, `/team-combat`, `/content-audit`, `/balance-check`.
 
-### Tier Seçim Kuralları
+## Okuma ve çıktı disiplini
 
-Yeni skill veya agent oluştururken:
+- **Arşiv okunmaz:** `production/continuation-archive.md`, `production/session-state/archive.md`,
+  tarihli raporlar (`*-2026-*.md`) — yalnız `Grep` ile hedefli satır.
+- **Büyük dosya:** önce `Grep` ile yer bul, sonra `Read` `offset/limit`. `translations.csv`,
+  `.tres`, GDD'ler bütün olarak okunmaz.
+- **Testler:** `QUIET=1 tools/ci/run-tests.sh [res://tests/…yol]` — yalnız özet + başarısızlar.
+  Çalışırken yalnız ilgili test klasörü; görev kapanışında bir kez tam paket.
+- **Aynı dosya iki kez okunmaz**; düzenlemeden sonra doğrulama okuması yapılmaz.
+- **Team-* skill'leri** yalnız kullanıcı açıkça isterse veya iş gerçekten 3+ alanı kapsıyorsa;
+  aksi halde tek uzman yeterlidir.
 
-1. **Haiku** ata eğer: sadece okuma yapıyorsa, template dolduruyorsa, checklist
-   doğruluyorsa, formatlama yapıyorsa. Yaratıcı yargı gerektirmiyorsa.
-2. **Sonnet** ata eğer: tek bir sistem tasarlıyor/uyguluyorsa, kod yazıyorsa,
-   tek bir doküman analiz ediyorsa. Çoğu iş buraya düşer.
-3. **Opus** ata eğer: 5+ dokümanı sentezliyorsa, çapraz-sistem kararlar veriyorsa,
-   geri dönüşü zor yüksek riskli çıktılar üretiyorsa, veya birden fazla agent'ı
-   koordine ediyorsa.
+## Agent Teams (deneysel)
 
-### Dinamik Model Override
-
-Bir agent veya skill çalışma sırasında farklı zorluktaki alt görevlerle
-karşılaşabilir. Bu durumda subagent spawn ederken `model:` parametresini
-override edebilir:
-
-```
-# Sonnet agent, karmaşık bir alt görev için Opus subagent çağırır:
-Agent(subagent_type="narrative-director", model="opus", prompt="...")
-
-# Opus agent, basit bir arama için Haiku subagent çağırır:
-Agent(subagent_type="Explore", model="haiku", prompt="...")
-```
-
-Bu sayede aynı iş akışı içinde maliyet-verimlilik dengesi sağlanır.
-
-## Subagents vs Agent Teams
-
-This project uses two distinct multi-agent patterns:
-
-### Subagents (current, always active)
-Spawned via `Task` within a single Claude Code session. Used by all `team-*` skills
-and orchestration skills. Subagents share the session's permission context, run
-sequentially or in parallel within the session, and return results to the parent.
-
-**When to spawn in parallel**: If two subagents' inputs are independent (neither
-needs the other's output to begin), spawn both Task calls simultaneously rather
-than waiting. Example: `/review-all-gdds` Phase 1 (consistency) and Phase 2
-(design theory) are independent — spawn both at the same time.
-
-### Agent Teams (experimental — opt-in)
-Multiple independent Claude Code *sessions* running simultaneously, coordinated
-via a shared task list. Each session has its own context window and token budget.
-Requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` environment variable.
-
-**Use agent teams when**:
-- Work spans multiple subsystems that will not touch the same files
-- Each workstream would take >30 minutes and benefits from true parallelism
-- A senior agent (technical-director, producer) needs to coordinate 3+ specialist
-  sessions working on different epics simultaneously
-
-**Do not use agent teams when**:
-- One session's output is required as input for another (use sequential subagents)
-- The task fits in a single session's context (use subagents instead)
-- Cost is a concern — each team member burns tokens independently
-
-**Current status**: Opt-in via `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`. Document first usage here when adopted.
-
-## Parallel Task Protocol
-
-When an orchestration skill spawns multiple independent agents:
-
-1. Issue all independent Task calls before waiting for any result
-2. Collect all results before proceeding to dependent phases
-3. If any agent is BLOCKED, surface it immediately — do not silently skip
-4. Always produce a partial report if some agents complete and others block
+Ayrı oturumlar (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`) varsayılan olarak **kullanılmaz** —
+her üye bağımsız token harcar. Yalnız kullanıcı isterse.

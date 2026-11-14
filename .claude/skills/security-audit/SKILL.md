@@ -3,6 +3,7 @@ name: security-audit
 description: "Audit the game for security vulnerabilities: save tampering, cheat vectors, network exploits, data exposure, and input validation gaps. Produces a prioritised security report with remediation guidance. Run before any public release or multiplayer launch."
 argument-hint: "[full | network | save | input | quick]"
 user-invocable: true
+disable-model-invocation: true
 allowed-tools: Read, Glob, Grep, Bash, Write, Task
 model: sonnet
 agent: security-engineer

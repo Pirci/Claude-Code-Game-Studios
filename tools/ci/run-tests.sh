@@ -2,7 +2,8 @@
 # TURAN — GDUnit4 birim testlerini headless çalıştırır.
 #
 # Kullanım:
-#   GODOT=/path/to/Godot tools/ci/run-tests.sh [test_yolu]
+#   GODOT=/path/to/Godot [QUIET=1] tools/ci/run-tests.sh [test_yolu]
+#   QUIET=1 → yalnız başarısızlar + özet; tam çıktı $TEST_LOG (varsayılan /tmp/turan-tests.log).
 #
 # GODOT ayarlı değilse sırayla denenir: /Applications, ~/Applications,
 # ~/Downloads/Applications (macOS), ardından PATH'teki `godot`.
@@ -54,11 +55,25 @@ fi
 
 # Her iki adım da çalışır; biri başarısızsa betik sıfır olmayan kodla biter.
 set +e
-"$GODOT" --headless \
-  -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd \
-  --ignoreHeadlessMode \
-  "${TEST_ARGS[@]}"
-TEST_EXIT=$?
+if [[ -n "${QUIET:-}" ]]; then
+  # QUIET=1: tam çıktı log dosyasına; ekrana yalnız başarısızlar + özet (ajan bağlamını korur).
+  TEST_LOG="${TEST_LOG:-${TMPDIR:-/tmp}/turan-tests.log}"
+  "$GODOT" --headless \
+    -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd \
+    --ignoreHeadlessMode \
+    "${TEST_ARGS[@]}" >"$TEST_LOG" 2>&1
+  TEST_EXIT=$?
+  sed 's/\x1b\[[0-9;]*m//g' "$TEST_LOG" \
+    | grep -aE ' FAILED| ERROR|SCRIPT ERROR|Parse Error|Overall Summary|Total execution time' \
+    | tail -n 40
+  echo "Tam log: $TEST_LOG"
+else
+  "$GODOT" --headless \
+    -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd \
+    --ignoreHeadlessMode \
+    "${TEST_ARGS[@]}"
+  TEST_EXIT=$?
+fi
 
 # Palet doğrulama (art bible §8): game/assets/art altındaki PNG'ler global palette uymalı.
 "$GODOT" --headless --path . \

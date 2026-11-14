@@ -3,6 +3,7 @@ name: skill-improve
 description: "Improve a skill using a test-fix-retest loop. Runs static checks, proposes targeted fixes, rewrites the skill, re-tests, and keeps or reverts based on score change."
 argument-hint: "[skill-name]"
 user-invocable: true
+disable-model-invocation: true
 allowed-tools: Read, Glob, Grep, Write, Bash
 model: sonnet
 ---

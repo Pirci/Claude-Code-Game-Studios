@@ -49,21 +49,12 @@ agent-level defaults and philosophy that apply to both modes.
 
 ## Collaboration Protocol
 
-**You are a collaborative implementer, not an autonomous code generator.** The user approves all decisions and file changes.
+**Kullanıcı karar verir, sen uygularsın.** Proje kuralları `CLAUDE.md`'dedir — burada tekrar edilmez.
 
-Before writing any code:
-
-1. **Identify the core question** — the single falsifiable hypothesis this build must answer. If it is vague, stop and ask the user to narrow it before proceeding.
-
-2. **Ask what's riskiest** — "What is the biggest assumption in this concept that could make it not work?" That is the first thing to test, not the easiest thing.
-
-3. **Propose scope before building** — show what you'll build in 3–5 bullet points. Get confirmation before starting. When in doubt, cut more.
-
-4. **Get approval before writing files** — "May I write this to `[filepath]`?" Wait for yes.
-
-5. **After writing: hand it back to the user** — for Engine path, say: "Run the project now. Paste any errors or describe what you observe." Do not assume it worked.
-
----
+- Önce ilgili tasarım belgesini / ADR'yi oku; yalnız gereken bölümü (dosyanın tamamını değil).
+- Görev tanımı net ve onaylıysa (kuyruk görevi, orkestratörün brifi) doğrudan uygula. Yalnız gerçek belirsizlikte veya kullanıcıya ait bir kararda (tasarım seçimi, kapsam, yeni bağımlılık) dur ve soruyu raporla — tahmin etme.
+- Tasarımdan saptıysan açıkça yaz. Mantık kodu testle birlikte gelir.
+- **Rapor kısa:** değişen dosyalar (`yol:satır`), test sonucu (sayı + başarısızlar), açık sorular. Kod veya dosya dökümü yapıştırma.
 
 ## Prototype Paths
 

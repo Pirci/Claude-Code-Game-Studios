@@ -75,44 +75,30 @@
 
 - **GDUnit4** — Otomatik test framework'ü
 
-## Architecture Decisions Log
+## Architecture Decisions
 
-- **ADR-0001** (Accepted 2026-10-19): Context-based hierarchical architecture — root_context → game_context / menu_context. → [adr-0001](../../docs/architecture/adr-0001-context-based-hierarchical-architecture.md)
-- **ADR-0002** (Accepted 2026-10-19): Feature encapsulation — her sistem kendi klasöründe, minimal dış bağımlılık. → [adr-0002](../../docs/architecture/adr-0002-feature-encapsulation.md)
-- **ADR-0003** (Accepted 2026-10-19): Dependency injection — bind_services() pattern ile servis bağlama. → [adr-0003](../../docs/architecture/adr-0003-dependency-injection.md)
-- **ADR-0004** (Accepted 2026-10-19): State segregation — game state objeleri sadece veri tutar, mantık controller'larda. → [adr-0004](../../docs/architecture/adr-0004-state-segregation.md)
-- **ADR-0005** (Accepted 2026-10-19): AI mimarisi — saf `decide()` servisleri, MapController uygular. → [adr-0005](../../docs/architecture/adr-0005-ai-architecture.md)
-- **ADR-0006** (Accepted 2026-10-19): Additive modifier / stat pipeline — kaynak anahtarlı `StatModifier` + saf `StatResolver`, çift sayım yok. → [adr-0006](../../docs/architecture/adr-0006-additive-modifier-stat-pipeline.md)
-- **ADR-0008** (Accepted 2026-10-19, C-23): Ses mimarisi — RootContext'in kalıcı `AudioController`'ı, `Master → Music/SFX` bus düzeni, data-driven `SfxLibrary`. → [adr-0008](../../docs/architecture/adr-0008-audio-architecture.md)
-- **ADR-0007** (Accepted 2026-10-19): Save/load — versiyonlu JSON + saf `SaveSerializer`, atomik `.bak` rotasyonu, tur sonu otomatik kayıt; ADR-0004 göç planını kısmen supersede eder. → [adr-0007](../../docs/architecture/adr-0007-save-load-persistence.md)
-- **ADR-0012** (Accepted 2026-10-19, C-62): Scene flow & chapter loading — saf `SceneFlow` durum makinesi (RootContext eylemleri yürütür), `NarrativeContext` + `ChapterSelectContext`, harita üstü modallar `GameContext` `ModalQueue`'da, `CampaignDefinition`/`SceneDefinition.map_path` ile bölüm `load()`'u, kayıt S2 (`scene_entry` ikinci yuva) / S3. → [adr-0012](../../docs/architecture/adr-0012-scene-flow-chapter-loading.md)
-- **ADR-0011** (Accepted 2026-10-19, C-60): Presentation layer — pasif görünümler (veri al, niyet sinyali gönder), tek sunucu `GameContext` her değişiklikten sonra `_refresh_views()`, aynı saf kurallardan `HudModel` (gelir tahmini, yayılım göstergesi), `MoveOutcome` ile beslenen rapor modalları, tek seferde bir modal (`ModalQueue`; harita girdisi kilitli, odak geri verilir). → [adr-0011](../../docs/architecture/adr-0011-presentation-layer-reports.md)
-- **ADR-0010** (Accepted 2026-10-19, C-59): Move resolution — saf `MoveResolver.resolve()` → `MoveOutcome`, uygulama yalnız outcome'u yazar (`ArmyController.apply_outcome`, arındırmada `SpiritController.apply_purification`); önizleme / oyuncu / düşman aynı yol; `CombatResolver.resolve_effective` (M2), saf `IncomeRules` (F2 = HUD tahmini). → [adr-0010](../../docs/architecture/adr-0010-move-resolution-outcome-apply.md)
-- **ADR-0009** (Accepted 2026-10-19, C-61): Localization & pixel-font pipeline — tek CSV + `tr()` key'leri, çevirmen sahipli biçim key'leri (`PER_TURN`), Fusion 12 / Unifont 16 zinciri (yalnız native boyut), Arapça tema geçişi, harita LTR / içerik locale yönü, glif kapsama testi (Fusion'da olmayan semboller ikon). → [adr-0009](../../docs/architecture/adr-0009-localization-pixel-font-pipeline.md)
+Tümü **Accepted**; ayrıntı `docs/architecture/adr-00NN-*.md` (ilgili ADR işe başlamadan okunur),
+genel resim `docs/architecture/architecture.md`.
 
-> Tümü `/architecture-decision` ile yazıldı; `/architecture-review` (2026-10-19, C-17 — CONCERNS, bağımsız technical-director + godot-specialist incelemesi, düzeltmeler uygulandı) sonrası **Accepted**. Eksik ADR yok: Localization ADR-0009, Move Resolution ADR-0010, Presentation ADR-0011, Scene flow ADR-0012 ile kapandı (bkz. [rapor](../../docs/architecture/architecture-review-2026-10-19.md)).
+| ADR | Karar (tek satır) |
+|-----|-------------------|
+| 0001 | Context hiyerarşisi: root_context → game / menu / narrative / chapter_select |
+| 0002 | Feature encapsulation — sistem başına klasör |
+| 0003 | Dependency injection — `bind_services()`; autoload yok |
+| 0004 | State segregation — `state/` yalnız veri |
+| 0005 | AI: saf `decide()` servisleri, MapController uygular |
+| 0006 | `StatModifier` + saf `StatResolver`; `GameState.modifiers`'a doğrudan erişim yok |
+| 0007 | Kayıt: versiyonlu JSON, saf `SaveSerializer`, atomik `.bak`; kullanıcı dosyası asla `load()` edilmez |
+| 0008 | Ses: RootContext `AudioController`, `Master → Music/SFX`, `SfxLibrary` |
+| 0009 | Yerelleştirme: tek CSV + `tr()`, yalnız native font boyutu, glif kapsama testi |
+| 0010 | Hamle: saf `MoveResolver.resolve()` → `MoveOutcome`; uygulama yalnız outcome'u yazar |
+| 0011 | Sunum: pasif görünümler, tek sunucu `GameContext`, `ModalQueue` |
+| 0012 | Sahne akışı: saf `SceneFlow` durum makinesi, bölüm `load()` ile |
 
-## Godot Project Settings Checklist
+## Godot Project Settings
 
-Proje oluşturulduğunda aşağıdaki ayarlar yapılmalı:
-
-- [x] `display/window/size/viewport_width`: 640
-- [x] `display/window/size/viewport_height`: 360
-- [x] `display/window/size/window_width_override`: 1920
-- [x] `display/window/size/window_height_override`: 1080
-- [x] `display/window/stretch/mode`: viewport
-- [x] `display/window/stretch/scale_mode`: integer
-- [x] `display/window/stretch/aspect`: keep (varsayılan)
-- [x] `rendering/textures/canvas_textures/default_texture_filter`: Nearest (0)
-- [x] `rendering/2d/snap/snap_2d_transforms_to_pixel`: true
-- [x] `rendering/2d/snap/snap_2d_vertices_to_pixel`: true
-- [ ] `debug/gdscript/warnings/untyped_declaration`: WARN
-- [ ] `debug/gdscript/warnings/inferred_declaration`: WARN
-- [ ] `debug/gdscript/warnings/unsafe_property_access`: WARN
-- [ ] `debug/gdscript/warnings/unsafe_cast`: WARN
-- [ ] `debug/gdscript/warnings/unsafe_call_argument`: WARN
-- [x] `application/run/max_fps`: 60
-- [x] `gui/theme/default_font_multichannel_signed_distance_field`: false (pixel font — varsayılan)
+Ekran/ölçek/font ayarları `project.godot`'ta uygulanmış durumda (yukarıdaki değerler). GDScript
+uyarıları (`untyped_declaration`, `inferred_declaration`, `unsafe_*`) WARN.
 
 ## Debug Tools
 
@@ -124,19 +110,10 @@ Geliştirme sırasında aşağıdaki debug araçları oluşturulmalı:
 
 ## Engine Specialists
 
-- **Primary**: godot-specialist
-- **Language/Code Specialist**: godot-gdscript-specialist
-- **Shader Specialist**: godot-shader-specialist
-- **UI Specialist**: godot-specialist (ayrı UI specialist gerekmiyorsa)
-- **Additional Specialists**: —
-- **Routing Notes**: Tüm oyun kodu GDScript, shader'lar Godot Shading Language
+| Dosya / iş | Uzman |
+|------------|-------|
+| `.gd` | godot-gdscript-specialist |
+| `.gdshader`, shader/material `.tres` | godot-shader-specialist |
+| `.tscn` / `.scn`, UI, genel mimari | godot-specialist |
 
-### File Extension Routing
-
-| File Extension / Type | Specialist to Spawn |
-|-----------------------|---------------------|
-| `.gd` (GDScript) | godot-gdscript-specialist |
-| `.gdshader` / `.tres` (shader/material) | godot-shader-specialist |
-| `.tscn` / `.scn` (sahne dosyaları) | godot-specialist |
-| `.gdextension` (native plugin) | godot-gdextension-specialist |
-| General architecture review | godot-specialist |
+Tüm oyun kodu GDScript; C#, GDExtension, Unity/Unreal ve ağ uzmanları projeden kaldırıldı (2026-11-14).

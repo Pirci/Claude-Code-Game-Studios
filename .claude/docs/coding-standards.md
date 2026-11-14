@@ -102,7 +102,4 @@ All stories must have appropriate test evidence before they can be marked Done:
 - Automated test suite runs on every push to main and every PR
 - No merge if tests fail — tests are a blocking gate in CI
 - Never disable or skip failing tests to make CI pass — fix the underlying issue
-- Engine-specific CI commands:
-  - **Godot**: `GODOT=<godot> tools/ci/run-tests.sh` (GDUnit4 + palet doğrulayıcı); CI: `.github/workflows/tests.yml` (headless Godot 4.7.1, SHA512 doğrulamalı indirme)
-  - **Unity**: `game-ci/unity-test-runner@v4` (GitHub Actions)
-  - **Unreal**: headless runner with `-nullrhi` flag
+- CI komutu: `GODOT=<godot> tools/ci/run-tests.sh` (ajan oturumunda `QUIET=1` ile) (GDUnit4 + palet doğrulayıcı); CI: `.github/workflows/tests.yml` (headless Godot 4.7.1, SHA512 doğrulamalı indirme)
